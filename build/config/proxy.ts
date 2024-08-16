@@ -12,9 +12,9 @@ export function createViteProxy(env: Env.ImportMeta, isDev: boolean) {
 
   if (!isEnableHttpProxy) return undefined;
 
-  const { baseURL, proxyPattern, other } = createServiceConfig(env);
+  const { baseURL, proxyPattern, ws, other } = createServiceConfig(env);
 
-  const proxy: Record<string, ProxyOptions> = createProxyItem({ baseURL, proxyPattern });
+  const proxy: Record<string, ProxyOptions> = createProxyItem({ baseURL, ws, proxyPattern });
 
   other.forEach(item => {
     Object.assign(proxy, createProxyItem(item));
