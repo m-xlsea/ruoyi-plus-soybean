@@ -30,6 +30,99 @@ export function createStaticRoutes() {
   };
 }
 
+const dynamicConstantRoutes: ElegantRoute[] = [
+  {
+    name: 'home',
+    path: '/home',
+    component: 'layout.base$view.home',
+    meta: {
+      title: 'home',
+      i18nKey: 'route.home',
+      icon: 'mdi:monitor-dashboard',
+      order: 1
+    }
+  },
+  {
+    name: '403',
+    path: '/403',
+    component: 'layout.blank$view.403',
+    meta: {
+      title: '403',
+      i18nKey: 'route.403',
+      constant: true,
+      hideInMenu: true
+    }
+  },
+  {
+    name: '404',
+    path: '/404',
+    component: 'layout.blank$view.404',
+    meta: {
+      title: '404',
+      i18nKey: 'route.404',
+      constant: true,
+      hideInMenu: true
+    }
+  },
+  {
+    name: '500',
+    path: '/500',
+    component: 'layout.blank$view.500',
+    meta: {
+      title: '500',
+      i18nKey: 'route.500',
+      constant: true,
+      hideInMenu: true
+    }
+  },
+  {
+    name: 'login',
+    path: '/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?',
+    component: 'layout.blank$view.login',
+    props: true,
+    meta: {
+      title: 'login',
+      i18nKey: 'route.login',
+      constant: true,
+      hideInMenu: true
+    }
+  },
+  {
+    name: 'iframe-page',
+    path: '/iframe-page/:url',
+    component: 'layout.base$view.iframe-page',
+    props: true,
+    meta: {
+      title: 'iframe-page',
+      i18nKey: 'route.iframe-page',
+      constant: true,
+      hideInMenu: true,
+      keepAlive: true,
+      icon: 'material-symbols:iframe-outline'
+    }
+  }
+];
+
+/** create routes when the auth route mode is static */
+export function createDynamicRoutes() {
+  const constantRoutes: ElegantConstRoute[] = [];
+
+  const authRoutes: ElegantConstRoute[] = [];
+
+  [...customRoutes, ...dynamicConstantRoutes].forEach(item => {
+    if (item.meta?.constant) {
+      constantRoutes.push(item);
+    } else {
+      authRoutes.push(item);
+    }
+  });
+
+  return {
+    constantRoutes,
+    authRoutes
+  };
+}
+
 /**
  * Get auth vue routes
  *

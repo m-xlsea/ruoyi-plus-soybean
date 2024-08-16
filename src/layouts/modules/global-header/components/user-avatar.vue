@@ -73,7 +73,7 @@ function handleDropdown(key: DropdownKey) {
     <div>
       <ButtonIcon>
         <SvgIcon icon="ph:user-circle" class="text-icon-large" />
-        <span class="text-16px font-medium">{{ authStore.userInfo.userName }}</span>
+        <span class="text-16px font-medium">{{ authStore.userInfo.user?.userName }}</span>
       </ButtonIcon>
     </div>
   </NDropdown>

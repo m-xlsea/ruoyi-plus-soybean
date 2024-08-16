@@ -8,40 +8,38 @@ declare namespace Api {
     /** common params of paginating */
     interface PaginatingCommonParams {
       /** current page number */
-      current: number;
+      pageNum: number;
       /** page size */
-      size: number;
+      pageSize: number;
       /** total count */
       total: number;
     }
 
     /** common params of paginating query list data */
     interface PaginatingQueryRecord<T = any> extends PaginatingCommonParams {
-      records: T[];
+      rows: T[];
     }
 
     /**
      * enable status
      *
-     * - "1": enabled
-     * - "2": disabled
+     * - "0": enabled
+     * - "1": disabled
      */
-    type EnableStatus = '1' | '2';
+    type EnableStatus = '0' | '1';
 
     /** common record */
     type CommonRecord<T = any> = {
-      /** record id */
-      id: number;
       /** record creator */
       createBy: string;
+      /** record dept */
+      createDept?: any;
       /** record create time */
       createTime: string;
       /** record updater */
       updateBy: string;
       /** record update time */
       updateTime: string;
-      /** record status */
-      status: EnableStatus | null;
     } & T;
   }
 
@@ -51,16 +49,53 @@ declare namespace Api {
    * backend api module: "auth"
    */
   namespace Auth {
+    interface LoginData {
+      tenantId?: string;
+      username?: string;
+      password?: string;
+      rememberMe?: boolean;
+      socialCode?: string;
+      socialState?: string;
+      source?: string;
+      code?: string;
+      uuid?: string;
+      clientId: string;
+      grantType: string;
+    }
+
+    type LoginForm = Pick<LoginData, 'tenantId' | 'username' | 'password' | 'rememberMe' | 'code' | 'uuid'>;
+
     interface LoginToken {
-      token: string;
-      refreshToken: string;
+      access_token: string;
+      client_id: string;
+      expire_in: number;
+      openid: string;
+      refresh_expire_in: number;
+      refresh_token: string;
+      scope: string;
     }
 
     interface UserInfo {
-      userId: string;
-      userName: string;
+      user?: Api.System.User;
       roles: string[];
-      buttons: string[];
+      permissions: string[];
+    }
+
+    interface Tenant {
+      companyName: string;
+      domain: string;
+      tenantId: string;
+    }
+
+    interface TenantList {
+      tenantEnabled: boolean;
+      voList: Tenant[];
+    }
+
+    interface CaptchaCode {
+      captchaEnabled: boolean;
+      uuid?: string;
+      img?: string;
     }
   }
 

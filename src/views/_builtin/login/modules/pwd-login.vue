@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed, reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
+import type { SelectOption } from 'naive-ui';
+import { useLoading } from '@sa/hooks';
 import { $t } from '@/locales';
 import { loginModuleRecord } from '@/constants/app';
 import { useRouterPush } from '@/hooks/common/router';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { useAuthStore } from '@/store/modules/auth';
+import { fetchCaptchaCode, fetchTenantList } from '@/service/api';
 
 defineOptions({
   name: 'PwdLogin'
@@ -13,71 +16,83 @@ defineOptions({
 const authStore = useAuthStore();
 const { toggleLoginModule } = useRouterPush();
 const { formRef, validate } = useNaiveForm();
+const { loading: codeLoading, startLoading: startCodeLoading, endLoading: endCodeLoading } = useLoading();
 
-interface FormModel {
-  userName: string;
-  password: string;
-}
+const codeUrl = ref<string>();
+const captchaEnabled = ref<boolean>(false);
+const tenantEnabled = ref<boolean>(false);
+const tenantOption = ref<SelectOption[]>([]);
 
-const model: FormModel = reactive({
-  userName: 'Soybean',
-  password: '123456'
+const model: Api.Auth.LoginForm = reactive({
+  tenantId: '000000',
+  username: 'admin',
+  password: 'admin123',
+  remberMe: false
 });
 
-const rules = computed<Record<keyof FormModel, App.Global.FormRule[]>>(() => {
+const rules = computed<Record<keyof Api.Auth.LoginForm, App.Global.FormRule[]>>(() => {
   // inside computed to make locale reactive, if not apply i18n, you can define it without computed
-  const { formRules } = useFormRules();
+  const { formRules, createRequiredRule } = useFormRules();
 
-  return {
-    userName: formRules.userName,
-    password: formRules.pwd
+  const loginRules: Record<keyof Api.Auth.LoginForm, App.Global.FormRule[]> = {
+    username: formRules.userName,
+    password: formRules.pwd,
+    code: captchaEnabled.value ? [createRequiredRule($t('form.code.required'))] : [],
+    tenantId: tenantEnabled.value ? formRules.tenantId : [],
+    rememberMe: [],
+    uuid: []
   };
+
+  return loginRules;
 });
 
 async function handleSubmit() {
   await validate();
-  await authStore.login(model.userName, model.password);
-}
-
-type AccountKey = 'super' | 'admin' | 'user';
-
-interface Account {
-  key: AccountKey;
-  label: string;
-  userName: string;
-  password: string;
-}
-
-const accounts = computed<Account[]>(() => [
-  {
-    key: 'super',
-    label: $t('page.login.pwdLogin.superAdmin'),
-    userName: 'Super',
-    password: '123456'
-  },
-  {
-    key: 'admin',
-    label: $t('page.login.pwdLogin.admin'),
-    userName: 'Admin',
-    password: '123456'
-  },
-  {
-    key: 'user',
-    label: $t('page.login.pwdLogin.user'),
-    userName: 'User',
-    password: '123456'
+  try {
+    await authStore.login(model);
+  } catch (error) {
+    handleFetchCaptchaCode();
   }
-]);
-
-async function handleAccountLogin(account: Account) {
-  await authStore.login(account.userName, account.password);
 }
+
+async function handleFetchTenantList() {
+  const { data, error } = await fetchTenantList();
+  if (!error) {
+    tenantEnabled.value = data.tenantEnabled;
+    tenantOption.value = data.voList.map(tenant => {
+      return {
+        label: tenant.companyName,
+        value: tenant.tenantId
+      };
+    });
+  }
+}
+
+handleFetchTenantList();
+
+async function handleFetchCaptchaCode() {
+  startCodeLoading();
+  const { data, error } = await fetchCaptchaCode();
+  if (!error) {
+    captchaEnabled.value = data.captchaEnabled;
+    if (data.captchaEnabled) {
+      model.uuid = data.uuid;
+      codeUrl.value = `data:image/gif;base64,${data.img}`;
+    }
+  }
+  endCodeLoading();
+}
+
+handleFetchCaptchaCode();
 </script>
 
 <template>
   <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false">
-    <NFormItem path="userName">
-      <NInput v-model:value="model.userName" :placeholder="$t('page.login.common.userNamePlaceholder')" />
+    <NFormItem v-if="tenantEnabled" path="tenantId">
+      <NSelect v-model:value="model.tenantId" placeholder="请选择/输入公司名称" :options="tenantOption" />
+    </NFormItem>
+    <NFormItem path="username">
+      <NInput v-model:value="model.username" :placeholder="$t('page.login.common.usernamePlaceholder')" />
     </NFormItem>
     <NFormItem path="password">
       <NInput
@@ -86,6 +101,17 @@ async function handleAccountLogin(account: Account) {
         show-password-on="click"
         :placeholder="$t('page.login.common.passwordPlaceholder')"
       />
+    </NFormItem>
+    <NFormItem v-if="captchaEnabled" path="code">
+      <div class="w-full flex-y-center gap-16px">
+        <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
+        <NSpin :show="codeLoading" :size="28" class="h-42px">
+          <NButton :focusable="false" class="login-code h-42px w-116px" @click="handleFetchCaptchaCode">
+            <img v-if="codeUrl" :src="codeUrl" />
+            <NEmpty v-else :show-icon="false" description="暂无验证码" />
+          </NButton>
+        </NSpin>
+      </div>
     </NFormItem>
     <NSpace vertical :size="24">
       <div class="flex-y-center justify-between">
@@ -105,14 +131,19 @@ async function handleAccountLogin(account: Account) {
           {{ $t(loginModuleRecord.register) }}
         </NButton>
       </div>
-      <NDivider class="text-14px text-#666 !m-0">{{ $t('page.login.pwdLogin.otherAccountLogin') }}</NDivider>
-      <div class="flex-center gap-12px">
-        <NButton v-for="item in accounts" :key="item.key" type="primary" @click="handleAccountLogin(item)">
-          {{ item.label }}
-        </NButton>
-      </div>
     </NSpace>
   </NForm>
 </template>
 
-<style scoped></style>
+<style scoped>
+.login-code {
+  &.n-button {
+    --n-padding: 0 8px !important;
+    background-color: #c0c0c0;
+  }
+
+  img {
+    height: 40px;
+  }
+}
+</style>

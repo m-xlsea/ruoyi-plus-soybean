@@ -7,6 +7,11 @@ declare namespace StorageType {
     //  * the theme settings
     //  */
     // themeSettings: App.Theme.ThemeSetting;
+    sessionObj: {
+      url: string;
+      data: any;
+      time: number;
+    };
   }
 
   interface Local {

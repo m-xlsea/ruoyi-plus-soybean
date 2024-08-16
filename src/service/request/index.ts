@@ -1,30 +1,50 @@
-import type { AxiosResponse } from 'axios';
-import { BACKEND_ERROR_CODE, createFlatRequest, createRequest } from '@sa/axios';
+import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { BACKEND_ERROR_CODE, createFlatRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
 import { $t } from '@/locales';
-import { localStg } from '@/utils/storage';
+import { localStg, sessionStg } from '@/utils/storage';
 import { getServiceBaseURL } from '@/utils/service';
+import { decryptBase64, decryptWithAes, encryptBase64, encryptWithAes, generateAesKey } from '@/utils/crypto';
+import { decrypt, encrypt } from '@/utils/jsencrypt';
 import { handleRefreshToken, showErrorMsg } from './shared';
 import type { RequestInstanceState } from './type';
 
+const encryptHeader = 'encrypt-key';
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
-const { baseURL, otherBaseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
+const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
 export const request = createFlatRequest<App.Service.Response, RequestInstanceState>(
   {
     baseURL,
-    headers: {
-      apifoxToken: 'XL299LiMEDZ0H5h3A29PxwQXdMJqWyY2'
+    'axios-retry': {
+      retries: 0
     }
   },
   {
     async onRequest(config) {
       const { headers } = config;
 
+      // 对应国际化资源文件后缀
+      config.headers['Content-Language'] = 'zh_CN';
+
+      const isToken = config.headers?.isToken === false;
+
       // set token
       const token = localStg.get('token');
-      const Authorization = token ? `Bearer ${token}` : null;
-      Object.assign(headers, { Authorization });
+      if (token && !isToken) {
+        config.headers.Clientid = import.meta.env.VITE_APP_CLIENT_ID;
+        const Authorization = token ? `Bearer ${token}` : null;
+        Object.assign(headers, { Authorization });
+      }
+
+      handleRepeatSubmit(config);
+
+      handleEncrypt(config);
+
+      // FormData数据去请求头Content-Type
+      if (config.data instanceof FormData) {
+        delete config.headers['Content-Type'];
+      }
 
       return config;
     },
@@ -98,6 +118,31 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       return null;
     },
     transformBackendResponse(response) {
+      if (import.meta.env.VITE_APP_ENCRYPT === 'true') {
+        // 加密后的 AES 秘钥
+        const keyStr = response.headers[encryptHeader];
+        // 加密
+        if (keyStr && keyStr !== '') {
+          const data = String(response.data);
+          // 请求体 AES 解密
+          const base64Str = decrypt(keyStr);
+          // base64 解码 得到请求头的 AES 秘钥
+          const aesKey = decryptBase64(base64Str.toString());
+          // aesKey 解码 data
+          const decryptData = decryptWithAes(data, aesKey);
+          // 将结果 (得到的是 JSON 字符串) 转为 JSON
+          response.data = JSON.parse(decryptData);
+        }
+      }
+
+      // 二进制数据则直接返回
+      if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
+        return response.data;
+      }
+
+      if (response.data.rows) {
+        return response.data;
+      }
       return response.data.data;
     },
     onError(error) {
@@ -129,44 +174,48 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
   }
 );
 
-export const demoRequest = createRequest<App.Service.DemoResponse>(
-  {
-    baseURL: otherBaseURL.demo
-  },
-  {
-    async onRequest(config) {
-      const { headers } = config;
+function handleRepeatSubmit(config: InternalAxiosRequestConfig) {
+  // 是否需要防止数据重复提交
+  const isRepeatSubmit = config.headers?.repeatSubmit === false;
 
-      // set token
-      const token = localStg.get('token');
-      const Authorization = token ? `Bearer ${token}` : null;
-      Object.assign(headers, { Authorization });
-
-      return config;
-    },
-    isBackendSuccess(response) {
-      // when the backend response code is "200", it means the request is success
-      // you can change this logic by yourself
-      return response.data.status === '200';
-    },
-    async onBackendFail(_response) {
-      // when the backend response code is not "200", it means the request is fail
-      // for example: the token is expired, refresh token and retry request
-    },
-    transformBackendResponse(response) {
-      return response.data.result;
-    },
-    onError(error) {
-      // when the request is fail, you can show error message
-
-      let message = error.message;
-
-      // show backend error message
-      if (error.code === BACKEND_ERROR_CODE) {
-        message = error.response?.data?.message || message;
+  if (!isRepeatSubmit && (config.method === 'post' || config.method === 'put')) {
+    const requestObj = {
+      url: config.url!,
+      data: typeof config.data === 'object' ? JSON.stringify(config.data) : config.data,
+      time: new Date().getTime()
+    };
+    const sessionObj = sessionStg.get('sessionObj');
+    if (!sessionObj) {
+      sessionStg.set('sessionObj', requestObj);
+    } else {
+      const s_url = sessionObj.url; // 请求地址
+      const s_data = sessionObj.data; // 请求数据
+      const s_time = sessionObj.time; // 请求时间
+      const interval = 500; // 间隔时间(ms)，小于此时间视为重复提交
+      if (s_data === requestObj.data && requestObj.time - s_time < interval && s_url === requestObj.url) {
+        const message = '数据正在处理，请勿重复提交';
+        console.warn(`[${s_url}]: ${message}`);
+        throw new Error(message);
       }
-
-      window.$message?.error(message);
+      sessionStg.set('sessionObj', requestObj);
     }
   }
-);
+}
+
+function handleEncrypt(config: InternalAxiosRequestConfig) {
+  // 是否需要加密
+  const isEncrypt = config.headers?.isEncrypt === 'true';
+
+  if (import.meta.env.VITE_APP_ENCRYPT === 'true') {
+    // 当开启参数加密
+    if (isEncrypt && (config.method === 'post' || config.method === 'put')) {
+      // 生成一个 AES 密钥
+      const aesKey = generateAesKey();
+      config.headers[encryptHeader] = encrypt(encryptBase64(aesKey));
+      config.data =
+        typeof config.data === 'object'
+          ? encryptWithAes(JSON.stringify(config.data), aesKey)
+          : encryptWithAes(config.data, aesKey);
+    }
+  }
+}

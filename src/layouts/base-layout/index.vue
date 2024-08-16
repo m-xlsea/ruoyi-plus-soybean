@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, defineAsyncComponent } from 'vue';
+import { computed, defineAsyncComponent, onMounted } from 'vue';
 import { AdminLayout, LAYOUT_SCROLL_EL_ID } from '@sa/materials';
 import type { LayoutMode } from '@sa/materials';
 import { useAppStore } from '@/store/modules/app';
 import { useThemeStore } from '@/store/modules/theme';
+import { initWebSocket } from '@/utils/websocket';
 import GlobalHeader from '../modules/global-header/index.vue';
 import GlobalSider from '../modules/global-sider/index.vue';
 import GlobalTab from '../modules/global-tab/index.vue';
@@ -100,6 +101,11 @@ function getSiderCollapsedWidth() {
 
   return w;
 }
+
+onMounted(() => {
+  const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+  initWebSocket(`${protocol + window.location.host + import.meta.env.VITE_APP_BASE_API}/resource/websocket`);
+});
 </script>
 
 <template>

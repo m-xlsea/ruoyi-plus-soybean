@@ -1,29 +1,16 @@
 {
-  "name": "soybean-admin",
+  "name": "ruoyi-vue-plus",
   "type": "module",
   "version": "1.3.4",
-  "description": "A fresh and elegant admin template, based on Vue3、Vite3、TypeScript、NaiveUI and UnoCSS. 一个基于Vue3、Vite3、TypeScript、NaiveUI and UnoCSS的清新优雅的中后台模版。",
-  "author": {
-    "name": "Soybean",
-    "email": "soybeanjs@outlook.com",
-    "url": "https://github.com/soybeanjs"
-  },
-  "license": "MIT",
-  "homepage": "https://github.com/soybeanjs/soybean-admin",
-  "repository": {
-    "url": "https://github.com/soybeanjs/soybean-admin.git"
-  },
-  "bugs": {
-    "url": "https://github.com/soybeanjs/soybean-admin/issues"
-  },
+  "description": "RuoYi-Vue-Plus多租户管理系统",
   "keywords": [
+    "RuoYi-Vue-Plus",
     "Vue3 admin ",
     "vue-admin-template",
     "Vite5",
     "TypeScript",
     "naive-ui",
     "naive-ui-admin",
-    "ant-design-vue v4",
     "UnoCSS"
   ],
   "engines": {
@@ -58,6 +45,7 @@
     "clipboard": "2.0.11",
     "dayjs": "1.11.12",
     "echarts": "5.5.1",
+    "jsencrypt": "^3.3.2",
     "naive-ui": "2.39.0",
     "nprogress": "0.2.0",
     "pinia": "2.2.0",
@@ -105,6 +93,5 @@
   },
   "lint-staged": {
     "*": "eslint --fix"
-  },
-  "website": "https://admin.soybeanjs.cn"
+  }
 }

@@ -532,6 +532,7 @@ declare namespace App {
       baseURL: string;
       /** The proxy pattern of the backend service base url */
       proxyPattern: string;
+      ws?: boolean;
     }
 
     interface OtherServiceConfigItem extends ServiceConfigItem {
@@ -556,6 +557,8 @@ declare namespace App {
       msg: string;
       /** The backend service response data */
       data: T;
+      rows?: any[];
+      total?: number;
     };
 
     /** The demo backend service response data */

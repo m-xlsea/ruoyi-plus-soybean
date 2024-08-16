@@ -3,7 +3,7 @@ defineOptions({ name: 'SystemLogo' });
 </script>
 
 <template>
-  <icon-local-logo />
+  <img src="@/assets/imgs/logo.png" />
 </template>
 
 <style scoped></style>
