@@ -36,7 +36,7 @@ export function createServiceConfig(env: Env.ImportMeta) {
 
   const config: App.Service.ServiceConfig = {
     baseURL: httpConfig.baseURL,
-    ws: VITE_APP_WEBSOCKET === 'true',
+    ws: VITE_APP_WEBSOCKET === 'Y',
     proxyPattern: VITE_APP_BASE_API,
     other: otherConfig
   };

@@ -5,6 +5,7 @@ import type { LayoutMode } from '@sa/materials';
 import { useAppStore } from '@/store/modules/app';
 import { useThemeStore } from '@/store/modules/theme';
 import { initWebSocket } from '@/utils/websocket';
+import { initSSE } from '@/utils/sse';
 import GlobalHeader from '../modules/global-header/index.vue';
 import GlobalSider from '../modules/global-sider/index.vue';
 import GlobalTab from '../modules/global-tab/index.vue';
@@ -105,6 +106,7 @@ function getSiderCollapsedWidth() {
 onMounted(() => {
   const protocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
   initWebSocket(`${protocol + window.location.host + import.meta.env.VITE_APP_BASE_API}/resource/websocket`);
+  initSSE(`${import.meta.env.VITE_APP_BASE_API}/resource/sse`);
 });
 </script>
 

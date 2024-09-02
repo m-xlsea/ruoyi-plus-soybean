@@ -58,7 +58,7 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       const responseCode = String(response.data.code);
 
       function handleLogout() {
-        authStore.resetStore();
+        authStore.logout();
       }
 
       function logoutAndCleanup() {
@@ -118,7 +118,7 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       return null;
     },
     transformBackendResponse(response) {
-      if (import.meta.env.VITE_APP_ENCRYPT === 'true') {
+      if (import.meta.env.VITE_APP_ENCRYPT === 'Y') {
         // 加密后的 AES 秘钥
         const keyStr = response.headers[encryptHeader];
         // 加密
@@ -194,6 +194,7 @@ function handleRepeatSubmit(config: InternalAxiosRequestConfig) {
       const interval = 500; // 间隔时间(ms)，小于此时间视为重复提交
       if (s_data === requestObj.data && requestObj.time - s_time < interval && s_url === requestObj.url) {
         const message = '数据正在处理，请勿重复提交';
+        // eslint-disable-next-line no-console
         console.warn(`[${s_url}]: ${message}`);
         throw new Error(message);
       }
@@ -206,7 +207,7 @@ function handleEncrypt(config: InternalAxiosRequestConfig) {
   // 是否需要加密
   const isEncrypt = config.headers?.isEncrypt === 'true';
 
-  if (import.meta.env.VITE_APP_ENCRYPT === 'true') {
+  if (import.meta.env.VITE_APP_ENCRYPT === 'Y') {
     // 当开启参数加密
     if (isEncrypt && (config.method === 'post' || config.method === 'put')) {
       // 生成一个 AES 密钥

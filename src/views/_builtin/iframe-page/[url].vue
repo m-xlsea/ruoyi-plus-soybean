@@ -8,10 +8,12 @@ interface Props {
 defineProps<Props>();
 
 onMounted(() => {
+  // eslint-disable-next-line no-console
   console.log('mounted');
 });
 
 onActivated(() => {
+  // eslint-disable-next-line no-console
   console.log('activated');
 });
 </script>

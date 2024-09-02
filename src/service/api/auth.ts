@@ -39,3 +39,17 @@ export function fetchLogin(data: Api.Auth.LoginData) {
 export function fetchGetUserInfo() {
   return request<Api.Auth.UserInfo>({ url: '/system/user/getInfo' });
 }
+
+/** Logout */
+export function fetchLogout() {
+  if (import.meta.env.VITE_APP_SSE === 'Y') {
+    request({
+      url: '/resource/sse/close',
+      method: 'get'
+    });
+  }
+  return request({
+    url: '/auth/logout',
+    method: 'post'
+  });
+}

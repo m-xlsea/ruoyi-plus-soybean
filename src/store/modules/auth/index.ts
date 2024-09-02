@@ -4,7 +4,7 @@ import { defineStore } from 'pinia';
 import { useLoading } from '@sa/hooks';
 import { SetupStoreId } from '@/enum';
 import { useRouterPush } from '@/hooks/common/router';
-import { fetchGetUserInfo, fetchLogin } from '@/service/api';
+import { fetchGetUserInfo, fetchLogin, fetchLogout } from '@/service/api';
 import { localStg } from '@/utils/storage';
 // import { $t } from '@/locales';
 import { useRouteStore } from '../route';
@@ -50,6 +50,11 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
 
     tabStore.cacheTabs();
     routeStore.resetStore();
+  }
+
+  async function logout() {
+    await fetchLogout();
+    resetStore();
   }
 
   /**
@@ -147,6 +152,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     loginLoading,
     resetStore,
     login,
+    logout,
     initUserInfo
   };
 });

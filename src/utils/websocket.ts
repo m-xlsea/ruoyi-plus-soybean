@@ -32,7 +32,7 @@ let socketError = 0; // 错误次数
 
 // 初始化socket
 export function initWebSocket(url: any) {
-  if (import.meta.env.VITE_APP_WEBSOCKET === 'false') {
+  if (import.meta.env.VITE_APP_WEBSOCKET === 'N') {
     return null;
   }
   socketUrl = url;
@@ -50,6 +50,7 @@ export function initWebSocket(url: any) {
 // socket 连接成功
 export function websocketonopen() {
   websocket.onopen = () => {
+    // eslint-disable-next-line no-console
     console.log('连接 websocket 成功');
     resetHeart();
   };
@@ -58,14 +59,16 @@ export function websocketonopen() {
 // socket 连接失败
 export function websocketonerror() {
   websocket.onerror = (e: any) => {
-    console.log('连接 websocket 失败', e);
+    // eslint-disable-next-line no-console
+    console.error('连接 websocket 失败', e);
   };
 }
 
 // socket 断开链接
 export function websocketclose() {
   websocket.onclose = (e: any) => {
-    console.log('断开连接', e);
+    // eslint-disable-next-line no-console
+    console.warn('断开连接', e);
   };
 }
 
@@ -102,9 +105,11 @@ export function reconnect() {
     clearInterval(heartTime);
     initWebSocket(socketUrl);
     socketError += 1;
+    // eslint-disable-next-line no-console
     console.log('socket重连', socketError);
   } else {
-    console.log('重试次数已用完');
+    // eslint-disable-next-line no-console
+    console.warn('重试次数已用完');
     clearInterval(heartTime);
   }
 }

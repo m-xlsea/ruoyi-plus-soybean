@@ -38,7 +38,10 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     apiParams,
     columns: config.columns,
     transformer: res => {
-      const { rows: records = [], pageNum: current = 1, pageSize: size = 10, total = 0 } = res.data || {};
+      const { rows: records = [], total = 0 } = res.data || {};
+
+      const current = searchParams.pageNum as number;
+      const size = (searchParams.pageSize || 0) as number;
 
       // Ensure that the size is greater than 0, If it is less than 0, it will cause paging calculation errors.
       const pageSize = size <= 0 ? 10 : size;
@@ -124,8 +127,8 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       pagination.page = page;
 
       updateSearchParams({
-        current: page,
-        size: pagination.pageSize!
+        pageNum: page,
+        pageSize: pagination.pageSize!
       });
 
       getData();
@@ -135,8 +138,8 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       pagination.page = 1;
 
       updateSearchParams({
-        current: pagination.page,
-        size: pageSize
+        pageNum: pagination.page,
+        pageSize
       });
 
       getData();
@@ -174,8 +177,8 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     });
 
     updateSearchParams({
-      current: pageNum,
-      size: pagination.pageSize!
+      pageNum,
+      pageSize: pagination.pageSize!
     });
 
     await getData();

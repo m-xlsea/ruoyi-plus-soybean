@@ -92,7 +92,7 @@ handleFetchCaptchaCode();
       <NSelect v-model:value="model.tenantId" placeholder="请选择/输入公司名称" :options="tenantOption" />
     </NFormItem>
     <NFormItem path="username">
-      <NInput v-model:value="model.username" :placeholder="$t('page.login.common.usernamePlaceholder')" />
+      <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
     </NFormItem>
     <NFormItem path="password">
       <NInput
