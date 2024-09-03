@@ -82,7 +82,7 @@ export const generatedRoutes: GeneratedRoute[] = [
     meta: {
       title: 'system',
       i18nKey: 'route.system',
-      localIcon: 'system',
+      localIcon: 'menu-system',
       order: 1
     },
     children: [
@@ -93,7 +93,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'system_menu',
           i18nKey: 'route.system_menu',
-          localIcon: 'tree-table',
+          localIcon: 'menu-tree-table',
           order: 3
         }
       }

@@ -9,6 +9,7 @@ import { createDynamicRoutes, createStaticRoutes, getAuthVueRoutes } from '@/rou
 import { ROOT_ROUTE } from '@/router/routes/builtin';
 import { getRouteName, getRoutePath } from '@/router/elegant/transform';
 import { fetchGetRoutes } from '@/service/api';
+import { humpToLine } from '@/utils/common';
 import { useAppStore } from '../app';
 import { useAuthStore } from '../auth';
 import { useTabStore } from '../tab';
@@ -72,6 +73,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     const authRoutesMap = new Map<string, ElegantConstRoute>([]);
 
     routes.forEach(route => {
+      parseRouter(route);
       authRoutesMap.set(route.name, route);
     });
 
@@ -87,6 +89,50 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     });
 
     authRoutes.value = Array.from(authRoutesMap.values());
+  }
+
+  function parseRouter(route: ElegantConstRoute, parent?: ElegantConstRoute) {
+    if (authRouteMode.value === 'dynamic') {
+      route.path = route.path.substring(1);
+      const name = humpToLine(route.path.substring(1).replace('/', '_'));
+      route.name = parent ? `${parent.name}_${name}` : name;
+
+      route.meta = route.meta ? route.meta : { title: route.name };
+
+      if (route.meta.icon) {
+        if (route.meta.icon.startsWith('icon-')) {
+          route.meta.localIcon = route.meta.icon.replace('icon-', 'menu-');
+          delete route.meta.icon;
+        }
+      }
+
+      // @ts-expect-error no hidden field
+      route.meta.hideInMenu = Boolean(route.hidden) || false;
+
+      route.meta.keepAlive = Boolean(route.meta.noCache) || false;
+
+      if (route.component !== 'layout.base') {
+        route.component = parent ? `view.${route.component}` : `layout.base$view.${route.component}`;
+      }
+
+      if (route.component.endsWith('iframe-page')) {
+        route.meta.href = String(route.meta.link);
+        route.path = '/iframe-page/123';
+        route.name = 'iframe_page';
+        route.component = 'view.iframe-page';
+      }
+
+      delete route.meta.link;
+      delete route.meta.noCache;
+      // @ts-expect-error no query field
+      delete route.query;
+      // @ts-expect-error no hidden field
+      delete route.hidden;
+    }
+
+    if (route.children) {
+      route.children.forEach(child => parseRouter(child, route));
+    }
   }
 
   const removeRouteFns: (() => void)[] = [];

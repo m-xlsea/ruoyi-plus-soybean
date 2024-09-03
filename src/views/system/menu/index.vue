@@ -49,13 +49,14 @@ const getMeunTree = async () => {
 
 getMeunTree();
 
-async function handleSubmitted() {
-  getMeunTree();
+async function handleSubmitted(menuType?: Api.System.MenuType) {
+  if (menuType === 'F') {
+    await getBtnMenuList();
+    return;
+  }
+  await getMeunTree();
   if (operateType.value === 'edit') {
     currentMenu.value = menuTreeRef.value?.getCheckedData().options[0] as Api.System.Menu;
-  }
-  if (createType.value === 'F') {
-    getBtnMenuList();
   }
 }
 
@@ -83,7 +84,7 @@ async function handleDeleteMenu(id?: CommonType.IdType) {
   expandedKeys.value.filter(item => !checkedKeys.value.includes(item));
   currentMenu.value = undefined;
   checkedKeys.value = [];
-  getBtnMenuList();
+  getMeunTree();
 }
 
 function renderPrefix({ option }: { option: TreeOption }) {
@@ -339,7 +340,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
               </NButton>
               <NPopconfirm @positive-click="() => handleDeleteMenu()">
                 <template #trigger>
-                  <NButton size="small" ghost type="error">
+                  <NButton size="small" ghost type="error" :disabled="btnData.length > 0 || btnLoading">
                     <template #icon>
                       <icon-ic-round-delete />
                     </template>

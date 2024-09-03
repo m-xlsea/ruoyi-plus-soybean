@@ -30,7 +30,7 @@ interface Props {
 const props = defineProps<Props>();
 
 interface Emits {
-  (e: 'submitted'): void;
+  (e: 'submitted', menuType?: Api.System.MenuType): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -136,7 +136,10 @@ async function handleSubmit() {
     remark
   } = model;
 
-  const path = !model.path?.startsWith('/') ? `/${model.path}` : model.path;
+  let path = model.path;
+  if (model.isFrame === '1') {
+    path = !model.path?.startsWith('/') ? `/${model.path}` : model.path;
+  }
 
   let icon;
   if (model.icon) {
@@ -206,7 +209,7 @@ async function handleSubmit() {
   }
 
   closeDrawer();
-  emit('submitted');
+  emit('submitted', menuType);
 }
 
 watch(visible, () => {
@@ -265,7 +268,13 @@ const FormTipComponent = defineComponent({
           </NFormItemGi>
           <NFormItemGi v-if="menuType !== 'F'" :span="24" label="菜单类型" path="menuType">
             <NRadioGroup v-model:value="model.menuType">
-              <NRadioButton v-for="item in menuTypeOptions" :key="item.value" :value="item.value" :label="item.label" />
+              <NRadioButton
+                v-for="item in menuTypeOptions"
+                v-show="item.value !== 'F'"
+                :key="item.value"
+                :value="item.value"
+                :label="item.label"
+              />
             </NRadioGroup>
           </NFormItemGi>
           <NFormItemGi :span="24" label="菜单名称" path="menuName">
