@@ -2,7 +2,7 @@ import { request } from '../request';
 
 /** Get tenant list */
 export function fetchTenantList() {
-  return request<Api.Auth.TenantList>({
+  return request<Api.Auth.LoginTenant>({
     url: '/auth/tenant/list',
     method: 'get'
   });
@@ -22,7 +22,7 @@ export function fetchCaptchaCode() {
  * @param username User name
  * @param password Password
  */
-export function fetchLogin(data: Api.Auth.LoginData) {
+export function fetchLogin(data: Api.Auth.PwdLoginForm) {
   return request<Api.Auth.LoginToken>({
     url: '/auth/login',
     method: 'post',

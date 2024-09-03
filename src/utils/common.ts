@@ -25,6 +25,13 @@ export function transformRecordToOption<T extends Record<string, string>>(record
   })) as CommonType.Option<keyof T>[];
 }
 
+export function transformRecordToNumberOption<T extends Record<string, string>>(record: T) {
+  return Object.entries(record).map(([value, label]) => ({
+    value,
+    label
+  })) as CommonType.Option<keyof T>[];
+}
+
 /**
  * Translate options
  *
@@ -55,4 +62,21 @@ export function toggleHtmlClass(className: string) {
     add,
     remove
   };
+}
+
+/* 驼峰转换下划线 */
+export function humpToLine(str: string, line: string = '-') {
+  let temp = str.replace(/[A-Z]/g, match => {
+    return `${line}${match.toLowerCase()}`;
+  });
+  // 如果首字母是大写，执行replace时会多一个_，这里需要去掉
+  if (temp.slice(0, 1) === line) {
+    temp = temp.slice(1);
+  }
+  return temp;
+}
+
+/** 判断是否为空 */
+export function isNotNull(value: any) {
+  return value !== undefined && value !== null && value !== '' && value !== 'undefined' && value !== 'null';
 }

@@ -107,11 +107,11 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
       return filteredColumns;
     },
     onFetched: async transformed => {
-      const { pageNum, pageSize, total } = transformed;
+      const { total } = transformed;
 
       updatePagination({
-        page: pageNum,
-        pageSize,
+        page: searchParams.pageNum,
+        pageSize: searchParams.pageSize,
         itemCount: total
       });
     },

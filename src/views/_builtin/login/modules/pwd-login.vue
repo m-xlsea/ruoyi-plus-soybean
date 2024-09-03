@@ -21,26 +21,26 @@ const { loading: codeLoading, startLoading: startCodeLoading, endLoading: endCod
 const codeUrl = ref<string>();
 const captchaEnabled = ref<boolean>(false);
 const tenantEnabled = ref<boolean>(false);
+const remberMe = ref<boolean>(false);
 const tenantOption = ref<SelectOption[]>([]);
 
-const model: Api.Auth.LoginForm = reactive({
+const model: Api.Auth.PwdLoginForm = reactive({
   tenantId: '000000',
   username: 'admin',
-  password: 'admin123',
-  remberMe: false
+  password: 'admin123'
 });
 
-const rules = computed<Record<keyof Api.Auth.LoginForm, App.Global.FormRule[]>>(() => {
+type RuleKey = Extract<keyof Api.Auth.PwdLoginForm, 'username' | 'password' | 'code' | 'tenantId'>;
+
+const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
   // inside computed to make locale reactive, if not apply i18n, you can define it without computed
   const { formRules, createRequiredRule } = useFormRules();
 
-  const loginRules: Record<keyof Api.Auth.LoginForm, App.Global.FormRule[]> = {
+  const loginRules: Record<RuleKey, App.Global.FormRule[]> = {
     username: formRules.userName,
     password: formRules.pwd,
     code: captchaEnabled.value ? [createRequiredRule($t('form.code.required'))] : [],
-    tenantId: tenantEnabled.value ? formRules.tenantId : [],
-    rememberMe: [],
-    uuid: []
+    tenantId: tenantEnabled.value ? formRules.tenantId : []
   };
 
   return loginRules;
@@ -115,7 +115,7 @@ handleFetchCaptchaCode();
     </NFormItem>
     <NSpace vertical :size="24">
       <div class="flex-y-center justify-between">
-        <NCheckbox>{{ $t('page.login.pwdLogin.rememberMe') }}</NCheckbox>
+        <NCheckbox v-model:checked="remberMe">{{ $t('page.login.pwdLogin.rememberMe') }}</NCheckbox>
         <NButton quaternary @click="toggleLoginModule('reset-pwd')">
           {{ $t('page.login.pwdLogin.forgetPassword') }}
         </NButton>

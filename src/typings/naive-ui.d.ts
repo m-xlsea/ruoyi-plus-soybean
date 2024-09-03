@@ -30,6 +30,8 @@ declare namespace NaiveUI {
     params: R
   ) => Promise<FlatResponseData<Api.Common.PaginatingQueryRecord<T>>>;
 
+  type TreeTableApiFn<T = any, R = Record<string, any>> = (params: R) => Promise<FlatResponseData<T[]>>;
+
   /**
    * the type of table operation
    *
@@ -39,6 +41,8 @@ declare namespace NaiveUI {
   type TableOperateType = 'add' | 'edit';
 
   type GetTableData<A extends TableApiFn> = A extends TableApiFn<infer T> ? T : never;
+
+  type GetTreeTableData<A extends TreeTableApiFn> = A extends TreeTableApiFn<infer T> ? T : never;
 
   type NaiveTableConfig<A extends TableApiFn> = Pick<
     import('@sa/hooks').TableConfig<A, GetTableData<A>, TableColumn<TableDataWithIndex<GetTableData<A>>>>,
@@ -51,4 +55,9 @@ declare namespace NaiveUI {
      */
     showTotal?: boolean;
   };
+
+  type NaiveTreeTableConfig<A extends TreeTableApiFn> = Pick<
+    import('@sa/hooks').TableConfig<A, GetTreeTableData<A>, TableColumn<TableDataWithIndex<GetTreeTableData<A>>>>,
+    'apiFn' | 'apiParams' | 'columns' | 'immediate'
+  >;
 }

@@ -25,6 +25,7 @@ const routeStore = useRouteStore();
 const tabStore = useTabStore();
 
 const transitionName = computed(() => (themeStore.page.animate ? themeStore.page.animateMode : ''));
+const footerVar = computed(() => themeStore.footer.visible);
 
 function resetScroll() {
   const el = document.querySelector(`#${LAYOUT_SCROLL_EL_ID}`);
@@ -47,7 +48,7 @@ function resetScroll() {
           :is="Component"
           v-if="appStore.reloadFlag"
           :key="tabStore.getTabIdByRoute(route)"
-          :class="{ 'p-16px': showPadding }"
+          :class="{ 'p-16px': showPadding, 'footer-var': footerVar }"
           class="flex-grow bg-layout transition-300"
         />
       </KeepAlive>
@@ -55,4 +56,8 @@ function resetScroll() {
   </RouterView>
 </template>
 
-<style></style>
+<style>
+.footer-var {
+  --calc-footer-height: var(--soy-footer-height);
+}
+</style>

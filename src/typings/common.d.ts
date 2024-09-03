@@ -22,4 +22,7 @@ declare namespace CommonType {
   type RecordNullable<T> = {
     [K in keyof T]?: T[K] | null;
   };
+
+  /** The id type */
+  type IdType = string | number;
 }

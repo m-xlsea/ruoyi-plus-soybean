@@ -19,6 +19,7 @@ const local: App.I18n.Schema = {
     columnSetting: '列设置',
     config: '配置',
     confirm: '确认',
+    save: '保存',
     delete: '删除',
     deleteSuccess: '删除成功',
     confirmDelete: '确认删除吗？',
@@ -154,7 +155,9 @@ const local: App.I18n.Schema = {
     404: '页面不存在',
     500: '服务器错误',
     'iframe-page': '外链页面',
-    home: '首页'
+    home: '首页',
+    system: '系统管理',
+    system_menu: '菜单管理'
   },
   page: {
     login: {

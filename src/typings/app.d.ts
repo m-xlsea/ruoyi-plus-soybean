@@ -300,6 +300,7 @@ declare namespace App {
         columnSetting: string;
         config: string;
         confirm: string;
+        save: string;
         delete: string;
         deleteSuccess: string;
         confirmDelete: string;

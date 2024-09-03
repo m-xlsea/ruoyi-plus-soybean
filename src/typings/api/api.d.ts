@@ -24,12 +24,28 @@ declare namespace Api {
     type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'pageNum' | 'pageSize'>;
 
     /**
-     * enable status
+     * 启用状态
      *
-     * - "0": enabled
-     * - "1": disabled
+     * - "0": 正常
+     * - "1": 停用
      */
     type EnableStatus = '0' | '1';
+
+    /**
+     * 显示状态
+     *
+     * - "0": 显示
+     * - "1": 隐藏
+     */
+    type VisibleStatus = '0' | '1';
+
+    /**
+     * 是否状态
+     *
+     * - "0": 是
+     * - "1": 否
+     */
+    type YesOrNoStatus = '0' | '1';
 
     /** common record */
     type CommonRecord<T = any> = {
@@ -44,6 +60,12 @@ declare namespace Api {
       /** record update time */
       updateTime: string;
     } & T;
+
+    type CommonTenantRecord<T = any> = {
+      /** record tenant id */
+      tenantId: string;
+    } & CommonRecord &
+      T;
   }
 
   /**
@@ -52,52 +74,80 @@ declare namespace Api {
    * backend api module: "auth"
    */
   namespace Auth {
-    interface LoginData {
+    /** base login form */
+    interface LoginForm {
+      /** 客户端 ID */
+      clientId?: string;
+      /** 授权类型 */
+      grantType?: string;
+      /** 租户ID */
       tenantId?: string;
-      username?: string;
-      password?: string;
-      rememberMe?: boolean;
-      socialCode?: string;
-      socialState?: string;
-      source?: string;
+      /** 验证码 */
       code?: string;
+      /** 唯一标识 */
       uuid?: string;
-      clientId: string;
-      grantType: string;
     }
 
-    type LoginForm = Pick<LoginData, 'tenantId' | 'username' | 'password' | 'rememberMe' | 'code' | 'uuid'>;
+    /** password login form */
+    interface PwdLoginForm extends LoginForm {
+      /** 用户名 */
+      username?: string;
+      /** 密码 */
+      password?: string;
+    }
 
+    /** login token data */
     interface LoginToken {
-      access_token: string;
-      client_id: string;
-      expire_in: number;
-      openid: string;
-      refresh_expire_in: number;
-      refresh_token: string;
-      scope: string;
+      /** 授权令牌 */
+      access_token?: string;
+      /** 应用id */
+      client_id?: string;
+      /** 授权令牌 access_token 的有效期 */
+      expire_in?: number;
+      /** 用户 openid */
+      openid?: string;
+      /** 刷新令牌 refresh_token 的有效期 */
+      refresh_expire_in?: number;
+      /** 刷新令牌 */
+      refresh_token?: string;
+      /** 令牌权限 */
+      scope?: string;
     }
 
+    /** userinfo */
     interface UserInfo {
+      /** 用户信息 */
       user?: Api.System.User;
+      /** 角色权限 */
       roles: string[];
+      /** 菜单权限 */
       permissions: string[];
     }
 
+    /** tenant */
     interface Tenant {
+      /** 企业名称 */
       companyName: string;
+      /** 域名 */
       domain: string;
+      /** 租户编号 */
       tenantId: string;
     }
 
-    interface TenantList {
+    /** login tenant */
+    interface LoginTenant {
+      /** 租户开关 */
       tenantEnabled: boolean;
+      /** 租户列表 */
       voList: Tenant[];
     }
 
     interface CaptchaCode {
+      /** 是否开启验证码 */
       captchaEnabled: boolean;
+      /** 唯一标识 */
       uuid?: string;
+      /** 验证码图片 */
       img?: string;
     }
   }

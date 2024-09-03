@@ -19,6 +19,7 @@ const local: App.I18n.Schema = {
     columnSetting: 'Column Setting',
     config: 'Config',
     confirm: 'Confirm',
+    save: 'Save',
     delete: 'Delete',
     deleteSuccess: 'Delete Success',
     confirmDelete: 'Are you sure you want to delete?',
@@ -154,7 +155,9 @@ const local: App.I18n.Schema = {
     404: 'Page Not Found',
     500: 'Server Error',
     'iframe-page': 'Iframe',
-    home: 'Home'
+    home: 'Home',
+    system: 'System Management',
+    system_menu: 'Menu Management'
   },
   page: {
     login: {
