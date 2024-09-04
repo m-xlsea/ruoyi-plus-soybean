@@ -157,7 +157,9 @@ const local: App.I18n.Schema = {
     'iframe-page': 'Iframe',
     home: 'Home',
     system: 'System Management',
-    system_menu: 'Menu Management'
+    system_menu: 'Menu Management',
+    tool: 'System Tools',
+    tool_gen: 'Code Generation'
   },
   page: {
     login: {

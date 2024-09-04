@@ -157,7 +157,9 @@ const local: App.I18n.Schema = {
     'iframe-page': '外链页面',
     home: '首页',
     system: '系统管理',
-    system_menu: '菜单管理'
+    system_menu: '菜单管理',
+    tool: '系统工具',
+    tool_gen: '代码生成'
   },
   page: {
     login: {

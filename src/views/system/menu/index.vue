@@ -11,6 +11,7 @@ import ButtonIcon from '@/components/custom/button-icon.vue';
 import { $t } from '@/locales';
 import { handleMenuTree } from '@/utils/ruoyi';
 import StatusTag from '@/components/common/status-tag.vue';
+import { useDict } from '@/hooks/business/dict';
 import MenuOperateDrawer from './modules/menu-operate-drawer.vue';
 
 const appStore = useAppStore();
@@ -258,6 +259,18 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
     }
   }
 ];
+
+const enableStatusRecord = ref<CommonType.Record>({});
+const showHideRecord = ref<CommonType.Record>({});
+
+async function initDictData() {
+  const { getDictRecord } = useDict();
+  const { sys_show_hide, sys_normal_disable } = await getDictRecord('sys_show_hide', 'sys_normal_disable');
+  enableStatusRecord.value = sys_normal_disable;
+  showHideRecord.value = sys_show_hide;
+}
+
+initDictData();
 </script>
 
 <template>
@@ -381,7 +394,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
             </NDescriptionsItem>
             <NDescriptionsItem label="显示状态">
               <NTag v-if="currentMenu.visible" size="small" :type="tagMap[currentMenu.visible]">
-                {{ currentMenu.visible === '0' ? '显示' : '隐藏' }}
+                {{ showHideRecord[currentMenu.visible] }}
               </NTag>
             </NDescriptionsItem>
             <NDescriptionsItem v-if="currentMenu.menuType === 'C'" label="是否缓存">

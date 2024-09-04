@@ -98,5 +98,29 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       }
     ]
+  },
+  {
+    name: 'tool',
+    path: '/tool',
+    component: 'layout.base',
+    meta: {
+      title: 'tool',
+      i18nKey: 'route.tool',
+      localIcon: 'menu-tool',
+      order: 4
+    },
+    children: [
+      {
+        name: 'tool_gen',
+        path: '/tool/gen',
+        component: 'view.tool_gen',
+        meta: {
+          title: 'tool_gen',
+          i18nKey: 'route.tool_gen',
+          localIcon: 'menu-code',
+          order: 2
+        }
+      }
+    ]
   }
 ];

@@ -5,10 +5,11 @@ import { NTooltip } from 'naive-ui';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api';
-import { enableStatusOptions, menuIconTypeOptions, menuTypeOptions } from '@/constants/business';
+import { menuIconTypeOptions, menuTypeOptions } from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { getLocalMenuIcons } from '@/utils/icon';
 import { humpToLine, isNotNull } from '@/utils/common';
+import { useDict } from '@/hooks/business/dict';
 
 defineOptions({
   name: 'MenuOperateDrawer'
@@ -216,6 +217,7 @@ watch(visible, () => {
   if (visible.value) {
     handleInitModel();
     restoreValidation();
+    initDictData();
   }
 });
 
@@ -249,6 +251,16 @@ const FormTipComponent = defineComponent({
     );
   }
 });
+
+const enableStatusOptions = ref<Array<CommonType.Option>>([]);
+const showHideOptions = ref<Array<CommonType.Option>>([]);
+
+async function initDictData() {
+  const { getDictOptions } = useDict();
+  const { sys_show_hide, sys_normal_disable } = await getDictOptions('sys_show_hide', 'sys_normal_disable');
+  enableStatusOptions.value = sys_normal_disable;
+  showHideOptions.value = sys_show_hide;
+}
 </script>
 
 <template>
@@ -398,8 +410,7 @@ const FormTipComponent = defineComponent({
             </template>
             <NRadioGroup v-model:value="model.visible">
               <NSpace>
-                <NRadio value="0" label="显示" />
-                <NRadio value="1" label="隐藏" />
+                <NRadio v-for="item in showHideOptions" :key="item.value" :value="item.value" :label="item.label" />
               </NSpace>
             </NRadioGroup>
           </NFormItemGi>

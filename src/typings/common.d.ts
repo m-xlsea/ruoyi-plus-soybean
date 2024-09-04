@@ -16,6 +16,9 @@ declare namespace CommonType {
    */
   type Option<K = string> = { value: K; label: string };
 
+  /** The record type */
+  type Record<K extends string | number = string> = { [key in K]: string };
+
   type YesOrNo = 'Y' | 'N';
 
   /** add null to all properties */

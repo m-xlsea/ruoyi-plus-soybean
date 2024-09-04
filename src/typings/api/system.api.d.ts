@@ -14,20 +14,28 @@ declare namespace Api {
 
     /** role */
     type Role = Common.CommonRecord<{
-      roleId: CommonType.IdType;
-      roleName: string;
-      roleKey: string;
-      roleSort: number;
-      dataScope: string;
-      menuCheckStrictly: boolean;
-      deptCheckStrictly: boolean;
-      status: string;
-      delFlag: string;
-      remark?: any;
-      flag: boolean;
-      menuIds?: Array<CommonType.IdType>;
-      deptIds?: Array<CommonType.IdType>;
-      admin: boolean;
+      /** 数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限） */
+      dataScope?: string;
+      /** 部门树选择项是否关联显示 */
+      deptCheckStrictly?: boolean;
+      /** 用户是否存在此角色标识 默认不存在 */
+      flag?: boolean;
+      /** 菜单树选择项是否关联显示 */
+      menuCheckStrictly?: boolean;
+      /** 备注 */
+      remark?: string;
+      /** 角色ID */
+      roleId?: number;
+      /** 角色权限字符串 */
+      roleKey?: string;
+      /** 角色名称 */
+      roleName?: string;
+      /** 显示顺序 */
+      roleSort?: number;
+      /** 角色状态（0正常 1停用） */
+      status?: string;
+      /** 是否管理员 */
+      superAdmin?: boolean;
     }>;
 
     /** role search params */
@@ -176,11 +184,11 @@ declare namespace Api {
       /** 父菜单名称 */
       parentName?: string;
       /** 子菜单 */
-      children?: Menu[];
+      children?: MenuList;
     }>;
 
     /** menu list */
-    type MenuList = Menu[];
+    type MenuList = Array<Menu>;
 
     /** menu search params */
     type MenuSearchParams = CommonType.RecordNullable<Pick<Menu, 'menuName' | 'status' | 'menuType' | 'parentId'>>;
@@ -204,5 +212,27 @@ declare namespace Api {
       | 'icon'
       | 'remark'
     >;
+
+    /** 字典数据 */
+    export type DictData = Common.CommonRecord<{
+      /** 样式属性（其他样式扩展） */
+      cssClass?: string;
+      /** 字典编码 */
+      dictCode?: number;
+      /** 字典标签 */
+      dictLabel?: string;
+      /** 字典排序 */
+      dictSort?: number;
+      /** 字典类型 */
+      dictType?: string;
+      /** 字典键值 */
+      dictValue?: string;
+      /** 是否默认（Y是 N否） */
+      isDefault?: string;
+      /** 表格回显样式 */
+      listClass?: string;
+      /** 备注 */
+      remark?: string;
+    }>;
   }
 }
