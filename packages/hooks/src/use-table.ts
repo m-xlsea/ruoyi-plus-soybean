@@ -129,6 +129,7 @@ export default function useHookTable<A extends ApiFn, T, C>(config: TableConfig<
   /** reset search params */
   function resetSearchParams() {
     Object.assign(searchParams, jsonClone(apiParams));
+    getData();
   }
 
   if (immediate) {

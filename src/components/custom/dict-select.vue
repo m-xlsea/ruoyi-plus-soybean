@@ -1,39 +1,50 @@
 <script setup lang="tsx">
-import { ref, useAttrs, watch } from 'vue';
+import { ref, useAttrs } from 'vue';
 import { useLoading } from '@sa/hooks';
-import type { SelectProps } from 'naive-ui';
-import { useDict } from '@/hooks/business/dict';
+import type { SelectOption, SelectProps } from 'naive-ui';
+import { fetchGetDictTypeOption } from '@/service/api';
 
 defineOptions({ name: 'DictSelect' });
 
-const dictType = defineModel<string>('value', { required: true });
+interface Props {
+  [key: string]: any;
+}
+
+defineProps<Props>();
+
+const value = defineModel<string>('value', { required: true });
 
 const attrs: SelectProps = useAttrs();
-const { getDictOptions } = useDict();
-const options = ref<Array<CommonType.Option>>([]);
+const options = ref<SelectOption[]>([]);
 const { loading, startLoading, endLoading } = useLoading();
 
 async function getDeptOptions() {
-  if (!dictType.value) {
-    return;
-  }
   startLoading();
-  const dictData = await getDictOptions(dictType.value);
-  options.value = dictData[dictType.value];
+  const { error, data } = await fetchGetDictTypeOption();
+  if (error) return;
+  options.value = data.map(dict => ({
+    value: dict.dictType!,
+    label: () => (
+      <div class="w-520px flex justify-between">
+        <span>{dict.dictType}</span>
+        <span>{dict.dictName}</span>
+      </div>
+    )
+  }));
   endLoading();
 }
 
-watch(
-  () => dictType.value,
-  () => {
-    getDeptOptions();
-  },
-  { immediate: true }
-);
+getDeptOptions();
 </script>
 
 <template>
-  <NSelect :loading="loading" :options="options" :clear-filter-after-select="false" v-bind="attrs" />
+  <NSelect
+    v-model:value="value"
+    :loading="loading"
+    :options="options"
+    :clear-filter-after-select="false"
+    v-bind="attrs"
+  />
 </template>
 
 <style scoped></style>

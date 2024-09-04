@@ -228,7 +228,7 @@ export function useTableOperate<T extends TableData = TableData>(data: Ref<T[]>,
   /** the editing row data */
   const editingData: Ref<T | null> = ref(null);
 
-  function handleEdit(field: keyof T, id: string) {
+  function handleEdit(field: keyof T, id: CommonType.IdType) {
     operateType.value = 'edit';
     const findItem = data.value.find(item => item[field] === id) || null;
     editingData.value = jsonClone(findItem);
@@ -237,7 +237,7 @@ export function useTableOperate<T extends TableData = TableData>(data: Ref<T[]>,
   }
 
   /** the checked row keys of table */
-  const checkedRowKeys = ref<string[]>([]);
+  const checkedRowKeys = ref<CommonType.IdType[]>([]);
 
   /** the hook after the batch delete operation is completed */
   async function onBatchDeleted() {

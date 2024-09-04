@@ -188,7 +188,7 @@ declare namespace Api {
     }>;
 
     /** menu list */
-    type MenuList = Array<Menu>;
+    type MenuList = Menu[];
 
     /** menu search params */
     type MenuSearchParams = CommonType.RecordNullable<Pick<Menu, 'menuName' | 'status' | 'menuType' | 'parentId'>>;
@@ -213,8 +213,20 @@ declare namespace Api {
       | 'remark'
     >;
 
+    /** 字典类型 */
+    type DictType = Common.CommonRecord<{
+      /** 字典主键 */
+      dictId?: number;
+      /** 字典名称 */
+      dictName?: string;
+      /** 字典类型 */
+      dictType?: string;
+      /** 备注 */
+      remark?: string;
+    }>;
+
     /** 字典数据 */
-    export type DictData = Common.CommonRecord<{
+    type DictData = Common.CommonRecord<{
       /** 样式属性（其他样式扩展） */
       cssClass?: string;
       /** 字典编码 */

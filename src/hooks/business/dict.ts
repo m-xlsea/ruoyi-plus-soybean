@@ -4,8 +4,8 @@ import { useDictStore } from '@/store/modules/dict';
 export function useDict() {
   const dictStore = useDictStore();
 
-  async function getDictData(...args: Array<string>) {
-    const dictData: { [key: string]: Array<Api.System.DictData> } = {};
+  async function getDictData(...args: string[]) {
+    const dictData: { [key: string]: Api.System.DictData[] } = {};
     const promises = args.map(async dictType => {
       dictData[dictType] = [];
       const dicts = dictStore.getDict(dictType);
@@ -22,7 +22,7 @@ export function useDict() {
     return dictData;
   }
 
-  async function getDictRecord(...args: Array<string>) {
+  async function getDictRecord(...args: string[]) {
     const dictRecord: { [key: string]: { [key: string]: string } } = {};
     const dictData = await getDictData(...args);
     Object.keys(dictData).forEach(dictType => {
@@ -36,8 +36,8 @@ export function useDict() {
     return dictRecord;
   }
 
-  async function getDictOptions(...args: Array<string>) {
-    const dictOptions: { [key: string]: Array<CommonType.Option> } = {};
+  async function getDictOptions(...args: string[]) {
+    const dictOptions: { [key: string]: CommonType.Option[] } = {};
     const dictData = await getDictData(...args);
     Object.keys(dictData).forEach(dictType => {
       dictOptions[dictType] = dictData[dictType].map(dict => ({ label: dict.dictLabel!, value: dict.dictValue! }));
@@ -50,7 +50,7 @@ export function useDict() {
     return transformDictByOptions(code, dictData[type]);
   }
 
-  function transformDictByOptions(code: string, options: Array<Api.System.DictData>) {
+  function transformDictByOptions(code: string, options: Api.System.DictData[]) {
     return options.find(item => item.dictValue === code)?.dictLabel;
   }
 

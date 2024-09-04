@@ -252,8 +252,8 @@ const FormTipComponent = defineComponent({
   }
 });
 
-const enableStatusOptions = ref<Array<CommonType.Option>>([]);
-const showHideOptions = ref<Array<CommonType.Option>>([]);
+const enableStatusOptions = ref<CommonType.Option[]>([]);
+const showHideOptions = ref<CommonType.Option[]>([]);
 
 async function initDictData() {
   const { getDictOptions } = useDict();

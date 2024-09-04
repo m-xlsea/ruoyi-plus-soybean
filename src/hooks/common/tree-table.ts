@@ -137,7 +137,7 @@ export function useTreeTableOperate<T extends TableData = TableData>(_: Ref<T[]>
   }
 
   /** the checked row keys of table */
-  const checkedRowKeys = ref<string[]>([]);
+  const checkedRowKeys = ref<CommonType.IdType[]>([]);
 
   function clearCheckedRowKeys() {
     checkedRowKeys.value = [];

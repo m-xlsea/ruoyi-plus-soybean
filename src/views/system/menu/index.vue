@@ -35,16 +35,15 @@ const btnData = ref<Api.System.MenuList>([]);
 const getMeunTree = async () => {
   startLoading();
   const { data, error } = await fetchGetMenuList();
-  if (!error) {
-    treeData.value = [
-      {
-        menuId: 0,
-        menuName: '根目录',
-        icon: 'material-symbols:home-outline-rounded',
-        children: handleMenuTree(data, 'menuId')
-      }
-    ] as Api.System.Menu[];
-  }
+  if (error) return;
+  treeData.value = [
+    {
+      menuId: 0,
+      menuName: '根目录',
+      icon: 'material-symbols:home-outline-rounded',
+      children: handleMenuTree(data, 'menuId')
+    }
+  ] as Api.System.Menu[];
   endLoading();
 };
 

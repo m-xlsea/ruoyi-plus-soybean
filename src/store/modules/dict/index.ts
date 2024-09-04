@@ -2,13 +2,13 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 export const useDictStore = defineStore('dict', () => {
-  const dictData = ref<{ [key: string]: Array<Api.System.DictData> }>({});
+  const dictData = ref<{ [key: string]: Api.System.DictData[] }>({});
 
   const getDict = (key: string) => {
     return dictData.value[key];
   };
 
-  const setDict = (key: string, dict: Array<Api.System.DictData>) => {
+  const setDict = (key: string, dict: Api.System.DictData[]) => {
     dictData.value[key] = dict;
   };
 
