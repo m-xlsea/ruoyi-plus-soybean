@@ -10,7 +10,7 @@ import { menuTypeRecord } from '@/constants/business';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import { $t } from '@/locales';
 import { handleMenuTree } from '@/utils/ruoyi';
-import StatusTag from '@/components/common/status-tag.vue';
+import StatusTag from '@/components/custom/status-tag.vue';
 import { useDict } from '@/hooks/business/dict';
 import MenuOperateDrawer from './modules/menu-operate-drawer.vue';
 
