@@ -13,7 +13,12 @@ declare global {
     /** Notification instance */
     $notification?: import('naive-ui').NotificationProviderInst;
     /** Content loading */
-    $loading?: import('@sa/hooks').LoadingApiInst;
+    $loading?: {
+      loading: import('vue').Ref<boolean>;
+      description: import('vue').Ref<string>;
+      startLoading: (description?: string) => void;
+      endLoading: () => void;
+    };
   }
 
   interface ViewTransition {

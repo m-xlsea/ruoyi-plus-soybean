@@ -9,4 +9,3 @@ export { useBoolean, useLoading, useCountDown, useContext, useSvgIconRender, use
 
 export * from './use-signal';
 export * from './use-table';
-export type { LoadingApiInst } from './use-loading';

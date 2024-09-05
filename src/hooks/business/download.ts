@@ -25,7 +25,7 @@ export function useDownload() {
   }
 
   function download(url: string, params: any, fileName: string) {
-    window.$loading?.startLoading();
+    window.$loading?.startLoading('正在下载数据，请稍候...');
     const token = localStg.get('token');
     const clientId = import.meta.env.VITE_APP_CLIENT_ID;
     const now = new Date().getTime();
@@ -54,7 +54,7 @@ export function useDownload() {
   }
 
   function oss(ossId: CommonType.IdType) {
-    window.$loading?.startLoading();
+    window.$loading?.startLoading('正在下载数据，请稍候...');
     const token = localStg.get('token');
     const clientId = import.meta.env.VITE_APP_CLIENT_ID;
     const url = `/resource/oss/download/${ossId}`;
@@ -77,7 +77,7 @@ export function useDownload() {
   }
 
   function zip(url: string, fileName: string) {
-    window.$loading?.startLoading();
+    window.$loading?.startLoading('正在下载数据，请稍候...');
     const token = localStg.get('token');
     const clientId = import.meta.env.VITE_APP_CLIENT_ID;
     const now = new Date().getTime();
