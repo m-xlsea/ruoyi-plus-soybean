@@ -65,3 +65,37 @@ export function fetchGetGenDbList(params?: Api.Tool.GenTableDbSearchParams) {
     params
   });
 }
+
+/** 同步数据库 */
+export function fetchSynchGenDbList(tableId: CommonType.IdType) {
+  return request<Api.Tool.GenTableDbList>({
+    url: `/tool/gen/synchDb/${tableId}`,
+    method: 'get'
+  });
+}
+
+/** 预览代码 */
+export function fetchGetGenPreview(tableId: CommonType.IdType) {
+  return request<Api.Tool.GenTableDbList>({
+    url: `/tool/gen/preview/${tableId}`,
+    method: 'get'
+  });
+}
+
+/** 生成代码（自定义路径） */
+export function fetchGenCode(tableId: CommonType.IdType) {
+  return request<Api.Tool.GenTableDbList>({
+    url: `/tool/gen/genCode/${tableId}`,
+    method: 'get'
+  });
+}
+
+/** 批量生成代码 */
+export function fetchBatchGenCode(tableIds: CommonType.IdType[]) {
+  const tableIdStr = tableIds.join(',');
+  return request<Api.Tool.GenTableDbList>({
+    url: '/tool/gen/genCode/',
+    method: 'get',
+    params: { tableIdStr }
+  });
+}

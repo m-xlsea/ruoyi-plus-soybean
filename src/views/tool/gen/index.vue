@@ -2,17 +2,25 @@
 import { NButton, NPopconfirm, NTooltip } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import { ref } from 'vue';
-import { fetchBatchDeleteGenTable, fetchGetGenDataNames, fetchGetGenTableList } from '@/service/api';
+import {
+  fetchBatchDeleteGenTable,
+  fetchGenCode,
+  fetchGetGenDataNames,
+  fetchGetGenTableList,
+  fetchSynchGenDbList
+} from '@/service/api';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
+import { useDownload } from '@/hooks/business/download';
 import GenTableSearch from './modules/gen-table-search.vue';
 import TableImportDrawer from './modules/table-import-drawer.vue';
 import GenTableOperateDrawer from './modules/gen-table-operate-drawer.vue';
 
 const appStore = useAppStore();
+const { zip } = useDownload();
 const { bool: importVisible, setTrue: openImportVisible } = useBoolean();
 
 const {
@@ -101,13 +109,19 @@ const {
             tooltipContent={$t('common.edit')}
             onClick={() => edit(row.tableId!)}
           />
-          <ButtonIcon type="primary" text icon="ep:refresh" tooltipContent="同步" onClick={() => edit(row.tableId!)} />
+          <ButtonIcon
+            type="primary"
+            text
+            icon="ep:refresh"
+            tooltipContent="同步"
+            onClick={() => refresh(row.tableId!)}
+          />
           <ButtonIcon
             type="primary"
             text
             icon="ep:download"
             tooltipContent="生成代码"
-            onClick={() => edit(row.tableId!)}
+            onClick={() => handleGenCode(row)}
           />
           <NTooltip placement="bottom">
             {{
@@ -152,8 +166,6 @@ async function handleBatchDelete() {
   // request
   const { error } = await fetchBatchDeleteGenTable(checkedRowKeys.value);
   if (error) return;
-  window.$message?.success('删除成功');
-
   onBatchDeleted();
 }
 
@@ -161,8 +173,6 @@ async function handleDelete(id: CommonType.IdType) {
   // request
   const { error } = await fetchBatchDeleteGenTable([id]);
   if (error) return;
-  window.$message?.success('删除成功');
-
   onDeleted();
 }
 
@@ -170,11 +180,32 @@ function edit(id: CommonType.IdType) {
   handleEdit('tableId', id);
 }
 
+async function refresh(id: CommonType.IdType) {
+  // request
+  const { error } = await fetchSynchGenDbList(id);
+  if (error) return;
+  window.$message?.success('同步成功');
+}
+
 function handleImport() {
   openImportVisible();
 }
 
-function handleGenCode() {}
+async function handleGenCode(row?: Api.Tool.GenTable) {
+  const tableIds = row?.tableId || checkedRowKeys.value.join(',');
+  if (!tableIds || tableIds === '') {
+    window.$message?.error('请选择要生成的数据');
+    return;
+  }
+  // request
+  if (row?.genType === '1') {
+    const { error } = await fetchGenCode(row.tableId!);
+    if (error) return;
+    window.$message?.success('生成成功');
+  } else {
+    await zip(`/tool/gen/batchGenCode?tableIdStr=${tableIds}`, `ruoyi-${new Date().getTime()}.zip`);
+  }
+}
 
 const dataNameOptions = ref<CommonType.Option[]>([]);
 
@@ -207,7 +238,13 @@ getDataNames();
           @refresh="getData"
         >
           <template #prefix>
-            <NButton :disabled="checkedRowKeys.length === 0" size="small" ghost type="primary" @click="handleGenCode">
+            <NButton
+              :disabled="checkedRowKeys.length === 0"
+              size="small"
+              ghost
+              type="primary"
+              @click="() => handleGenCode()"
+            >
               <template #icon>
                 <icon-ic-round-download class="text-icon" />
               </template>

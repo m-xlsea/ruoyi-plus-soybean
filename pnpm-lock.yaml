@@ -202,6 +202,9 @@ importers:
 
   packages/materials:
     dependencies:
+      '@sa/hooks':
+        specifier: workspace:*
+        version: link:../hooks
       '@sa/utils':
         specifier: workspace:*
         version: link:../utils

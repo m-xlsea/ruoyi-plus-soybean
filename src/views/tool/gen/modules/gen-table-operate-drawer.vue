@@ -129,6 +129,7 @@ async function handleSubmit() {
 
 watch(visible, () => {
   if (visible.value) {
+    genTableInfo.value = undefined;
     tab.value = 'dragTable';
     getDeptOptions();
     getGenTableInfo();

@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { createTextVNode, defineComponent } from 'vue';
 import { useDialog, useLoadingBar, useMessage, useNotification } from 'naive-ui';
+import { useLoading } from '@sa/hooks';
 
 defineOptions({
   name: 'AppProvider'
 });
+
+const loading = useLoading(false);
 
 const ContextHolder = defineComponent({
   name: 'ContextHolder',
@@ -14,6 +17,7 @@ const ContextHolder = defineComponent({
       window.$dialog = useDialog();
       window.$message = useMessage();
       window.$notification = useNotification();
+      window.$loading = loading;
     }
 
     register();
@@ -24,16 +28,18 @@ const ContextHolder = defineComponent({
 </script>
 
 <template>
-  <NLoadingBarProvider>
-    <NDialogProvider>
-      <NNotificationProvider>
-        <NMessageProvider>
-          <ContextHolder />
-          <slot></slot>
-        </NMessageProvider>
-      </NNotificationProvider>
-    </NDialogProvider>
-  </NLoadingBarProvider>
+  <NSpin class="h-full" content-class="h-full" :show="loading.loading.value">
+    <NLoadingBarProvider>
+      <NDialogProvider>
+        <NNotificationProvider>
+          <NMessageProvider>
+            <ContextHolder />
+            <slot></slot>
+          </NMessageProvider>
+        </NNotificationProvider>
+      </NDialogProvider>
+    </NLoadingBarProvider>
+  </NSpin>
 </template>
 
 <style scoped></style>

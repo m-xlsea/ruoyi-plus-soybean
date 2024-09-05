@@ -12,6 +12,8 @@ declare global {
     $message?: import('naive-ui').MessageProviderInst;
     /** Notification instance */
     $notification?: import('naive-ui').NotificationProviderInst;
+    /** Content loading */
+    $loading?: import('@sa/hooks').LoadingApiInst;
   }
 
   interface ViewTransition {
