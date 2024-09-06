@@ -259,17 +259,8 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
   }
 ];
 
-const enableStatusRecord = ref<CommonType.Record>({});
-const showHideRecord = ref<CommonType.Record>({});
-
-async function initDictData() {
-  const { getDictRecord } = useDict();
-  const { sys_show_hide, sys_normal_disable } = await getDictRecord('sys_show_hide', 'sys_normal_disable');
-  enableStatusRecord.value = sys_normal_disable;
-  showHideRecord.value = sys_show_hide;
-}
-
-initDictData();
+const { getDictRecord } = useDict();
+const showHideRecord = getDictRecord('sys_show_hide');
 </script>
 
 <template>

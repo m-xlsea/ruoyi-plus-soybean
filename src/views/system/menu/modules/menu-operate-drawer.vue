@@ -40,6 +40,10 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
+const { getDictOptions } = useDict();
+const showHideOptions = getDictOptions('sys_show_hide');
+const enableStatusOptions = getDictOptions('sys_normal_disable');
+
 const iconType = ref<Api.System.IconType>('1');
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { defaultRequiredRule } = useFormRules();
@@ -217,7 +221,6 @@ watch(visible, () => {
   if (visible.value) {
     handleInitModel();
     restoreValidation();
-    initDictData();
   }
 });
 
@@ -251,16 +254,6 @@ const FormTipComponent = defineComponent({
     );
   }
 });
-
-const enableStatusOptions = ref<CommonType.Option[]>([]);
-const showHideOptions = ref<CommonType.Option[]>([]);
-
-async function initDictData() {
-  const { getDictOptions } = useDict();
-  const { sys_show_hide, sys_normal_disable } = await getDictOptions('sys_show_hide', 'sys_normal_disable');
-  enableStatusOptions.value = sys_normal_disable;
-  showHideOptions.value = sys_show_hide;
-}
 </script>
 
 <template>

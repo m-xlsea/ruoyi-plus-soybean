@@ -1,64 +1,42 @@
+import { ref } from 'vue';
 import { fetchGetDictDataByType } from '@/service/api';
 import { useDictStore } from '@/store/modules/dict';
 
 export function useDict() {
   const dictStore = useDictStore();
 
-  async function getDictData(...args: string[]) {
-    const dictData: { [key: string]: Api.System.DictData[] } = {};
-    const promises = args.map(async dictType => {
-      dictData[dictType] = [];
-      const dicts = dictStore.getDict(dictType);
-      if (dicts) {
-        dictData[dictType] = dicts;
-        return;
-      }
-      const { data, error } = await fetchGetDictDataByType(dictType);
-      if (error) return;
-      dictData[dictType] = data;
-      dictStore.setDict(dictType, data);
-    });
-    await Promise.all(promises);
-    return dictData;
+  async function getDictData(dictType: string) {
+    const dicts = dictStore.getDict(dictType);
+    if (dicts) {
+      return dicts;
+    }
+    const { data, error } = await fetchGetDictDataByType(dictType);
+    if (error) return [];
+    dictStore.setDict(dictType, data);
+    return data;
   }
 
-  async function getDictRecord(...args: string[]) {
-    const dictRecord: { [key: string]: { [key: string]: string } } = {};
-    const dictData = await getDictData(...args);
-    Object.keys(dictData).forEach(dictType => {
-      const data: { [key: string]: string } = {};
-      Object.keys(dictData);
-      dictData[dictType].forEach(dict => {
-        data[dict.dictValue!] = dict.dictLabel!;
+  function getDictRecord(dictType: string) {
+    const dictRecord = ref<{ [key: string]: string }>({});
+    getDictData(dictType).then(dictData => {
+      dictData.forEach(dict => {
+        dictRecord.value[dict.dictValue!] = dict.dictLabel!;
       });
-      dictRecord[dictType] = data;
     });
     return dictRecord;
   }
 
-  async function getDictOptions(...args: string[]) {
-    const dictOptions: { [key: string]: CommonType.Option[] } = {};
-    const dictData = await getDictData(...args);
-    Object.keys(dictData).forEach(dictType => {
-      dictOptions[dictType] = dictData[dictType].map(dict => ({ label: dict.dictLabel!, value: dict.dictValue! }));
+  function getDictOptions(dictType: string) {
+    const dictOptions = ref<CommonType.Option[]>([]);
+    getDictData(dictType).then(dictData => {
+      dictOptions.value = dictData.map(dict => ({ label: dict.dictLabel!, value: dict.dictValue! }));
     });
     return dictOptions;
-  }
-
-  async function transformDictByCode(type: string, code: string) {
-    const dictData = await getDictData(type);
-    return transformDictByOptions(code, dictData[type]);
-  }
-
-  function transformDictByOptions(code: string, options: Api.System.DictData[]) {
-    return options.find(item => item.dictValue === code)?.dictLabel;
   }
 
   return {
     getDictData,
     getDictRecord,
-    getDictOptions,
-    transformDictByCode,
-    transformDictByOptions
+    getDictOptions
   };
 }
