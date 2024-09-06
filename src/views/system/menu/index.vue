@@ -259,8 +259,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
   }
 ];
 
-const { getDictRecord } = useDict();
-const showHideRecord = getDictRecord('sys_show_hide');
+const { record: showHideRecord } = useDict('sys_show_hide');
 </script>
 
 <template>

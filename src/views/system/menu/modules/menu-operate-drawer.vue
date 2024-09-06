@@ -40,9 +40,8 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const { getDictOptions } = useDict();
-const showHideOptions = getDictOptions('sys_show_hide');
-const enableStatusOptions = getDictOptions('sys_normal_disable');
+const { options: showHideOptions, getOptions: getShowHideOptions } = useDict('sys_show_hide', false);
+const { options: enableStatusOptions, getOptions: getNormalDisableOptions } = useDict('sys_normal_disable', false);
 
 const iconType = ref<Api.System.IconType>('1');
 const { formRef, validate, restoreValidation } = useNaiveForm();
@@ -221,6 +220,9 @@ watch(visible, () => {
   if (visible.value) {
     handleInitModel();
     restoreValidation();
+    getShowHideOptions();
+    getShowHideOptions();
+    getNormalDisableOptions();
   }
 });
 
