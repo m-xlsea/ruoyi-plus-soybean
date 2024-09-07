@@ -6,11 +6,11 @@
  */
 namespace ${ModuleName} {
     /** ${businessName} */
-    type ${ClassName} = Common.CommonRecord<{
-        #foreach($column in $columns)
-            /** $column.columnComment */
-            $column.javaField:#if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) CommonType.IdType; #elseif($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number; #elseif($column.javaType == 'Boolean') boolean; #else string; #end
-        #end
+    type ${BusinessName} = Common.CommonRecord<{
+        #foreach($column in $columns)#if($column.insert || $column.edit)
+        /** $column.columnComment */
+        $column.javaField:#if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) CommonType.IdType; #elseif($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number; #elseif($column.javaType == 'Boolean') boolean; #else string; #end
+        #end#end
     }>;
 
     /** ${businessName} search params */
@@ -27,11 +27,11 @@ namespace ${ModuleName} {
                 #else
                 #set($comment=$column.columnComment)
                 #end
-        #if($foreach.hasNext) | #end ' ${column.javaField}'
+#if($foreach.hasNext)        |#end '${column.javaField}'
             #end
         #end
       > &
-        CommonSearchParams
+        Common.CommonSearchParams
     >;
 
     /** ${businessName} list */

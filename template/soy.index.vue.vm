@@ -106,7 +106,7 @@ async function handleDelete(id: number) {
 }
 
 async function edit(id: number) {
-  handleEdit('#foreach ($column in $columns) #if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) $column.javaField #end #end', id);
+  handleEdit('#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end', id);
 }
 </script>
 

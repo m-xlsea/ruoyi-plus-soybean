@@ -18,6 +18,7 @@ const local: App.I18n.Schema = {
     expandColumn: '展开列',
     columnSetting: '列设置',
     config: '配置',
+    login: '登录',
     confirm: '确认',
     save: '保存',
     delete: '删除',
@@ -179,7 +180,7 @@ const local: App.I18n.Schema = {
       },
       pwdLogin: {
         title: '密码登录',
-        rememberMe: '记住我',
+        rememberMe: '记住密码',
         forgetPassword: '忘记密码？',
         register: '注册账号',
         otherAccountLogin: '其他账号登录',

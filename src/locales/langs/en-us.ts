@@ -18,6 +18,7 @@ const local: App.I18n.Schema = {
     expandColumn: 'Expand Column',
     columnSetting: 'Column Setting',
     config: 'Config',
+    login: 'Login',
     confirm: 'Confirm',
     save: 'Save',
     delete: 'Delete',
@@ -179,7 +180,7 @@ const local: App.I18n.Schema = {
       },
       pwdLogin: {
         title: 'Password Login',
-        rememberMe: 'Remember me',
+        rememberMe: 'Remember password',
         forgetPassword: 'Forget password?',
         register: 'Register',
         otherAccountLogin: 'Other Account Login',

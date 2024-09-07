@@ -175,6 +175,9 @@ declare namespace Api {
       Pick<GenTable, 'dataName' | 'tableName' | 'tableComment'> & Common.CommonSearchParams
     >;
 
+    /** gen table preview */
+    type GenTablePreview = Record<string, string>;
+
     /** gen table db list */
     type GenTableDbList = Common.PaginatingQueryRecord<
       Common.CommonRecord<Pick<GenTable, 'tableName' | 'tableComment'>>

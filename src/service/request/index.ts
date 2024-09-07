@@ -1,7 +1,6 @@
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { BACKEND_ERROR_CODE, createFlatRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
-import { $t } from '@/locales';
 import { localStg, sessionStg } from '@/utils/storage';
 import { getServiceBaseURL } from '@/utils/service';
 import { decryptBase64, decryptWithAes, encryptBase64, encryptWithAes, generateAesKey } from '@/utils/crypto';
@@ -58,7 +57,7 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       const responseCode = String(response.data.code);
 
       function handleLogout() {
-        authStore.logout();
+        authStore.resetStore();
       }
 
       function logoutAndCleanup() {
@@ -69,30 +68,28 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       }
 
       // when the backend response code is in `logoutCodes`, it means the user will be logged out and redirected to login page
-      const logoutCodes = import.meta.env.VITE_SERVICE_LOGOUT_CODES?.split(',') || [];
-      if (logoutCodes.includes(responseCode)) {
-        handleLogout();
-        return null;
-      }
+      // const logoutCodes = import.meta.env.VITE_SERVICE_LOGOUT_CODES?.split(',') || [];
+      // if (logoutCodes.includes(responseCode)) {
+      //   handleLogout();
+      //   return null;
+      // }
 
       // when the backend response code is in `modalLogoutCodes`, it means the user will be logged out by displaying a modal
       const modalLogoutCodes = import.meta.env.VITE_SERVICE_MODAL_LOGOUT_CODES?.split(',') || [];
-      if (modalLogoutCodes.includes(responseCode) && !request.state.errMsgStack?.includes(response.data.msg)) {
+      if (modalLogoutCodes.includes(responseCode)) {
         request.state.errMsgStack = [...(request.state.errMsgStack || []), response.data.msg];
 
         // prevent the user from refreshing the page
         window.addEventListener('beforeunload', handleLogout);
 
-        window.$dialog?.error({
-          title: $t('common.error'),
-          content: response.data.msg,
-          positiveText: $t('common.confirm'),
+        window.$dialog?.warning({
+          title: '系统提示',
+          content: '登录状态已过期，您可以继续留在该页面，或者重新登录',
+          positiveText: '重新登录',
+          negativeText: '取消',
           maskClosable: false,
           closeOnEsc: false,
           onPositiveClick() {
-            logoutAndCleanup();
-          },
-          onClose() {
             logoutAndCleanup();
           }
         });

@@ -2,6 +2,7 @@
 import { NButton, NPopconfirm, NTooltip } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import { ref } from 'vue';
+import { jsonClone } from '@sa/utils';
 import {
   fetchBatchDeleteGenTable,
   fetchGenCode,
@@ -16,12 +17,14 @@ import ButtonIcon from '@/components/custom/button-icon.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { useDownload } from '@/hooks/business/download';
 import GenTableSearch from './modules/gen-table-search.vue';
-import TableImportDrawer from './modules/table-import-drawer.vue';
+import GenTableImportDrawer from './modules/gen-table-import-drawer.vue';
 import GenTableOperateDrawer from './modules/gen-table-operate-drawer.vue';
+import GenTablePreviewDrawer from './modules/gen-table-preview-drawer.vue';
 
 const appStore = useAppStore();
 const { zip } = useDownload();
 const { bool: importVisible, setTrue: openImportVisible } = useBoolean();
+const { bool: previewVisible, setTrue: openPreviewVisible } = useBoolean();
 
 const {
   columns,
@@ -101,7 +104,13 @@ const {
       width: 180,
       render: row => (
         <div class="flex-center gap-16px">
-          <ButtonIcon type="primary" text icon="ep:view" tooltipContent="预览" onClick={() => edit(row.tableId!)} />
+          <ButtonIcon
+            type="primary"
+            text
+            icon="ep:view"
+            tooltipContent="预览"
+            onClick={() => handlePreview(row.tableId!)}
+          />
           <ButtonIcon
             type="primary"
             text
@@ -191,6 +200,12 @@ function handleImport() {
   openImportVisible();
 }
 
+function handlePreview(id: CommonType.IdType) {
+  const findItem = data.value.find(item => item.tableId === id) || null;
+  editingData.value = jsonClone(findItem);
+  openPreviewVisible();
+}
+
 async function handleGenCode(row?: Api.Tool.GenTable) {
   const tableIds = row?.tableId || checkedRowKeys.value.join(',');
   if (!tableIds || tableIds === '') {
@@ -203,7 +218,7 @@ async function handleGenCode(row?: Api.Tool.GenTable) {
     if (error) return;
     window.$message?.success('生成成功');
   } else {
-    await zip(`/tool/gen/batchGenCode?tableIdStr=${tableIds}`, `ruoyi-${new Date().getTime()}.zip`);
+    zip(`/tool/gen/batchGenCode?tableIdStr=${tableIds}`, `ruoyi-${new Date().getTime()}.zip`);
   }
 }
 
@@ -219,7 +234,7 @@ getDataNames();
 </script>
 
 <template>
-  <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
+  <div class="min-h-500px flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
     <GenTableSearch
       v-model:model="searchParams"
       :options="dataNameOptions"
@@ -265,15 +280,20 @@ getDataNames();
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="1200"
         :loading="loading"
         remote
         :row-key="row => row.tableId"
         :pagination="mobilePagination"
         class="sm:h-full"
       />
-      <TableImportDrawer v-model:visible="importVisible" :options="dataNameOptions" @submitted="getDataByPage" />
+      <GenTableImportDrawer v-model:visible="importVisible" :options="dataNameOptions" @submitted="getDataByPage" />
       <GenTableOperateDrawer v-model:visible="drawerVisible" :row-data="editingData" @submitted="getDataByPage" />
+      <GenTablePreviewDrawer
+        v-model:visible="previewVisible"
+        :row-data="editingData"
+        @submitted="() => handleGenCode(editingData!)"
+      />
     </NCard>
   </div>
 </template>

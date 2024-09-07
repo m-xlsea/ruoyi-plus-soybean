@@ -373,8 +373,13 @@ const { record: showHideRecord } = useDict('sys_show_hide');
             <NDescriptionsItem v-if="currentMenu.menuType === 'C'" label="组件路径">
               {{ currentMenu.component }}
             </NDescriptionsItem>
-            <NDescriptionsItem label="路由地址">{{ currentMenu.path }}</NDescriptionsItem>
-            <NDescriptionsItem v-if="currentMenu.menuType === 'C'" label="路由参数">
+            <NDescriptionsItem :label="currentMenu.isFrame !== '0' ? '路由地址' : '外链地址'">
+              {{ currentMenu.path }}
+            </NDescriptionsItem>
+            <NDescriptionsItem
+              v-if="currentMenu.menuType === 'C'"
+              :label="currentMenu.isFrame !== '2' ? '路由参数' : 'iframe 地址'"
+            >
               {{ currentMenu.queryParam }}
             </NDescriptionsItem>
             <NDescriptionsItem v-if="currentMenu.menuType !== 'M'" label="权限标识">

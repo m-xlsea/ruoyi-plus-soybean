@@ -7,7 +7,7 @@ import { useTable, useTableOperate } from '@/hooks/common/table';
 import GenTableDbSearch from './gen-table-db-search.vue';
 
 defineOptions({
-  name: 'TableImportDrawer'
+  name: 'GenTableImportDrawer'
 });
 
 interface Props {

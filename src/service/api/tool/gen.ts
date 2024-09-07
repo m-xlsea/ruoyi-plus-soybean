@@ -76,7 +76,7 @@ export function fetchSynchGenDbList(tableId: CommonType.IdType) {
 
 /** 预览代码 */
 export function fetchGetGenPreview(tableId: CommonType.IdType) {
-  return request<Api.Tool.GenTableDbList>({
+  return request<Api.Tool.GenTablePreview>({
     url: `/tool/gen/preview/${tableId}`,
     method: 'get'
   });

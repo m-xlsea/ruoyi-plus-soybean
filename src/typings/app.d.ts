@@ -299,6 +299,7 @@ declare namespace App {
         expandColumn: string;
         columnSetting: string;
         config: string;
+        login: string;
         confirm: string;
         save: string;
         delete: string;

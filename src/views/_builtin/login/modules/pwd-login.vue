@@ -8,6 +8,7 @@ import { useRouterPush } from '@/hooks/common/router';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { useAuthStore } from '@/store/modules/auth';
 import { fetchCaptchaCode, fetchTenantList } from '@/service/api';
+import { localStg } from '@/utils/storage';
 
 defineOptions({
   name: 'PwdLogin'
@@ -26,8 +27,8 @@ const tenantOption = ref<SelectOption[]>([]);
 
 const model: Api.Auth.PwdLoginForm = reactive({
   tenantId: '000000',
-  username: 'admin',
-  password: 'admin123'
+  username: '',
+  password: ''
 });
 
 type RuleKey = Extract<keyof Api.Auth.PwdLoginForm, 'username' | 'password' | 'code' | 'tenantId'>;
@@ -48,6 +49,14 @@ const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
 
 async function handleSubmit() {
   await validate();
+  // 勾选了需要记住密码设置在 localStorage 中设置记住用户名和密码
+  if (remberMe.value) {
+    const { tenantId, username, password } = model;
+    localStg.set('loginRember', { tenantId, username, password });
+  } else {
+    // 否则移除
+    localStg.remove('loginRember');
+  }
   try {
     await authStore.login(model);
   } catch (error) {
@@ -57,15 +66,14 @@ async function handleSubmit() {
 
 async function handleFetchTenantList() {
   const { data, error } = await fetchTenantList();
-  if (!error) {
-    tenantEnabled.value = data.tenantEnabled;
-    tenantOption.value = data.voList.map(tenant => {
-      return {
-        label: tenant.companyName,
-        value: tenant.tenantId
-      };
-    });
-  }
+  if (error) return;
+  tenantEnabled.value = data.tenantEnabled;
+  tenantOption.value = data.voList.map(tenant => {
+    return {
+      label: tenant.companyName,
+      value: tenant.tenantId
+    };
+  });
 }
 
 handleFetchTenantList();
@@ -84,6 +92,15 @@ async function handleFetchCaptchaCode() {
 }
 
 handleFetchCaptchaCode();
+
+function handleLoginRember() {
+  const loginRember = localStg.get('loginRember');
+  if (!loginRember) return;
+  remberMe.value = true;
+  Object.assign(model, loginRember);
+}
+
+handleLoginRember();
 </script>
 
 <template>
@@ -120,8 +137,8 @@ handleFetchCaptchaCode();
           {{ $t('page.login.pwdLogin.forgetPassword') }}
         </NButton>
       </div>
-      <NButton type="primary" size="large" round block :loading="authStore.loginLoading" @click="handleSubmit">
-        {{ $t('common.confirm') }}
+      <NButton type="primary" size="large" block :loading="authStore.loginLoading" @click="handleSubmit">
+        {{ $t('common.login') }}
       </NButton>
       <div class="flex-y-center justify-between gap-12px">
         <NButton class="flex-1" block @click="toggleLoginModule('code-login')">

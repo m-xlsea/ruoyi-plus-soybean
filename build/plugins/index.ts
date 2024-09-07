@@ -7,6 +7,7 @@ import { setupElegantRouter } from './router';
 import { setupUnocss } from './unocss';
 import { setupUnplugin } from './unplugin';
 import { setupHtmlPlugin } from './html';
+import { setupMonacoEditorPlugin } from './monaco-editor';
 
 export function setupVitePlugins(viteEnv: Env.ImportMeta, buildTime: string) {
   const plugins: PluginOption = [
@@ -21,7 +22,8 @@ export function setupVitePlugins(viteEnv: Env.ImportMeta, buildTime: string) {
     setupUnocss(viteEnv),
     ...setupUnplugin(viteEnv),
     progress(),
-    setupHtmlPlugin(buildTime)
+    setupHtmlPlugin(buildTime),
+    setupMonacoEditorPlugin()
   ];
 
   return plugins;

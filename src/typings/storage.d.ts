@@ -40,5 +40,7 @@ declare namespace StorageType {
       layout: UnionKey.ThemeLayoutMode;
       siderCollapse: boolean;
     };
+    /** The login form rember */
+    loginRember: Api.Auth.PwdLoginForm;
   }
 }
