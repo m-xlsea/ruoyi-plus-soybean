@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useLoading } from '@sa/hooks';
 import { ref, watch } from 'vue';
-import { fetchGetGenPreview } from '@/service/api';
+import { fetchGetGenPreview } from '@/service/api/tool';
 import MonacoEditor from '@/components/common/monaco-editor.vue';
 
 defineOptions({
@@ -68,7 +68,7 @@ const genMap: Api.Tool.GenTablePreview = {
   'vm/java/controller.java.vm': 'controller.java',
   'vm/xml/mapper.xml.vm': 'mapper.xml',
   'vm/sql/sql.vm': 'sql',
-  'vm/soybean/soy.api.ts.vm': 'api.ts',
+  'vm/soybean/api/soy.api.ts.vm': 'api.ts',
   'vm/soybean/typings/soy.api.d.ts.vm': 'type.d.ts',
   'vm/soybean/soy.index.vue.vm': 'index.vue'
 };

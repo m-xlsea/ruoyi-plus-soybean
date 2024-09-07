@@ -4,7 +4,8 @@ import type { FormInst, SelectOption } from 'naive-ui';
 import { NCheckbox, NInput, NSelect, NTabs } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { jsonClone } from '@sa/utils';
-import { fetchGetDictTypeOption, fetchGetGenTableInfo, fetchUpdateGenTable } from '@/service/api';
+import { fetchGetDictTypeOption } from '@/service/api/system';
+import { fetchGetGenTableInfo, fetchUpdateGenTable } from '@/service/api/tool';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import {
@@ -155,8 +156,8 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
   {
     key: 'sort',
     title: $t('common.index'),
-    align: 'left',
-    width: 64
+    align: 'center',
+    width: 80
   },
   {
     key: 'columnName',
@@ -314,7 +315,7 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
                 :data="genTableInfo?.rows"
                 size="small"
                 :flex-height="!appStore.isMobile"
-                :scroll-x="750"
+                :scroll-x="1800"
                 remote
                 class="flex-1"
               />

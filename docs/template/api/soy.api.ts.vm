@@ -1,0 +1,36 @@
+import { request } from '@/service/request';
+
+/** 获取${functionName}列表 */
+export function fetchGet${BusinessName}List(params?: Api.System.${BusinessName}SearchParams) {
+    return request<Api.${ModuleName}.${BusinessName}List>({
+        url: '/${moduleName}/${businessName}/list',
+        method: 'get',
+        params
+    });
+}
+
+/** 新增${functionName} */
+export function fetchCreate${BusinessName}(data: Api.${ModuleName}.${BusinessName}OperateParams) {
+    return request<boolean>({
+        url: '/${moduleName}/${businessName}',
+        method: 'post',
+        data
+    });
+}
+
+/** 修改${functionName} */
+export function fetchUpdate${BusinessName}(data: Api.${ModuleName}.${BusinessName}OperateParams) {
+    return request<boolean>({
+        url: '/${moduleName}/${businessName}',
+        method: 'put',
+        data
+    });
+}
+
+/** 批量删除${functionName} */
+export function fetchDelete${BusinessName}(${pkColumn.javaField}s: CommonType.IdType[]) {
+    return request<boolean>({
+        url: `/${moduleName}/${businessName}/${${pkColumn.javaField}s.join(',')}`,
+        method: 'delete'
+    });
+}

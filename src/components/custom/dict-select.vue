@@ -2,7 +2,7 @@
 import { ref, useAttrs } from 'vue';
 import { useLoading } from '@sa/hooks';
 import type { SelectOption, SelectProps } from 'naive-ui';
-import { fetchGetDictTypeOption } from '@/service/api';
+import { fetchGetDictTypeOption } from '@/service/api/system';
 
 defineOptions({ name: 'DictSelect' });
 

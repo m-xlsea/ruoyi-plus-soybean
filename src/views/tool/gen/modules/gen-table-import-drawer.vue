@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { watch } from 'vue';
-import { fetchGetGenDbList, fetchImportGenTable } from '@/service/api';
+import { fetchGetGenDbList, fetchImportGenTable } from '@/service/api/tool';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';

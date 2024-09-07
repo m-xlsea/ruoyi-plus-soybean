@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useBoolean, useLoading } from '@sa/hooks';
 import type { DataTableColumns, TreeInst, TreeOption } from 'naive-ui';
 import { NButton, NIcon, NInput, NPopconfirm, NTooltip } from 'naive-ui';
-import { fetchDeleteMenu, fetchGetMenuList } from '@/service/api';
+import { fetchDeleteMenu, fetchGetMenuList } from '@/service/api/system';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { useAppStore } from '@/store/modules/app';
 import { menuIsFrameRecord, menuTypeRecord } from '@/constants/business';

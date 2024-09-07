@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { fetchGetDictDataByType } from '@/service/api';
+import { fetchGetDictDataByType } from '@/service/api/system';
 import { useDictStore } from '@/store/modules/dict';
 
 export function useDict(dictType: string, immediate: boolean = true) {

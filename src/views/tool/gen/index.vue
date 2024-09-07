@@ -9,7 +9,7 @@ import {
   fetchGetGenDataNames,
   fetchGetGenTableList,
   fetchSynchGenDbList
-} from '@/service/api';
+} from '@/service/api/tool';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';

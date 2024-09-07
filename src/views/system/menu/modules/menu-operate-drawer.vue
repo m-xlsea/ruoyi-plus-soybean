@@ -4,7 +4,7 @@ import type { SelectOption } from 'naive-ui';
 import { NTooltip } from 'naive-ui';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api';
+import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api/system';
 import { menuIconTypeOptions, menuIsFrameOptions, menuTypeOptions } from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { getLocalMenuIcons } from '@/utils/icon';

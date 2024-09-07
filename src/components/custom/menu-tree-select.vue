@@ -2,7 +2,7 @@
 import { ref, useAttrs } from 'vue';
 import { useLoading } from '@sa/hooks';
 import type { TreeOption, TreeSelectProps } from 'naive-ui';
-import { fetchGetMenuList } from '@/service/api';
+import { fetchGetMenuList } from '@/service/api/system';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { handleMenuTree } from '@/utils/ruoyi';
 
