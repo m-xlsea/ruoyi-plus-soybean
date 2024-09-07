@@ -15,5 +15,7 @@
   "prettier.enable": false,
   "typescript.tsdk": "node_modules/typescript/lib",
   "unocss.root": ["./"],
-  "vue.server.hybridMode": true
+  "vue.server.hybridMode": true,
+  "files.exclude": { "/docs": true },
+  "search.exclude": { "/docs": true }
 }
