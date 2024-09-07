@@ -17,6 +17,15 @@ export const menuTypeRecord: Record<Api.System.MenuType, string> = {
 
 export const menuTypeOptions = transformRecordToOption(menuTypeRecord);
 
+/** menu is frame */
+export const menuIsFrameRecord: Record<Api.System.IsMenuFrame, string> = {
+  '0': '缓存',
+  '1': '不缓存',
+  '2': 'iframe'
+};
+
+export const menuIsFrameOptions = transformRecordToOption(menuIsFrameRecord);
+
 /** menu icon type */
 export const menuIconTypeRecord: Record<Api.System.IconType, string> = {
   '1': 'iconify',

@@ -93,7 +93,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
   function parseRouter(route: ElegantConstRoute, parent?: ElegantConstRoute) {
     if (authRouteMode.value === 'dynamic') {
-      route.path = route.path.substring(1);
+      // @ts-expect-error no query field
+      const query = route.query ? String(route.query) : undefined;
+      route.path = route.path.startsWith('//') ? route.path.substring(1) : route.path;
       const name = humpToLine(route.path.substring(1).replace('/', '_'));
       route.name = parent ? `${parent.name}_${name}` : name;
 
@@ -116,10 +118,17 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
       }
 
       if (route.component.endsWith('iframe-page')) {
-        route.meta.href = String(route.meta.link);
-        route.path = '/iframe-page/123';
-        route.name = 'iframe_page';
         route.component = 'view.iframe-page';
+        if (query) {
+          route.props = {
+            url: query
+          };
+        } else {
+          route.meta.href = String(route.meta.link);
+          const randomValue = Math.random().toString(36).slice(2, 12);
+          route.path = `/iframe-page/${randomValue}`;
+          route.name = `iframe_page_${randomValue}`;
+        }
       }
 
       delete route.meta.link;

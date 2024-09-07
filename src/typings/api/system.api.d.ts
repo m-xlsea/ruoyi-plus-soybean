@@ -150,6 +150,15 @@ declare namespace Api {
      */
     type MenuType = 'M' | 'C' | 'F';
 
+    /**
+     * 是否外链
+     *
+     * - "0": "是"
+     * - "1": "否"
+     * - "2": "iframe"
+     */
+    type IsMenuFrame = '0' | '1' | '2';
+
     type Menu = Common.CommonRecord<{
       /** 菜单 ID */
       menuId?: CommonType.IdType;
@@ -165,8 +174,8 @@ declare namespace Api {
       component?: string;
       /** 路由参数 */
       queryParam?: string;
-      /** 是否为外链（0是 1否） */
-      isFrame?: Common.YesOrNoStatus;
+      /** 是否为外链（0是 1否 2iframe） */
+      isFrame?: IsMenuFrame;
       /** 是否缓存（0缓存 1不缓存） */
       isCache?: Common.YesOrNoStatus;
       /** 菜单类型（M目录 C菜单 F按钮） */

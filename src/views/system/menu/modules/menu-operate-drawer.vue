@@ -5,7 +5,7 @@ import { NTooltip } from 'naive-ui';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api';
-import { menuIconTypeOptions, menuTypeOptions } from '@/constants/business';
+import { menuIconTypeOptions, menuIsFrameOptions, menuTypeOptions } from '@/constants/business';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { getLocalMenuIcons } from '@/utils/icon';
 import { humpToLine, isNotNull } from '@/utils/common';
@@ -109,8 +109,11 @@ function handleInitModel() {
     Object.assign(model, props.rowData);
     model.component = model.component?.replaceAll('_', '/');
     iconType.value = model.icon?.startsWith('icon-') ? '2' : '1';
-    const queryObj: { [key: string]: string } = JSON.parse(model.queryParam || '{}');
-    queryList.value = Object.keys(queryObj).map(item => ({ key: item, value: queryObj[item] }));
+
+    if (model.isFrame !== '2') {
+      const queryObj: { [key: string]: string } = JSON.parse(model.queryParam || '{}');
+      queryList.value = Object.keys(queryObj).map(item => ({ key: item, value: queryObj[item] }));
+    }
   }
 }
 
@@ -120,10 +123,6 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
-
-  const queryObj: { [key: string]: string } = {};
-  queryList.value.forEach(item => (queryObj[item.key] = item.value));
-  model.queryParam = JSON.stringify(queryObj);
 
   const {
     menuId,
@@ -140,9 +139,10 @@ async function handleSubmit() {
     remark
   } = model;
 
-  let path = model.path;
-  if (model.isFrame === '1') {
-    path = !model.path?.startsWith('/') ? `/${model.path}` : model.path;
+  if (isFrame !== '2' && queryList.value.length) {
+    const queryObj: { [key: string]: string } = {};
+    queryList.value.forEach(item => (queryObj[item.key] = item.value));
+    model.queryParam = JSON.stringify(queryObj);
   }
 
   let icon;
@@ -150,18 +150,15 @@ async function handleSubmit() {
     icon = iconType.value === '1' ? model.icon : model.icon?.replace('menu-', 'icon-');
   }
 
+  let path = model.path;
   let component = model.component;
-
-  if (model.menuType === 'C') {
-    component = humpToLine(model.component?.replaceAll('/', '_') || '');
-  }
-
-  if (model.menuType === 'M') {
-    component = model.parentId === 0 ? 'layout.base' : undefined;
-  }
-
-  if (model.isFrame === '0') {
+  if (isFrame !== '0') {
     component = 'iframe-page';
+    path = !model.path?.startsWith('/') ? `/${model.path}` : model.path;
+  } else if (model.menuType === 'C') {
+    component = humpToLine(model.component?.replaceAll('/', '_') || '');
+  } else if (model.menuType === 'M') {
+    component = model.parentId === 0 ? 'layout.base' : undefined;
   }
 
   // request
@@ -276,8 +273,7 @@ const FormTipComponent = defineComponent({
           <NFormItemGi v-if="menuType !== 'F'" :span="24" label="菜单类型" path="menuType">
             <NRadioGroup v-model:value="model.menuType">
               <NRadioButton
-                v-for="item in menuTypeOptions"
-                v-show="item.value !== 'F'"
+                v-for="item in menuTypeOptions.filter(item => item.value !== 'F')"
                 :key="item.value"
                 :value="item.value"
                 :label="item.label"
@@ -314,12 +310,12 @@ const FormTipComponent = defineComponent({
             <template #label>
               <div class="flex-center">
                 <FormTipComponent content="访问的路由地址，如：`/user`，如外网地址需内链访问则以 `http(s)://` 开头" />
-                <span class="pl-3px">路由地址</span>
+                <span class="pl-3px">{{ model.isFrame !== '0' ? '路由地址' : '外链地址' }}</span>
               </div>
             </template>
             <NInput v-model:value="model.path" placeholder="请输入路由地址" />
           </NFormItemGi>
-          <NFormItemGi v-if="isMenu" :span="24" path="component">
+          <NFormItemGi v-if="isMenu && model.isFrame === '1'" :span="24" path="component">
             <template #label>
               <div class="flex-center">
                 <FormTipComponent content="访问的组件路径，如：`system/user`，默认在`views`目录下" />
@@ -332,8 +328,18 @@ const FormTipComponent = defineComponent({
               <NInputGroupLabel>/index.vue</NInputGroupLabel>
             </NInputGroup>
           </NFormItemGi>
-          <NFormItemGi v-if="isMenu" span="24" :show-feedback="!queryList.length" label="路由参数">
-            <NDynamicInput v-model:value="queryList" item-style="margin-bottom: 0" :on-create="onCreate">
+          <NFormItemGi
+            v-if="isMenu && model.isFrame !== '0'"
+            span="24"
+            :show-feedback="!queryList.length"
+            :label="model.isFrame !== '2' ? '路由参数' : 'iframe 地址'"
+          >
+            <NDynamicInput
+              v-if="model.isFrame !== '2'"
+              v-model:value="queryList"
+              item-style="margin-bottom: 0"
+              :on-create="onCreate"
+            >
               <template #default="{ index }">
                 <div class="w-full flex">
                   <NFormItem
@@ -358,6 +364,7 @@ const FormTipComponent = defineComponent({
                 </div>
               </template>
             </NDynamicInput>
+            <NInput v-else v-model:value="model.queryParam" placeholder="请输入 iframe 地址" />
           </NFormItemGi>
           <NFormItemGi :span="24" path="perms">
             <template #label>
@@ -377,8 +384,12 @@ const FormTipComponent = defineComponent({
             </template>
             <NRadioGroup v-model:value="model.isFrame">
               <NSpace>
-                <NRadio value="0" label="是" />
-                <NRadio value="1" label="否" />
+                <NRadio
+                  v-for="option in menuIsFrameOptions"
+                  :key="option.value"
+                  :value="option.value"
+                  :label="option.label"
+                />
               </NSpace>
             </NRadioGroup>
           </NFormItemGi>

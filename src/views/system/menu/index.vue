@@ -6,7 +6,7 @@ import { NButton, NIcon, NInput, NPopconfirm, NTooltip } from 'naive-ui';
 import { fetchDeleteMenu, fetchGetMenuList } from '@/service/api';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { useAppStore } from '@/store/modules/app';
-import { menuTypeRecord } from '@/constants/business';
+import { menuIsFrameRecord, menuTypeRecord } from '@/constants/business';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import { $t } from '@/locales';
 import { handleMenuTree } from '@/utils/ruoyi';
@@ -133,9 +133,10 @@ function handleClickTree(option: Array<TreeOption | null>) {
   getBtnMenuList();
 }
 
-const tagMap: Record<Api.Common.EnableStatus, NaiveUI.ThemeColor> = {
+const tagMap: Record<'0' | '1' | '2', NaiveUI.ThemeColor> = {
   '0': 'success',
-  '1': 'warning'
+  '1': 'warning',
+  '2': 'primary'
 };
 
 async function getBtnMenuList() {
@@ -291,6 +292,7 @@ const { record: showHideRecord } = useDict('sys_show_hide');
           v-model:checked-keys="checkedKeys"
           v-model:expanded-keys="expandedKeys"
           :cancelable="false"
+          show-line
           :data="treeData as []"
           :default-expanded-keys="[0]"
           :show-irrelevant-nodes="false"
@@ -379,7 +381,9 @@ const { record: showHideRecord } = useDict('sys_show_hide');
               {{ currentMenu.perms }}
             </NDescriptionsItem>
             <NDescriptionsItem label="是否外链">
-              <BooleanTag size="small" :value="currentMenu.isFrame!" />
+              <NTag v-if="currentMenu.isFrame" size="small" :type="tagMap[currentMenu.isFrame]">
+                {{ menuIsFrameRecord[currentMenu.isFrame] }}
+              </NTag>
             </NDescriptionsItem>
             <NDescriptionsItem label="显示状态">
               <NTag v-if="currentMenu.visible" size="small" :type="tagMap[currentMenu.visible]">
@@ -395,7 +399,7 @@ const { record: showHideRecord } = useDict('sys_show_hide');
         </NCard>
 
         <NCard
-          title="接口权限列表"
+          title="按钮权限列表"
           :bordered="false"
           size="small"
           class="h-full overflow-auto card-wrapper"
@@ -429,7 +433,7 @@ const { record: showHideRecord } = useDict('sys_show_hide');
   </TableSiderLayout>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 :deep(.infinite-scroll) {
   height: calc(100vh - 224px - var(--calc-footer-height, 0px)) !important;
   max-height: calc(100vh - 224px - var(--calc-footer-height, 0px)) !important;
@@ -452,5 +456,21 @@ const { record: showHideRecord } = useDict('sys_show_hide');
 
 :deep(.n-data-table-base-table) {
   height: 100% !important;
+}
+
+.menu-tree {
+  :deep(.n-tree-node) {
+    height: 33px;
+  }
+
+  :deep(.n-tree-node-switcher) {
+    height: 33px;
+  }
+
+  :deep(.n-tree-node-switcher__icon) {
+    font-size: 16px !important;
+    height: 16px !important;
+    width: 16px !important;
+  }
 }
 </style>
