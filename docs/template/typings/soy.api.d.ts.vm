@@ -6,7 +6,7 @@
  */
 namespace ${ModuleName} {
     /** ${businessName} */
-    type ${BusinessName} = Common.CommonRecord<{
+    type ${BusinessName} = Api.Common.CommonRecord<{
         #foreach($column in $columns)#if($column.insert || $column.edit)
         /** $column.columnComment */
         $column.javaField:#if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) CommonType.IdType; #elseif($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number; #elseif($column.javaType == 'Boolean') boolean; #else string; #end
@@ -14,7 +14,7 @@ namespace ${ModuleName} {
     }>;
 
     /** ${businessName} search params */
-    type ${BusinessName}SearchParams = CommonType.RecordNullable<
+    type ${BusinessName}SearchParams = Api.CommonType.RecordNullable<
       Pick<
         Api.${ModuleName}.${BusinessName},
         #foreach($column in $columns)
@@ -31,9 +31,9 @@ namespace ${ModuleName} {
             #end
         #end
       > &
-        Common.CommonSearchParams
+        Api.Common.CommonSearchParams
     >;
 
     /** ${businessName} list */
-    type ${BusinessName}List = Common.PaginatingQueryRecord<${BusinessName}>;
+    type ${BusinessName}List = Api.Common.PaginatingQueryRecord<${BusinessName}>;
 }

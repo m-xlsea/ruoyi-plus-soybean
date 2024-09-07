@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
-import { fetchGet${BusinessName}List, fetchDelete${BusinessName}, fetchBatchDelete${BusinessName} } from '@/service/api';
+import { fetchGet${BusinessName}List, fetchDelete${BusinessName}, fetchBatchDelete${BusinessName} } from '@/service/api/${moduleName}/${businessName}';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
