@@ -1,0 +1,137 @@
+#set($ModuleName=$moduleName.substring(0, 1).toUpperCase() + $moduleName.substring(1))
+<script setup lang="ts">
+import { ref } from 'vue';
+import { $t } from '@/locales';
+import { useNaiveForm } from '@/hooks/common/form';
+
+defineOptions({
+  name: '${BusinessName}Search'
+});
+
+interface Emits {
+  (e: 'reset'): void;
+  (e: 'search'): void;
+}
+
+const emit = defineEmits<Emits>();
+
+const { formRef, validate, restoreValidation } = useNaiveForm();
+
+#foreach ($column in $columns)
+    #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+        #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+const dateRange${AttrName} = ref<[string, string]>();
+    #end
+#end
+
+const model = defineModel<Api.$ModuleName.${BusinessName}SearchParams>('model', { required: true });
+
+#if($dictList && $dictList.size() > 0)
+#foreach($dict in $dictList)
+const { options: ${dict.name}Options } = useDict(${dict.type}#if($dict.immediate), false#end);
+#end#end
+async function reset() {
+#foreach ($column in $columns)
+    #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+        #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+  const dateRange${AttrName}.value = undefined;
+    #end
+#end
+  await restoreValidation();
+  emit('reset');
+}
+
+async function search() {
+  await validate();
+#foreach ($column in $columns)
+    #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+        #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+  if (dateRange${AttrName}.value?.length) {
+    model.value.params!.begin${AttrName} = dateRange${AttrName}.value[0];
+    model.value.params!.end${AttrName} = dateRange${AttrName}.value[0];
+  }
+    #end
+#end
+  emit('search');
+}
+</script>
+
+<template>
+  <NCard :bordered="false" size="small" class="card-wrapper">
+    <NCollapse>
+      <NCollapseItem :title="$t('common.search')" name="user-search">
+        <NForm ref="formRef" :model="model" :rules="rules" label-placement="left" :label-width="80">
+          <NGrid responsive="screen" item-responsive>
+#foreach($column in $columns)
+#if($column.query)
+#set($dictType=$column.dictType)
+#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+            <NFormItemGi span="24 s:12 m:6" label="$column.columnComment" path="$column.javaField" class="pr-24px">
+            #if(($column.htmlType == "select" || $column.htmlType == "radio") && "" != $dictType)
+              <NSelect
+                v-model:value="model.$column.javaField"
+                placeholder="请选择$column.columnComment"
+                :options="${column.dictType}Options"
+                clearable
+              />
+            #elseif(($column.htmlType == "select" || $column.htmlType == "radio") && $dictType)
+              <NSelect
+                v-model:value="model.$column.javaField"
+                placeholder="请选择$column.columnComment"
+                :options="[]"
+                clearable
+              />
+            #elseif($column.htmlType.equals('select') || $column.htmlType.equals('radio'))
+              <NSelect
+                v-model:value="model.$column.javaField"
+                placeholder="请选择$column.columnComment"
+                :options="[]"
+                clearable
+              />
+            #elseif($column.htmlType == "datetime" && $column.queryType != "BETWEEN")
+              <NDatePicker
+                v-model:formatted-value="model.$column.javaField"
+                type="date"
+                value-format="yyyy-MM-dd"
+                clearable
+              />
+            #elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+              <NDatePicker
+                v-model:formatted-value="dateRange${AttrName}"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                clearable
+              />
+#else              <NInput v-model:value="model.$column.javaField" placeholder="请输入$column.columnComment" />
+    #end
+            </NFormItemGi>
+  #end
+#end
+            <NFormItemGi span="24" class="pr-24px">
+              <NSpace class="w-full" justify="end">
+                <NButton @click="reset">
+                  <template #icon>
+                    <icon-ic-round-refresh class="text-icon" />
+                  </template>
+                  {{ $t('common.reset') }}
+                </NButton>
+                <NButton type="primary" ghost @click="search">
+                  <template #icon>
+                    <icon-ic-round-search class="text-icon" />
+                  </template>
+                  {{ $t('common.search') }}
+                </NButton>
+              </NSpace>
+            </NFormItemGi>
+      </NGrid>
+    </NForm>
+  </NCard>
+</template>
+
+<style scoped></style>

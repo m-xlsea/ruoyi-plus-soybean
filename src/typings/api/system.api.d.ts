@@ -10,8 +10,6 @@ declare namespace Api {
    * backend api module: "system"
    */
   namespace System {
-    type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'pageNum' | 'pageSize'>;
-
     /** role */
     type Role = Common.CommonRecord<{
       /** 数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限） */
@@ -40,7 +38,7 @@ declare namespace Api {
 
     /** role search params */
     type RoleSearchParams = CommonType.RecordNullable<
-      Pick<Role, 'roleName' | 'roleKey' | 'status'> & CommonSearchParams
+      Pick<Role, 'roleName' | 'roleKey' | 'status'> & Common.CommonSearchParams<Role>
     >;
 
     /** role list */
@@ -93,7 +91,7 @@ declare namespace Api {
 
     /** user search params */
     type UserSearchParams = CommonType.RecordNullable<
-      Pick<User, 'userName' | 'sex' | 'nickName' | 'phonenumber' | 'email' | 'status'> & CommonSearchParams
+      Pick<User, 'userName' | 'sex' | 'nickName' | 'phonenumber' | 'email' | 'status'> & Common.CommonSearchParams<User>
     >;
 
     /** user list */

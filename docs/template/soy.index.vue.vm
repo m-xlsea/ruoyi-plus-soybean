@@ -7,6 +7,10 @@ import { useTable, useTableOperate } from '@/hooks/common/table';
 import ${BusinessName}OperateDrawer from './modules/${businessName}-operate-drawer.vue';
 import ${BusinessName}Search from './modules/${businessName}-search.vue';
 
+defineOptions({
+  name: '${BusinessName}List'
+});
+
 const appStore = useAppStore();
 
 const {
@@ -113,7 +117,7 @@ async function edit(id: number) {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <${BusinessName}Search v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="${functionName}" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard title="${functionName}列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

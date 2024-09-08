@@ -1,9 +1,11 @@
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+import { storeToRefs } from 'pinia';
 import { fetchGetDictDataByType } from '@/service/api/system';
 import { useDictStore } from '@/store/modules/dict';
 
 export function useDict(dictType: string, immediate: boolean = true) {
   const dictStore = useDictStore();
+  const { dictData: dictList } = storeToRefs(dictStore);
 
   const data = ref<Api.System.DictData[]>([]);
   const record = ref<Record<string, string>>({});
@@ -43,6 +45,17 @@ export function useDict(dictType: string, immediate: boolean = true) {
       getRecord();
       getOptions();
     });
+  } else {
+    watch(
+      () => dictList.value[dictType],
+      val => {
+        if (val && val.length) {
+          getRecord();
+          getOptions();
+        }
+      },
+      { immediate: true }
+    );
   }
 
   return {

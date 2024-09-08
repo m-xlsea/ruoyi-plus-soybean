@@ -1,0 +1,195 @@
+<script setup lang="ts">
+import { computed, reactive, watch } from 'vue';
+import { useFormRules, useNaiveForm } from '@/hooks/common/form';
+import { $t } from '@/locales';
+import { fetchCreate${BusinessName}, fetchUpdate${BusinessName} } from '@/service/api/${moduleName}/${businessName}';
+
+defineOptions({
+  name: '${BusinessName}OperateDrawer'
+});
+
+interface Props {
+  /** the type of operation */
+  operateType: NaiveUI.TableOperateType;
+  /** the edit row data */
+  rowData?: Api.$ModuleName.${BusinessName} | null;
+}
+
+const props = defineProps<Props>();
+
+interface Emits {
+  (e: 'submitted'): void;
+}
+
+const emit = defineEmits<Emits>();
+
+const visible = defineModel<boolean>('visible', {
+  default: false
+});
+
+#if($dictList && $dictList.size() > 0)
+#foreach($dict in $dictList)
+const { options: ${dict.name}Options } = useDict(${dict.type}#if($dict.immediate), false#end);
+#end#end
+
+const { formRef, validate, restoreValidation } = useNaiveForm();
+const { createRequiredRule } = useFormRules();
+
+const title = computed(() => {
+  const titles: Record<NaiveUI.TableOperateType, string> = {
+    add: '新增${functionName}',
+    edit: '编辑${functionName}'
+  };
+  return titles[props.operateType];
+});
+
+type Model = Api.$ModuleName.${BusinessName}OperateParams;
+
+const model: Model = reactive(createDefaultModel());
+
+function createDefaultModel(): Model {
+  return {
+#foreach($column in $columns)
+  #if($column.insert)
+    ${column.javaField}:#if($column.javaType == 'String') ''#else null#end#if($foreach.hasNext),#end
+  #end
+#end
+  };
+}
+
+type RuleKey = Extract<
+  keyof Model,
+#foreach($column in $columns)
+#if($column.required)
+  | '$column.javaField'#if($foreach.hasNext)#end
+#end#end>;
+
+const rules: Record<RuleKey, App.Global.FormRule> = {
+#foreach($column in $columns)
+#if($column.required)
+  $column.javaField: createRequiredRule('${column.columnComment}不能为空')#if($foreach.hasNext),#end
+#end
+#end
+};
+
+function handleUpdateModelWhenEdit() {
+  if (props.operateType === 'add') {
+    Object.assign(model, createDefaultModel());
+    return;
+  }
+
+  if (props.operateType === 'edit' && props.rowData) {
+    Object.assign(model, props.rowData);
+  }
+}
+
+function closeDrawer() {
+  visible.value = false;
+}
+
+async function handleSubmit() {
+  await validate();
+
+  // request
+  if (props.operateType === 'add') {
+    const { #foreach($column in $columns)#if($column.insert)$column.javaType#if($foreach.hasNext), #end#end#end } = model;
+    const { error } = await fetchCreate${BusinessName}({ #foreach($column in $columns)#if($column.insert)$column.javaType#if($foreach.hasNext), #end#end#end });
+    if (error) return;
+  }
+
+  if (props.operateType === 'edit') {
+    const { #foreach($column in $columns)#if($column.edit)$column.javaType#if($foreach.hasNext), #end#end#end } = model;
+    const { error } = await fetchUpdate${BusinessName}({ #foreach($column in $columns)#if($column.edit)$column.javaType#if($foreach.hasNext), #end#end#end });
+    if (error) return;
+  }
+
+  window.$message?.success($t('common.updateSuccess'));
+  closeDrawer();
+  emit('submitted');
+}
+
+watch(visible, () => {
+  if (visible.value) {
+    handleUpdateModelWhenEdit();
+    restoreValidation();
+  }
+});
+</script>
+
+<template>
+  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
+    <NDrawerContent :title="title" :native-scrollbar="false" closable>
+      <NForm ref="formRef" :model="model" :rules="rules">
+#foreach($column in $columns)
+#set($field=$column.javaField)
+#if(($column.insert || $column.edit) && !$column.pk)
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+#set($dictType=$column.dictType)
+        <NFormItem label="$column.columnComment" path="$column.javaField">
+        #if($column.htmlType == "textarea" || $column.htmlType == "editor")
+          <NInput
+            v-model:value="model.$column.javaField"
+            :rows="3"
+            type="textarea"
+            :placeholder="请输入$column.columnComment"
+          />
+        #elseif($column.htmlType == "select" && "" != $dictType)
+          <NSelect
+            v-model:value="model.$column.javaField"
+            placeholder="请选择$column.columnComment"
+            :options="${column.dictType}Options"
+            clearable
+          />
+        #elseif($column.htmlType == "select" && $dictType)
+          <NSelect
+            v-model:value="model.$column.javaField"
+            placeholder="请选择$column.columnComment"
+            :options="[]"
+            clearable
+          />
+        #elseif($column.htmlType == "radio" && "" != $dictType)
+          <NRadioGroup v-model:value="model.$column.javaField">
+            <NSpace>
+              <NRadio
+                v-for="option in ${column.dictType}Options"
+                :key="option.value"
+                :value="option.value"
+                :label="option.label"
+              />
+            </NSpace>
+          </NRadioGroup>
+        #elseif($column.htmlType == "radio" && $dictType)
+          <NRadioGroup v-model:value="model.$column.javaField">
+            <NSpace>
+              <NRadio value="0" label="请选择字典生成" />
+            </NSpace>
+          </NRadioGroup>
+        #elseif($column.htmlType == "datetime")
+          <NDatePicker
+            v-model:formatted-value="model.$column.javaField"
+            type="date"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            clearable
+          />
+#else              <NInput v-model:value="model.$column.javaField" placeholder="请输入$column.columnComment" />
+    #end
+        </NFormItem>
+#end
+#end
+      </NForm>
+      <template #footer>
+        <NSpace :size="16">
+          <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>
+          <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
+        </NSpace>
+      </template>
+    </NDrawerContent>
+  </NDrawer>
+</template>
+
+<style scoped></style>

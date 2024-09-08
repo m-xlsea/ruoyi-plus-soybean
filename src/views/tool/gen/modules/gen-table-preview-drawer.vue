@@ -70,7 +70,9 @@ const genMap: Api.Tool.GenTablePreview = {
   'vm/sql/sql.vm': 'sql',
   'vm/soybean/api/soy.api.ts.vm': 'api.ts',
   'vm/soybean/typings/soy.api.d.ts.vm': 'type.d.ts',
-  'vm/soybean/soy.index.vue.vm': 'index.vue'
+  'vm/soybean/soy.index.vue.vm': 'index.vue',
+  'vm/soybean/modules/soy.search.vue.vm': 'search.vue',
+  'vm/soybean/modules/soy.operate-drawer.vue.vm': 'operate-drawer.vue'
 };
 
 function getGenLanguage(name: string) {

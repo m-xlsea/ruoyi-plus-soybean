@@ -1,4 +1,5 @@
-#set($ModuleName=$moduleName.substring(0, 1).toUpperCase() + $moduleName.substring(1))
+#set($BaseEntity = ['createDept', 'createBy', 'createTime', 'updateBy', 'updateTime'])
+#set($ModuleName = $moduleName.substring(0, 1).toUpperCase() + $moduleName.substring(1))
 /**
  * namespace ${ModuleName}
  *
@@ -7,7 +8,7 @@
 namespace ${ModuleName} {
     /** ${businessName} */
     type ${BusinessName} = Api.Common.CommonRecord<{
-        #foreach($column in $columns)#if($column.insert || $column.edit)
+        #foreach($column in $columns)#if(!$BaseEntity.contains($column.javaField))
         /** $column.columnComment */
         $column.javaField:#if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) CommonType.IdType; #elseif($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number; #elseif($column.javaType == 'Boolean') boolean; #else string; #end
         #end#end
@@ -18,20 +19,24 @@ namespace ${ModuleName} {
       Pick<
         Api.${ModuleName}.${BusinessName},
         #foreach($column in $columns)
-            #if($column.query)
-                #set($dictType=$column.dictType)
-                #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
-                #set($parentheseIndex=$column.columnComment.indexOf("（"))
-                #if($parentheseIndex != -1)
-                #set($comment=$column.columnComment.substring(0, $parentheseIndex))
-                #else
-                #set($comment=$column.columnComment)
-                #end
-#if($foreach.hasNext)        |#end '${column.javaField}'
+            #if($column.query && $column.queryType != 'BETWEEN')
+        | '${column.javaField}'
             #end
         #end
       > &
-        Api.Common.CommonSearchParams
+        Api.Common.CommonSearchParams<${BusinessName}>
+    >;
+
+    /** ${businessName} operate params */
+    type ${BusinessName}OperateParams = Api.CommonType.RecordNullable<
+      Pick<
+        Api.${ModuleName}.${BusinessName},
+        #foreach($column in $columns)
+            #if($column.insert || $column.edit)
+        | '${column.javaField}'
+            #end
+        #end
+      >
     >;
 
     /** ${businessName} list */

@@ -1,7 +1,7 @@
 import { request } from '@/service/request';
 
 /** 获取${functionName}列表 */
-export function fetchGet${BusinessName}List(params?: Api.System.${BusinessName}SearchParams) {
+export function fetchGet${BusinessName}List (params?: Api.System.${BusinessName}SearchParams) {
     return request<Api.${ModuleName}.${BusinessName}List>({
         url: '/${moduleName}/${businessName}/list',
         method: 'get',
@@ -10,7 +10,7 @@ export function fetchGet${BusinessName}List(params?: Api.System.${BusinessName}S
 }
 
 /** 新增${functionName} */
-export function fetchCreate${BusinessName}(data: Api.${ModuleName}.${BusinessName}OperateParams) {
+export function fetchCreate${BusinessName} (data: Api.${ModuleName}.${BusinessName}OperateParams) {
     return request<boolean>({
         url: '/${moduleName}/${businessName}',
         method: 'post',
@@ -19,7 +19,7 @@ export function fetchCreate${BusinessName}(data: Api.${ModuleName}.${BusinessNam
 }
 
 /** 修改${functionName} */
-export function fetchUpdate${BusinessName}(data: Api.${ModuleName}.${BusinessName}OperateParams) {
+export function fetchUpdate${BusinessName} (data: Api.${ModuleName}.${BusinessName}OperateParams) {
     return request<boolean>({
         url: '/${moduleName}/${businessName}',
         method: 'put',
@@ -28,7 +28,7 @@ export function fetchUpdate${BusinessName}(data: Api.${ModuleName}.${BusinessNam
 }
 
 /** 批量删除${functionName} */
-export function fetchDelete${BusinessName}(${pkColumn.javaField}s: CommonType.IdType[]) {
+export function fetchDelete${BusinessName} (${pkColumn.javaField}s: CommonType.IdType[]) {
     return request<boolean>({
         url: `/${moduleName}/${businessName}/${${pkColumn.javaField}s.join(',')}`,
         method: 'delete'
