@@ -26,7 +26,7 @@
         velocityContext.put("pkColumn", genTable.getPkColumn());
         velocityContext.put("importList", getImportList(genTable));
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
-        velocityContext.put("columns", genTable.getColumns());
+        velocityContext.put("columns", getColumns(genTable));
         velocityContext.put("table", genTable);
         velocityContext.put("dicts", getDicts(genTable));
         velocityContext.put("dictList", getDictList(genTable));
@@ -169,4 +169,20 @@
                 dicts.add(dict);
             }
         }
+    }
+
+    /**
+     * 根据列类型获取字典组
+     *
+     * @param genTable 业务表对象
+     * @return 返回字典组
+     */
+    public static List<GenTableColumn> getColumns(GenTable genTable) {
+        List<GenTableColumn> columns = genTable.getColumns();
+        for (GenTableColumn column : columns) {
+            if (StringUtils.isNotBlank(column.getDictType())) {
+                column.setDictType(StringUtils.toCamelCase(column.getDictType()));
+            }
+        }
+        return columns;
     }
