@@ -1,11 +1,11 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
-import { fetchGet${BusinessName}List, fetchDelete${BusinessName}, fetchBatchDelete${BusinessName} } from '@/service/api/${moduleName}/${businessName}';
+import { fetchGet${BusinessName}List, fetchBatchDelete${BusinessName} } from '@/service/api/${moduleName}/${businessName}';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import ${BusinessName}OperateDrawer from './modules/${businessName}-operate-drawer.vue';
-import ${BusinessName}Search from './modules/${businessName}-search.vue';
+import ${BusinessName}OperateDrawer from './modules/${business_name}-operate-drawer.vue';
+import ${BusinessName}Search from './modules/${business_name}-search.vue';
 
 defineOptions({
   name: '${BusinessName}List'
@@ -65,10 +65,10 @@ const {
       width: 130,
       render: row => (
         <div class="flex-center gap-8px">
-          <NButton type="primary" ghost size="small" onClick={() => edit(row.id)}>
+          <NButton type="primary" ghost size="small" onClick={() => edit(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}>
             {$t('common.edit')}
           </NButton>
-          <NPopconfirm onPositiveClick={() => handleDelete(row.id)}>
+          <NPopconfirm onPositiveClick={() => handleDelete(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}>
             {{
               default: () => $t('common.confirmDelete'),
               trigger: () => (
@@ -97,20 +97,20 @@ const {
 
 async function handleBatchDelete() {
   // request
-  const { error } = await fetchDelete${BusinessName}(checkedRowKeys.value)
+  const { error } = await fetchBatchDelete${BusinessName}(checkedRowKeys.value)
   if (error) return;
   onBatchDeleted();
 }
 
-async function handleDelete(id: number) {
+async function handleDelete(#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end: CommonType.IdType) {
   // request
-  const { error } = await fetchBatchDelete${BusinessName}([id])
+  const { error } = await fetchBatchDelete${BusinessName}([#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end])
   if (error) return;
   onDeleted();
 }
 
-async function edit(id: number) {
-  handleEdit('#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end', id);
+async function edit(id: CommonType.IdType) {
+  handleEdit('#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end', #foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end);
 }
 </script>
 

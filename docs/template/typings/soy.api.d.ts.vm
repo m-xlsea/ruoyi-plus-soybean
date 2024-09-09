@@ -6,7 +6,7 @@
  * backend api module: "${ModuleName}"
  */
 namespace ${ModuleName} {
-    /** ${businessName} */
+    /** ${businessname} */
     type ${BusinessName} = Api.Common.CommonRecord<{
         #foreach($column in $columns)#if(!$BaseEntity.contains($column.javaField))
         /** $column.columnComment */
@@ -14,7 +14,7 @@ namespace ${ModuleName} {
         #end#end
     }>;
 
-    /** ${businessName} search params */
+    /** ${businessname} search params */
     type ${BusinessName}SearchParams = Api.CommonType.RecordNullable<
       Pick<
         Api.${ModuleName}.${BusinessName},
@@ -27,7 +27,7 @@ namespace ${ModuleName} {
         Api.Common.CommonSearchParams<${BusinessName}>
     >;
 
-    /** ${businessName} operate params */
+    /** ${businessname} operate params */
     type ${BusinessName}OperateParams = Api.CommonType.RecordNullable<
       Pick<
         Api.${ModuleName}.${BusinessName},
@@ -39,6 +39,6 @@ namespace ${ModuleName} {
       >
     >;
 
-    /** ${businessName} list */
+    /** ${businessname} list */
     type ${BusinessName}List = Api.Common.PaginatingQueryRecord<${BusinessName}>;
 }
