@@ -160,7 +160,8 @@ const local: App.I18n.Schema = {
     system: 'System Management',
     system_menu: 'Menu Management',
     tool: 'System Tools',
-    tool_gen: 'Code Generation'
+    tool_gen: 'Code Generation',
+    system_user: 'User Management'
   },
   page: {
     login: {

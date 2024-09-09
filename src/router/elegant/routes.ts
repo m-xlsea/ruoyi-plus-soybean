@@ -96,6 +96,15 @@ export const generatedRoutes: GeneratedRoute[] = [
           localIcon: 'menu-tree-table',
           order: 3
         }
+      },
+      {
+        name: 'system_user',
+        path: '/system/user',
+        component: 'view.system_user',
+        meta: {
+          title: 'system_user',
+          i18nKey: 'route.system_user'
+        }
       }
     ]
   },

@@ -1,46 +1,30 @@
-<script setup lang="tsx">
-import { ref, useAttrs } from 'vue';
-import { useLoading } from '@sa/hooks';
-import type { SelectOption, SelectProps } from 'naive-ui';
-import { fetchGetDictTypeOption } from '@/service/api/system';
+<script setup lang="ts">
+import { useAttrs } from 'vue';
+import type { SelectProps } from 'naive-ui';
+import { useDict } from '@/hooks/business/dict';
 
 defineOptions({ name: 'DictSelect' });
 
 interface Props {
+  dictCode: string;
+  immediate?: boolean;
   [key: string]: any;
 }
 
-defineProps<Props>();
+const props = withDefaults(defineProps<Props>(), {
+  immediate: true
+});
 
-const value = defineModel<string>('value', { required: true });
+const value = defineModel<string | null>('value', { required: true });
 
 const attrs: SelectProps = useAttrs();
-const options = ref<SelectOption[]>([]);
-const { loading, startLoading, endLoading } = useLoading();
-
-async function getDeptOptions() {
-  startLoading();
-  const { error, data } = await fetchGetDictTypeOption();
-  if (error) return;
-  options.value = data.map(dict => ({
-    value: dict.dictType!,
-    label: () => (
-      <div class="w-520px flex justify-between">
-        <span>{dict.dictType}</span>
-        <span>{dict.dictName}</span>
-      </div>
-    )
-  }));
-  endLoading();
-}
-
-getDeptOptions();
+const { options } = useDict(props.dictCode, props.immediate);
 </script>
 
 <template>
   <NSelect
     v-model:value="value"
-    :loading="loading"
+    :loading="!options.length"
     :options="options"
     :clear-filter-after-select="false"
     v-bind="attrs"

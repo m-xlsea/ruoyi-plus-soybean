@@ -28,7 +28,7 @@ export function useDownload() {
     window.$loading?.startLoading('正在下载数据，请稍候...');
     const token = localStg.get('token');
     const clientId = import.meta.env.VITE_APP_CLIENT_ID;
-    const now = new Date().getTime();
+    const now = Date.now();
     const formData = new FormData();
     Object.keys(params).forEach(key => formData.append(key, params[key]));
     fetch(`${baseURL}${url}?t=${now}`, {
@@ -58,7 +58,7 @@ export function useDownload() {
     const token = localStg.get('token');
     const clientId = import.meta.env.VITE_APP_CLIENT_ID;
     const url = `/resource/oss/download/${ossId}`;
-    const now = new Date().getTime();
+    const now = Date.now();
     let fileName = String(`${ossId}-${now}`);
     fetch(`${baseURL}${url}?t=${now}`, {
       method: 'get',
@@ -80,7 +80,7 @@ export function useDownload() {
     window.$loading?.startLoading('正在下载数据，请稍候...');
     const token = localStg.get('token');
     const clientId = import.meta.env.VITE_APP_CLIENT_ID;
-    const now = new Date().getTime();
+    const now = Date.now();
     fetch(`${baseURL}${url}${url.includes('?') ? '&' : '?'}t=${now}`, {
       method: 'get',
       headers: {

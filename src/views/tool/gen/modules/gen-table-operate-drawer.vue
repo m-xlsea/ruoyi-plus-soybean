@@ -269,6 +269,7 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
           consistent-menu-width={false}
           render-label={renderLabel}
           render-tag={renderTag}
+          clearable
         />
       );
     }

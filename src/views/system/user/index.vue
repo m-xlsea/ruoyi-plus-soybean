@@ -1,14 +1,14 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
-import { fetchGet${BusinessName}List, fetchBatchDelete${BusinessName} } from '@/service/api/${moduleName}/${businessName}';
+import { fetchBatchDeleteUser, fetchGetUserList } from '@/service/api/system';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import ${BusinessName}OperateDrawer from './modules/${business_name}-operate-drawer.vue';
-import ${BusinessName}Search from './modules/${business_name}-search.vue';
+import UserOperateDrawer from './modules/user-operate-drawer.vue';
+import UserSearch from './modules/user-search.vue';
 
 defineOptions({
-  name: '${BusinessName}List'
+  name: 'UserList'
 });
 
 const appStore = useAppStore();
@@ -24,17 +24,18 @@ const {
   searchParams,
   resetSearchParams
 } = useTable({
-  apiFn: fetchGet${BusinessName}List,
+  apiFn: fetchGetUserList,
   apiParams: {
     pageNum: 1,
     pageSize: 10,
     // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
     // the value can not be undefined, otherwise the property in Form will not be reactive
-#foreach ($column in $columns)
-  #if($column.query)
-    $column.javaField: null#if($foreach.hasNext),#end
-  #end
-#end
+    deptId: null,
+    userName: null,
+    nickName: null,
+    phonenumber: null,
+    status: null,
+    params: {}
   },
   columns: () => [
     {
@@ -48,16 +49,48 @@ const {
       align: 'center',
       width: 64
     },
-#foreach ($column in $columns)
-  #if($column.list)
     {
-      key: '$column.javaField',
-      title: '$column.columnComment',
+      key: 'deptId',
+      title: '部门',
       align: 'center',
       minWidth: 120
     },
-  #end
-#end
+    {
+      key: 'userName',
+      title: '用户名称',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'nickName',
+      title: '用户昵称',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'phonenumber',
+      title: '手机号码',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'status',
+      title: '帐号状态',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'createTime',
+      title: '创建时间',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'remark',
+      title: '备注',
+      align: 'center',
+      minWidth: 120
+    },
     {
       key: 'operate',
       title: $t('common.operate'),
@@ -65,10 +98,10 @@ const {
       width: 130,
       render: row => (
         <div class="flex-center gap-8px">
-          <NButton type="primary" ghost size="small" onClick={() => edit(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}>
+          <NButton type="primary" ghost size="small" onClick={() => edit(row.userId!)}>
             {$t('common.edit')}
           </NButton>
-          <NPopconfirm onPositiveClick={() => handleDelete(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}>
+          <NPopconfirm onPositiveClick={() => handleDelete(row.userId!)}>
             {{
               default: () => $t('common.confirmDelete'),
               trigger: () => (
@@ -84,40 +117,32 @@ const {
   ]
 });
 
-const {
-  drawerVisible,
-  operateType,
-  editingData,
-  handleAdd,
-  handleEdit,
-  checkedRowKeys,
-  onBatchDeleted,
-  onDeleted
-} = useTableOperate(data, getData);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
+  useTableOperate(data, getData);
 
 async function handleBatchDelete() {
   // request
-  const { error } = await fetchBatchDelete${BusinessName}(checkedRowKeys.value)
+  const { error } = await fetchBatchDeleteUser(checkedRowKeys.value);
   if (error) return;
   onBatchDeleted();
 }
 
-async function handleDelete(#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end: CommonType.IdType) {
+async function handleDelete(userId: CommonType.IdType) {
   // request
-  const { error } = await fetchBatchDelete${BusinessName}([#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end])
+  const { error } = await fetchBatchDeleteUser([userId]);
   if (error) return;
   onDeleted();
 }
 
-async function edit(#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end: CommonType.IdType) {
-  handleEdit('#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end', #foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end);
+async function edit(userId: CommonType.IdType) {
+  handleEdit('userId', userId);
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <${BusinessName}Search v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="${functionName}列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <NCard title="用户信息列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
@@ -137,11 +162,11 @@ async function edit(#foreach($column in $columns)#if($column.isPk == '1')$column
         :scroll-x="962"
         :loading="loading"
         remote
-        :row-key="row => row.id"
+        :row-key="row => row.userId"
         :pagination="mobilePagination"
         class="sm:h-full"
       />
-      <${BusinessName}OperateDrawer
+      <UserOperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"

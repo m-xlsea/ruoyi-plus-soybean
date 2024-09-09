@@ -21,9 +21,9 @@ declare namespace Api {
     }
 
     /** common search params of table */
-    type CommonSearchParams<T = any> = Pick<Common.PaginatingCommonParams, 'pageNum' | 'pageSize'> &
+    type CommonSearchParams = Pick<Common.PaginatingCommonParams, 'pageNum' | 'pageSize'> &
       CommonType.RecordNullable<{
-        orderByColumn: keyof T;
+        orderByColumn: string;
         isAsc: 'asc' | 'desc';
         params: { [key: string]: any };
       }>;
@@ -69,8 +69,7 @@ declare namespace Api {
     type CommonTenantRecord<T = any> = {
       /** record tenant id */
       tenantId: string;
-    } & CommonRecord &
-      T;
+    } & CommonRecord<T>;
   }
 
   /**

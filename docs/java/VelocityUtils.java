@@ -71,10 +71,10 @@ public class VelocityUtils {
         velocityContext.put("pkColumn", genTable.getPkColumn());
         velocityContext.put("importList", getImportList(genTable));
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
-        velocityContext.put("columns", getColumns(genTable));
-        velocityContext.put("table", genTable);
         velocityContext.put("dicts", getDicts(genTable));
         velocityContext.put("dictList", getDictList(genTable));
+        velocityContext.put("columns", getColumns(genTable));
+        velocityContext.put("table", genTable);
         setMenuVelocityContext(velocityContext, genTable);
         if (GenConstants.TPL_TREE.equals(tplCategory)) {
             setTreeVelocityContext(velocityContext, genTable);
@@ -178,7 +178,7 @@ public class VelocityUtils {
         if (template.contains("soy.index.vue.vm")) {
             fileName = StringUtils.format("soybean/views/{}/{}/index.vue", moduleName, businessName);
         } else if (template.contains("soy.api.d.ts.vm")) {
-            fileName = StringUtils.format("soybean/typings/api/{}.d.ts", moduleName);
+            fileName = StringUtils.format("soybean/typings/api/{}.api.d.ts", moduleName);
         } else if (template.contains("soy.api.ts.vm")) {
             fileName = StringUtils.format("soybean/api/{}/{}.ts", moduleName, businessName);
         } else if (template.contains("soy.search.vue.vm")) {

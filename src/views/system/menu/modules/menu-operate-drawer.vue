@@ -31,7 +31,7 @@ interface Props {
 const props = defineProps<Props>();
 
 interface Emits {
-  (e: 'submitted', menuType?: Api.System.MenuType): void;
+  (e: 'submitted', menuType: Api.System.MenuType): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -45,7 +45,7 @@ const { options: enableStatusOptions } = useDict('sys_normal_disable');
 
 const iconType = ref<Api.System.IconType>('1');
 const { formRef, validate, restoreValidation } = useNaiveForm();
-const { defaultRequiredRule } = useFormRules();
+const { createRequiredRule } = useFormRules();
 const queryList = ref<{ key: string; value: string }[]>([]);
 
 const drawerTitle = computed(() => {
@@ -82,10 +82,10 @@ function createDefaultModel(): Model {
 type RuleKey = Extract<keyof Model, 'menuName' | 'orderNum' | 'path' | 'component'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  menuName: { ...defaultRequiredRule, message: '菜单名称不能为空' },
-  orderNum: { ...defaultRequiredRule, type: 'number', message: '菜单排序不能为空' },
-  path: { ...defaultRequiredRule, message: '路由地址不能为空' },
-  component: { ...defaultRequiredRule, message: '组件路径不能为空' }
+  menuName: createRequiredRule('菜单名称不能为空'),
+  orderNum: createRequiredRule('菜单排序不能为空'),
+  path: createRequiredRule('路由地址不能为空'),
+  component: createRequiredRule('组件路径不能为空')
 };
 
 const isBtn = computed(() => model.menuType === 'F');
@@ -210,7 +210,7 @@ async function handleSubmit() {
   }
 
   closeDrawer();
-  emit('submitted', menuType);
+  emit('submitted', menuType!);
 }
 
 watch(visible, () => {
@@ -344,7 +344,7 @@ const FormTipComponent = defineComponent({
                     ignore-path-change
                     :show-label="false"
                     :path="`query[${index}].key`"
-                    :rule="{ ...defaultRequiredRule, validator: value => isNotNull(value) }"
+                    :rule="{ ...createRequiredRule('请输入 Key'), validator: value => isNotNull(value) }"
                   >
                     <NInput v-model:value="queryList[index].key" placeholder="Key" @keydown.enter.prevent />
                   </NFormItem>
@@ -354,7 +354,7 @@ const FormTipComponent = defineComponent({
                     ignore-path-change
                     :show-label="false"
                     :path="`query[${index}].value`"
-                    :rule="{ ...defaultRequiredRule, validator: value => isNotNull(value) }"
+                    :rule="{ ...createRequiredRule('请输入 Value'), validator: value => isNotNull(value) }"
                   >
                     <NInput v-model:value="queryList[index].value" placeholder="Value" @keydown.enter.prevent />
                   </NFormItem>

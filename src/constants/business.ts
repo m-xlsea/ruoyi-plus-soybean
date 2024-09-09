@@ -19,8 +19,8 @@ export const menuTypeOptions = transformRecordToOption(menuTypeRecord);
 
 /** menu is frame */
 export const menuIsFrameRecord: Record<Api.System.IsMenuFrame, string> = {
-  '0': '缓存',
-  '1': '不缓存',
+  '0': '是',
+  '1': '否',
   '2': 'iframe'
 };
 

@@ -3,6 +3,7 @@ import { computed, reactive, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { fetchCreate${BusinessName}, fetchUpdate${BusinessName} } from '@/service/api/${moduleName}/${businessName}';
+#if($dictList && $dictList.size() > 0)import { useDict } from '@/hooks/business/dict';#end
 
 defineOptions({
   name: '${BusinessName}OperateDrawer'
