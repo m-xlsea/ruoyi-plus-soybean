@@ -32,12 +32,12 @@ let socketError = 0; // 错误次数
 
 // 初始化socket
 export function initWebSocket(url: any) {
-  if (import.meta.env.VITE_APP_WEBSOCKET === 'N') {
+  const token = localStg.get('token');
+  if (import.meta.env.VITE_APP_WEBSOCKET === 'N' || !token) {
     return null;
   }
   socketUrl = url;
   // 初始化 websocket
-  const token = localStg.get('token');
   websocket = new WebSocket(`${url}?Authorization=Bearer ${token}&clientid=${import.meta.env.VITE_APP_CLIENT_ID}`);
   websocketonopen();
   websocketonmessage();

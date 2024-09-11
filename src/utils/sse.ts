@@ -5,10 +5,10 @@ import { localStg } from './storage';
 
 // 初始化
 export const initSSE = (url: any) => {
-  if (import.meta.env.VITE_APP_SSE === 'N') {
+  const token = localStg.get('token');
+  if (import.meta.env.VITE_APP_SSE === 'N' || !token) {
     return;
   }
-  const token = localStg.get('token');
   const sseUrl = `${url}?Authorization=Bearer ${token}&clientid=${import.meta.env.VITE_APP_CLIENT_ID}`;
   const { data, error } = useEventSource(sseUrl, [], {
     autoReconnect: {
