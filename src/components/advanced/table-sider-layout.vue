@@ -7,16 +7,17 @@ defineOptions({
 
 interface Props {
   defaultExpanded?: boolean;
+  siderTitle?: string;
 }
 
 withDefaults(defineProps<Props>(), {
-  defaultExpanded: false
+  defaultExpanded: false,
+  siderTitle: undefined
 });
 
 const time = new Date().getTime();
 const breakpoints = useBreakpoints(breakpointsTailwind);
 const isCollapse = breakpoints.smaller('lg');
-const title = defineModel<string>('title');
 </script>
 
 <template>
@@ -36,11 +37,11 @@ const title = defineModel<string>('title');
         content-class="sider-layout-card-content"
       >
         <NCollapse v-if="isCollapse" :default-expanded-names="defaultExpanded ? [`table-sider-layout${time}`] : []">
-          <NCollapseItem :title="title" :name="`table-sider-layout${time}`" display-directive="show">
+          <NCollapseItem :title="siderTitle" :name="`table-sider-layout${time}`" display-directive="show">
             <slot name="sider" />
             <template #header>
               <slot name="header">
-                <span>{{ title }}</span>
+                <span>{{ siderTitle }}</span>
               </slot>
             </template>
             <template #header-extra>
@@ -65,7 +66,7 @@ const title = defineModel<string>('title');
         <slot name="sider" />
         <template #header>
           <slot name="header">
-            <span>{{ title }}</span>
+            <span>{{ siderTitle }}</span>
           </slot>
         </template>
         <template #header-extra>

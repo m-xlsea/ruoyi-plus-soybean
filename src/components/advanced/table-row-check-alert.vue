@@ -1,9 +1,9 @@
 <script setup lang="ts">
 defineOptions({
-  name: 'TableColumnCheckAlert'
+  name: 'TableRowCheckAlert'
 });
 
-const checkedRowKeys = defineModel<CommonType.IdType[]>('columns', { required: true });
+const checkedRowKeys = defineModel<CommonType.IdType[]>('checkedRowKeys', { required: true });
 </script>
 
 <template>

@@ -146,40 +146,43 @@ async function edit(userId: CommonType.IdType) {
 </script>
 
 <template>
-  <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="用户列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
-      <template #header-extra>
-        <TableHeaderOperation
-          v-model:columns="columnChecks"
-          :disabled-delete="checkedRowKeys.length === 0"
+  <TableSiderLayout sider-title="部门列表">
+    <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
+      <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+      <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
+      <NCard title="用户列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+        <template #header-extra>
+          <TableHeaderOperation
+            v-model:columns="columnChecks"
+            :disabled-delete="checkedRowKeys.length === 0"
+            :loading="loading"
+            @add="handleAdd"
+            @delete="handleBatchDelete"
+            @refresh="getData"
+          />
+        </template>
+        <NDataTable
+          v-model:checked-row-keys="checkedRowKeys"
+          :columns="columns"
+          :data="data"
+          size="small"
+          :flex-height="!appStore.isMobile"
+          :scroll-x="962"
           :loading="loading"
-          @add="handleAdd"
-          @delete="handleBatchDelete"
-          @refresh="getData"
+          remote
+          :row-key="row => row.userId"
+          :pagination="mobilePagination"
+          class="h-full"
         />
-      </template>
-      <NDataTable
-        v-model:checked-row-keys="checkedRowKeys"
-        :columns="columns"
-        :data="data"
-        size="small"
-        :flex-height="!appStore.isMobile"
-        :scroll-x="962"
-        :loading="loading"
-        remote
-        :row-key="row => row.userId"
-        :pagination="mobilePagination"
-        class="sm:h-full"
-      />
-      <UserOperateDrawer
-        v-model:visible="drawerVisible"
-        :operate-type="operateType"
-        :row-data="editingData"
-        @submitted="getDataByPage"
-      />
-    </NCard>
-  </div>
+        <UserOperateDrawer
+          v-model:visible="drawerVisible"
+          :operate-type="operateType"
+          :row-data="editingData"
+          @submitted="getDataByPage"
+        />
+      </NCard>
+    </div>
+  </TableSiderLayout>
 </template>
 
 <style scoped></style>
