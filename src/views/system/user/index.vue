@@ -4,12 +4,17 @@ import { fetchBatchDeleteUser, fetchGetUserList } from '@/service/api/system';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import DictTag from '@/components/custom/dict-tag.vue';
+import { useDict } from '@/hooks/business/dict';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
 
 defineOptions({
   name: 'UserList'
 });
+
+useDict('sys_user_sex');
+useDict('sys_normal_disable');
 
 const appStore = useAppStore();
 
@@ -50,44 +55,45 @@ const {
       width: 64
     },
     {
-      key: 'deptId',
-      title: '部门',
-      align: 'center',
-      minWidth: 120
-    },
-    {
       key: 'userName',
       title: '用户名称',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
+      ellipsis: true
     },
     {
       key: 'nickName',
       title: '用户昵称',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
+      ellipsis: true
+    },
+    {
+      key: 'deptName',
+      title: '部门',
+      align: 'center',
+      minWidth: 120,
+      ellipsis: true
     },
     {
       key: 'phonenumber',
       title: '手机号码',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
+      ellipsis: true
     },
     {
       key: 'status',
-      title: '帐号状态',
+      title: '状态',
       align: 'center',
-      minWidth: 120
+      minWidth: 80,
+      render(row) {
+        return <DictTag size="small" value={row.status} dict-code="sys_normal_disable" />;
+      }
     },
     {
       key: 'createTime',
       title: '创建时间',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'remark',
-      title: '备注',
       align: 'center',
       minWidth: 120
     },
@@ -142,7 +148,7 @@ async function edit(userId: CommonType.IdType) {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="用户信息列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard title="用户列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

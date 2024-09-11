@@ -9,7 +9,6 @@ import { menuIconTypeOptions, menuIsFrameOptions, menuTypeOptions } from '@/cons
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { getLocalMenuIcons } from '@/utils/icon';
 import { humpToLine, isNotNull } from '@/utils/common';
-import { useDict } from '@/hooks/business/dict';
 
 defineOptions({
   name: 'MenuOperateDrawer'
@@ -39,9 +38,6 @@ const emit = defineEmits<Emits>();
 const visible = defineModel<boolean>('visible', {
   default: false
 });
-
-const { options: showHideOptions } = useDict('sys_show_hide', false);
-const { options: enableStatusOptions } = useDict('sys_normal_disable');
 
 const iconType = ref<Api.System.IconType>('1');
 const { formRef, validate, restoreValidation } = useNaiveForm();
@@ -411,11 +407,7 @@ const FormTipComponent = defineComponent({
                 <span class="pl-3px">显示状态</span>
               </div>
             </template>
-            <NRadioGroup v-model:value="model.visible">
-              <NSpace>
-                <NRadio v-for="item in showHideOptions" :key="item.value" :value="item.value" :label="item.label" />
-              </NSpace>
-            </NRadioGroup>
+            <DictRadio v-model:value="model.visible" dict-code="sys_show_hide" />
           </NFormItemGi>
           <NFormItemGi :span="12" path="status">
             <template #label>
@@ -424,11 +416,7 @@ const FormTipComponent = defineComponent({
                 <span class="pl-3px">菜单状态</span>
               </div>
             </template>
-            <NRadioGroup v-model:value="model.status">
-              <NSpace>
-                <NRadio v-for="item in enableStatusOptions" :key="item.value" :value="item.value" :label="item.label" />
-              </NSpace>
-            </NRadioGroup>
+            <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
           </NFormItemGi>
           <NFormItemGi :span="12" label="显示排序" path="orderNum">
             <NInputNumber v-model:value="model.orderNum" placeholder="请输入排序" />

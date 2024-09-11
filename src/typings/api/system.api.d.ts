@@ -270,7 +270,7 @@ declare namespace Api {
       /** 是否默认（Y是 N否） */
       isDefault: string;
       /** 表格回显样式 */
-      listClass: string;
+      listClass: NaiveUI.ThemeColor;
       /** 备注 */
       remark: string;
     }>;

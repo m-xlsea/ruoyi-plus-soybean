@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 import { $t } from '@/locales';
 import { useNaiveForm } from '@/hooks/common/form';
+
 defineOptions({
   name: 'UserSearch'
 });
@@ -36,7 +37,7 @@ async function search() {
 </script>
 
 <template>
-  <NCard :bordered="false" size="small" class="card-wrapper">
+  <NCard :bordered="false" size="small" class="table-search card-wrapper">
     <NCollapse>
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
@@ -51,9 +52,14 @@ async function search() {
               <NInput v-model:value="model.phonenumber" placeholder="请输入手机号码" />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" label="帐号状态" path="status" class="pr-24px">
-              <NSelect v-model:value="model.status" placeholder="请选择帐号状态" :options="[]" clearable />
+              <DictSelect
+                v-model:value="model.status"
+                placeholder="请选择帐号状态"
+                dict-code="sys_normal_disable"
+                clearable
+              />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="创建时间" path="createTime" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:8" label="创建时间" path="createTime" class="pr-24px">
               <NDatePicker
                 v-model:formatted-value="dateRangeCreateTime"
                 type="datetimerange"
@@ -61,7 +67,7 @@ async function search() {
                 clearable
               />
             </NFormItemGi>
-            <NFormItemGi span="24" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:16" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

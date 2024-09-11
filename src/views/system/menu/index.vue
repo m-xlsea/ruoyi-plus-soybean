@@ -4,15 +4,18 @@ import { useBoolean, useLoading } from '@sa/hooks';
 import type { DataTableColumns, TreeInst, TreeOption } from 'naive-ui';
 import { NButton, NIcon, NInput, NPopconfirm, NTooltip } from 'naive-ui';
 import { fetchDeleteMenu, fetchGetMenuList } from '@/service/api/system';
-import SvgIcon from '@/components/custom/svg-icon.vue';
 import { useAppStore } from '@/store/modules/app';
 import { menuIsFrameRecord, menuTypeRecord } from '@/constants/business';
-import ButtonIcon from '@/components/custom/button-icon.vue';
 import { $t } from '@/locales';
 import { handleMenuTree } from '@/utils/ruoyi';
-import StatusTag from '@/components/custom/status-tag.vue';
 import { useDict } from '@/hooks/business/dict';
+import SvgIcon from '@/components/custom/svg-icon.vue';
+import DictTag from '@/components/custom/dict-tag.vue';
+import ButtonIcon from '@/components/custom/button-icon.vue';
 import MenuOperateDrawer from './modules/menu-operate-drawer.vue';
+
+useDict('sys_show_hide');
+useDict('sys_normal_disable');
 
 const appStore = useAppStore();
 const editingData = ref<Api.System.Menu>();
@@ -207,7 +210,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
     minWidth: 80,
     align: 'center',
     render(row) {
-      return <StatusTag size="small" value={row.status} />;
+      return <DictTag size="small" value={row.status} dict-code="sys_normal_disable" />;
     }
   },
   {
@@ -259,8 +262,6 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
     }
   }
 ];
-
-const { record: showHideRecord } = useDict('sys_show_hide');
 </script>
 
 <template>
@@ -367,7 +368,7 @@ const { record: showHideRecord } = useDict('sys_show_hide');
               <NTag size="small" type="primary">{{ menuTypeRecord[currentMenu.menuType!] }}</NTag>
             </NDescriptionsItem>
             <NDescriptionsItem label="菜单状态">
-              <StatusTag size="small" :value="currentMenu.status" />
+              <DictTag size="small" :value="currentMenu.status" dict-code="sys_normal_disable" />
             </NDescriptionsItem>
             <NDescriptionsItem label="菜单名称">{{ currentMenu.menuName }}</NDescriptionsItem>
             <NDescriptionsItem v-if="currentMenu.menuType === 'C'" label="组件路径">
@@ -391,9 +392,7 @@ const { record: showHideRecord } = useDict('sys_show_hide');
               </NTag>
             </NDescriptionsItem>
             <NDescriptionsItem label="显示状态">
-              <NTag v-if="currentMenu.visible" size="small" :type="tagMap[currentMenu.visible]">
-                {{ showHideRecord[currentMenu.visible] }}
-              </NTag>
+              <DictTag size="small" :value="currentMenu.visible" dict-code="sys_show_hide" />
             </NDescriptionsItem>
             <NDescriptionsItem v-if="currentMenu.menuType === 'C'" label="是否缓存">
               <NTag v-if="currentMenu.isCache" size="small" :type="tagMap[currentMenu.isCache]">

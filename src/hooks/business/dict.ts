@@ -40,6 +40,11 @@ export function useDict(dictType: string, immediate: boolean = true) {
     options.value = data.value.map(dict => ({ label: dict.dictLabel!, value: dict.dictValue! }));
   }
 
+  function transformDictData(dictValue: string): Api.System.DictData | undefined {
+    if (!data.value.length || !dictValue) return undefined;
+    return data.value.find(dict => dict.dictValue === dictValue);
+  }
+
   if (immediate) {
     getData().then(() => {
       getRecord();
@@ -64,6 +69,7 @@ export function useDict(dictType: string, immediate: boolean = true) {
     options,
     getData,
     getRecord,
-    getOptions
+    getOptions,
+    transformDictData
   };
 }

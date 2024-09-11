@@ -12,7 +12,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  immediate: true
+  immediate: false
 });
 
 const value = defineModel<string | null>('value', { required: true });

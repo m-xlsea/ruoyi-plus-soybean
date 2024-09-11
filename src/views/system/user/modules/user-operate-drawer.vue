@@ -155,8 +155,8 @@ watch(visible, () => {
         <NFormItem label="密码" path="password">
           <NInput v-model:value="model.password" placeholder="请输入密码" />
         </NFormItem>
-        <NFormItem label="帐号状态" path="status">
-          <NInput v-model:value="model.status" placeholder="请输入帐号状态" />
+        <NFormItem label="状态" path="status">
+          <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
         </NFormItem>
         <NFormItem label="备注" path="remark">
           <NInput v-model:value="model.remark" placeholder="请输入备注" />

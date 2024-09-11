@@ -16,6 +16,7 @@ declare module 'vue' {
     DarkModeContainer: typeof import('./../components/common/dark-mode-container.vue')['default']
     DictRadio: typeof import('./../components/custom/dict-radio.vue')['default']
     DictSelect: typeof import('./../components/custom/dict-select.vue')['default']
+    DictTag: typeof import('./../components/custom/dict-tag.vue')['default']
     ExceptionBase: typeof import('./../components/common/exception-base.vue')['default']
     FullScreen: typeof import('./../components/common/full-screen.vue')['default']
     IconAntDesignEnterOutlined: typeof import('~icons/ant-design/enter-outlined')['default']
