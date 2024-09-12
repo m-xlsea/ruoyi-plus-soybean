@@ -241,7 +241,7 @@ getDataNames();
       @reset="resetSearchParams"
       @search="getDataByPage"
     />
-    <TableColumnCheckAlert v-model:columns="checkedRowKeys" />
+    <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
     <NCard title="代码生成" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation

@@ -34,7 +34,7 @@ const { columns, data, getData, getDataByPage, loading, mobilePagination, search
   showTotal: true,
   apiParams: {
     pageNum: 1,
-    pageSize: 15,
+    pageSize: 30,
     // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
     // the value can not be undefined, otherwise the property in Form will not be reactive
     dataName: null,
@@ -102,7 +102,7 @@ watch(visible, () => {
           @reset="resetSearchParams"
           @search="getDataByPage"
         />
-        <TableColumnCheckAlert v-model:columns="checkedRowKeys" class="mb-16px" />
+        <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" class="mb-16px" />
         <NDataTable
           v-model:checked-row-keys="checkedRowKeys"
           :columns="columns"

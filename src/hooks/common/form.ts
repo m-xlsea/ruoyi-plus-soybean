@@ -48,6 +48,7 @@ export function useFormRules() {
   function createRequiredRule(message: string): App.Global.FormRule {
     return {
       required: true,
+      trigger: ['change', 'blur'],
       message
     };
   }

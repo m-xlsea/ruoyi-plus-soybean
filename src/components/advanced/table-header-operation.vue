@@ -11,18 +11,21 @@ interface Props {
   loading?: boolean;
   showAdd?: boolean;
   showDelete?: boolean;
+  showExport?: boolean;
 }
 
 withDefaults(defineProps<Props>(), {
   itemAlign: undefined,
   showAdd: true,
-  showDelete: true
+  showDelete: true,
+  showExport: false
 });
 
 interface Emits {
   (e: 'add'): void;
   (e: 'delete'): void;
   (e: 'refresh'): void;
+  (e: 'export'): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -41,6 +44,10 @@ function batchDelete() {
 
 function refresh() {
   emit('refresh');
+}
+
+function handleExport() {
+  emit('export');
 }
 </script>
 
@@ -65,7 +72,14 @@ function refresh() {
         </template>
         {{ $t('common.confirmDelete') }}
       </NPopconfirm>
+      <NButton v-if="showExport" size="small" ghost type="warning" @click="handleExport">
+        <template #icon>
+          <icon-ic-round-download class="text-icon" />
+        </template>
+        导出
+      </NButton>
     </slot>
+    <slot name="after"></slot>
     <NButton size="small" @click="refresh">
       <template #icon>
         <icon-mdi-refresh class="text-icon" :class="{ 'animate-spin': loading }" />

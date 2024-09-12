@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useLoading } from '@sa/hooks';
 import { ref, watch } from 'vue';
+import { useClipboard } from '@vueuse/core';
 import { fetchGetGenPreview } from '@/service/api/tool';
 import MonacoEditor from '@/components/common/monaco-editor.vue';
 
@@ -49,6 +50,24 @@ function closeDrawer() {
 async function handleSubmit() {
   closeDrawer();
   emit('submitted');
+}
+
+const { copy, isSupported } = useClipboard();
+
+async function handleCopyCode() {
+  if (!isSupported) {
+    window.$message?.error('您的浏览器不支持Clipboard API');
+    return;
+  }
+
+  const code = previewData.value[tab.value];
+
+  if (!previewData.value[tab.value]) {
+    return;
+  }
+
+  await copy(code);
+  window.$message?.success('代码复制成功');
 }
 
 watch(visible, () => {
@@ -117,6 +136,14 @@ function getGenLanguage(name: string) {
             :language="getGenLanguage(genMap[tab])"
             height="calc(100vh - 162px)"
           />
+          <div class="position-absolute right-42px top-2px">
+            <NButton text :focusable="false" class="flex-center" @click="handleCopyCode">
+              <template #icon>
+                <icon-ep-copy-document class="text-14px" />
+              </template>
+              <span>复制</span>
+            </NButton>
+          </div>
         </div>
       </NSpin>
       <template #footer>

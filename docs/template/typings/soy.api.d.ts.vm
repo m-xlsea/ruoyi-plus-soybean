@@ -7,7 +7,7 @@
  */
 namespace ${ModuleName} {
     /** ${businessname} */
-    type ${BusinessName} = Api.Common.CommonRecord<{
+    type ${BusinessName} = Common.CommonRecord<{
         #foreach($column in $columns)#if(!$BaseEntity.contains($column.javaField))
         /** $column.columnComment */
         $column.javaField:#if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) CommonType.IdType; #elseif($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number; #elseif($column.javaType == 'Boolean') boolean; #else string; #end
@@ -15,7 +15,7 @@ namespace ${ModuleName} {
     }>;
 
     /** ${businessname} search params */
-    type ${BusinessName}SearchParams = Api.CommonType.RecordNullable<
+    type ${BusinessName}SearchParams = CommonType.RecordNullable<
       Pick<
         Api.${ModuleName}.${BusinessName},
         #foreach($column in $columns)
@@ -24,11 +24,11 @@ namespace ${ModuleName} {
             #end
         #end
       > &
-        Api.Common.CommonSearchParams<${BusinessName}>
+        Api.Common.CommonSearchParams
     >;
 
     /** ${businessname} operate params */
-    type ${BusinessName}OperateParams = Api.CommonType.RecordNullable<
+    type ${BusinessName}OperateParams = CommonType.RecordNullable<
       Pick<
         Api.${ModuleName}.${BusinessName},
         #foreach($column in $columns)

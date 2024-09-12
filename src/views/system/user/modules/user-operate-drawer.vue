@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
+import { useLoading } from '@sa/hooks';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import { fetchCreateUser, fetchUpdateUser } from '@/service/api/system';
+import { fetchCreateUser, fetchGetUserInfo, fetchUpdateUser } from '@/service/api/system';
 
 defineOptions({
   name: 'UserOperateDrawer'
@@ -13,6 +14,8 @@ interface Props {
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
   rowData?: Api.System.User | null;
+  /** the dept tree data */
+  deptData?: Api.Common.CommonTreeRecord;
 }
 
 const props = defineProps<Props>();
@@ -27,8 +30,9 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
+const { loading: deptLoading, startLoading: startDeptLoading, endLoading: endDeptLoading } = useLoading();
 const { formRef, validate, restoreValidation } = useNaiveForm();
-const { createRequiredRule } = useFormRules();
+const { createRequiredRule, patternRules } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
@@ -51,19 +55,30 @@ function createDefaultModel(): Model {
     phonenumber: '',
     sex: '',
     password: '',
-    status: '',
+    status: '0',
+    roleIds: [],
+    postIds: [],
     remark: ''
   };
 }
 
-type RuleKey = Extract<keyof Model, 'userName' | 'nickName' | 'password' | 'status'>;
+type RuleKey = Extract<keyof Model, 'userName' | 'nickName' | 'password' | 'status' | 'phonenumber'>;
 
-const rules: Record<RuleKey, App.Global.FormRule> = {
-  userName: createRequiredRule('用户名称不能为空'),
-  nickName: createRequiredRule('用户昵称不能为空'),
-  password: createRequiredRule('密码不能为空'),
-  status: createRequiredRule('帐号状态不能为空')
+const rules: Record<RuleKey, App.Global.FormRule[]> = {
+  userName: [createRequiredRule('用户名称不能为空')],
+  nickName: [createRequiredRule('用户昵称不能为空')],
+  password: [createRequiredRule('密码不能为空'), patternRules.pwd],
+  phonenumber: [patternRules.phone],
+  status: [createRequiredRule('帐号状态不能为空')]
 };
+
+async function getUserInfo() {
+  const { error, data } = await fetchGetUserInfo(props.rowData?.userId);
+  if (!error) {
+    model.roleIds = data.roleIds;
+    model.postIds = data.postIds;
+  }
+}
 
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
@@ -72,7 +87,10 @@ function handleUpdateModelWhenEdit() {
   }
 
   if (props.operateType === 'edit' && props.rowData) {
+    startDeptLoading();
     Object.assign(model, props.rowData);
+    getUserInfo();
+    endDeptLoading();
   }
 }
 
@@ -134,26 +152,46 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="部门" path="deptId">
-          <!-- <NInput v-model:value="model.deptId" placeholder="请输入部门" /> -->
-        </NFormItem>
-        <NFormItem label="用户名称" path="userName">
-          <NInput v-model:value="model.userName" placeholder="请输入用户名称" />
-        </NFormItem>
         <NFormItem label="用户昵称" path="nickName">
           <NInput v-model:value="model.nickName" placeholder="请输入用户昵称" />
         </NFormItem>
-        <NFormItem label="用户邮箱" path="email">
-          <NInput v-model:value="model.email" placeholder="请输入用户邮箱" />
+        <NFormItem label="归属部门" path="deptId">
+          <NTreeSelect
+            v-model:value="model.deptId"
+            :loading="deptLoading"
+            clearable
+            :options="deptData as []"
+            label-field="label"
+            key-field="id"
+            :default-expanded-keys="deptData?.length ? [deptData[0].id] : []"
+            placeholder="请选择归属部门"
+          />
         </NFormItem>
         <NFormItem label="手机号码" path="phonenumber">
           <NInput v-model:value="model.phonenumber" placeholder="请输入手机号码" />
         </NFormItem>
-        <NFormItem label="用户性别" path="sex">
-          <DictRadio v-model:value="model.sex" dict-code="sys_user_sex" />
+        <NFormItem label="邮箱" path="email">
+          <NInput v-model:value="model.email" placeholder="请输入邮箱" />
         </NFormItem>
-        <NFormItem label="密码" path="password">
-          <NInput v-model:value="model.password" placeholder="请输入密码" />
+        <NFormItem v-if="operateType === 'add'" label="用户名称" path="userName">
+          <NInput v-model:value="model.userName" placeholder="请输入用户名称" />
+        </NFormItem>
+        <NFormItem v-if="operateType === 'add'" label="用户密码" path="password">
+          <NInput
+            v-model:value="model.password"
+            type="password"
+            show-password-on="click"
+            placeholder="请输入用户密码"
+          />
+        </NFormItem>
+        <NFormItem label="用户性别" path="sex">
+          <DictRadio v-model:value="model.sex" dict-code="sys_user_sex" placeholder="请选择用户性别" />
+        </NFormItem>
+        <NFormItem label="岗位" path="postIds">
+          <PostSelect v-model:value="model.postIds" :dept-id="model.deptId" multiple clearable />
+        </NFormItem>
+        <NFormItem label="角色" path="roleIds">
+          <RoleSelect v-model:value="model.roleIds" multiple clearable />
         </NFormItem>
         <NFormItem label="状态" path="status">
           <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />

@@ -1,6 +1,8 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
-import { fetchBatchDeleteUser, fetchGetUserList } from '@/service/api/system';
+import { ref } from 'vue';
+import { useLoading } from '@sa/hooks';
+import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList } from '@/service/api/system';
 import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
@@ -143,10 +145,66 @@ async function handleDelete(userId: CommonType.IdType) {
 async function edit(userId: CommonType.IdType) {
   handleEdit('userId', userId);
 }
+
+const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
+const deptPattern = ref<string>();
+const deptData = ref<Api.Common.CommonTreeRecord>([]);
+
+async function getTreeData() {
+  startTreeLoading();
+  const { data: tree, error } = await fetchGetDeptTree();
+  if (!error) {
+    deptData.value = tree;
+  }
+  endTreeLoading();
+}
+
+getTreeData();
+
+function handleClickTree(keys: string[]) {
+  searchParams.deptId = keys.length ? keys[0] : null;
+  checkedRowKeys.value = [];
+  getDataByPage();
+}
+
+function handleResetTreeData() {
+  deptPattern.value = undefined;
+  getTreeData();
+}
 </script>
 
 <template>
   <TableSiderLayout sider-title="部门列表">
+    <template #header-extra>
+      <NButton size="small" text class="h-18px" @click.stop="() => handleResetTreeData()">
+        <template #icon>
+          <SvgIcon icon="ic:round-refresh" />
+        </template>
+      </NButton>
+    </template>
+    <template #sider>
+      <NInput v-model:value="deptPattern" clearable :placeholder="$t('common.keywordSearch')" />
+      <NSpin class="dept-tree" :show="treeLoading">
+        <NTree
+          block-node
+          show-line
+          :data="deptData as []"
+          :default-expanded-keys="deptData?.length ? [deptData[0].id!] : []"
+          :show-irrelevant-nodes="false"
+          :pattern="deptPattern"
+          block-line
+          class="infinite-scroll h-full min-h-200px py-3"
+          key-field="id"
+          label-field="label"
+          virtual-scroll
+          @update:selected-keys="handleClickTree"
+        >
+          <template #empty>
+            <NEmpty description="暂无部门信息" class="h-full min-h-200px justify-center" />
+          </template>
+        </NTree>
+      </NSpin>
+    </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
       <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
@@ -178,6 +236,7 @@ async function edit(userId: CommonType.IdType) {
           v-model:visible="drawerVisible"
           :operate-type="operateType"
           :row-data="editingData"
+          :dept-data="deptData"
           @submitted="getDataByPage"
         />
       </NCard>
@@ -185,4 +244,67 @@ async function edit(userId: CommonType.IdType) {
   </TableSiderLayout>
 </template>
 
-<style scoped></style>
+<style scoped lang="scss">
+.dept-tree {
+  .n-button {
+    --n-padding: 8px !important;
+  }
+
+  :deep(.n-tree__empty) {
+    height: 100%;
+    justify-content: center;
+  }
+
+  :deep(.n-spin-content) {
+    height: 100%;
+  }
+
+  :deep(.infinite-scroll) {
+    height: calc(100vh - 228px - var(--calc-footer-height, 0px)) !important;
+    max-height: calc(100vh - 228px - var(--calc-footer-height, 0px)) !important;
+  }
+
+  @media screen and (max-width: 1024px) {
+    :deep(.infinite-scroll) {
+      height: calc(100vh - 227px - var(--calc-footer-height, 0px)) !important;
+      max-height: calc(100vh - 227px - var(--calc-footer-height, 0px)) !important;
+    }
+  }
+
+  :deep(.n-tree-node) {
+    height: 33px;
+  }
+
+  :deep(.n-tree-node-switcher) {
+    height: 33px;
+  }
+
+  :deep(.n-tree-node-switcher__icon) {
+    font-size: 16px !important;
+    height: 16px !important;
+    width: 16px !important;
+  }
+}
+
+:deep(.n-data-table-wrapper),
+:deep(.n-data-table-base-table),
+:deep(.n-data-table-base-table-body) {
+  height: 100%;
+}
+
+@media screen and (max-width: 800px) {
+  :deep(.n-data-table-base-table-body) {
+    max-height: calc(100vh - 400px - var(--calc-footer-height, 0px));
+  }
+}
+
+@media screen and (max-width: 802px) {
+  :deep(.n-data-table-base-table-body) {
+    max-height: calc(100vh - 473px - var(--calc-footer-height, 0px));
+  }
+}
+
+:deep(.n-card-header__main) {
+  min-width: 69px !important;
+}
+</style>

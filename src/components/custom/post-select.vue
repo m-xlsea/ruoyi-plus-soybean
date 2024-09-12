@@ -1,0 +1,60 @@
+<script setup lang="ts">
+import { useLoading } from '@sa/hooks';
+import type { SelectProps } from 'naive-ui';
+import { ref, useAttrs, watch } from 'vue';
+import { fetchGetPostSelect } from '@/service/api/system';
+
+defineOptions({
+  name: 'PostSelect'
+});
+
+interface Props {
+  deptId?: string;
+  [key: string]: any;
+}
+
+const props = defineProps<Props>();
+
+const value = defineModel<string | null>('value', { required: true });
+
+const attrs: SelectProps = useAttrs();
+
+const { loading: roleLoading, startLoading: startRoleLoading, endLoading: endRoleLoading } = useLoading();
+
+/** the enabled role options */
+const roleOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
+
+watch(
+  () => props.deptId,
+  () => {
+    if (!props.deptId) return;
+    getRoleOptions();
+  },
+  { immediate: true }
+);
+
+async function getRoleOptions() {
+  startRoleLoading();
+  const { error, data } = await fetchGetPostSelect(props.deptId);
+
+  if (!error) {
+    roleOptions.value = data.map(item => ({
+      label: item.postName,
+      value: item.postId
+    }));
+  }
+  endRoleLoading();
+}
+</script>
+
+<template>
+  <NSelect
+    v-model:value="value"
+    :loading="roleLoading"
+    :options="roleOptions"
+    v-bind="attrs"
+    placeholder="请选择岗位"
+  />
+</template>
+
+<style scoped></style>
