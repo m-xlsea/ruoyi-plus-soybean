@@ -90,7 +90,7 @@ const {
       align: 'center',
       minWidth: 80,
       render(row) {
-        return <DictTag size="small" value={row.status} dict-code="sys_normal_disable" />;
+        return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
       }
     },
     {

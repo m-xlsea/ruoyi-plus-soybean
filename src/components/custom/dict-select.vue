@@ -15,7 +15,7 @@ const props = withDefaults(defineProps<Props>(), {
   immediate: false
 });
 
-const value = defineModel<string | null>('value', { required: true });
+const value = defineModel<string | null>('value', { required: false });
 
 const attrs: SelectProps = useAttrs();
 const { options } = useDict(props.dictCode, props.immediate);

@@ -14,7 +14,7 @@ interface Props {
 
 defineProps<Props>();
 
-const value = defineModel<string | null>('value', { required: true });
+const value = defineModel<CommonType.IdType[] | null>('value', { required: false });
 
 const attrs: SelectProps = useAttrs();
 

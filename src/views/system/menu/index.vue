@@ -210,7 +210,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
     minWidth: 80,
     align: 'center',
     render(row) {
-      return <DictTag size="small" value={row.status} dict-code="sys_normal_disable" />;
+      return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
     }
   },
   {

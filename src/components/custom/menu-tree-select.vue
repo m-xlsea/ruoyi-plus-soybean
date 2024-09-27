@@ -14,7 +14,7 @@ interface Props {
 
 defineProps<Props>();
 
-const value = defineModel<CommonType.IdType | null>('value', { required: true });
+const value = defineModel<CommonType.IdType | null>('value', { required: false });
 
 const attrs: TreeSelectProps = useAttrs();
 const options = ref<Api.System.MenuList>([]);

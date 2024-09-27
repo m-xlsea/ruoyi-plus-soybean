@@ -9,13 +9,13 @@ defineOptions({
 });
 
 interface Props {
-  deptId?: string;
+  deptId?: CommonType.IdType | null;
   [key: string]: any;
 }
 
 const props = defineProps<Props>();
 
-const value = defineModel<string | null>('value', { required: true });
+const value = defineModel<CommonType.IdType[] | null>('value', { required: false });
 
 const attrs: SelectProps = useAttrs();
 
@@ -35,7 +35,7 @@ watch(
 
 async function getRoleOptions() {
   startRoleLoading();
-  const { error, data } = await fetchGetPostSelect(props.deptId);
+  const { error, data } = await fetchGetPostSelect(props.deptId!);
 
   if (!error) {
     roleOptions.value = data.map(item => ({

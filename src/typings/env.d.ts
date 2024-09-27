@@ -103,6 +103,8 @@ declare namespace Env {
     readonly VITE_ICONIFY_URL?: string;
     /** Used to differentiate storage across different domains */
     readonly VITE_STORAGE_PREFIX?: string;
+    /** Whether to automatically detect updates after configuring application packaging */
+    readonly VITE_AUTOMATICALLY_DETECT_UPDATE?: CommonType.YesOrNo;
     readonly VITE_APP_CLIENT_ID?: string;
     readonly VITE_APP_ENCRYPT?: CommonType.YesOrNo;
     readonly VITE_APP_RSA_PUBLIC_KEY?: string;
