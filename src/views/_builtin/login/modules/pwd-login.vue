@@ -59,7 +59,7 @@ async function handleSubmit() {
   }
   try {
     await authStore.login(model);
-  } catch (error) {
+  } catch {
     handleFetchCaptchaCode();
   }
 }
@@ -104,7 +104,7 @@ handleLoginRember();
 </script>
 
 <template>
-  <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false">
+  <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
     <NFormItem v-if="tenantEnabled" path="tenantId">
       <NSelect v-model:value="model.tenantId" placeholder="请选择/输入公司名称" :options="tenantOption" />
     </NFormItem>
