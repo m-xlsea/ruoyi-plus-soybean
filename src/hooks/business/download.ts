@@ -88,7 +88,14 @@ export function useDownload() {
         Clientid: clientId!
       }
     })
-      .then(async response => response.blob())
+      .then(async response => {
+        if (response.headers.get('Content-Type')?.includes('application/json')) {
+          const res = await response.json();
+          const code = res.code as CommonType.ErrorCode;
+          throw new Error(errorCodeRecord[code] || res.msg || errorCodeRecord.default);
+        }
+        return response.blob();
+      })
       .then(data => downloadByData(data, fileName, 'application/zip'))
       .catch(err => window.$message?.error(err.message))
       .finally(() => window.$loading?.endLoading());

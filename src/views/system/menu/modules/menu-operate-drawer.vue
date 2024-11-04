@@ -41,7 +41,7 @@ const visible = defineModel<boolean>('visible', {
 
 const iconType = ref<Api.System.IconType>('1');
 const { formRef, validate, restoreValidation } = useNaiveForm();
-const { createRequiredRule } = useFormRules();
+const { createRequiredRule, createNumberRequiredRule } = useFormRules();
 const queryList = ref<{ key: string; value: string }[]>([]);
 
 const drawerTitle = computed(() => {
@@ -79,7 +79,7 @@ type RuleKey = Extract<keyof Model, 'menuName' | 'orderNum' | 'path' | 'componen
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   menuName: createRequiredRule('菜单名称不能为空'),
-  orderNum: createRequiredRule('菜单排序不能为空'),
+  orderNum: createNumberRequiredRule('菜单排序不能为空'),
   path: createRequiredRule('路由地址不能为空'),
   component: createRequiredRule('组件路径不能为空')
 };
@@ -148,7 +148,7 @@ async function handleSubmit() {
 
   let path = model.path;
   let component = model.component;
-  if (isFrame !== '0') {
+  if (isFrame !== '1') {
     component = 'iframe-page';
     path = !model.path?.startsWith('/') ? `/${model.path}` : model.path;
   } else if (model.menuType === 'C') {

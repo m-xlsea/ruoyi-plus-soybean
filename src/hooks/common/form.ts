@@ -53,6 +53,10 @@ export function useFormRules() {
     };
   }
 
+  function createNumberRequiredRule(message: string): App.Global.FormRule {
+    return { ...createRequiredRule(message), type: 'number' };
+  }
+
   /** create a rule for confirming the password */
   function createConfirmPwdRule(pwd: string | Ref<string> | ComputedRef<string>) {
     const confirmPwdRule: App.Global.FormRule[] = [
@@ -76,7 +80,8 @@ export function useFormRules() {
     formRules,
     defaultRequiredRule,
     createRequiredRule,
-    createConfirmPwdRule
+    createConfirmPwdRule,
+    createNumberRequiredRule
   };
 }
 

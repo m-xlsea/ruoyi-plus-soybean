@@ -30,6 +30,7 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
+const { loading, startLoading, endLoading } = useLoading();
 const { loading: deptLoading, startLoading: startDeptLoading, endLoading: endDeptLoading } = useLoading();
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule, patternRules } = useFormRules();
@@ -73,11 +74,13 @@ const rules: Record<RuleKey, App.Global.FormRule[]> = {
 };
 
 async function getUserInfo() {
+  startLoading();
   const { error, data } = await fetchGetUserInfo(props.rowData?.userId);
   if (!error) {
     model.roleIds = data.roleIds;
     model.postIds = data.postIds;
   }
+  endLoading();
 }
 
 function handleUpdateModelWhenEdit() {
@@ -151,55 +154,57 @@ watch(visible, () => {
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="用户昵称" path="nickName">
-          <NInput v-model:value="model.nickName" placeholder="请输入用户昵称" />
-        </NFormItem>
-        <NFormItem label="归属部门" path="deptId">
-          <NTreeSelect
-            v-model:value="model.deptId"
-            :loading="deptLoading"
-            clearable
-            :options="deptData as []"
-            label-field="label"
-            key-field="id"
-            :default-expanded-keys="deptData?.length ? [deptData[0].id] : []"
-            placeholder="请选择归属部门"
-          />
-        </NFormItem>
-        <NFormItem label="手机号码" path="phonenumber">
-          <NInput v-model:value="model.phonenumber" placeholder="请输入手机号码" />
-        </NFormItem>
-        <NFormItem label="邮箱" path="email">
-          <NInput v-model:value="model.email" placeholder="请输入邮箱" />
-        </NFormItem>
-        <NFormItem v-if="operateType === 'add'" label="用户名称" path="userName">
-          <NInput v-model:value="model.userName" placeholder="请输入用户名称" />
-        </NFormItem>
-        <NFormItem v-if="operateType === 'add'" label="用户密码" path="password">
-          <NInput
-            v-model:value="model.password"
-            type="password"
-            show-password-on="click"
-            placeholder="请输入用户密码"
-          />
-        </NFormItem>
-        <NFormItem label="用户性别" path="sex">
-          <DictRadio v-model:value="model.sex" dict-code="sys_user_sex" placeholder="请选择用户性别" />
-        </NFormItem>
-        <NFormItem label="岗位" path="postIds">
-          <PostSelect v-model:value="model.postIds" :dept-id="model.deptId" multiple clearable />
-        </NFormItem>
-        <NFormItem label="角色" path="roleIds">
-          <RoleSelect v-model:value="model.roleIds" multiple clearable />
-        </NFormItem>
-        <NFormItem label="状态" path="status">
-          <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
-        </NFormItem>
-        <NFormItem label="备注" path="remark">
-          <NInput v-model:value="model.remark" placeholder="请输入备注" />
-        </NFormItem>
-      </NForm>
+      <NSpin :show="loading">
+        <NForm ref="formRef" :model="model" :rules="rules">
+          <NFormItem label="用户昵称" path="nickName">
+            <NInput v-model:value="model.nickName" placeholder="请输入用户昵称" />
+          </NFormItem>
+          <NFormItem label="归属部门" path="deptId">
+            <NTreeSelect
+              v-model:value="model.deptId"
+              :loading="deptLoading"
+              clearable
+              :options="deptData as []"
+              label-field="label"
+              key-field="id"
+              :default-expanded-keys="deptData?.length ? [deptData[0].id] : []"
+              placeholder="请选择归属部门"
+            />
+          </NFormItem>
+          <NFormItem label="手机号码" path="phonenumber">
+            <NInput v-model:value="model.phonenumber" placeholder="请输入手机号码" />
+          </NFormItem>
+          <NFormItem label="邮箱" path="email">
+            <NInput v-model:value="model.email" placeholder="请输入邮箱" />
+          </NFormItem>
+          <NFormItem v-if="operateType === 'add'" label="用户名称" path="userName">
+            <NInput v-model:value="model.userName" placeholder="请输入用户名称" />
+          </NFormItem>
+          <NFormItem v-if="operateType === 'add'" label="用户密码" path="password">
+            <NInput
+              v-model:value="model.password"
+              type="password"
+              show-password-on="click"
+              placeholder="请输入用户密码"
+            />
+          </NFormItem>
+          <NFormItem label="用户性别" path="sex">
+            <DictRadio v-model:value="model.sex" dict-code="sys_user_sex" placeholder="请选择用户性别" />
+          </NFormItem>
+          <NFormItem label="岗位" path="postIds">
+            <PostSelect v-model:value="model.postIds" :dept-id="model.deptId" multiple clearable />
+          </NFormItem>
+          <NFormItem label="角色" path="roleIds">
+            <RoleSelect v-model:value="model.roleIds" multiple clearable />
+          </NFormItem>
+          <NFormItem label="状态" path="status">
+            <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
+          </NFormItem>
+          <NFormItem label="备注" path="remark">
+            <NInput v-model:value="model.remark" placeholder="请输入备注" />
+          </NFormItem>
+        </NForm>
+      </NSpin>
       <template #footer>
         <NSpace :size="16">
           <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>

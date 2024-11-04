@@ -93,6 +93,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
   function parseRouter(route: ElegantConstRoute, parent?: ElegantConstRoute) {
     if (authRouteMode.value === 'dynamic') {
+      if (route.component === 'Layout' && route.path === '/' && route.children?.length) {
+        Object.assign(route, route.children[0]);
+      }
       // @ts-expect-error no query field
       const query = route.query ? String(route.query) : undefined;
       route.path = route.path.startsWith('//') ? route.path.substring(1) : route.path;

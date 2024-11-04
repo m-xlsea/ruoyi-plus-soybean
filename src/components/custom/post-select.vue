@@ -19,7 +19,7 @@ const value = defineModel<CommonType.IdType[] | null>('value', { required: false
 
 const attrs: SelectProps = useAttrs();
 
-const { loading: roleLoading, startLoading: startRoleLoading, endLoading: endRoleLoading } = useLoading();
+const { loading: postLoading, startLoading: startPostLoading, endLoading: endPostLoading } = useLoading();
 
 /** the enabled role options */
 const roleOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
@@ -34,7 +34,7 @@ watch(
 );
 
 async function getRoleOptions() {
-  startRoleLoading();
+  startPostLoading();
   const { error, data } = await fetchGetPostSelect(props.deptId!);
 
   if (!error) {
@@ -43,14 +43,14 @@ async function getRoleOptions() {
       value: item.postId
     }));
   }
-  endRoleLoading();
+  endPostLoading();
 }
 </script>
 
 <template>
   <NSelect
     v-model:value="value"
-    :loading="roleLoading"
+    :loading="postLoading"
     :options="roleOptions"
     v-bind="attrs"
     placeholder="请选择岗位"

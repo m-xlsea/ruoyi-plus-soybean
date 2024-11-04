@@ -31,7 +31,7 @@
     "cleanup": "sa cleanup",
     "commit": "sa git-commit",
     "commit:zh": "sa git-commit -l=zh-cn",
-    "dev": "vite --mode test",
+    "dev": "vite --mode dev",
     "dev:prod": "vite --mode prod",
     "dev:test": "vite --mode test",
     "gen-route": "sa gen-route",
