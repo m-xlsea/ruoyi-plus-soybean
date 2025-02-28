@@ -25,6 +25,8 @@ declare namespace StorageType {
     refreshToken: string;
     /** The theme color */
     themeColor: string;
+    /** The dark mode */
+    darkMode: boolean;
     /** The theme settings */
     themeSettings: App.Theme.ThemeSetting;
     /**

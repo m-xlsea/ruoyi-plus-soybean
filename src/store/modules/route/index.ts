@@ -232,10 +232,17 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     handleConstantAndAuthRoutes();
 
     setIsInitConstantRoute(true);
+
+    tabStore.initHomeTab();
   }
 
   /** Init auth route */
   async function initAuthRoute() {
+    // check if user info is initialized
+    if (!authStore.userInfo.userId) {
+      await authStore.initUserInfo();
+    }
+
     if (authRouteMode.value === 'static') {
       initStaticAuthRoute();
     } else {
@@ -364,6 +371,14 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     return getSelectedMenuKeyPathByKey(selectedKey, menus.value);
   }
 
+  async function onRouteSwitchWhenLoggedIn() {
+    await authStore.initUserInfo();
+  }
+
+  async function onRouteSwitchWhenNotLoggedIn() {
+    // some global init logic if it does not need to be logged in
+  }
+
   return {
     resetStore,
     routeHome,
@@ -380,6 +395,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     isInitAuthRoute,
     setIsInitAuthRoute,
     getIsAuthRouteExist,
-    getSelectedMenuKeyPath
+    getSelectedMenuKeyPath,
+    onRouteSwitchWhenLoggedIn,
+    onRouteSwitchWhenNotLoggedIn
   };
 });
