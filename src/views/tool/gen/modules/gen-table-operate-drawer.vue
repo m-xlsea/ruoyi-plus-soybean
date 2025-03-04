@@ -39,7 +39,7 @@ interface Emits {
 const emit = defineEmits<Emits>();
 
 const appStore = useAppStore();
-const { defaultRequiredRule } = useFormRules();
+const { defaultRequiredRule, defaultNumberRequiredRule } = useFormRules();
 const { loading, startLoading, endLoading } = useLoading();
 const genTableInfo = ref<Api.Tool.GenTableInfo>();
 
@@ -73,7 +73,7 @@ const infoRules: Record<InfoRuleKey, App.Global.FormRule> = {
   moduleName: defaultRequiredRule,
   businessName: defaultRequiredRule,
   functionName: defaultRequiredRule,
-  parentMenuId: defaultRequiredRule,
+  parentMenuId: defaultNumberRequiredRule,
   genType: defaultRequiredRule,
   genPath: defaultRequiredRule
 };
