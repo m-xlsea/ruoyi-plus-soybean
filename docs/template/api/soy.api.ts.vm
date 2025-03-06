@@ -1,7 +1,7 @@
 import { request } from '@/service/request';
 
 /** 获取${functionName}列表 */
-export function fetchGet${BusinessName}List (params?: Api.System.${BusinessName}SearchParams) {
+export function fetchGet${BusinessName}List (params?: Api.${ModuleName}.${BusinessName}SearchParams) {
     return request<Api.${ModuleName}.${BusinessName}List>({
         url: '/${moduleName}/${businessName}/list',
         method: 'get',
