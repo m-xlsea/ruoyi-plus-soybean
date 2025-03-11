@@ -46,13 +46,17 @@ export function useFormRules() {
   const defaultRequiredRule = createRequiredRule($t('form.required'));
 
   /** the default number required rule */
-  const defaultNumberRequiredRule = createNumberRequiredRule($t('form.required'));
 
   function createRequiredRule(message: string): App.Global.FormRule {
     return {
       required: true,
       trigger: ['change', 'blur'],
-      message
+      validator: (_rule: any, value: any) => {
+        if (value === null || value === undefined || value === '') {
+          return new Error(message);
+        }
+        return true;
+      }
     };
   }
 
@@ -82,7 +86,6 @@ export function useFormRules() {
     patternRules,
     formRules,
     defaultRequiredRule,
-    defaultNumberRequiredRule,
     createRequiredRule,
     createConfirmPwdRule,
     createNumberRequiredRule

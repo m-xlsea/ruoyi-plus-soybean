@@ -25,6 +25,7 @@ declare module "@elegant-router/types" {
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
     "system": "/system";
     "system_menu": "/system/menu";
+    "system_tenant": "/system/tenant";
     "system_user": "/system/user";
     "tool": "/tool";
     "tool_gen": "/tool/gen";
@@ -90,6 +91,7 @@ declare module "@elegant-router/types" {
     | "login"
     | "home"
     | "system_menu"
+    | "system_tenant"
     | "system_user"
     | "tool_gen"
   >;

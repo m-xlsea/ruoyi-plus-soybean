@@ -98,6 +98,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'system_tenant',
+        path: '/system/tenant',
+        component: 'view.system_tenant',
+        meta: {
+          title: 'system_tenant',
+          i18nKey: 'route.system_tenant'
+        }
+      },
+      {
         name: 'system_user',
         path: '/system/user',
         component: 'view.system_user',
