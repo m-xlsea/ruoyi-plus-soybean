@@ -51,7 +51,12 @@ export function useFormRules() {
     return {
       required: true,
       trigger: ['change', 'blur'],
-      message
+      validator: (_rule: any, value: any) => {
+        if (value === null || value === undefined || value === '') {
+          return new Error(message);
+        }
+        return true;
+      }
     };
   }
 
