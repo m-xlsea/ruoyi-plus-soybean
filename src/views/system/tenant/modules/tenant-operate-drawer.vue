@@ -245,6 +245,7 @@ watch(visible, () => {
         <NFormItem label="租户套餐" path="packageId">
           <NSelect
             v-model:value="model.packageId"
+            clearable
             :disabled="props.operateType === 'edit'"
             placeholder="请选择租户套餐"
             :options="packageOptions"
