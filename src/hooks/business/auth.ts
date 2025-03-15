@@ -8,11 +8,17 @@ export function useAuth() {
       return false;
     }
 
-    if (typeof codes === 'string') {
-      return authStore.userInfo.permissions.includes(codes);
+    const { permissions } = authStore.userInfo;
+
+    // 超级管理员拥有所有权限
+    if (permissions.includes('*:*:*')) {
+      return true;
     }
 
-    return codes.some(code => authStore.userInfo.permissions.includes(code));
+    // 将单个权限转换为数组统一处理
+    const codeList = Array.isArray(codes) ? codes : [codes];
+
+    return codeList.some(code => permissions.includes(code));
   }
 
   return {
