@@ -1,8 +1,10 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
-import { fetchGet${BusinessName}List, fetchBatchDelete${BusinessName} } from '@/service/api/${moduleName}/${businessName}';
+import { fetchBatchDelete${BusinessName}, fetchGet${BusinessName}List } from '@/service/api/${moduleName}/${businessName}';
 import { $t } from '@/locales';
+import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
+import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import ${BusinessName}OperateDrawer from './modules/${business_name}-operate-drawer.vue';
 import ${BusinessName}Search from './modules/${business_name}-search.vue';
@@ -12,6 +14,8 @@ defineOptions({
 });
 
 const appStore = useAppStore();
+const { download } = useDownload();
+const { hasAuth } = useAuth();
 
 const {
   columns,
@@ -63,23 +67,43 @@ const {
       title: $t('common.operate'),
       align: 'center',
       width: 130,
-      render: row => (
-        <div class="flex-center gap-8px">
-          <NButton type="primary" ghost size="small" onClick={() => edit(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}>
-            {$t('common.edit')}
-          </NButton>
-          <NPopconfirm onPositiveClick={() => handleDelete(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}>
-            {{
-              default: () => $t('common.confirmDelete'),
-              trigger: () => (
-                <NButton type="error" ghost size="small">
-                  {$t('common.delete')}
+      render: row => {
+        const editBtn = () => {
+            if (!hasAuth('${moduleName}:${businessName}:edit')) {
+                return null;
+            }
+            return (
+                <NButton type="primary" ghost size="small" onClick={() => edit(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}>
+                    {$t('common.edit')}
                 </NButton>
-              )
-            }}
-          </NPopconfirm>
-        </div>
-      )
+            );
+        };
+
+        const deleteBtn = () => {
+            if (!hasAuth('${moduleName}:${businessName}:remove')) {
+                return null;
+            }
+            return (
+                <NPopconfirm onPositiveClick={() => handleDelete(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}>
+                    {{
+                        default: () => $t('common.confirmDelete'),
+                        trigger: () => (
+                            <NButton type="error" ghost size="small">
+                                {$t('common.delete')}
+                            </NButton>
+                        )
+                    }}
+                </NPopconfirm>
+            );
+        };
+
+        return (
+            <div class="flex-center gap-8px">
+                {editBtn()}
+                {deleteBtn()}
+            </div>
+        );
+      }
     }
   ]
 });
@@ -112,6 +136,10 @@ async function handleDelete(#foreach($column in $columns)#if($column.isPk == '1'
 async function edit(#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end: CommonType.IdType) {
   handleEdit('#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end', #foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end);
 }
+
+async function handleExport() {
+    download('/${moduleName}/${businessName}/export', searchParams, `${businessName}_#[[${new Date().getTime()}]]#.xlsx`);
+}
 </script>
 
 <template>
@@ -123,8 +151,12 @@ async function edit(#foreach($column in $columns)#if($column.isPk == '1')$column
           v-model:columns="columnChecks"
           :disabled-delete="checkedRowKeys.length === 0"
           :loading="loading"
+          :show-add="hasAuth('${moduleName}:${businessName}:add')"
+          :show-delete="hasAuth('${moduleName}:${businessName}:remove')"
+          :show-export="hasAuth('${moduleName}:${businessName}:export')"
           @add="handleAdd"
           @delete="handleBatchDelete"
+          @export="handleExport"
           @refresh="getData"
         />
       </template>

@@ -2,9 +2,12 @@
 import { NButton, NPopconfirm } from 'naive-ui';
 import { fetchBatchDeleteTenant, fetchGetTenantList } from '@/service/api/system/tenant';
 import { $t } from '@/locales';
+import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import DictTag from '@/components/custom/dict-tag.vue';
+import { useDownload } from '@/hooks/business/download';
+import { useDict } from '@/hooks/business/dict';
 import TenantOperateDrawer from './modules/tenant-operate-drawer.vue';
 import TenantSearch from './modules/tenant-search.vue';
 
@@ -12,7 +15,11 @@ defineOptions({
   name: 'TenantList'
 });
 
+useDict('sys_normal_disable');
+
 const appStore = useAppStore();
+const { download } = useDownload();
+const { hasAuth } = useAuth();
 
 const {
   columns,
@@ -92,12 +99,23 @@ const {
       title: $t('common.operate'),
       align: 'center',
       width: 180,
-      render: row =>
-        row.tenantId !== '000000' ? (
-          <div class="flex-center gap-8px">
+      render: row => {
+        if (row.tenantId === '000000') return null;
+        const editBtn = () => {
+          if (!hasAuth('system:tenant:edit')) {
+            return null;
+          }
+          return (
             <NButton type="primary" ghost size="small" onClick={() => edit(row.id!)}>
               {$t('common.edit')}
             </NButton>
+          );
+        };
+        const syncBtn = () => {
+          if (!hasAuth('system:tenant:edit')) {
+            return null;
+          }
+          return (
             <NPopconfirm onPositiveClick={() => handleDelete(row.id!)}>
               {{
                 default: () => `确认同步[${row.companyName}]的套餐吗?`,
@@ -108,6 +126,13 @@ const {
                 )
               }}
             </NPopconfirm>
+          );
+        };
+        const deleteBtn = () => {
+          if (!hasAuth('system:tenant:delete')) {
+            return null;
+          }
+          return (
             <NPopconfirm onPositiveClick={() => handleDelete(row.id!)}>
               {{
                 default: () => $t('common.confirmDelete'),
@@ -118,8 +143,16 @@ const {
                 )
               }}
             </NPopconfirm>
+          );
+        };
+        return (
+          <div class="flex-center gap-8px">
+            {editBtn()}
+            {syncBtn()}
+            {deleteBtn()}
           </div>
-        ) : null
+        );
+      }
     }
   ]
 });
@@ -144,6 +177,10 @@ async function handleDelete(id: CommonType.IdType) {
 async function edit(id: CommonType.IdType) {
   handleEdit('id', id);
 }
+
+async function handleExport() {
+  download('/system/tenant/export', searchParams, '租户列表.xlsx');
+}
 </script>
 
 <template>
@@ -155,8 +192,12 @@ async function edit(id: CommonType.IdType) {
           v-model:columns="columnChecks"
           :disabled-delete="checkedRowKeys.length === 0"
           :loading="loading"
+          :show-add="hasAuth('system:tenant:add')"
+          :show-delete="hasAuth('system:tenant:delete')"
+          :show-export="hasAuth('system:tenant:export')"
           @add="handleAdd"
           @delete="handleBatchDelete"
+          @export="handleExport"
           @refresh="getData"
         />
       </template>
