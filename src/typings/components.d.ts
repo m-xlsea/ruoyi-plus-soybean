@@ -47,8 +47,6 @@ declare module 'vue' {
     IconMdiKeyboardReturn: typeof import('~icons/mdi/keyboard-return')['default']
     IconMdiRefresh: typeof import('~icons/mdi/refresh')['default']
     'IconMingcute:questionLine': typeof import('~icons/mingcute/question-line')['default']
-    'IconPh:questionLight': typeof import('~icons/ph/question-light')['default']
-    'IconStash:questionLight': typeof import('~icons/stash/question-light')['default']
     IconUilSearch: typeof import('~icons/uil/search')['default']
     LangSwitch: typeof import('./../components/common/lang-switch.vue')['default']
     LookForward: typeof import('./../components/custom/look-forward.vue')['default']

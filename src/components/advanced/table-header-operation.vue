@@ -72,7 +72,7 @@ function handleExport() {
         </template>
         {{ $t('common.confirmDelete') }}
       </NPopconfirm>
-      <NButton v-if="showExport" size="small" ghost type="warning" @click="handleExport">
+      <NButton v-if="showExport" size="small" ghost @click="handleExport">
         <template #icon>
           <icon-ic-round-download class="text-icon" />
         </template>

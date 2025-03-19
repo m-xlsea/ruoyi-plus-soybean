@@ -265,7 +265,7 @@ watch(visible, () => {
           <template #label>
             <span class="flex-y-center">
               用户数量
-              <NTooltip trigger="hover">
+              <NTooltip :show-arrow="false" trigger="hover">
                 <template #trigger>
                   <icon-mingcute:question-line class="ml-4px cursor-pointer text-14px" />
                 </template>
@@ -279,7 +279,7 @@ watch(visible, () => {
           <template #label>
             <span class="flex-y-center">
               绑定域名
-              <NTooltip trigger="hover">
+              <NTooltip :show-arrow="false" trigger="hover">
                 <template #trigger>
                   <icon-mingcute:question-line class="ml-4px cursor-pointer text-14px" />
                 </template>

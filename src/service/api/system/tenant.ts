@@ -38,3 +38,11 @@ export function fetchBatchDeleteTenant(ids: CommonType.IdType[]) {
     method: 'delete'
   });
 }
+
+/** 同步租户字典 */
+export function fetchSyncTenantDict() {
+  return request<boolean>({
+    url: '/system/tenant/syncTenantDict',
+    method: 'get'
+  });
+}
