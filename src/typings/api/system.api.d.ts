@@ -232,7 +232,7 @@ declare namespace Api {
     /** 字典类型 */
     type DictType = Common.CommonRecord<{
       /** 字典主键 */
-      dictId: number;
+      dictId: CommonType.IdType;
       /** 字典名称 */
       dictName: string;
       /** 字典类型 */
@@ -241,12 +241,25 @@ declare namespace Api {
       remark: string;
     }>;
 
+    /** dict type search params */
+    type DictTypeSearchParams = CommonType.RecordNullable<
+      Pick<Api.System.DictType, 'dictName' | 'dictType'> & Api.Common.CommonSearchParams
+    >;
+
+    /** dict type operate params */
+    type DictTypeOperateParams = CommonType.RecordNullable<
+      Pick<Api.System.DictType, 'dictId' | 'dictName' | 'dictType' | 'remark'>
+    >;
+
+    /** dict type list */
+    type DictTypeList = Api.Common.PaginatingQueryRecord<DictType>;
+
     /** 字典数据 */
     type DictData = Common.CommonRecord<{
       /** 样式属性（其他样式扩展） */
       cssClass: string;
       /** 字典编码 */
-      dictCode: number;
+      dictCode: CommonType.IdType;
       /** 字典标签 */
       dictLabel: string;
       /** 字典排序 */
@@ -262,6 +275,30 @@ declare namespace Api {
       /** 备注 */
       remark: string;
     }>;
+
+    /** dict data search params */
+    type DictDataSearchParams = CommonType.RecordNullable<
+      Pick<Api.System.DictData, 'dictLabel' | 'dictType'> & Api.Common.CommonSearchParams
+    >;
+
+    /** dict data operate params */
+    type DictDataOperateParams = CommonType.RecordNullable<
+      Pick<
+        Api.System.DictData,
+        | 'dictCode'
+        | 'dictSort'
+        | 'dictLabel'
+        | 'dictValue'
+        | 'dictType'
+        | 'cssClass'
+        | 'listClass'
+        | 'isDefault'
+        | 'remark'
+      >
+    >;
+
+    /** dict data list */
+    type DictDataList = Api.Common.PaginatingQueryRecord<DictData>;
 
     /** dept */
     type Dept = Api.Common.CommonRecord<{

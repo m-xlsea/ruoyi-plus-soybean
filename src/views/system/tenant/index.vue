@@ -192,7 +192,7 @@ async function handleSyncTenantDict() {
 }
 
 async function handleExport() {
-  download('/system/tenant/export', searchParams, '租户列表.xlsx');
+  download('/system/tenant/export', searchParams, `租户列表_${new Date().getTime()}.xlsx`);
 }
 </script>
 

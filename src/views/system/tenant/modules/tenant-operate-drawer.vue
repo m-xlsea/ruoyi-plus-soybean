@@ -4,7 +4,7 @@ import { useLoading } from '@sa/hooks';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { fetchCreateTenant, fetchUpdateTenant } from '@/service/api/system/tenant';
-import { fetchGetTenantPackageSelectList } from '@/service/api/system/tenantPackage';
+import { fetchGetTenantPackageSelectList } from '@/service/api/system/tenant-package';
 
 defineOptions({
   name: 'TenantOperateDrawer'
@@ -72,7 +72,7 @@ type RuleKey = Extract<
 const rules: Record<RuleKey, App.Global.FormRule | App.Global.FormRule[]> = {
   id: createRequiredRule('id不能为空'),
   contactUserName: createRequiredRule('联系人不能为空'),
-  contactPhone: [createRequiredRule('联系电话不能为空'), patternRules.phone],
+  contactPhone: [createRequiredRule('联系电话不能为空'), { ...patternRules.phone, trigger: ['blur', 'change'] }],
   companyName: createRequiredRule('企业名称不能为空'),
   packageId: createRequiredRule('租户套餐不能为空'),
   accountCount: createRequiredRule('用户数量不能为空'),
@@ -320,3 +320,4 @@ watch(visible, () => {
 </template>
 
 <style scoped></style>
+@/service/api/system/tenant-package

@@ -6,24 +6,39 @@ import { useDict } from '@/hooks/business/dict';
 defineOptions({ name: 'DictTag' });
 
 interface Props {
-  value: string;
-  dictCode: string;
+  value?: string;
+  dictCode?: string;
   immediate?: boolean;
+  dictData?: Api.System.DictData;
   [key: string]: any;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  immediate: false
+  immediate: false,
+  dictData: undefined,
+  dictCode: '',
+  value: ''
 });
 
-const attrs: TagProps = useAttrs();
-const { transformDictData } = useDict(props.dictCode, props.immediate);
-const dictData = computed(() => transformDictData(props.value));
+const attrs = useAttrs() as TagProps;
+
+const dictTagData = computed(() => {
+  if (props.dictData) {
+    return props.dictData;
+  }
+
+  if (props.dictCode && props.value) {
+    const { transformDictData } = useDict(props.dictCode, props.immediate);
+    return transformDictData(props.value);
+  }
+
+  return null;
+});
 </script>
 
 <template>
-  <NTag v-if="dictData" :class="dictData.cssClass" :type="dictData.listClass" v-bind="attrs">
-    {{ dictData.dictLabel }}
+  <NTag v-if="dictTagData" :class="dictTagData.cssClass" :type="dictTagData.listClass" v-bind="attrs">
+    {{ dictTagData.dictLabel }}
   </NTag>
 </template>
 

@@ -15,3 +15,37 @@ export function fetchGetDictTypeOption() {
     method: 'get'
   });
 }
+/** 获取字典类型列表 */
+export function fetchGetDictTypeList(params?: Api.System.DictTypeSearchParams) {
+  return request<Api.System.DictTypeList>({
+    url: '/system/dict/type/list',
+    method: 'get',
+    params
+  });
+}
+
+/** 新增字典类型 */
+export function fetchCreateDictType(data: Api.System.DictTypeOperateParams) {
+  return request<boolean>({
+    url: '/system/dict/type',
+    method: 'post',
+    data
+  });
+}
+
+/** 修改字典类型 */
+export function fetchUpdateDictType(data: Api.System.DictTypeOperateParams) {
+  return request<boolean>({
+    url: '/system/dict/type',
+    method: 'put',
+    data
+  });
+}
+
+/** 批量删除字典类型 */
+export function fetchBatchDeleteDictType(dictIds: CommonType.IdType[]) {
+  return request<boolean>({
+    url: `/system/dict/type/${dictIds.join(',')}`,
+    method: 'delete'
+  });
+}

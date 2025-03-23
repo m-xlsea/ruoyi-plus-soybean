@@ -138,7 +138,7 @@ async function edit(#foreach($column in $columns)#if($column.isPk == '1')$column
 }
 
 async function handleExport() {
-    download('/${moduleName}/${businessName}/export', searchParams, `${businessName}_#[[${new Date().getTime()}]]#.xlsx`);
+    download('/${moduleName}/${businessName}/export', searchParams, `${functionName}_#[[${new Date().getTime()}]]#.xlsx`);
 }
 </script>
 
