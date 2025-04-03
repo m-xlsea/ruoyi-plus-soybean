@@ -8,6 +8,7 @@ defineOptions({
 interface Props {
   itemAlign?: NaiveUI.Align;
   disabledDelete?: boolean;
+  disableAdd?: boolean;
   loading?: boolean;
   showAdd?: boolean;
   showDelete?: boolean;
@@ -55,7 +56,7 @@ function handleExport() {
   <NSpace :align="itemAlign" wrap justify="end" class="lt-sm:w-200px">
     <slot name="prefix"></slot>
     <slot name="default">
-      <NButton v-if="showAdd" size="small" ghost type="primary" @click="add">
+      <NButton v-if="showAdd" :disabled="disableAdd" size="small" ghost type="primary" @click="add">
         <template #icon>
           <icon-ic-round-plus class="text-icon" />
         </template>

@@ -10,6 +10,7 @@ import DictTag from '@/components/custom/dict-tag.vue';
 import { emitter } from '../mitt';
 import DictDataOperateDrawer from './modules/dict-data-operate-drawer.vue';
 import DictDataSearch from './modules/dict-data-search.vue';
+import { ref } from 'vue';
 defineOptions({
   name: 'DictDataList'
 });
@@ -170,19 +171,29 @@ async function handleExport() {
 
 emitter.on('rowClick', async (value: string) => {
   searchParams.dictType = value;
-  await getData();
+  await getDataByPage();
 });
+
+/**
+ * 自定义重置方法，重置dictLabel，不重置dictType
+ */
+async function handleReset() {
+  searchParams.dictLabel = null;
+  await getDataByPage();
+}
+
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <DictDataSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <DictDataSearch v-model:model="searchParams" @reset="handleReset" @search="getDataByPage" />
     <NCard title="字典数据列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
           :disabled-delete="checkedRowKeys.length === 0"
           :loading="loading"
+          :disable-add="searchParams.dictType == null"
           :show-add="hasAuth('system:dictData:add')"
           :show-delete="hasAuth('system:dictData:remove')"
           :show-export="hasAuth('system:dictData:export')"
@@ -209,6 +220,7 @@ emitter.on('rowClick', async (value: string) => {
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
+        :dict-type="searchParams.dictType || ''"
         @submitted="getDataByPage"
       />
     </NCard>

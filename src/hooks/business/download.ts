@@ -29,15 +29,20 @@ export function useDownload() {
     const token = localStg.get('token');
     const clientId = import.meta.env.VITE_APP_CLIENT_ID;
     const now = Date.now();
-    const formData = new FormData();
-    Object.keys(params).forEach(key => formData.append(key, params[key]));
+    const searchParams = new FormData();
+    if (params) {
+      Object.keys(params).forEach(key => {
+        if (params[key] !== null && params[key] !== undefined) {
+          searchParams.append(key, params[key]);
+        }
+      });
+    }
     fetch(`${baseURL}${url}?t=${now}`, {
       method: 'post',
-      body: formData,
+      body: searchParams,
       headers: {
         Authorization: `Bearer ${token}`,
-        Clientid: clientId!,
-        'Content-Type': 'application/x-www-form-urlencoded'
+        Clientid: clientId!
       }
     })
       .then(async response => {

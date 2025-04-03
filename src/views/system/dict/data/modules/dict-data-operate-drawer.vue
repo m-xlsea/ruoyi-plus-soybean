@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, h, reactive, watch } from 'vue';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { fetchCreateDictData, fetchUpdateDictData } from '@/service/api/system/dict-data';
+import { NTag } from 'naive-ui';
 
 defineOptions({
   name: 'DictDataOperateDrawer'
@@ -13,6 +14,7 @@ interface Props {
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
   rowData?: Api.System.DictData | null;
+  dictType: string;
 }
 
 const props = defineProps<Props>();
@@ -42,15 +44,23 @@ type Model = Api.System.DictDataOperateParams;
 
 const model: Model = reactive(createDefaultModel());
 
+const listClassOptions = [
+  { label: 'primary', value: 'primary' },
+  { label: 'success', value: 'success' },
+  { label: 'info', value: 'info' },
+  { label: 'warning', value: 'warning' },
+  { label: 'error', value: 'error' },
+  { label: 'default', value: 'default' }
+]
+
 function createDefaultModel(): Model {
   return {
-    dictSort: null,
+    dictSort: 0,
     dictLabel: '',
     dictValue: '',
-    dictType: '',
+    dictType: props.dictType,
     cssClass: '',
     listClass: null,
-    isDefault: '',
     remark: ''
   };
 }
@@ -83,7 +93,7 @@ async function handleSubmit() {
 
   // request
   if (props.operateType === 'add') {
-    const { dictSort, dictLabel, dictValue, dictType, cssClass, listClass, isDefault, remark } = model;
+    const { dictSort, dictLabel, dictValue, dictType, cssClass, listClass, remark } = model;
     const { error } = await fetchCreateDictData({
       dictSort,
       dictLabel,
@@ -91,14 +101,13 @@ async function handleSubmit() {
       dictType,
       cssClass,
       listClass,
-      isDefault,
       remark
     });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { dictCode, dictSort, dictLabel, dictValue, dictType, cssClass, listClass, isDefault, remark } = model;
+    const { dictCode, dictSort, dictLabel, dictValue, dictType, cssClass, listClass, remark } = model;
     const { error } = await fetchUpdateDictData({
       dictCode,
       dictSort,
@@ -107,7 +116,6 @@ async function handleSubmit() {
       dictType,
       cssClass,
       listClass,
-      isDefault,
       remark
     });
     if (error) return;
@@ -124,32 +132,44 @@ watch(visible, () => {
     restoreValidation();
   }
 });
+
+function renderTagLabel(option: { label: string; value: string }) {
+  return h(
+    'div',
+    { class: 'flex items-center gap-2' },
+    [
+      h(NTag, {type: option.value as any,}, { default: () => option.label })
+    ]
+  );
+}
 </script>
 
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="字典排序" path="dictSort">
-          <NInputNumber v-model:value="model.dictSort" placeholder="请输入字典排序" />
+        <NFormItem label="字典类型" path="dictType">
+          <NInput v-model:value="model.dictType" disabled placeholder="请输入字典类型" />
         </NFormItem>
-        <NFormItem label="字典标签" path="dictLabel">
+        <NFormItem label="标签样式" path="listClass">
+          <NSelect
+            v-model:value="model.listClass"
+            :options="listClassOptions"
+            placeholder="请选择标签样式"
+            :render-label="renderTagLabel"
+          />
+        </NFormItem>
+        <NFormItem label="数据标签" path="dictLabel">
           <NInput v-model:value="model.dictLabel" placeholder="请输入字典标签" />
         </NFormItem>
-        <NFormItem label="字典键值" path="dictValue">
+        <NFormItem label="数据键值" path="dictValue">
           <NInput v-model:value="model.dictValue" placeholder="请输入字典键值" />
         </NFormItem>
-        <NFormItem label="字典类型" path="dictType">
-          <NInput v-model:value="model.dictType" placeholder="请输入字典类型" />
-        </NFormItem>
-        <NFormItem label="样式属性（其他样式扩展）" path="cssClass">
+        <NFormItem label="css类名" path="cssClass">
           <NInput v-model:value="model.cssClass" placeholder="请输入样式属性（其他样式扩展）" />
         </NFormItem>
-        <NFormItem label="表格回显样式" path="listClass">
-          <NInput v-model:value="model.listClass" placeholder="请输入表格回显样式" />
-        </NFormItem>
-        <NFormItem label="是否默认（Y是 N否）" path="isDefault">
-          <NInput v-model:value="model.isDefault" placeholder="请输入是否默认（Y是 N否）" />
+        <NFormItem label="显示排序" path="dictSort">
+          <NInputNumber v-model:value="model.dictSort" placeholder="请输入字典排序" />
         </NFormItem>
         <NFormItem label="备注" path="remark">
           <NInput v-model:value="model.remark" :rows="3" type="textarea" placeholder="请输入备注" />
@@ -166,4 +186,3 @@ watch(visible, () => {
 </template>
 
 <style scoped></style>
-@/service/api/system/dict-data

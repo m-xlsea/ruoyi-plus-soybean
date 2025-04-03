@@ -285,15 +285,7 @@ declare namespace Api {
     type DictDataOperateParams = CommonType.RecordNullable<
       Pick<
         Api.System.DictData,
-        | 'dictCode'
-        | 'dictSort'
-        | 'dictLabel'
-        | 'dictValue'
-        | 'dictType'
-        | 'cssClass'
-        | 'listClass'
-        | 'isDefault'
-        | 'remark'
+        'dictCode' | 'dictSort' | 'dictLabel' | 'dictValue' | 'dictType' | 'cssClass' | 'listClass' | 'remark'
       >
     >;
 
@@ -380,6 +372,37 @@ declare namespace Api {
 
     /** post list */
     type PostList = Api.Common.PaginatingQueryRecord<Post>;
+
+    /** config */
+    type Config = Common.CommonRecord<{
+      /** 参数主键 */
+      configId: CommonType.IdType;
+      /** 租户编号 */
+      tenantId: CommonType.IdType;
+      /** 参数名称 */
+      configName: string;
+      /** 参数键名 */
+      configKey: string;
+      /** 参数键值 */
+      configValue: string;
+      /** 是否内置 */
+      configType: string;
+      /** 备注 */
+      remark: string;
+    }>;
+
+    /** config search params */
+    type ConfigSearchParams = CommonType.RecordNullable<
+      Pick<Api.System.Config, 'configName' | 'configKey' | 'configType' | 'createTime'> & Api.Common.CommonSearchParams
+    >;
+
+    /** config operate params */
+    type ConfigOperateParams = CommonType.RecordNullable<
+      Pick<Api.System.Config, 'configId' | 'configName' | 'configKey' | 'configValue' | 'configType' | 'remark'>
+    >;
+
+    /** config list */
+    type ConfigList = Api.Common.PaginatingQueryRecord<Config>;
 
     /** tenant */
     type Tenant = Common.CommonRecord<{

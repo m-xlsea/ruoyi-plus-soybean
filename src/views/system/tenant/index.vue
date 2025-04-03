@@ -202,9 +202,9 @@ async function handleExport() {
     <NCard title="租户列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <NSpace>
-          <NPopconfirm @positive-click="() => handleSyncTenantDict()">
+          <NPopconfirm v-if="isSuperAdmin" @positive-click="() => handleSyncTenantDict()">
             <template #trigger>
-              <NButton v-if="isSuperAdmin" size="small">
+              <NButton size="small">
                 <template #icon>
                   <icon-material-symbols:sync-rounded />
                 </template>

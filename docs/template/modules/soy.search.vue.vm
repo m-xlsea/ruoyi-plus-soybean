@@ -1,6 +1,5 @@
 #set($ModuleName=$moduleName.substring(0, 1).toUpperCase() + $moduleName.substring(1))
 <script setup lang="ts">
-import { ref } from 'vue';
 import { $t } from '@/locales';
 import { useNaiveForm } from '@/hooks/common/form';
 #if($dictList && $dictList.size() > 0)import { useDict } from '@/hooks/business/dict';#end
