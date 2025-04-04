@@ -136,6 +136,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'system_post',
+        path: '/system/post',
+        component: 'view.system_post',
+        meta: {
+          title: 'system_post',
+          i18nKey: 'route.system_post'
+        }
+      },
+      {
         name: 'system_tenant',
         path: '/system/tenant',
         component: 'view.system_tenant',

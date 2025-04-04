@@ -175,6 +175,7 @@ const routeMap: RouteMap = {
   "system_dict_data": "/system/dict/data",
   "system_dict_type": "/system/dict/type",
   "system_menu": "/system/menu",
+  "system_post": "/system/post",
   "system_tenant": "/system/tenant",
   "system_user": "/system/user",
   "tool": "/tool",

@@ -30,7 +30,7 @@ const visible = defineModel<boolean>('visible', {
 
 #if($dictList && $dictList.size() > 0)
 #foreach($dict in $dictList)
-const { options: ${dict.name}Options } = useDict(${dict.type}#if($dict.immediate), false#end);
+const { options: ${dict.name}Options } = useDict('${dict.type}'#if($dict.immediate), false#end);
 #end#end
 
 const { formRef, validate, restoreValidation } = useNaiveForm();

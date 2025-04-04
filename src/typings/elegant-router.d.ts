@@ -29,6 +29,7 @@ declare module "@elegant-router/types" {
     "system_dict_data": "/system/dict/data";
     "system_dict_type": "/system/dict/type";
     "system_menu": "/system/menu";
+    "system_post": "/system/post";
     "system_tenant": "/system/tenant";
     "system_user": "/system/user";
     "tool": "/tool";
@@ -99,6 +100,7 @@ declare module "@elegant-router/types" {
     | "system_dict"
     | "system_dict_type"
     | "system_menu"
+    | "system_post"
     | "system_tenant"
     | "system_user"
     | "tool_gen"

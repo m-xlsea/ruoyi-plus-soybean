@@ -28,7 +28,7 @@ export function fetchUpdatePost(data: Api.System.PostOperateParams) {
 }
 
 /** 批量删除岗位信息 */
-export function fetchDeletePost(postIds: CommonType.IdType[]) {
+export function fetchBatchDeletePost(postIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/post/${postIds.join(',')}`,
     method: 'delete'
