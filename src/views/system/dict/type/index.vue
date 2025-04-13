@@ -1,13 +1,13 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
 import { ref } from 'vue';
+import type { TableDataWithIndex } from '@sa/hooks';
 import { fetchBatchDeleteDictType, fetchGetDictTypeList } from '@/service/api/system/dict';
 import { $t } from '@/locales';
 import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import type { TableDataWithIndex } from '~/packages/hooks/src';
 import { emitter } from '../mitt';
 import DictTypeOperateDrawer from './modules/dict-type-operate-drawer.vue';
 import DictTypeSearch from './modules/dict-type-search.vue';

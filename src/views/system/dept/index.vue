@@ -1,11 +1,12 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
+import { jsonClone } from '@sa/utils';
+import type { TableDataWithIndex } from '@sa/hooks';
 import { fetchBatchDeleteDept, fetchGetDeptList } from '@/service/api/system/dept';
 import { $t } from '@/locales';
 import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
 import { useTreeTable, useTreeTableOperate } from '@/hooks/common/tree-table';
-import type { TableDataWithIndex } from '~/packages/hooks/src';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { useDict } from '@/hooks/business/dict';
 import DeptOperateDrawer from './modules/dept-operate-drawer.vue';
@@ -76,7 +77,7 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 130,
+      width: 180,
       render: row => {
         const editBtn = () => {
           if (!hasAuth('system:dept:edit')) {
@@ -88,7 +89,16 @@ const {
             </NButton>
           );
         };
-
+        const addBtn = () => {
+          if (!hasAuth('system:dept:add')) {
+            return null;
+          }
+          return (
+            <NButton type="success" ghost size="small" onClick={() => addInRow(row)}>
+              {$t('common.add')}
+            </NButton>
+          );
+        };
         const deleteBtn = () => {
           if (!hasAuth('system:dept:remove')) {
             return null;
@@ -110,6 +120,7 @@ const {
         return (
           <div class="flex-center gap-8px">
             {editBtn()}
+            {addBtn()}
             {deleteBtn()}
           </div>
         );
@@ -132,6 +143,11 @@ async function handleDelete(deptId: CommonType.IdType) {
 
 async function edit(row: TableDataWithIndex<Api.System.Dept>) {
   handleEdit(row);
+}
+
+async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
+  handleAdd();
+  editingData.value = jsonClone(row);
 }
 </script>
 

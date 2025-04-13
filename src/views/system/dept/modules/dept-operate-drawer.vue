@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { NInputNumber } from 'naive-ui';
+import { useLoading } from '@sa/hooks';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import { fetchCreateDept, fetchUpdateDept } from '@/service/api/system/dept';
-import { useDict } from '@/hooks/business/dict';
+import { fetchCreateDept, fetchGetDeptList, fetchGetExcludeDeptList, fetchUpdateDept } from '@/service/api/system/dept';
+import { fetchGetDeptUserList } from '@/service/api/system/user';
+import { handleTree } from '@/utils/common';
+
 defineOptions({
   name: 'DeptOperateDrawer'
 });
@@ -28,10 +31,15 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const { options: sysNormalDisableOptions } = useDict('sys_normal_disable');
-
 const { formRef, validate, restoreValidation } = useNaiveForm();
-const { createRequiredRule } = useFormRules();
+const { createRequiredRule, patternRules } = useFormRules();
+
+const { loading: deptLoading, startLoading: startDeptLoading, endLoading: endDeptLoading } = useLoading();
+const { loading: userLoading, startLoading: startUserLoading, endLoading: endUserLoading } = useLoading();
+const deptData = ref<Api.System.Dept[]>([]);
+const userOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
+const placeholder = ref<string>('请选择负责人');
+const disabled = ref<boolean>(false);
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
@@ -47,28 +55,31 @@ const model: Model = reactive(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
-    parentId: null,
+    parentId: props.rowData?.deptId,
     deptName: '',
     deptCategory: '',
     orderNum: null,
     leader: null,
     phone: '',
     email: '',
-    status: ''
+    status: '0'
   };
 }
 
-type RuleKey = Extract<keyof Model, 'deptId' | 'status'>;
+type RuleKey = Extract<keyof Model, 'deptId' | 'parentId' | 'orderNum' | 'deptName' | 'phone' | 'email'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   deptId: createRequiredRule('部门id不能为空'),
-  status: createRequiredRule('部门状态（0正常 1停用）不能为空')
+  parentId: createRequiredRule('上级部门不能为空'),
+  orderNum: createRequiredRule('显示顺序不能为空'),
+  deptName: createRequiredRule('部门名称不能为空'),
+  phone: patternRules.phone,
+  email: patternRules.email
 };
 
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
     Object.assign(model, createDefaultModel());
-    return;
   }
 
   if (props.operateType === 'edit' && props.rowData) {
@@ -120,8 +131,50 @@ async function handleSubmit() {
   emit('submitted');
 }
 
+async function getDeptData() {
+  startDeptLoading();
+  const { data, error } =
+    props.operateType === 'add' ? await fetchGetDeptList() : await fetchGetExcludeDeptList(props.rowData?.deptId);
+
+  if (error) {
+    window.$message?.error(error.message || '获取部门数据失败');
+    return;
+  }
+
+  if (data) {
+    deptData.value = handleTree(data, { idField: 'deptId' });
+  }
+  endDeptLoading();
+}
+
+async function getUserData() {
+  if (props.operateType === 'add' || !props.rowData?.deptId) {
+    placeholder.value = '仅在更新时可选择部门负责人';
+    disabled.value = true;
+    return;
+  }
+  startUserLoading();
+  const { data, error } = await fetchGetDeptUserList(props.rowData.deptId);
+  if (error) {
+    window.$message?.error(error.message || '获取部门用户数据失败');
+    return;
+  }
+  if (data.length === 0) {
+    placeholder.value = '该部门没有负责人';
+    disabled.value = true;
+  }
+  userOptions.value = data.map(item => ({
+    label: `${item.userName} | ${item.nickName}`,
+    value: item.userId
+  }));
+  endUserLoading();
+}
+
 watch(visible, () => {
   if (visible.value) {
+    disabled.value = false;
+    getDeptData();
+    getUserData();
     handleUpdateModelWhenEdit();
     restoreValidation();
   }
@@ -132,26 +185,38 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <!--
- <NFormItem label="父部门id" path="parentId">
-          <NInput v-model:value="model.parentId" placeholder="请输入父部门id" />
+        <NFormItem label="上级部门" path="parentId">
+          <NTreeSelect
+            v-model:value="model.parentId"
+            :loading="deptLoading"
+            clearable
+            :options="deptData"
+            label-field="deptName"
+            key-field="deptId"
+            default-expand-all
+            placeholder="请选择上级部门"
+          />
         </NFormItem>
--->
-
         <NFormItem label="部门名称" path="deptName">
           <NInput v-model:value="model.deptName" placeholder="请输入部门名称" />
+        </NFormItem>
+        <NFormItem label="显示顺序" path="orderNum">
+          <NInputNumber v-model:value="model.orderNum" class="w-full" placeholder="请输入显示顺序" />
         </NFormItem>
         <NFormItem label="部门类别编码" path="deptCategory">
           <NInput v-model:value="model.deptCategory" placeholder="请输入部门类别编码" />
         </NFormItem>
-        <NFormItem label="显示顺序" path="orderNum">
-          <NInputNumber v-model:value="model.orderNum" placeholder="请输入显示顺序" />
+
+        <NFormItem label="负责人" path="leader">
+          <NSelect
+            v-model:value="model.leader"
+            :loading="userLoading"
+            :disabled="disabled"
+            :placeholder="placeholder"
+            :options="userOptions"
+          />
         </NFormItem>
-        <!--
- <NFormItem label="负责人" path="leader">
-          <NInput v-model:value="model.leader" placeholder="请输入负责人" />
-        </NFormItem>
--->
+
         <NFormItem label="联系电话" path="phone">
           <NInput v-model:value="model.phone" placeholder="请输入联系电话" />
         </NFormItem>
@@ -159,12 +224,7 @@ watch(visible, () => {
           <NInput v-model:value="model.email" placeholder="请输入邮箱" />
         </NFormItem>
         <NFormItem label="部门状态" path="status">
-          <NSelect
-            v-model:value="model.status"
-            placeholder="请选择部门状态"
-            :options="sysNormalDisableOptions"
-            clearable
-          />
+          <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
         </NFormItem>
       </NForm>
       <template #footer>

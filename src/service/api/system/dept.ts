@@ -8,6 +8,13 @@ export function fetchGetDeptList(params?: Api.System.DeptSearchParams) {
     params
   });
 }
+/** 获取排除部门列表 */
+export function fetchGetExcludeDeptList(deptId?: CommonType.IdType) {
+  return request<Api.System.Dept[]>({
+    url: `/system/dept/list/exclude/${deptId}`,
+    method: 'get'
+  });
+}
 
 /** 新增部门 */
 export function fetchCreateDept(data: Api.System.DeptOperateParams) {

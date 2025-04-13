@@ -8,6 +8,13 @@ export function fetchGetUserList(params?: Api.System.UserSearchParams) {
     params
   });
 }
+/** 获取部门用户信息列表 */
+export function fetchGetDeptUserList(deptId: CommonType.IdType) {
+  return request<Api.System.User[]>({
+    url: `/system/user/list/dept/${deptId}`,
+    method: 'get'
+  });
+}
 
 /** 新增用户信息 */
 export function fetchCreateUser(data: Api.System.UserOperateParams) {
