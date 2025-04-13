@@ -4,7 +4,7 @@ import { useLoading } from '@sa/hooks';
 import type { TreeOption, TreeSelectProps } from 'naive-ui';
 import { fetchGetMenuList } from '@/service/api/system';
 import SvgIcon from '@/components/custom/svg-icon.vue';
-import { handleMenuTree } from '@/utils/ruoyi';
+import { handleTree } from '@/utils/common';
 
 defineOptions({ name: 'MenuTreeSelect' });
 
@@ -29,7 +29,7 @@ async function getMenuList() {
       menuId: 0,
       menuName: '根目录',
       icon: 'material-symbols:home-outline-rounded',
-      children: handleMenuTree(data, 'menuId')
+      children: handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' })
     }
   ] as Api.System.Menu[];
   endLoading();

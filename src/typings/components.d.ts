@@ -19,6 +19,7 @@ declare module 'vue' {
     DictSelect: typeof import('./../components/custom/dict-select.vue')['default']
     DictTag: typeof import('./../components/custom/dict-tag.vue')['default']
     ExceptionBase: typeof import('./../components/common/exception-base.vue')['default']
+    FormTip: typeof import('./../components/custom/form-tip.vue')['default']
     FullScreen: typeof import('./../components/common/full-screen.vue')['default']
     IconAntDesignEnterOutlined: typeof import('~icons/ant-design/enter-outlined')['default']
     IconAntDesignReloadOutlined: typeof import('~icons/ant-design/reload-outlined')['default']

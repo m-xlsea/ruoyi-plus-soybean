@@ -27,7 +27,10 @@ const roleOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
 watch(
   () => props.deptId,
   () => {
-    if (!props.deptId) return;
+    if (!props.deptId) {
+      roleOptions.value = [];
+      return;
+    }
     getRoleOptions();
   },
   { immediate: true }

@@ -263,29 +263,21 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem label="用户数量" path="accountCount">
           <template #label>
-            <span class="flex-y-center">
-              用户数量
-              <NTooltip :show-arrow="false" trigger="hover">
-                <template #trigger>
-                  <icon-mingcute:question-line class="ml-4px cursor-pointer text-14px" />
-                </template>
-                -1不限制用户数量
-              </NTooltip>
-            </span>
+            <div class="flex-center">
+              <FormTip content="-1不限制用户数量" />
+              <span>用户数量</span>
+            </div>
           </template>
           <NInputNumber v-model:value="model.accountCount" placeholder="请输入用户数量" min="-1" class="w-full" />
         </NFormItem>
         <NFormItem label="绑定域名" path="domain">
           <template #label>
-            <span class="flex-y-center">
-              绑定域名
-              <NTooltip :show-arrow="false" trigger="hover">
-                <template #trigger>
-                  <icon-mingcute:question-line class="ml-4px cursor-pointer text-14px" />
-                </template>
-                可填写域名/端口 填写域名如: www.test.com 或者 www.test.com:8080 填写ip:端口如: 127.0.0.1:8080
-              </NTooltip>
-            </span>
+            <div class="flex-center">
+              <FormTip
+                content="可填写域名/端口 填写域名如: www.test.com 或者 www.test.com:8080 填写ip:端口如: 127.0.0.1:8080"
+              />
+              <span>绑定域名</span>
+            </div>
           </template>
           <NInputGroup>
             <NInputGroupLabel>http(s)://</NInputGroupLabel>

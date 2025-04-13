@@ -39,10 +39,10 @@ async function search() {
             <NFormItemGi span="24 s:12 m:6" label="部门名称" path="deptName" class="pr-24px">
               <NInput v-model:value="model.deptName" placeholder="请输入部门名称" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="部门状态（0正常 1停用）" path="status" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:6" label="部门状态" path="status" class="pr-24px">
               <NSelect
                 v-model:value="model.status"
-                placeholder="请选择部门状态（0正常 1停用）"
+                placeholder="请选择部门状态"
                 :options="sysNormalDisableOptions"
                 clearable
               />

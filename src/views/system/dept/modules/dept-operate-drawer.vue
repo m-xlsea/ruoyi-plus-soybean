@@ -137,6 +137,7 @@ watch(visible, () => {
           <NInput v-model:value="model.parentId" placeholder="请输入父部门id" />
         </NFormItem>
 -->
+
         <NFormItem label="部门名称" path="deptName">
           <NInput v-model:value="model.deptName" placeholder="请输入部门名称" />
         </NFormItem>
@@ -157,10 +158,10 @@ watch(visible, () => {
         <NFormItem label="邮箱" path="email">
           <NInput v-model:value="model.email" placeholder="请输入邮箱" />
         </NFormItem>
-        <NFormItem label="部门状态（0正常 1停用）" path="status">
+        <NFormItem label="部门状态" path="status">
           <NSelect
             v-model:value="model.status"
-            placeholder="请选择部门状态（0正常 1停用）"
+            placeholder="请选择部门状态"
             :options="sysNormalDisableOptions"
             clearable
           />

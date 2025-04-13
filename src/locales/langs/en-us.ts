@@ -173,7 +173,10 @@ const local: App.I18n.Schema = {
     system_dict: 'Dict Management',
     system_dict_data: 'DictData MAnagement',
     system_dict_type: 'DictType Management',
-    system_tenant: 'Tenant Management'
+    system_tenant: 'Tenant Management',
+    system_config: 'Config Management',
+    system_dept: 'Dept Management',
+    system_post: 'Post Management'
   },
   page: {
     login: {

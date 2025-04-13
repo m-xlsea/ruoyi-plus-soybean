@@ -1,7 +1,6 @@
 <script setup lang="tsx">
-import { computed, defineComponent, reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
-import { NTooltip } from 'naive-ui';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api/system';
@@ -222,30 +221,6 @@ function onCreate() {
     value: ''
   };
 }
-
-const FormTipComponent = defineComponent({
-  name: 'FormTipComponent',
-  props: {
-    content: {
-      type: String,
-      default: ''
-    }
-  },
-  setup(tipProps) {
-    return () => (
-      <NTooltip trigger="hover">
-        {{
-          default: () => <span>{tipProps.content}</span>,
-          trigger: () => (
-            <div>
-              <SvgIcon class="text-15px" icon="ep:warning" />
-            </div>
-          )
-        }}
-      </NTooltip>
-    );
-  }
-});
 </script>
 
 <template>
@@ -284,7 +259,7 @@ const FormTipComponent = defineComponent({
           <NFormItemGi v-if="!isBtn" span="24" path="icon">
             <template #label>
               <div class="flex-center">
-                <FormTipComponent content="iconify 地址：`https://icones.js.org`" />
+                <FormTip content="iconify 地址：`https://icones.js.org`" />
                 <span class="pl-3px">菜单图标</span>
               </div>
             </template>
@@ -302,8 +277,8 @@ const FormTipComponent = defineComponent({
           <NFormItemGi v-if="!isBtn" :span="24" path="path">
             <template #label>
               <div class="flex-center">
-                <FormTipComponent content="访问的路由地址，如：`/user`，如外网地址需内链访问则以 `http(s)://` 开头" />
-                <span class="pl-3px">{{ model.isFrame !== '0' ? '路由地址' : '外链地址' }}</span>
+                <FormTip content="访问的路由地址，如：`/user`，如外网地址需内链访问则以 `http(s)://` 开头" />
+                <span>{{ model.isFrame !== '0' ? '路由地址' : '外链地址' }}</span>
               </div>
             </template>
             <NInput v-model:value="model.path" placeholder="请输入路由地址" />
@@ -311,8 +286,8 @@ const FormTipComponent = defineComponent({
           <NFormItemGi v-if="isMenu && model.isFrame === '1'" :span="24" path="component">
             <template #label>
               <div class="flex-center">
-                <FormTipComponent content="访问的组件路径，如：`system/user`，默认在`views`目录下" />
-                <span class="pl-3px">组件路径</span>
+                <FormTip content="访问的组件路径，如：`system/user`，默认在`views`目录下" />
+                <span>组件路径</span>
               </div>
             </template>
             <NInputGroup>
@@ -362,8 +337,8 @@ const FormTipComponent = defineComponent({
           <NFormItemGi :span="24" path="perms">
             <template #label>
               <div class="flex-center">
-                <FormTipComponent content="控制器中定义的权限字符，如：@SaCheckPermission('system:user:list')" />
-                <span class="pl-3px">权限字符</span>
+                <FormTip content="控制器中定义的权限字符，如：@SaCheckPermission('system:user:list')" />
+                <span>权限字符</span>
               </div>
             </template>
             <NInput v-model:value="model.perms" placeholder="请输入菜单名称" />
@@ -371,8 +346,8 @@ const FormTipComponent = defineComponent({
           <NFormItemGi v-if="!isBtn" :span="12" path="isFrame">
             <template #label>
               <div class="flex-center">
-                <FormTipComponent content="选择是外链则路由地址需要以`http(s)://`开头" />
-                <span class="pl-3px">是否外链</span>
+                <FormTip content="选择是外链则路由地址需要以`http(s)://`开头" />
+                <span>是否外链</span>
               </div>
             </template>
             <NRadioGroup v-model:value="model.isFrame">
@@ -389,8 +364,8 @@ const FormTipComponent = defineComponent({
           <NFormItemGi v-if="isMenu" :span="12" path="isCache">
             <template #label>
               <div class="flex-center">
-                <FormTipComponent content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" />
-                <span class="pl-3px">是否缓存</span>
+                <FormTip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" />
+                <span>是否缓存</span>
               </div>
             </template>
             <NRadioGroup v-model:value="model.isCache">
@@ -403,8 +378,8 @@ const FormTipComponent = defineComponent({
           <NFormItemGi v-if="!isBtn" :span="12" label="显示状态" path="visible">
             <template #label>
               <div class="flex-center">
-                <FormTipComponent content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" />
-                <span class="pl-3px">显示状态</span>
+                <FormTip content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" />
+                <span>显示状态</span>
               </div>
             </template>
             <DictRadio v-model:value="model.visible" dict-code="sys_show_hide" />
@@ -412,8 +387,8 @@ const FormTipComponent = defineComponent({
           <NFormItemGi :span="12" path="status">
             <template #label>
               <div class="flex-center">
-                <FormTipComponent content="选择停用则路由将不会出现在侧边栏，也不能被访问" />
-                <span class="pl-3px">菜单状态</span>
+                <FormTip content="选择停用则路由将不会出现在侧边栏，也不能被访问" />
+                <span>菜单状态</span>
               </div>
             </template>
             <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
