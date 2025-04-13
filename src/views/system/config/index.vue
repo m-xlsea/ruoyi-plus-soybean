@@ -198,7 +198,7 @@ async function handleExport() {
         :scroll-x="962"
         :loading="loading"
         remote
-        :row-key="row => row.id"
+        :row-key="row => row.configId"
         :pagination="mobilePagination"
         class="sm:h-full"
       />

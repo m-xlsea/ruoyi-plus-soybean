@@ -1,7 +1,8 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
-import { fetchBatchDeletePost, fetchGetPostList } from '@/service/api/system/post';
 import { useLoading } from '@sa/hooks';
+import { ref } from 'vue';
+import { fetchBatchDeletePost, fetchGetPostList } from '@/service/api/system/post';
 import { fetchGetDeptTree } from '@/service/api/system';
 import { $t } from '@/locales';
 import { useAuth } from '@/hooks/business/auth';
@@ -11,7 +12,6 @@ import { useTable, useTableOperate } from '@/hooks/common/table';
 import DictTag from '@/components/custom/dict-tag.vue';
 import PostOperateDrawer from './modules/post-operate-drawer.vue';
 import PostSearch from './modules/post-search.vue';
-import { ref } from 'vue';
 
 defineOptions({
   name: 'PostList'
@@ -40,7 +40,7 @@ const {
     // the value can not be undefined, otherwise the property in Form will not be reactive
     postCode: null,
     postName: null,
-    status: null,
+    status: null
   },
   columns: () => [
     {
@@ -103,66 +103,58 @@ const {
       width: 130,
       render: row => {
         const editBtn = () => {
-            if (!hasAuth('system:post:edit')) {
-                return null;
-            }
-            return (
-                <NButton type="primary" ghost size="small" onClick={() => edit(row.postId!)}>
-                    {$t('common.edit')}
-                </NButton>
-            );
+          if (!hasAuth('system:post:edit')) {
+            return null;
+          }
+          return (
+            <NButton type="primary" ghost size="small" onClick={() => edit(row.postId!)}>
+              {$t('common.edit')}
+            </NButton>
+          );
         };
 
         const deleteBtn = () => {
-            if (!hasAuth('system:post:remove')) {
-                return null;
-            }
-            return (
-                <NPopconfirm onPositiveClick={() => handleDelete(row.postId!)}>
-                    {{
-                        default: () => $t('common.confirmDelete'),
-                        trigger: () => (
-                            <NButton type="error" ghost size="small">
-                                {$t('common.delete')}
-                            </NButton>
-                        )
-                    }}
-                </NPopconfirm>
-            );
+          if (!hasAuth('system:post:remove')) {
+            return null;
+          }
+          return (
+            <NPopconfirm onPositiveClick={() => handleDelete(row.postId!)}>
+              {{
+                default: () => $t('common.confirmDelete'),
+                trigger: () => (
+                  <NButton type="error" ghost size="small">
+                    {$t('common.delete')}
+                  </NButton>
+                )
+              }}
+            </NPopconfirm>
+          );
         };
 
         return (
-            <div class="flex-center gap-8px">
-                {editBtn()}
-                {deleteBtn()}
-            </div>
+          <div class="flex-center gap-8px">
+            {editBtn()}
+            {deleteBtn()}
+          </div>
         );
       }
     }
   ]
 });
 
-const {
-  drawerVisible,
-  operateType,
-  editingData,
-  handleAdd,
-  handleEdit,
-  checkedRowKeys,
-  onBatchDeleted,
-  onDeleted
-} = useTableOperate(data, getData);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
+  useTableOperate(data, getData);
 
 async function handleBatchDelete() {
   // request
-  const { error } = await fetchBatchDeletePost(checkedRowKeys.value)
+  const { error } = await fetchBatchDeletePost(checkedRowKeys.value);
   if (error) return;
   onBatchDeleted();
 }
 
 async function handleDelete(postId: CommonType.IdType) {
   // request
-  const { error } = await fetchBatchDeletePost([postId])
+  const { error } = await fetchBatchDeletePost([postId]);
   if (error) return;
   onDeleted();
 }
@@ -172,7 +164,7 @@ async function edit(postId: CommonType.IdType) {
 }
 
 async function handleExport() {
-    download('/system/post/export', searchParams, `岗位信息_${new Date().getTime()}.xlsx`);
+  download('/system/post/export', searchParams, `岗位信息_${new Date().getTime()}.xlsx`);
 }
 
 const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
@@ -220,10 +212,10 @@ function handleResetTreeData() {
       <NInput v-model:value="deptPattern" clearable :placeholder="$t('common.keywordSearch')" />
       <NSpin class="dept-tree" :show="treeLoading">
         <NTree
+          v-model:selected-keys="selectedKeys"
           block-node
           show-line
           :data="deptData as []"
-          v-model:selected-keys="selectedKeys"
           :default-expanded-keys="deptData?.length ? [deptData[0].id!] : []"
           :show-irrelevant-nodes="false"
           :pattern="deptPattern"
@@ -281,7 +273,6 @@ function handleResetTreeData() {
     </div>
   </TableSiderLayout>
 </template>
-
 
 <style scoped lang="scss">
 .dept-tree {

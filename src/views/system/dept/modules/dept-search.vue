@@ -3,7 +3,7 @@ import { $t } from '@/locales';
 import { useNaiveForm } from '@/hooks/common/form';
 import { useDict } from '@/hooks/business/dict';
 defineOptions({
-  name: 'PostSearch'
+  name: 'DeptSearch'
 });
 
 interface Emits {
@@ -15,9 +15,9 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const model = defineModel<Api.System.PostSearchParams>('model', { required: true });
+const model = defineModel<Api.System.DeptSearchParams>('model', { required: true });
 
-const { options: sysCommonStatusOptions } = useDict('sys_normal_disable');
+const { options: sysNormalDisableOptions } = useDict('sys_normal_disable');
 
 async function reset() {
   await restoreValidation();
@@ -36,17 +36,14 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="岗位编码" path="postCode" class="pr-24px">
-              <NInput v-model:value="model.postCode" placeholder="请输入岗位编码" />
+            <NFormItemGi span="24 s:12 m:6" label="部门名称" path="deptName" class="pr-24px">
+              <NInput v-model:value="model.deptName" placeholder="请输入部门名称" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="岗位名称" path="postName" class="pr-24px">
-              <NInput v-model:value="model.postName" placeholder="请输入岗位名称" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="状态" path="status" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:6" label="部门状态（0正常 1停用）" path="status" class="pr-24px">
               <NSelect
                 v-model:value="model.status"
-                placeholder="请选择状态"
-                :options="sysCommonStatusOptions"
+                placeholder="请选择部门状态（0正常 1停用）"
+                :options="sysNormalDisableOptions"
                 clearable
               />
             </NFormItemGi>

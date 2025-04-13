@@ -31,4 +31,16 @@ declare namespace CommonType {
 
   /** The res error code */
   type ErrorCode = '401' | '403' | '404' | 'default';
+
+  /** 构造树型结构数据的配置选项 */
+  type TreeConfig = {
+    /** id字段名 */
+    idField: string;
+    /** 父节点字段名 */
+    parentIdField?: string;
+    /** 子节点字段名 */
+    childrenField?: string;
+    /** 过滤函数 */
+    filterFn?: (node: any) => boolean;
+  };
 }

@@ -7,13 +7,12 @@ import { fetchDeleteMenu, fetchGetMenuList } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { menuIsFrameRecord, menuTypeRecord } from '@/constants/business';
 import { $t } from '@/locales';
-import { handleMenuTree } from '@/utils/ruoyi';
 import { useDict } from '@/hooks/business/dict';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
+import { handleTree } from '@/utils/common';
 import MenuOperateDrawer from './modules/menu-operate-drawer.vue';
-
 useDict('sys_show_hide');
 useDict('sys_normal_disable');
 
@@ -44,7 +43,7 @@ const getMeunTree = async () => {
       menuId: 0,
       menuName: '根目录',
       icon: 'material-symbols:home-outline-rounded',
-      children: handleMenuTree(data, 'menuId')
+      children: handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' })
     }
   ] as Api.System.Menu[];
   endLoading();

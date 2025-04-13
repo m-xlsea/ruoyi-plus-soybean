@@ -2,7 +2,7 @@ import { request } from '@/service/request';
 
 /** 获取部门列表 */
 export function fetchGetDeptList(params?: Api.System.DeptSearchParams) {
-  return request<Api.System.DeptList>({
+  return request<Api.System.Dept[]>({
     url: '/system/dept/list',
     method: 'get',
     params
@@ -28,7 +28,7 @@ export function fetchUpdateDept(data: Api.System.DeptOperateParams) {
 }
 
 /** 批量删除部门 */
-export function fetchDeleteDept(deptIds: CommonType.IdType[]) {
+export function fetchBatchDeleteDept(deptIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/dept/${deptIds.join(',')}`,
     method: 'delete'

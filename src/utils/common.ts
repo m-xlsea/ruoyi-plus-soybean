@@ -1,5 +1,4 @@
 import { $t } from '@/locales';
-
 /**
  * Transform record to option
  *
@@ -80,3 +79,76 @@ export function humpToLine(str: string, line: string = '-') {
 export function isNotNull(value: any) {
   return value !== undefined && value !== null && value !== '' && value !== 'undefined' && value !== 'null';
 }
+
+/**
+ * 构造树型结构数据
+ *
+ * @param {T[]} data 数据源
+ * @param {TreeConfig} config 配置选项
+ * @returns {T[]} 树形结构数据
+ */
+export const handleTree = <T extends Record<string, any>>(data: T[], config: CommonType.TreeConfig): T[] => {
+  if (!data?.length) {
+    return [];
+  }
+
+  const {
+    idField,
+    parentIdField = 'parentId',
+    childrenField = 'children',
+    filterFn = () => true // 添加过滤函数，默认为不过滤
+  } = config;
+
+  // 使用 Map 替代普通对象，提高性能
+  const childrenMap = new Map<string | number, T[]>();
+  const nodeMap = new Map<string | number, T>();
+  const tree: T[] = [];
+
+  // 第一遍遍历：构建节点映射
+  for (const item of data) {
+    const id = item[idField];
+    const parentId = item[parentIdField];
+
+    nodeMap.set(id, item);
+
+    if (!childrenMap.has(parentId)) {
+      childrenMap.set(parentId, []);
+    }
+    // 应用过滤函数
+    if (filterFn(item)) {
+      childrenMap.get(parentId)!.push(item);
+    }
+  }
+
+  // 第二遍遍历：找出根节点
+  for (const item of data) {
+    const parentId = item[parentIdField];
+    if (!nodeMap.has(parentId) && filterFn(item)) {
+      tree.push(item);
+    }
+  }
+
+  // 递归构建树形结构
+  const buildTree = (node: T) => {
+    const id = node[idField];
+    const children = childrenMap.get(id);
+
+    if (children?.length) {
+      // 使用类型断言确保类型安全
+      (node as any)[childrenField] = children;
+      for (const child of children) {
+        buildTree(child);
+      }
+    } else {
+      // 如果没有子节点，设置为 undefined
+      (node as any)[childrenField] = undefined;
+    }
+  };
+
+  // 从根节点开始构建树
+  for (const root of tree) {
+    buildTree(root);
+  }
+
+  return tree;
+};

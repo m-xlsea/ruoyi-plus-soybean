@@ -4,20 +4,32 @@ import { jsonClone } from '@sa/utils';
 import { useBoolean, useHookTable } from '@sa/hooks';
 import { useAppStore } from '@/store/modules/app';
 import { $t } from '@/locales';
+import { handleTree } from '@/utils/common';
 
 type TableData = NaiveUI.TableData;
 type GetTableData<A extends NaiveUI.TreeTableApiFn> = NaiveUI.GetTreeTableData<A>;
 type TableColumn<T> = NaiveUI.TableColumn<T>;
 
-export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(config: NaiveUI.NaiveTreeTableConfig<A>) {
+export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
+  config: NaiveUI.NaiveTreeTableConfig<A> & CommonType.TreeConfig & { defaultExpandAll?: boolean }
+) {
   const scope = effectScope();
   const appStore = useAppStore();
 
-  const { apiFn, apiParams, immediate } = config;
+  const {
+    apiFn,
+    apiParams,
+    immediate,
+    idField,
+    parentIdField = 'parentId',
+    childrenField = 'children',
+    defaultExpandAll = true
+  } = config;
 
   const SELECTION_KEY = '__selection__';
-
   const EXPAND_KEY = '__expand__';
+
+  const expandedRowKeys = ref<CommonType.IdType[]>([]);
 
   const {
     loading,
@@ -36,9 +48,20 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(config: NaiveUI.N
     columns: config.columns,
     transformer: res => {
       const records = res.data || [];
-      return {
-        data: records
-      };
+      if (!records.length) return { data: [] };
+
+      const treeData = handleTree(records, {
+        idField,
+        parentIdField,
+        childrenField
+      });
+
+      // 如果设置了默认展开所有，则收集所有节点的key
+      if (defaultExpandAll) {
+        expandedRowKeys.value = records.map(item => item[idField]);
+      }
+
+      return { data: treeData };
     },
     getColumnChecks: cols => {
       const checks: NaiveUI.TableColumnCheck[] = [];
@@ -89,6 +112,33 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(config: NaiveUI.N
     immediate
   });
 
+  /** 收集所有节点的key */
+  function collectAllNodeKeys(treeNodes: any[]): CommonType.IdType[] {
+    const keys: CommonType.IdType[] = [];
+
+    const collect = (nodes: any[]) => {
+      nodes.forEach(node => {
+        keys.push(node[idField]);
+        if (node[childrenField]?.length) {
+          collect(node[childrenField]);
+        }
+      });
+    };
+
+    collect(treeNodes);
+    return keys;
+  }
+
+  /** 展开所有节点 */
+  function expandAll() {
+    expandedRowKeys.value = collectAllNodeKeys(data.value);
+  }
+
+  /** 收起所有节点 */
+  function collapseAll() {
+    expandedRowKeys.value = [];
+  }
+
   scope.run(() => {
     watch(
       () => appStore.locale,
@@ -112,7 +162,10 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(config: NaiveUI.N
     getData,
     searchParams,
     updateSearchParams,
-    resetSearchParams
+    resetSearchParams,
+    expandedRowKeys,
+    expandAll,
+    collapseAll
   };
 }
 

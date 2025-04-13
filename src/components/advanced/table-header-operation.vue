@@ -19,7 +19,7 @@ withDefaults(defineProps<Props>(), {
   itemAlign: undefined,
   showAdd: true,
   showDelete: true,
-  showExport: true
+  showExport: false
 });
 
 interface Emits {

@@ -316,11 +316,13 @@ declare namespace Api {
       email: string;
       /** 部门状态（0正常 1停用） */
       status: string;
+      /** 子部门 */
+      children: Dept[];
     }>;
 
     /** dept search params */
     type DeptSearchParams = CommonType.RecordNullable<
-      Pick<Api.System.Dept, 'parentId' | 'deptName' | 'deptCategory' | 'status'> & Api.Common.CommonSearchParams
+      Pick<Api.System.Dept, 'deptName' | 'status'> & Api.Common.CommonSearchParams
     >;
 
     /** dept operate params */
@@ -358,8 +360,9 @@ declare namespace Api {
 
     /** post search params */
     type PostSearchParams = CommonType.RecordNullable<
-      Pick<Api.System.Post, 'deptId' | 'postCode' | 'postName' | 'status'>
-      & { belongDeptId: CommonType.IdType } & Api.Common.CommonSearchParams
+      Pick<Api.System.Post, 'deptId' | 'postCode' | 'postName' | 'status'> & {
+        belongDeptId: CommonType.IdType;
+      } & Api.Common.CommonSearchParams
     >;
 
     /** post operate params */
@@ -441,7 +444,7 @@ declare namespace Api {
     /** tenant search params */
     type TenantSearchParams = CommonType.RecordNullable<
       Pick<Api.System.Tenant, 'tenantId' | 'contactUserName' | 'contactPhone' | 'companyName'> &
-      Api.Common.CommonSearchParams
+        Api.Common.CommonSearchParams
     >;
 
     /** tenant operate params */
@@ -492,7 +495,7 @@ declare namespace Api {
     /** tenant package search params */
     type TenantPackageSearchParams = CommonType.RecordNullable<
       Pick<Api.System.TenantPackage, 'packageName' | 'menuIds' | 'menuCheckStrictly' | 'status'> &
-      Api.Common.CommonSearchParams
+        Api.Common.CommonSearchParams
     >;
 
     /** tenant package operate params */
