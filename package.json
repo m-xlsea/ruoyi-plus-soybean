@@ -62,9 +62,11 @@
     "nprogress": "0.2.0",
     "pinia": "3.0.0",
     "tailwind-merge": "3.0.1",
+    "tinymce": "^7",
     "vue": "3.5.13",
     "vue-draggable-plus": "0.6.0",
     "vue-i18n": "11.1.1",
+    "vue-json-pretty": "^2.4.0",
     "vue-router": "4.5.0"
   },
   "devDependencies": {

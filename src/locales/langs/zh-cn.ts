@@ -176,7 +176,10 @@ const local: App.I18n.Schema = {
     system_tenant: '租户管理',
     system_config: '参数设置',
     system_dept: '部门管理',
-    system_post: '岗位管理'
+    system_post: '岗位管理',
+    monitor: '系统监控',
+    'monitor_login-infor': '登录日志',
+    'monitor_oper-log': '操作日志'
   },
   page: {
     login: {

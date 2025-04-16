@@ -2,7 +2,7 @@
 import { NButton, NPopconfirm } from 'naive-ui';
 import { ref } from 'vue';
 import type { TableDataWithIndex } from '@sa/hooks';
-import { fetchBatchDeleteDictType, fetchGetDictTypeList } from '@/service/api/system/dict';
+import { fetchBatchDeleteDictType, fetchGetDictTypeList, fetchRefreshCache } from '@/service/api/system/dict';
 import { $t } from '@/locales';
 import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
@@ -170,6 +170,13 @@ async function edit(dictId: CommonType.IdType) {
 async function handleExport() {
   download('/system/dict/type/export', searchParams, `字典类型_${new Date().getTime()}.xlsx`);
 }
+
+async function handleRefreshCache() {
+  const { error } = await fetchRefreshCache();
+  if (error) return;
+  window.$message?.success('刷新缓存成功');
+  await getData();
+}
 </script>
 
 <template>
@@ -177,18 +184,23 @@ async function handleExport() {
     <DictTypeSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard title="字典类型列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
-        <TableHeaderOperation
-          v-model:columns="columnChecks"
-          :disabled-delete="checkedRowKeys.length === 0"
-          :loading="loading"
-          :show-add="hasAuth('system:dict:add')"
-          :show-delete="hasAuth('system:dict:remove')"
-          :show-export="hasAuth('system:dict:export')"
-          @add="handleAdd"
-          @delete="handleBatchDelete"
-          @export="handleExport"
-          @refresh="getData"
-        />
+        <NSpace>
+          <NButton v-if="hasAuth('system:dict:remove')" type="warning" ghost size="small" @click="handleRefreshCache">
+            刷新缓存
+          </NButton>
+          <TableHeaderOperation
+            v-model:columns="columnChecks"
+            :disabled-delete="checkedRowKeys.length === 0"
+            :loading="loading"
+            :show-add="hasAuth('system:dict:add')"
+            :show-delete="hasAuth('system:dict:remove')"
+            :show-export="hasAuth('system:dict:export')"
+            @add="handleAdd"
+            @delete="handleBatchDelete"
+            @export="handleExport"
+            @refresh="getData"
+          />
+        </NSpace>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"

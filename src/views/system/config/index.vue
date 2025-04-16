@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
-import { fetchBatchDeleteConfig, fetchGetConfigList } from '@/service/api/system/config';
+import { fetchBatchDeleteConfig, fetchGetConfigList, fetchRefreshCache } from '@/service/api/system/config';
 import { $t } from '@/locales';
 import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
@@ -169,6 +169,13 @@ async function edit(configId: CommonType.IdType) {
 async function handleExport() {
   download('/system/config/export', searchParams, `参数配置_${new Date().getTime()}.xlsx`);
 }
+
+async function handleRefreshCache() {
+  const { error } = await fetchRefreshCache();
+  if (error) return;
+  window.$message?.success('刷新缓存成功');
+  await getData();
+}
 </script>
 
 <template>
@@ -176,18 +183,23 @@ async function handleExport() {
     <ConfigSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard title="参数配置列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
-        <TableHeaderOperation
-          v-model:columns="columnChecks"
-          :disabled-delete="checkedRowKeys.length === 0"
-          :loading="loading"
-          :show-add="hasAuth('system:config:add')"
-          :show-delete="hasAuth('system:config:remove')"
-          :show-export="hasAuth('system:config:export')"
-          @add="handleAdd"
-          @delete="handleBatchDelete"
-          @export="handleExport"
-          @refresh="getData"
-        />
+        <NSpace>
+          <NButton v-if="hasAuth('system:config:remove')" type="warning" ghost size="small" @click="handleRefreshCache">
+            刷新缓存
+          </NButton>
+          <TableHeaderOperation
+            v-model:columns="columnChecks"
+            :disabled-delete="checkedRowKeys.length === 0"
+            :loading="loading"
+            :show-add="hasAuth('system:config:add')"
+            :show-delete="hasAuth('system:config:remove')"
+            :show-export="hasAuth('system:config:export')"
+            @add="handleAdd"
+            @delete="handleBatchDelete"
+            @export="handleExport"
+            @refresh="getData"
+          />
+        </NSpace>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"

@@ -176,7 +176,10 @@ const local: App.I18n.Schema = {
     system_tenant: 'Tenant Management',
     system_config: 'Config Management',
     system_dept: 'Dept Management',
-    system_post: 'Post Management'
+    system_post: 'Post Management',
+    monitor: 'Monitor Management',
+    'monitor_login-infor': 'Login Log',
+    'monitor_oper-log': 'Operate Log'
   },
   page: {
     login: {

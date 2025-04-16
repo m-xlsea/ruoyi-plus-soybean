@@ -50,6 +50,7 @@ declare module 'vue' {
     IconMdiRefresh: typeof import('~icons/mdi/refresh')['default']
     'IconMingcute:questionLine': typeof import('~icons/mingcute/question-line')['default']
     IconUilSearch: typeof import('~icons/uil/search')['default']
+    JsonPreview: typeof import('./../components/custom/json-preview.vue')['default']
     LangSwitch: typeof import('./../components/common/lang-switch.vue')['default']
     LookForward: typeof import('./../components/custom/look-forward.vue')['default']
     MenuToggler: typeof import('./../components/common/menu-toggler.vue')['default']

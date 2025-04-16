@@ -49,3 +49,10 @@ export function fetchBatchDeleteDictType(dictIds: CommonType.IdType[]) {
     method: 'delete'
   });
 }
+/** 刷新缓存 */
+export function fetchRefreshCache() {
+  return request<boolean>({
+    url: `/system/dict/type/refreshCache`,
+    method: 'delete'
+  });
+}
