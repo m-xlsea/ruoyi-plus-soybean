@@ -116,13 +116,33 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'system_client',
+        path: '/system/client',
+        component: 'view.system_client',
+        meta: {
+          title: 'system_client',
+          i18nKey: 'route.system_client'
+        }
+      },
+      {
         name: 'system_config',
         path: '/system/config',
         component: 'view.system_config',
         meta: {
           title: 'system_config',
           i18nKey: 'route.system_config'
-        }
+        },
+        children: [
+          {
+            name: 'system_config_notice',
+            path: '/system/config/notice',
+            component: 'view.system_config_notice',
+            meta: {
+              title: 'system_config_notice',
+              i18nKey: 'route.system_config_notice'
+            }
+          }
+        ]
       },
       {
         name: 'system_dept',
@@ -171,6 +191,15 @@ export const generatedRoutes: GeneratedRoute[] = [
           i18nKey: 'route.system_menu',
           localIcon: 'menu-tree-table',
           order: 3
+        }
+      },
+      {
+        name: 'system_notice',
+        path: '/system/notice',
+        component: 'view.system_notice',
+        meta: {
+          title: 'system_notice',
+          i18nKey: 'route.system_notice'
         }
       },
       {

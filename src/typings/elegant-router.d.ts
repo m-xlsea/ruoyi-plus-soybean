@@ -27,12 +27,14 @@ declare module "@elegant-router/types" {
     "monitor_login-infor": "/monitor/login-infor";
     "monitor_oper-log": "/monitor/oper-log";
     "system": "/system";
+    "system_client": "/system/client";
     "system_config": "/system/config";
     "system_dept": "/system/dept";
     "system_dict": "/system/dict";
     "system_dict_data": "/system/dict/data";
     "system_dict_type": "/system/dict/type";
     "system_menu": "/system/menu";
+    "system_notice": "/system/notice";
     "system_post": "/system/post";
     "system_tenant": "/system/tenant";
     "system_user": "/system/user";
@@ -102,12 +104,14 @@ declare module "@elegant-router/types" {
     | "home"
     | "monitor_login-infor"
     | "monitor_oper-log"
+    | "system_client"
     | "system_config"
     | "system_dept"
     | "system_dict_data"
     | "system_dict"
     | "system_dict_type"
     | "system_menu"
+    | "system_notice"
     | "system_post"
     | "system_tenant"
     | "system_user"

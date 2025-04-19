@@ -1,0 +1,198 @@
+<script setup lang="tsx">
+import { NButton, NPopconfirm } from 'naive-ui';
+import { $t } from '@/locales';
+import { fetchBatchDeleteNotice, fetchGetNoticeList } from '@/service/api/system/notice';
+import { useAuth } from '@/hooks/business/auth';
+import { useAppStore } from '@/store/modules/app';
+import { useDownload } from '@/hooks/business/download';
+import { useTable, useTableOperate } from '@/hooks/common/table';
+import { useDict } from '@/hooks/business/dict';
+import DictTag from '@/components/custom/dict-tag.vue';
+import NoticeOperateDrawer from './modules/notice-operate-drawer.vue';
+import NoticeSearch from './modules/notice-search.vue';
+defineOptions({
+  name: 'NoticeList'
+});
+
+useDict('sys_notice_type');
+useDict('sys_normal_disable');
+const appStore = useAppStore();
+const { download } = useDownload();
+const { hasAuth } = useAuth();
+
+const {
+  columns,
+  columnChecks,
+  data,
+  getData,
+  getDataByPage,
+  loading,
+  mobilePagination,
+  searchParams,
+  resetSearchParams
+} = useTable({
+  apiFn: fetchGetNoticeList,
+  apiParams: {
+    pageNum: 1,
+    pageSize: 10,
+    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
+    // the value can not be undefined, otherwise the property in Form will not be reactive
+    noticeTitle: null,
+    noticeType: null
+  },
+  columns: () => [
+    {
+      type: 'selection',
+      align: 'center',
+      width: 48
+    },
+    {
+      key: 'noticeTitle',
+      title: '公告标题',
+      align: 'center',
+      width: 300
+    },
+    {
+      key: 'noticeType',
+      title: '公告类型',
+      align: 'center',
+      minWidth: 120,
+      render(row) {
+        return <DictTag size="small" value={row.noticeType} dictCode="sys_notice_type" />;
+      }
+    },
+    {
+      key: 'status',
+      title: '公告状态',
+      align: 'center',
+      minWidth: 120,
+      render(row) {
+        return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
+      }
+    },
+    {
+      key: 'createByName',
+      title: '创建者',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'createTime',
+      title: '创建时间',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'operate',
+      title: $t('common.operate'),
+      align: 'center',
+      width: 130,
+      render: row => {
+        const editBtn = () => {
+          if (!hasAuth('system:notice:edit')) {
+            return null;
+          }
+          return (
+            <NButton type="primary" ghost size="small" onClick={() => edit(row.noticeId!)}>
+              {$t('common.edit')}
+            </NButton>
+          );
+        };
+
+        const deleteBtn = () => {
+          if (!hasAuth('system:notice:remove')) {
+            return null;
+          }
+          return (
+            <NPopconfirm onPositiveClick={() => handleDelete(row.noticeId!)}>
+              {{
+                default: () => $t('common.confirmDelete'),
+                trigger: () => (
+                  <NButton type="error" ghost size="small">
+                    {$t('common.delete')}
+                  </NButton>
+                )
+              }}
+            </NPopconfirm>
+          );
+        };
+
+        return (
+          <div class="flex-center gap-8px">
+            {editBtn()}
+            {deleteBtn()}
+          </div>
+        );
+      }
+    }
+  ]
+});
+
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
+  useTableOperate(data, getData);
+
+async function handleBatchDelete() {
+  // request
+  const { error } = await fetchBatchDeleteNotice(checkedRowKeys.value);
+  if (error) return;
+  onBatchDeleted();
+}
+
+async function handleDelete(noticeId: CommonType.IdType) {
+  // request
+  const { error } = await fetchBatchDeleteNotice([noticeId]);
+  if (error) return;
+  onDeleted();
+}
+
+async function edit(noticeId: CommonType.IdType) {
+  handleEdit('noticeId', noticeId);
+}
+
+async function handleExport() {
+  download('/system/notice/export', searchParams, `通知公告_${new Date().getTime()}.xlsx`);
+}
+</script>
+
+<template>
+  <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
+    <NoticeSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <NCard title="通知公告列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+      <template #header-extra>
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="hasAuth('system:notice:add')"
+          :show-delete="hasAuth('system:notice:remove')"
+          :show-export="hasAuth('system:notice:export')"
+          @add="handleAdd"
+          @delete="handleBatchDelete"
+          @export="handleExport"
+          @refresh="getData"
+        />
+      </template>
+      <NDataTable
+        v-model:checked-row-keys="checkedRowKeys"
+        :columns="columns"
+        :data="data"
+        size="small"
+        :flex-height="!appStore.isMobile"
+        :scroll-x="962"
+        :loading="loading"
+        remote
+        :row-key="row => row.noticeId"
+        :pagination="mobilePagination"
+        class="sm:h-full"
+      />
+      <NoticeOperateDrawer
+        v-model:visible="drawerVisible"
+        :operate-type="operateType"
+        :row-data="editingData"
+        @submitted="getDataByPage"
+      />
+    </NCard>
+  </div>
+</template>
+
+<style scoped></style>
