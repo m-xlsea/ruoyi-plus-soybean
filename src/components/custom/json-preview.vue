@@ -51,20 +51,19 @@ const jsonData = computed(() => {
 
 <template>
   <div class="json-preview">
-    <template v-if="jsonData">
-      <VueJsonPretty
-        :data="jsonData"
-        :deep="deep"
-        :show-double-quotes="showDoubleQuotes"
-        :show-length="showLength"
-        :show-line="showLine"
-        :show-line-number="showLineNumber"
-        :show-icon="showIcon"
-        :show-select-controller="showSelectController"
-        :collapsed-level="collapsedLevel"
-        :highlight-mouseover-node="highlightMouseoverNode"
-      />
-    </template>
+    <VueJsonPretty
+      v-if="jsonData"
+      :data="jsonData"
+      :deep="deep"
+      :show-double-quotes="showDoubleQuotes"
+      :show-length="showLength"
+      :show-line="showLine"
+      :show-line-number="showLineNumber"
+      :show-icon="showIcon"
+      :show-select-controller="showSelectController"
+      :collapsed-level="collapsedLevel"
+      :highlight-mouseover-node="highlightMouseoverNode"
+    />
     <span v-else-if="props.data">{{ props.data }}</span>
     <div v-else class="empty-data">暂无数据</div>
   </div>

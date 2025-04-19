@@ -261,7 +261,7 @@ watch(visible, () => {
             class="w-full"
           />
         </NFormItem>
-        <NFormItem label="用户数量" path="accountCount">
+        <NFormItem path="accountCount">
           <template #label>
             <div class="flex-center">
               <FormTip content="-1不限制用户数量" />
@@ -270,7 +270,7 @@ watch(visible, () => {
           </template>
           <NInputNumber v-model:value="model.accountCount" placeholder="请输入用户数量" min="-1" class="w-full" />
         </NFormItem>
-        <NFormItem label="绑定域名" path="domain">
+        <NFormItem path="domain">
           <template #label>
             <div class="flex-center">
               <FormTip

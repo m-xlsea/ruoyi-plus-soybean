@@ -7,10 +7,10 @@ import { isNotNull } from '@/utils/common';
 defineOptions({ name: 'DictTag' });
 
 interface Props {
-  value?: string | number;
+  value?: string[] | number[] | string | number;
   dictCode?: string;
   immediate?: boolean;
-  dictData?: Api.System.DictData;
+  dictData?: Api.System.DictData[];
   [key: string]: any;
 }
 
@@ -18,29 +18,38 @@ const props = withDefaults(defineProps<Props>(), {
   immediate: false,
   dictData: undefined,
   dictCode: '',
-  value: ''
+  value: () => []
 });
 
 const attrs = useAttrs() as TagProps;
 
-const dictTagData = computed(() => {
+const dictTagData = computed<Api.System.DictData[]>(() => {
   if (props.dictData) {
     return props.dictData;
   }
   // 避免 props.value 为 0 时，无法触发
   if (props.dictCode && isNotNull(props.value)) {
     const { transformDictData } = useDict(props.dictCode, props.immediate);
-    return transformDictData(String(props.value));
+    return transformDictData(props.value) || [];
   }
 
-  return null;
+  return [];
 });
 </script>
 
 <template>
-  <NTag v-if="dictTagData" :class="dictTagData.cssClass" :type="dictTagData.listClass" v-bind="attrs">
-    {{ dictTagData.dictLabel }}
-  </NTag>
+  <div v-if="dictTagData.length">
+    <NTag
+      v-for="item in dictTagData"
+      :key="item.dictValue"
+      class="mb-2 mr-2"
+      :class="[item.cssClass]"
+      :type="item.listClass"
+      v-bind="attrs"
+    >
+      {{ item.dictLabel }}
+    </NTag>
+  </div>
 </template>
 
 <style scoped></style>

@@ -2,7 +2,7 @@ import { ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 import { fetchGetDictDataByType } from '@/service/api/system';
 import { useDictStore } from '@/store/modules/dict';
-
+import { isNull } from '@/utils/common';
 export function useDict(dictType: string, immediate: boolean = true) {
   const dictStore = useDictStore();
   const { dictData: dictList } = storeToRefs(dictStore);
@@ -40,9 +40,12 @@ export function useDict(dictType: string, immediate: boolean = true) {
     options.value = data.value.map(dict => ({ label: dict.dictLabel!, value: dict.dictValue! }));
   }
 
-  function transformDictData(dictValue: string): Api.System.DictData | undefined {
-    if (!data.value.length || !dictValue) return undefined;
-    return data.value.find(dict => dict.dictValue === dictValue);
+  function transformDictData(dictValue: string[] | number[] | string | number) {
+    if (!data.value.length || isNull(dictValue)) return undefined;
+    if (Array.isArray(dictValue)) {
+      return data.value.filter(dict => dictValue.some(value => dict.dictValue === value.toString()));
+    }
+    return data.value.filter(dict => dict.dictValue === dictValue.toString());
   }
 
   if (immediate) {

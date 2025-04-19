@@ -10,6 +10,7 @@ import { useAppStore } from '@/store/modules/app';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import DictTag from '@/components/custom/dict-tag.vue';
+import { useDict } from '@/hooks/business/dict';
 import PostOperateDrawer from './modules/post-operate-drawer.vue';
 import PostSearch from './modules/post-search.vue';
 
@@ -17,6 +18,7 @@ defineOptions({
   name: 'PostList'
 });
 
+useDict('sys_normal_disable');
 const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
@@ -170,7 +172,6 @@ async function handleExport() {
 const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
 const deptPattern = ref<string>();
 const deptData = ref<Api.Common.CommonTreeRecord>([]);
-const selectedKeys = ref<string[]>([]);
 
 async function getTreeData() {
   startTreeLoading();
@@ -184,7 +185,6 @@ async function getTreeData() {
 getTreeData();
 
 function handleClickTree(keys: string[]) {
-  selectedKeys.value = keys;
   searchParams.belongDeptId = keys.length ? keys[0] : null;
   checkedRowKeys.value = [];
   getDataByPage();
@@ -192,7 +192,6 @@ function handleClickTree(keys: string[]) {
 
 function handleResetTreeData() {
   deptPattern.value = undefined;
-  selectedKeys.value = [];
   searchParams.belongDeptId = null;
   getTreeData();
   getDataByPage();
@@ -212,7 +211,6 @@ function handleResetTreeData() {
       <NInput v-model:value="deptPattern" clearable :placeholder="$t('common.keywordSearch')" />
       <NSpin class="dept-tree" :show="treeLoading">
         <NTree
-          v-model:selected-keys="selectedKeys"
           block-node
           show-line
           :data="deptData as []"

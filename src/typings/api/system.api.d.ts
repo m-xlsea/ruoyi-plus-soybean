@@ -511,5 +511,88 @@ declare namespace Api {
 
     /** tenant package select list */
     type TenantPackageSelectList = Common.CommonRecord<Pick<TenantPackage, 'packageId' | 'packageName'>>;
+
+    /** notice */
+    type Notice = Common.CommonRecord<{
+      /** 公告ID */
+      noticeId: CommonType.IdType;
+      /** 租户编号 */
+      tenantId: CommonType.IdType;
+      /** 公告标题 */
+      noticeTitle: string;
+      /** 公告类型 */
+      noticeType: string;
+      /** 公告内容 */
+      noticeContent: string;
+      /** 公告状态 */
+      status: string;
+      /** 创建者 */
+      createByName: string;
+      /** 备注 */
+      remark: string;
+    }>;
+
+    /** notice search params */
+    type NoticeSearchParams = CommonType.RecordNullable<
+      Pick<Api.System.Notice, 'noticeTitle' | 'noticeType'> & Api.Common.CommonSearchParams
+    >;
+
+    /** notice operate params */
+    type NoticeOperateParams = CommonType.RecordNullable<
+      Pick<Api.System.Notice, 'noticeId' | 'noticeTitle' | 'noticeType' | 'noticeContent' | 'status'>
+    >;
+
+    /** notice list */
+    type NoticeList = Api.Common.PaginatingQueryRecord<Notice>;
+
+    /** client */
+    type Client = Common.CommonRecord<{
+      /** id */
+      id: CommonType.IdType;
+      /** 客户端id */
+      clientId: string;
+      /** 客户端key */
+      clientKey: string;
+      /** 客户端秘钥 */
+      clientSecret: string;
+      /** 授权类型 */
+      grantType: string;
+      /** 授权类型列表 */
+      grantTypeList: string[];
+      /** 设备类型 */
+      deviceType: string;
+      /** token活跃超时时间 */
+      activeTimeout: number;
+      /** token固定超时 */
+      timeout: number;
+      /** 状态 */
+      status: string;
+      /** 删除标志（0代表存在 1代表删除） */
+      delFlag: string;
+    }>;
+
+    /** client search params */
+    type ClientSearchParams = CommonType.RecordNullable<
+      Pick<Api.System.Client, 'clientKey' | 'clientSecret' | 'status'> & Api.Common.CommonSearchParams
+    >;
+
+    /** client operate params */
+    type ClientOperateParams = CommonType.RecordNullable<
+      Pick<
+        Api.System.Client,
+        | 'id'
+        | 'clientId'
+        | 'clientKey'
+        | 'clientSecret'
+        | 'grantTypeList'
+        | 'deviceType'
+        | 'activeTimeout'
+        | 'timeout'
+        | 'status'
+      >
+    >;
+
+    /** client list */
+    type ClientList = Api.Common.PaginatingQueryRecord<Client>;
   }
 }

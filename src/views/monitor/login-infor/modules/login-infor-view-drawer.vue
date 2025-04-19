@@ -31,20 +31,14 @@ function closeDrawer() {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NDescriptions label-placement="left" :column="1" size="small" bordered>
-        <NDescriptionsItem label="用户账号">
-          {{ props.rowData?.userName }}
+        <NDescriptionsItem label="账号信息">
+          {{ props.rowData?.userName }} | {{ props.rowData?.ipaddr }} | {{ props.rowData?.loginLocation }}
         </NDescriptionsItem>
         <NDescriptionsItem label="客户端">
           {{ props.rowData?.clientKey }}
         </NDescriptionsItem>
         <NDescriptionsItem label="设备类型">
           <DictTag size="small" :value="props.rowData?.deviceType" dict-code="sys_device_type" />
-        </NDescriptionsItem>
-        <NDescriptionsItem label="登录IP地址">
-          {{ props.rowData?.ipaddr }}
-        </NDescriptionsItem>
-        <NDescriptionsItem label="登录地点">
-          {{ props.rowData?.loginLocation }}
         </NDescriptionsItem>
         <NDescriptionsItem label="浏览器类型">
           <div class="flex items-center gap-2">

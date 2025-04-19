@@ -80,6 +80,11 @@ export function isNotNull(value: any) {
   return value !== undefined && value !== null && value !== '' && value !== 'undefined' && value !== 'null';
 }
 
+/** 判断是否为空 */
+export function isNull(value: any) {
+  return value === undefined || value === null || value === '' || value === 'undefined' || value === 'null';
+}
+
 /**
  * 构造树型结构数据
  *
