@@ -1,8 +1,9 @@
 <script setup lang="tsx">
 import { NDescriptions, NDescriptionsItem, NTag } from 'naive-ui';
+import { getRequestMethodTagType } from '@/utils/format';
 import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
-import { getRequestMethodTagType } from '@/utils/format';
+
 defineOptions({
   name: 'OperLogViewDrawer'
 });

@@ -9,24 +9,6 @@ export function fetchGetLoginInforList(params?: Api.Monitor.LoginInforSearchPara
   });
 }
 
-/** 新增系统访问记录 */
-export function fetchCreateLoginInfor(data: Api.Monitor.LoginInforOperateParams) {
-  return request<boolean>({
-    url: '/monitor/logininfor',
-    method: 'post',
-    data
-  });
-}
-
-/** 修改系统访问记录 */
-export function fetchUpdateLoginInfor(data: Api.Monitor.LoginInforOperateParams) {
-  return request<boolean>({
-    url: '/monitor/logininfor',
-    method: 'put',
-    data
-  });
-}
-
 /** 批量删除系统访问记录 */
 export function fetchBatchDeleteLoginInfor(infoIds: CommonType.IdType[]) {
   return request<boolean>({

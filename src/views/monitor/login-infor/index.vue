@@ -1,17 +1,18 @@
 <script setup lang="tsx">
 import { NButton } from 'naive-ui';
 import { fetchBatchDeleteLoginInfor, fetchGetLoginInforList } from '@/service/api/monitor/login-infor';
-import { $t } from '@/locales';
-import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
+import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
+import { getBrowserIcon, getOsIcon } from '@/utils/format';
 import DictTag from '@/components/custom/dict-tag.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
-import { getBrowserIcon, getOsIcon } from '@/utils/format';
+import { $t } from '@/locales';
 import LoginInforSearch from './modules/login-infor-search.vue';
 import LoginInforViewDrawer from './modules/login-infor-view-drawer.vue';
+
 defineOptions({
   name: 'LoginInforList'
 });

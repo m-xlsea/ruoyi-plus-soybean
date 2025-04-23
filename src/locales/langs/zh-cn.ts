@@ -179,7 +179,9 @@ const local: App.I18n.Schema = {
     system_post: '岗位管理',
     monitor: '系统监控',
     'monitor_login-infor': '登录日志',
-    'monitor_oper-log': '操作日志'
+    'monitor_oper-log': '操作日志',
+    system_client: '客户端管理',
+    system_notice: '通知公告'
   },
   page: {
     login: {

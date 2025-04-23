@@ -179,7 +179,9 @@ const local: App.I18n.Schema = {
     system_post: 'Post Management',
     monitor: 'Monitor Management',
     'monitor_login-infor': 'Login Log',
-    'monitor_oper-log': 'Operate Log'
+    'monitor_oper-log': 'Operate Log',
+    system_client: 'Client Management',
+    system_notice: 'Notice Management'
   },
   page: {
     login: {

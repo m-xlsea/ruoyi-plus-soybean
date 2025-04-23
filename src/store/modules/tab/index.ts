@@ -1,16 +1,15 @@
 import { computed, ref } from 'vue';
-import { defineStore } from 'pinia';
 import { useEventListener } from '@vueuse/core';
+import { defineStore } from 'pinia';
 import type { RouteKey } from '@elegant-router/types';
 import { router } from '@/router';
-import { SetupStoreId } from '@/enum';
+import { useRouteStore } from '@/store/modules/route';
 import { useRouterPush } from '@/hooks/common/router';
 import { localStg } from '@/utils/storage';
-import { useRouteStore } from '@/store/modules/route';
+import { SetupStoreId } from '@/enum';
 import { useThemeStore } from '../theme';
 import {
   extractTabsByAllRoutes,
-  filterTabsById,
   filterTabsByIds,
   findTabByRouteName,
   getAllTabs,
@@ -96,23 +95,15 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
    * @param tabId Tab id
    */
   async function removeTab(tabId: string) {
+    const removeTabIndex = tabs.value.findIndex(tab => tab.id === tabId);
+    if (removeTabIndex === -1) return;
+
     const isRemoveActiveTab = activeTabId.value === tabId;
-    const updatedTabs = filterTabsById(tabId, tabs.value);
+    const nextTab = tabs.value[removeTabIndex + 1] || homeTab.value;
 
-    function update() {
-      tabs.value = updatedTabs;
-    }
-
-    if (!isRemoveActiveTab) {
-      update();
-      return;
-    }
-
-    const activeTab = updatedTabs.at(-1) || homeTab.value;
-
-    if (activeTab) {
-      await switchRouteByTab(activeTab);
-      update();
+    tabs.value.splice(removeTabIndex, 1);
+    if (isRemoveActiveTab && nextTab) {
+      await switchRouteByTab(nextTab);
     }
   }
 
@@ -158,6 +149,25 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
 
     await switchRouteByTab(activeTab);
     update();
+  }
+
+  const { routerPushByKey } = useRouterPush();
+  /**
+   * Replace tab
+   *
+   * @param key Route key
+   * @param options Router push options
+   */
+  async function replaceTab(key: RouteKey, options?: App.Global.RouterPushOptions) {
+    const oldTabId = activeTabId.value;
+
+    // push new route
+    await routerPushByKey(key, options);
+
+    // remove old tab (exclude fixed tab)
+    if (!isTabRetain(oldTabId)) {
+      await removeTab(oldTabId);
+    }
   }
 
   /**
@@ -282,6 +292,7 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
     removeTab,
     removeActiveTab,
     removeTabByRouteName,
+    replaceTab,
     clearTabs,
     clearLeftTabs,
     clearRightTabs,

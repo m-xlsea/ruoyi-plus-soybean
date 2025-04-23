@@ -131,18 +131,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'system_config',
           i18nKey: 'route.system_config'
-        },
-        children: [
-          {
-            name: 'system_config_notice',
-            path: '/system/config/notice',
-            component: 'view.system_config_notice',
-            meta: {
-              title: 'system_config_notice',
-              i18nKey: 'route.system_config_notice'
-            }
-          }
-        ]
+        }
       },
       {
         name: 'system_dept',

@@ -3,13 +3,13 @@ import type { RouteRecordRaw } from 'vue-router';
 import { defineStore } from 'pinia';
 import { useBoolean } from '@sa/hooks';
 import type { CustomRoute, ElegantConstRoute, LastLevelRouteKey, RouteKey, RouteMap } from '@elegant-router/types';
-import { SetupStoreId } from '@/enum';
 import { router } from '@/router';
+import { fetchGetRoutes } from '@/service/api';
+import { humpToLine } from '@/utils/common';
+import { SetupStoreId } from '@/enum';
 import { createDynamicRoutes, createStaticRoutes, getAuthVueRoutes } from '@/router/routes';
 import { ROOT_ROUTE } from '@/router/routes/builtin';
 import { getRouteName, getRoutePath } from '@/router/elegant/transform';
-import { fetchGetRoutes } from '@/service/api';
-import { humpToLine } from '@/utils/common';
 import { useAuthStore } from '../auth';
 import { useTabStore } from '../tab';
 import {
