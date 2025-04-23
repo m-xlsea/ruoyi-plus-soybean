@@ -13,6 +13,8 @@ interface Props {
   class?: string;
   /** Iconify icon name */
   icon?: string;
+  /** Local icon name */
+  localIcon?: string;
   /** Tooltip content */
   tooltipContent?: string;
   /** Tooltip placement */
@@ -25,6 +27,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   class: '',
   icon: '',
+  localIcon: '',
   tooltipContent: '',
   tooltipPlacement: 'bottom',
   zIndex: 98,
@@ -46,7 +49,8 @@ const quaternary = computed(() => {
       <NButton :quaternary="quaternary" :class="twMerge(DEFAULT_CLASS, props.class)" :focusable="false" v-bind="attrs">
         <div class="flex-center gap-8px">
           <slot>
-            <SvgIcon :icon="icon" />
+            <SvgIcon v-if="icon" :icon="icon" />
+            <SvgIcon v-else :local-icon="localIcon" />
           </slot>
         </div>
       </NButton>

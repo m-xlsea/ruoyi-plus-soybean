@@ -32,7 +32,7 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       // 客户端 ID
       config.headers.Clientid = import.meta.env.VITE_APP_CLIENT_ID;
       // 对应国际化资源文件后缀
-      config.headers['Content-Language'] = 'zh_CN';
+      config.headers['Content-Language'] = (localStg.get('lang') || 'zh-CN').replace('-', '_');
 
       handleRepeatSubmit(config);
 

@@ -9,6 +9,14 @@ export function fetchGetConfigList(params?: Api.System.ConfigSearchParams) {
   });
 }
 
+/** 根据参数键名查询参数值 */
+export function fetchGetConfigDetail(configKey: string) {
+  return request<Api.System.Config>({
+    url: `/system/config/configKey/${configKey}`,
+    method: 'get'
+  });
+}
+
 /** 新增参数配置 */
 export function fetchCreateConfig(data: Api.System.ConfigOperateParams) {
   return request<boolean>({
@@ -34,6 +42,7 @@ export function fetchBatchDeleteConfig(configIds: CommonType.IdType[]) {
     method: 'delete'
   });
 }
+
 /** 刷新缓存 */
 export function fetchRefreshCache() {
   return request<boolean>({

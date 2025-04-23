@@ -35,6 +35,20 @@ export function fetchLogin(data: Api.Auth.PwdLoginForm) {
   });
 }
 
+/** Register */
+export function fetchRegister(data: Api.Auth.RegisterForm) {
+  return request<Api.Auth.LoginToken>({
+    url: '/auth/register',
+    method: 'post',
+    headers: {
+      isToken: false,
+      isEncrypt: true,
+      repeatSubmit: false
+    },
+    data
+  });
+}
+
 /** Get user info */
 export function fetchGetUserInfo() {
   return request<Api.Auth.UserInfo>({ url: '/system/user/getInfo' });

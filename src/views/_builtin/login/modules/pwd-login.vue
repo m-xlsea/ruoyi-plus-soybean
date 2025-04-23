@@ -2,8 +2,8 @@
 import { computed, reactive, ref } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { loginModuleRecord } from '@/constants/app';
 import { fetchCaptchaCode, fetchTenantList } from '@/service/api';
+// import { fetchGetConfigDetail } from '@/service/api/system/config';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -22,6 +22,7 @@ const { loading: codeLoading, startLoading: startCodeLoading, endLoading: endCod
 const codeUrl = ref<string>();
 const captchaEnabled = ref<boolean>(false);
 const tenantEnabled = ref<boolean>(false);
+const registerEnabled = ref<boolean>(false);
 const remberMe = ref<boolean>(false);
 const tenantOption = ref<SelectOption[]>([]);
 
@@ -101,6 +102,18 @@ function handleLoginRember() {
 }
 
 handleLoginRember();
+
+// async function handleRegister() {
+//   const { data, error } = await fetchGetConfigDetail('sys.account.registerUser');
+//   if (error) return;
+//   registerEnabled.value = data.configValue === 'true';
+// }
+
+// handleRegister();
+
+function handleSocialLogin(type: string) {
+  console.log(type);
+}
 </script>
 
 <template>
@@ -130,24 +143,23 @@ handleLoginRember();
         </NSpin>
       </div>
     </NFormItem>
-    <NSpace vertical :size="24">
-      <div class="flex-y-center justify-between">
+    <NSpace vertical :size="16" class="mb-8px">
+      <div class="mx-6px flex-y-center justify-between">
         <NCheckbox v-model:checked="remberMe">{{ $t('page.login.pwdLogin.rememberMe') }}</NCheckbox>
-        <NButton quaternary @click="toggleLoginModule('reset-pwd')">
-          {{ $t('page.login.pwdLogin.forgetPassword') }}
-        </NButton>
+        <NSpace :size="1">
+          <ButtonIcon class="color-#44b549" icon="ic:outline-wechat" @click="handleSocialLogin('wechat_enterprise')" />
+          <ButtonIcon local-icon="topiam" @click="handleSocialLogin('topiam')" />
+          <ButtonIcon local-icon="maxkey" @click="handleSocialLogin('maxkey')" />
+          <ButtonIcon class="color-#c71d23" icon="simple-icons:gitee" @click="handleSocialLogin('gitee')" />
+          <ButtonIcon class="color-#010409" icon="mdi:github" @click="handleSocialLogin('github')" />
+        </NSpace>
       </div>
       <NButton type="primary" size="large" block :loading="authStore.loginLoading" @click="handleSubmit">
         {{ $t('common.login') }}
       </NButton>
-      <div class="flex-y-center justify-between gap-12px">
-        <NButton class="flex-1" block @click="toggleLoginModule('code-login')">
-          {{ $t(loginModuleRecord['code-login']) }}
-        </NButton>
-        <NButton class="flex-1" block @click="toggleLoginModule('register')">
-          {{ $t(loginModuleRecord.register) }}
-        </NButton>
-      </div>
+      <NButton v-if="registerEnabled" size="large" block @click="toggleLoginModule('register')">
+        {{ $t('page.login.common.register') }}
+      </NButton>
     </NSpace>
   </NForm>
 </template>

@@ -114,6 +114,16 @@ declare namespace Api {
       password?: string;
     }
 
+    /** register form */
+    interface RegisterForm extends LoginForm {
+      /** 用户名 */
+      username?: string;
+      /** 密码 */
+      password?: string;
+      /** 确认密码 */
+      confirmPassword?: string;
+    }
+
     /** login token data */
     interface LoginToken {
       /** 授权令牌 */
