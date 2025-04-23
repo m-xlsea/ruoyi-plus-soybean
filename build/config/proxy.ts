@@ -42,7 +42,7 @@ function createProxyItem(item: App.Service.ServiceConfigItem, enableLog: boolean
 
         const proxyUrl = `${lightBlue('[real request url]')}: ${green(`${options.target}${req.url}`)}`;
 
-        consola.log(`${requestUrl}\n${proxyUrl}`);
+        consola.log(`\n${requestUrl}\n${proxyUrl}`);
       });
       _proxy.on('error', (_err, req, _res) => {
         if (!enableLog) return;
