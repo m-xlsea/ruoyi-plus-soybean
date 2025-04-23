@@ -17,30 +17,14 @@ export function setupLoading() {
     toggleHtmlClass(DARK_CLASS).add();
   }
 
-  const loadingClasses = [
-    'left-0 top-0',
-    'left-0 bottom-0 animate-delay-500',
-    'right-0 top-0 animate-delay-1000',
-    'right-0 bottom-0 animate-delay-1500'
-  ];
-
-  const logoWithClass = systemLogo.replace('<svg', `<svg class="size-128px text-primary"`);
-
-  const dot = loadingClasses
-    .map(item => {
-      return `<div class="absolute w-16px h-16px bg-primary rounded-8px animate-pulse ${item}"></div>`;
-    })
-    .join('\n');
-
   const loading = `
 <div class="fixed-center flex-col bg-layout" style="${primaryColor}">
-  ${logoWithClass}
-  <div class="w-120px h-120px my-36px">
+<div class="w-120px h-120px my-36px">
     <div class="relative h-full animate-spin">
-      ${dot}
+      <img src="${systemLogo}" width="120" />
     </div>
   </div>
-  <h2 class="text-28px font-500 text-#646464">${$t('system.title')}</h2>
+  <h2 class="text-28px font-500 text-primary">${$t('system.title')}</h2>
 </div>`;
 
   const app = document.getElementById('app');

@@ -4,12 +4,12 @@ export const themeSettings: App.Theme.ThemeSetting = {
   grayscale: false,
   colourWeakness: false,
   recommendColor: false,
-  themeColor: '#646CFF',
+  themeColor: '#0E42D2',
   otherColor: {
-    info: '#646CFF',
-    success: '#52C41A',
-    warning: '#FAAD14',
-    error: '#F5222D'
+    info: '#0E42D2',
+    success: '#009A29',
+    warning: '#D25F00',
+    error: '#CB2634'
   },
   isInfoFollowPrimary: true,
   resetCacheStrategy: 'close',

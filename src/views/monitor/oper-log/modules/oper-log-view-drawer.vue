@@ -52,10 +52,10 @@ function closeDrawer() {
         </NDescriptionsItem>
         <NDescriptionsItem label="操作时间">{{ props.rowData?.operTime }}</NDescriptionsItem>
         <NDescriptionsItem label="请求参数">
-          <JsonPreview :data="props.rowData?.operParam" />
+          <JsonPreview :code="props.rowData?.operParam" />
         </NDescriptionsItem>
         <NDescriptionsItem label="返回参数">
-          <JsonPreview :data="props.rowData?.jsonResult" />
+          <JsonPreview :code="props.rowData?.jsonResult" />
         </NDescriptionsItem>
         <NDescriptionsItem label="消耗时间">
           {{ `${props.rowData?.costTime} ms` }}

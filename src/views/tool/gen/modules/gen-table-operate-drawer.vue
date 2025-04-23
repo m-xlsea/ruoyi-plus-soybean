@@ -4,10 +4,6 @@ import type { FormInst, SelectOption } from 'naive-ui';
 import { NCheckbox, NInput, NSelect, NTabs } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { jsonClone } from '@sa/utils';
-import { fetchGetDictTypeOption } from '@/service/api/system';
-import { fetchGetGenTableInfo, fetchUpdateGenTable } from '@/service/api/tool';
-import { $t } from '@/locales';
-import { useAppStore } from '@/store/modules/app';
 import {
   genHtmlTypeOptions,
   genJavaTypeOptions,
@@ -15,7 +11,11 @@ import {
   genTplCategoryOptions,
   genTypeOptions
 } from '@/constants/business';
+import { fetchGetDictTypeOption } from '@/service/api/system';
+import { fetchGetGenTableInfo, fetchUpdateGenTable } from '@/service/api/tool';
+import { useAppStore } from '@/store/modules/app';
 import { useFormRules } from '@/hooks/common/form';
+import { $t } from '@/locales';
 
 defineOptions({
   name: 'GenTableOperateDrawer'

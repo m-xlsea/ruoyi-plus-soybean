@@ -1,7 +1,7 @@
 <script setup lang="tsx">
+import { ref } from 'vue';
 import { NButton, NPopconfirm, NTooltip } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
-import { ref } from 'vue';
 import { jsonClone } from '@sa/utils';
 import {
   fetchBatchDeleteGenTable,
@@ -10,12 +10,12 @@ import {
   fetchGetGenTableList,
   fetchSynchGenDbList
 } from '@/service/api/tool';
-import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import { useDownload } from '@/hooks/business/download';
+import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
-import { useDownload } from '@/hooks/business/download';
 import GenTableSearch from './modules/gen-table-search.vue';
 import GenTableImportDrawer from './modules/gen-table-import-drawer.vue';
 import GenTableOperateDrawer from './modules/gen-table-operate-drawer.vue';

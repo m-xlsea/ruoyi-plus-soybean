@@ -2,6 +2,7 @@
 import { useDict } from '@/hooks/business/dict';
 import { getBrowserIcon, getOsIcon } from '@/utils/format';
 import { $t } from '@/locales';
+
 defineOptions({
   name: 'LoginInforViewDrawer'
 });

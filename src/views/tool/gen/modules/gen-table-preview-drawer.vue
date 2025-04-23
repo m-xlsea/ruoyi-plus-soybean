@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useLoading } from '@sa/hooks';
 import { ref, watch } from 'vue';
 import { useClipboard } from '@vueuse/core';
+import { useLoading } from '@sa/hooks';
 import { fetchGetGenPreview } from '@/service/api/tool';
 import MonacoEditor from '@/components/common/monaco-editor.vue';
 
