@@ -1,16 +1,16 @@
 <script setup lang="tsx">
+import { ref } from 'vue';
 import { NButton, NPopconfirm } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { ref } from 'vue';
 import { fetchBatchDeletePost, fetchGetPostList } from '@/service/api/system/post';
 import { fetchGetDeptTree } from '@/service/api/system';
-import { $t } from '@/locales';
-import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
+import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import DictTag from '@/components/custom/dict-tag.vue';
 import { useDict } from '@/hooks/business/dict';
+import DictTag from '@/components/custom/dict-tag.vue';
+import { $t } from '@/locales';
 import PostOperateDrawer from './modules/post-operate-drawer.vue';
 import PostSearch from './modules/post-search.vue';
 

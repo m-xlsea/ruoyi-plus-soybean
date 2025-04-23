@@ -2,13 +2,13 @@
 import { computed, reactive, ref } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { $t } from '@/locales';
 import { loginModuleRecord } from '@/constants/app';
+import { fetchCaptchaCode, fetchTenantList } from '@/service/api';
+import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { useAuthStore } from '@/store/modules/auth';
-import { fetchCaptchaCode, fetchTenantList } from '@/service/api';
 import { localStg } from '@/utils/storage';
+import { $t } from '@/locales';
 
 defineOptions({
   name: 'PwdLogin'

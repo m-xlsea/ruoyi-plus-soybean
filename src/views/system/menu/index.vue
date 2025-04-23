@@ -1,17 +1,17 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
-import { useBoolean, useLoading } from '@sa/hooks';
 import type { DataTableColumns, TreeInst, TreeOption } from 'naive-ui';
 import { NButton, NIcon, NInput, NPopconfirm, NTooltip } from 'naive-ui';
+import { useBoolean, useLoading } from '@sa/hooks';
+import { menuIsFrameRecord, menuTypeRecord } from '@/constants/business';
 import { fetchDeleteMenu, fetchGetMenuList } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
-import { menuIsFrameRecord, menuTypeRecord } from '@/constants/business';
-import { $t } from '@/locales';
 import { useDict } from '@/hooks/business/dict';
+import { handleTree } from '@/utils/common';
+import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import { handleTree } from '@/utils/common';
 import MenuOperateDrawer from './modules/menu-operate-drawer.vue';
 useDict('sys_show_hide');
 useDict('sys_normal_disable');

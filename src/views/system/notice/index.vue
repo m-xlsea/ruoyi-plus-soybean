@@ -1,12 +1,12 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
-import { $t } from '@/locales';
 import { fetchBatchDeleteNotice, fetchGetNoticeList } from '@/service/api/system/notice';
-import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
+import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
+import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
 import NoticeOperateDrawer from './modules/notice-operate-drawer.vue';
 import NoticeSearch from './modules/notice-search.vue';

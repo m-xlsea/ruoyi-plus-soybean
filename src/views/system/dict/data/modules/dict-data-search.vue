@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { $t } from '@/locales';
 import { useNaiveForm } from '@/hooks/common/form';
+import { $t } from '@/locales';
 
 defineOptions({
   name: 'DictDataSearch'

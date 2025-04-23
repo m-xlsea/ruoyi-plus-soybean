@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, h, reactive, watch } from 'vue';
+import { NTag } from 'naive-ui';
+import { fetchCreateDictData, fetchUpdateDictData } from '@/service/api/system/dict-data';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import { fetchCreateDictData, fetchUpdateDictData } from '@/service/api/system/dict-data';
-import { NTag } from 'naive-ui';
 
 defineOptions({
   name: 'DictDataOperateDrawer'
@@ -51,7 +51,7 @@ const listClassOptions = [
   { label: 'warning', value: 'warning' },
   { label: 'error', value: 'error' },
   { label: 'default', value: 'default' }
-]
+];
 
 function createDefaultModel(): Model {
   return {
@@ -134,13 +134,9 @@ watch(visible, () => {
 });
 
 function renderTagLabel(option: { label: string; value: string }) {
-  return h(
-    'div',
-    { class: 'flex items-center gap-2' },
-    [
-      h(NTag, {type: option.value as any,}, { default: () => option.label })
-    ]
-  );
+  return h('div', { class: 'flex items-center gap-2' }, [
+    h(NTag, { type: option.value as any }, { default: () => option.label })
+  ]);
 }
 </script>
 

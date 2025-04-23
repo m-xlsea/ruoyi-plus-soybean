@@ -1,7 +1,7 @@
 <script setup lang="ts">
+import { computed, useAttrs } from 'vue';
 import type { ButtonProps, PopoverPlacement } from 'naive-ui';
 import { twMerge } from 'tailwind-merge';
-import { computed, useAttrs } from 'vue';
 
 defineOptions({
   name: 'ButtonIcon',

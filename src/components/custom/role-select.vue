@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useLoading } from '@sa/hooks';
-import type { SelectProps } from 'naive-ui';
 import { ref, useAttrs } from 'vue';
+import type { SelectProps } from 'naive-ui';
+import { useLoading } from '@sa/hooks';
 import { fetchGetRoleSelect } from '@/service/api/system';
 
 defineOptions({

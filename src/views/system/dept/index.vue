@@ -3,12 +3,12 @@ import { NButton, NPopconfirm } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
 import type { TableDataWithIndex } from '@sa/hooks';
 import { fetchBatchDeleteDept, fetchGetDeptList } from '@/service/api/system/dept';
-import { $t } from '@/locales';
-import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
+import { useAuth } from '@/hooks/business/auth';
 import { useTreeTable, useTreeTableOperate } from '@/hooks/common/tree-table';
-import DictTag from '@/components/custom/dict-tag.vue';
 import { useDict } from '@/hooks/business/dict';
+import DictTag from '@/components/custom/dict-tag.vue';
+import { $t } from '@/locales';
 import DeptOperateDrawer from './modules/dept-operate-drawer.vue';
 import DeptSearch from './modules/dept-search.vue';
 

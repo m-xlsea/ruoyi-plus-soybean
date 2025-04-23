@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
+import { fetchCreateDictType, fetchUpdateDictType } from '@/service/api/system/dict';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import { fetchCreateDictType, fetchUpdateDictType } from '@/service/api/system/dict';
 
 defineOptions({
   name: 'DictTypeOperateDrawer'

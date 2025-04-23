@@ -1,13 +1,13 @@
 <script setup lang="tsx">
 import { computed, reactive, ref, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
-import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { $t } from '@/locales';
-import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api/system';
 import { menuIconTypeOptions, menuIsFrameOptions, menuTypeOptions } from '@/constants/business';
-import SvgIcon from '@/components/custom/svg-icon.vue';
+import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api/system';
+import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { getLocalMenuIcons } from '@/utils/icon';
 import { humpToLine, isNotNull } from '@/utils/common';
+import { $t } from '@/locales';
+import SvgIcon from '@/components/custom/svg-icon.vue';
 
 defineOptions({
   name: 'MenuOperateDrawer'

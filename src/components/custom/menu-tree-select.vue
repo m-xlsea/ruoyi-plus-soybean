@@ -1,10 +1,10 @@
 <script setup lang="tsx">
 import { ref, useAttrs } from 'vue';
-import { useLoading } from '@sa/hooks';
 import type { TreeOption, TreeSelectProps } from 'naive-ui';
+import { useLoading } from '@sa/hooks';
 import { fetchGetMenuList } from '@/service/api/system';
-import SvgIcon from '@/components/custom/svg-icon.vue';
 import { handleTree } from '@/utils/common';
+import SvgIcon from '@/components/custom/svg-icon.vue';
 
 defineOptions({ name: 'MenuTreeSelect' });
 

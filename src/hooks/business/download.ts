@@ -1,6 +1,6 @@
+import { errorCodeRecord } from '@/constants/common';
 import { localStg } from '@/utils/storage';
 import { getServiceBaseURL } from '@/utils/service';
-import { errorCodeRecord } from '@/constants/common';
 
 export function useDownload() {
   const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';

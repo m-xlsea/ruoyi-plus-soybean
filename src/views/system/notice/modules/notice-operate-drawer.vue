@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
+import { fetchCreateNotice, fetchUpdateNotice } from '@/service/api/system/notice';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import { fetchCreateNotice, fetchUpdateNotice } from '@/service/api/system/notice';
 defineOptions({
   name: 'NoticeOperateDrawer'
 });

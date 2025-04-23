@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { defineStore } from 'pinia';
 
 export const useDictStore = defineStore('dict', () => {
   const dictData = ref<{ [key: string]: Api.System.DictData[] }>({});

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import { useLoading } from '@sa/hooks';
-import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { $t } from '@/locales';
 import { fetchCreateTenant, fetchUpdateTenant } from '@/service/api/system/tenant';
 import { fetchGetTenantPackageSelectList } from '@/service/api/system/tenant-package';
+import { useFormRules, useNaiveForm } from '@/hooks/common/form';
+import { $t } from '@/locales';
 
 defineOptions({
   name: 'TenantOperateDrawer'

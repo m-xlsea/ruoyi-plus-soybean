@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
+import { fetchCreateConfig, fetchUpdateConfig } from '@/service/api/system/config';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import { fetchCreateConfig, fetchUpdateConfig } from '@/service/api/system/config';
 
 defineOptions({
   name: 'ConfigOperateDrawer'

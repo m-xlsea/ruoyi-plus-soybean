@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { useLoading } from '@sa/hooks';
-import type { SelectProps } from 'naive-ui';
 import { ref, useAttrs, watch } from 'vue';
+import type { SelectProps } from 'naive-ui';
+import { useLoading } from '@sa/hooks';
 import { fetchGetPostSelect } from '@/service/api/system';
 
 defineOptions({

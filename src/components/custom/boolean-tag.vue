@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { TagProps } from 'naive-ui';
 import { useAttrs } from 'vue';
+import type { TagProps } from 'naive-ui';
 import { isNotNull } from '@/utils/common';
 
 defineOptions({

@@ -1,15 +1,15 @@
 <script setup lang="tsx">
-import { NButton, NPopconfirm } from 'naive-ui';
 import { computed } from 'vue';
+import { NButton, NPopconfirm } from 'naive-ui';
 import { fetchBatchDeleteTenant, fetchGetTenantList, fetchSyncTenantDict } from '@/service/api/system/tenant';
-import { $t } from '@/locales';
-import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
 import { useAuthStore } from '@/store/modules/auth';
+import { useAuth } from '@/hooks/business/auth';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import DictTag from '@/components/custom/dict-tag.vue';
 import { useDownload } from '@/hooks/business/download';
 import { useDict } from '@/hooks/business/dict';
+import DictTag from '@/components/custom/dict-tag.vue';
+import { $t } from '@/locales';
 import TenantOperateDrawer from './modules/tenant-operate-drawer.vue';
 import TenantSearch from './modules/tenant-search.vue';
 

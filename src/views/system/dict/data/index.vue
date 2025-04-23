@@ -1,16 +1,15 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
 import { fetchBatchDeleteDictData, fetchGetDictDataList } from '@/service/api/system/dict-data';
-import { $t } from '@/locales';
-import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
+import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { emitter } from '../mitt';
 import DictDataOperateDrawer from './modules/dict-data-operate-drawer.vue';
 import DictDataSearch from './modules/dict-data-search.vue';
-import { ref } from 'vue';
 defineOptions({
   name: 'DictDataList'
 });
@@ -174,14 +173,11 @@ emitter.on('rowClick', async (value: string) => {
   await getDataByPage();
 });
 
-/**
- * 自定义重置方法，重置dictLabel，不重置dictType
- */
+/** 自定义重置方法，重置dictLabel，不重置dictType */
 async function handleReset() {
   searchParams.dictLabel = null;
   await getDataByPage();
 }
-
 </script>
 
 <template>
@@ -201,6 +197,7 @@ async function handleReset() {
           @delete="handleBatchDelete"
           @export="handleExport"
           @refresh="getData"
+          @reset="resetSearchParams"
         />
       </template>
       <NDataTable

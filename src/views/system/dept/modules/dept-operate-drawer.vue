@@ -2,11 +2,11 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { NInputNumber } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { $t } from '@/locales';
 import { fetchCreateDept, fetchGetDeptList, fetchGetExcludeDeptList, fetchUpdateDept } from '@/service/api/system/dept';
 import { fetchGetDeptUserList } from '@/service/api/system/user';
+import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { handleTree } from '@/utils/common';
+import { $t } from '@/locales';
 
 defineOptions({
   name: 'DeptOperateDrawer'

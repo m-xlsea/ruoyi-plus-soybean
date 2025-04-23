@@ -1,12 +1,12 @@
 <script setup lang="tsx">
 import { NButton, NPopconfirm } from 'naive-ui';
 import { fetchBatchDeleteClient, fetchGetClientList } from '@/service/api/system/client';
-import { $t } from '@/locales';
-import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
+import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
+import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
 import ClientOperateDrawer from './modules/client-operate-drawer.vue';
 import ClientSearch from './modules/client-search.vue';

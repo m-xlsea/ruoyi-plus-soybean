@@ -1,13 +1,13 @@
 <script setup lang="tsx">
-import { NButton, NPopconfirm } from 'naive-ui';
 import { ref } from 'vue';
+import { NButton, NPopconfirm } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList } from '@/service/api/system';
-import { $t } from '@/locales';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import DictTag from '@/components/custom/dict-tag.vue';
 import { useDict } from '@/hooks/business/dict';
+import DictTag from '@/components/custom/dict-tag.vue';
+import { $t } from '@/locales';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
 

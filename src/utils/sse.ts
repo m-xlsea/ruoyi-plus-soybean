@@ -1,5 +1,5 @@
-import { useEventSource } from '@vueuse/core';
 import { watch } from 'vue';
+import { useEventSource } from '@vueuse/core';
 import useNoticeStore from '@/store/modules/notice';
 import { localStg } from './storage';
 

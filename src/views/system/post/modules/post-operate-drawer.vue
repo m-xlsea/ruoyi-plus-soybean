@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
 import { useLoading } from '@sa/hooks';
+import { fetchCreatePost, fetchUpdatePost } from '@/service/api/system/post';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
-import { fetchCreatePost, fetchUpdatePost } from '@/service/api/system/post';
 defineOptions({
   name: 'PostOperateDrawer'
 });

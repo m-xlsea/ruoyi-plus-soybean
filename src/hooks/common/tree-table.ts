@@ -3,8 +3,8 @@ import type { Ref } from 'vue';
 import { jsonClone } from '@sa/utils';
 import { useBoolean, useHookTable } from '@sa/hooks';
 import { useAppStore } from '@/store/modules/app';
-import { $t } from '@/locales';
 import { handleTree } from '@/utils/common';
+import { $t } from '@/locales';
 
 type TableData = NaiveUI.TableData;
 type GetTableData<A extends NaiveUI.TreeTableApiFn> = NaiveUI.GetTreeTableData<A>;
