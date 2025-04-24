@@ -35,6 +35,15 @@ export function fetchUpdateConfig(data: Api.System.ConfigOperateParams) {
   });
 }
 
+/** 根据Key修改值 */
+export function fetchUpdateConfigByKey(data: Api.System.ConfigOperateParams) {
+  return request<boolean>({
+    url: '/system/config/updateByKey',
+    method: 'put',
+    data
+  });
+}
+
 /** 批量删除参数配置 */
 export function fetchBatchDeleteConfig(configIds: CommonType.IdType[]) {
   return request<boolean>({

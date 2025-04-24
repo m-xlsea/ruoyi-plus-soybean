@@ -1,25 +1,30 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
-import { NButton, NImage, NPopconfirm } from 'naive-ui';
+import { onMounted, ref } from 'vue';
+import { NImage, NTag } from 'naive-ui';
+import { useBoolean, useLoading } from '@sa/hooks';
 import { fetchBatchDeleteOss, fetchGetOssList } from '@/service/api/system/oss';
-import { fetchGetConfigByKey } from '@/service/api/system/config';
+import { fetchGetConfigByKey, fetchUpdateConfigByKey } from '@/service/api/system/config';
 import { useAppStore } from '@/store/modules/app';
-import { useAuth } from '@/hooks/business/auth';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { isImage } from '@/utils/common';
 import { $t } from '@/locales';
+import ButtonIcon from '@/components/custom/button-icon.vue';
 import OssSearch from './modules/oss-search.vue';
-import type { TableDataWithIndex } from '~/packages/hooks/src';
+import OssUploadModal from './modules/oss-upload-modal.vue';
 
 defineOptions({
   name: 'OssList'
 });
 
-const appStore = useAppStore();
 const { hasAuth } = useAuth();
 const { oss } = useDownload();
-const preview = ref(false);
+const appStore = useAppStore();
+const fileUploadType = ref<'file' | 'image'>('file');
+const { bool: preview, setBool: setPreview } = useBoolean(true);
+const { loading: previewLoading, startLoading: startPreviewLoading, endLoading: endPreviewLoading } = useLoading(false);
+const { bool: uploadVisible, setTrue: showFUploadModal } = useBoolean(false);
 
 const {
   columns,
@@ -56,36 +61,33 @@ const {
       width: 64
     },
     {
+      key: 'ossId',
+      title: '对象存储主键',
+      align: 'center',
+      minWidth: 120
+    },
+    {
       key: 'fileName',
       title: '文件名',
       align: 'center',
-      ellipsis: {
-        tooltip: true
-      },
       minWidth: 120
     },
     {
       key: 'originalName',
       title: '原名',
       align: 'center',
-      ellipsis: {
-        tooltip: true
-      },
       minWidth: 120
     },
     {
       key: 'fileSuffix',
-      title: '后缀名',
+      title: '文件后缀名',
       align: 'center',
       minWidth: 120
     },
     {
       key: 'url',
-      title: '文件预览',
+      title: 'URL地址',
       align: 'center',
-      ellipsis: {
-        tooltip: true
-      },
       minWidth: 120,
       render: row => {
         if (preview.value && isImage(row.fileSuffix)) {
@@ -110,7 +112,10 @@ const {
       key: 'service',
       title: '服务商',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
+      render: row => {
+        return <NTag type="primary">{row.service}</NTag>;
+      }
     },
     {
       key: 'operate',
@@ -119,33 +124,40 @@ const {
       width: 130,
       render: row => {
         const downloadBtn = () => {
+          if (!hasAuth('system:oss:download')) {
+            return null;
+          }
           return (
-            <NButton type="primary" ghost size="small" onClick={() => handleDownload(row)}>
-              下载
-            </NButton>
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:download"
+              class="text-20px"
+              tooltipContent={$t('common.download')}
+              onClick={() => download(row.ossId!)}
+            />
           );
         };
 
         const deleteBtn = () => {
-          if (!hasAuth('system:oss:remove')) {
+          if (!hasAuth('system:oss:delete')) {
             return null;
           }
           return (
-            <NPopconfirm onPositiveClick={() => handleDelete(row.ossId!)}>
-              {{
-                default: () => $t('common.confirmDelete'),
-                trigger: () => (
-                  <NButton type="error" ghost size="small">
-                    {$t('common.delete')}
-                  </NButton>
-                )
-              }}
-            </NPopconfirm>
+            <ButtonIcon
+              text
+              type="error"
+              icon="material-symbols:delete-outline"
+              class="text-20px"
+              tooltipContent={$t('common.delete')}
+              popconfirmContent={$t('common.confirmDelete')}
+              onPositiveClick={() => handleDelete(row.ossId!)}
+            />
           );
         };
 
         return (
-          <div class="flex-center gap-8px">
+          <div class="flex-center gap-16px">
             {downloadBtn()}
             {deleteBtn()}
           </div>
@@ -155,7 +167,7 @@ const {
   ]
 });
 
-const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
+const { handleAdd, checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
 
 async function handleBatchDelete() {
   // request
@@ -171,38 +183,104 @@ async function handleDelete(ossId: CommonType.IdType) {
   onDeleted();
 }
 
+function download(ossId: CommonType.IdType) {
+  oss(ossId);
+}
+
+function handleUpload(type: 'file' | 'image') {
+  fileUploadType.value = type;
+  showFUploadModal();
+}
+
 async function getConfigKey() {
   const { data: previewStr, error } = await fetchGetConfigByKey('sys.oss.previewListResource');
   if (error) return;
-  preview.value = previewStr === 'true';
+  setPreview(previewStr === 'true');
 }
-getConfigKey();
 
-function handleDownload(row: TableDataWithIndex<Api.System.Oss>) {
-  oss(row.ossId);
+onMounted(() => {
+  getConfigKey();
+});
+
+async function handleUpdatePreview(checked: boolean) {
+  setPreview(!checked);
+  window.$dialog?.warning({
+    title: '提示',
+    content: `是否确认${checked ? '开启' : '关闭'}预览？`,
+    positiveText: '确认',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      startPreviewLoading();
+      const { error } = await fetchUpdateConfigByKey({
+        configKey: 'sys.oss.previewListResource',
+        configValue: String(checked)
+      });
+      if (error) {
+        setPreview(!checked);
+        endPreviewLoading();
+        return;
+      }
+      setPreview(checked);
+      window.$message?.success('更新成功');
+      endPreviewLoading();
+    },
+    onNegativeClick: () => {
+      setPreview(!checked);
+    }
+  });
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <OssSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="文件管理列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard title="OSS 对象存储列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
           :disabled-delete="checkedRowKeys.length === 0"
           :loading="loading"
           :show-add="false"
-          :show-delete="hasAuth('system:oss:remove')"
-          :show-export="false"
+          :show-delete="hasAuth('system:oss:delete')"
+          @add="handleAdd"
           @delete="handleBatchDelete"
           @refresh="getData"
         >
           <template #prefix>
-            <NSwitch v-model:value="preview">
-              <template #checked>开启预览</template>
-              <template #unchecked>关闭预览</template>
+            <NSwitch
+              v-model:value="preview"
+              class="mt-1px"
+              :loading="previewLoading"
+              size="large"
+              :round="false"
+              @update:value="handleUpdatePreview"
+            >
+              <template #checked>
+                <span class="text-14px">禁用预览</span>
+              </template>
+              <template #unchecked>
+                <span class="text-14px">开启预览</span>
+              </template>
             </NSwitch>
+
+            <NButton type="primary" size="small" ghost @click="handleUpload('file')">
+              <template #icon>
+                <icon-ic-round-file-upload />
+              </template>
+              上传文件
+            </NButton>
+            <NButton type="primary" size="small" ghost @click="handleUpload('image')">
+              <template #icon>
+                <icon-ic-round-image />
+              </template>
+              上传图片
+            </NButton>
+            <NButton type="primary" size="small" ghost>
+              <template #icon>
+                <icon-hugeicons:configuration-01 />
+              </template>
+              配置管理
+            </NButton>
           </template>
         </TableHeaderOperation>
       </template>
@@ -217,11 +295,15 @@ function handleDownload(row: TableDataWithIndex<Api.System.Oss>) {
         remote
         :row-key="row => row.ossId"
         :pagination="mobilePagination"
-        :row-props="() => ({ class: 'w-70px h-70px' })"
         class="sm:h-full"
       />
+      <OssUploadModal v-model:visible="uploadVisible" :upload-type="fileUploadType" @close="getData" />
     </NCard>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.n-switch {
+  --n-rail-height: 27px !important;
+}
+</style>

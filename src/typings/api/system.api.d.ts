@@ -623,13 +623,15 @@ declare namespace Api {
       fileName: string;
       /** 原名 */
       originalName: string;
-      /** 后缀名 */
+      /** 文件后缀名 */
       fileSuffix: string;
-      /** 文件预览 */
+      /** URL地址 */
       url: string;
+      /** 扩展属性 */
+      ext1: string;
       /** 服务商 */
       service: string;
-      /** 创建者 */
+      /** 创建者名称 */
       createByName: string;
     }>;
 
@@ -637,6 +639,7 @@ declare namespace Api {
     type OssSearchParams = CommonType.RecordNullable<
       Pick<Api.System.Oss, 'fileName' | 'originalName' | 'fileSuffix' | 'service'> & Api.Common.CommonSearchParams
     >;
+
     /** oss list */
     type OssList = Api.Common.PaginatingQueryRecord<Oss>;
   }

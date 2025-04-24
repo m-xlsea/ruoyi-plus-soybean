@@ -117,6 +117,7 @@ const {
               text
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
+              class="text-18px"
               tooltipContent={$t('common.edit')}
               onClick={() => edit(row.userId!)}
             />
@@ -132,6 +133,7 @@ const {
               text
               type="error"
               icon="material-symbols:delete-outline"
+              class="text-18px"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
               onPositiveClick={() => handleDelete(row.userId!)}

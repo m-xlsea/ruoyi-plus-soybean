@@ -25,6 +25,7 @@ const local: App.I18n.Schema = {
     deleteSuccess: '删除成功',
     confirmDelete: '确认删除吗？',
     edit: '编辑',
+    download: '下载',
     warning: '警告',
     error: '错误',
     index: '序号',
@@ -182,7 +183,8 @@ const local: App.I18n.Schema = {
     'monitor_oper-log': '操作日志',
     system_client: '客户端管理',
     system_notice: '通知公告',
-    'social-callback': '单点登录回调'
+    'social-callback': '单点登录回调',
+    system_oss: '文件管理'
   },
   page: {
     login: {

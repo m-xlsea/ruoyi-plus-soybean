@@ -25,6 +25,7 @@ const local: App.I18n.Schema = {
     deleteSuccess: 'Delete Success',
     confirmDelete: 'Are you sure you want to delete?',
     edit: 'Edit',
+    download: 'Download',
     warning: 'Warning',
     error: 'Error',
     index: 'Index',
@@ -182,7 +183,8 @@ const local: App.I18n.Schema = {
     'monitor_oper-log': 'Operate Log',
     system_client: 'Client Management',
     system_notice: 'Notice Management',
-    'social-callback': 'Social Callback'
+    'social-callback': 'Social Callback',
+    system_oss: 'File Management'
   },
   page: {
     login: {
