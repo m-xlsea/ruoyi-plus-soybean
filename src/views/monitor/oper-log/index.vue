@@ -163,30 +163,29 @@ async function handleCleanOperLog() {
     <OperLogSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard title="操作日志列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
-        <NSpace>
-          <NPopconfirm v-if="hasAuth('monitor:operlog:remove')" @positive-click="() => handleCleanOperLog()">
-            <template #trigger>
-              <NButton type="warning" ghost size="small">
-                <template #icon>
-                  <icon-ic-round-delete class="text-icon" />
-                </template>
-                清空
-              </NButton>
-            </template>
-            确认清空操作日志？
-          </NPopconfirm>
-          <TableHeaderOperation
-            v-model:columns="columnChecks"
-            :disabled-delete="checkedRowKeys.length === 0"
-            :loading="loading"
-            :show-add="false"
-            :show-delete="hasAuth('monitor:operlog:remove')"
-            :show-export="hasAuth('monitor:operlog:export')"
-            @delete="handleBatchDelete"
-            @export="handleExport"
-            @refresh="getData"
-          />
-        </NSpace>
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="false"
+          :show-delete="hasAuth('monitor:operlog:remove')"
+          :show-export="hasAuth('monitor:operlog:export')"
+          @delete="handleBatchDelete"
+          @export="handleExport"
+          @refresh="getData"
+        >
+          <template #prefix>
+            <NButton
+              v-if="hasAuth('monitor:operlog:remove')"
+              type="warning"
+              ghost
+              size="small"
+              @click="handleCleanOperLog"
+            >
+              清空
+            </NButton>
+          </template>
+        </TableHeaderOperation>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"

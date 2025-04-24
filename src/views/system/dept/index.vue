@@ -156,18 +156,19 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
     <DeptSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
     <NCard title="部门列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
-        <div class="flex items-center gap-8px">
-          <NButton size="small" @click="expandAll">展开</NButton>
-          <NButton size="small" @click="collapseAll">收起</NButton>
-          <TableHeaderOperation
-            v-model:columns="columnChecks"
-            :loading="loading"
-            :show-add="hasAuth('system:dept:add')"
-            :show-delete="false"
-            @add="handleAdd"
-            @refresh="getData"
-          />
-        </div>
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :loading="loading"
+          :show-add="hasAuth('system:dept:add')"
+          :show-delete="false"
+          @add="handleAdd"
+          @refresh="getData"
+        >
+          <template #prefix>
+            <NButton size="small" @click="expandAll">展开</NButton>
+            <NButton size="small" @click="collapseAll">收起</NButton>
+          </template>
+        </TableHeaderOperation>
       </template>
       <NDataTable
         :columns="columns"

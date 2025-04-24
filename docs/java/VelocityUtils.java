@@ -62,7 +62,7 @@ public class VelocityUtils {
         velocityContext.put("BusinessName", StringUtils.capitalize(genTable.getBusinessName()));
         velocityContext.put("businessName", genTable.getBusinessName());
         velocityContext.put("business_name", StrUtil.toUnderlineCase(genTable.getBusinessName()));
-        velocityContext.put("business-name", StrUtil.toUnderlineCase(genTable.getBusinessName()));
+        velocityContext.put("business-name", StrUtil.toSymbolCase(genTable.getBusinessName(),'-'));
         velocityContext.put("businessname", StrUtil.toSymbolCase(genTable.getBusinessName(), ' '));
         velocityContext.put("basePackage", getPackagePrefix(packageName));
         velocityContext.put("packageName", packageName);

@@ -43,6 +43,14 @@ export function fetchBatchDeleteConfig(configIds: CommonType.IdType[]) {
   });
 }
 
+/** 根据Key获取值 */
+export function fetchGetConfigByKey(configKey: string) {
+  return request<string>({
+    url: `/system/config/configKey/${configKey}`,
+    method: 'get'
+  });
+}
+
 /** 刷新缓存 */
 export function fetchRefreshCache() {
   return request<boolean>({

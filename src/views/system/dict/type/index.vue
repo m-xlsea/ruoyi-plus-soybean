@@ -184,23 +184,24 @@ async function handleRefreshCache() {
     <DictTypeSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard title="字典类型列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
-        <NSpace>
-          <NButton v-if="hasAuth('system:dict:remove')" type="warning" ghost size="small" @click="handleRefreshCache">
-            刷新缓存
-          </NButton>
-          <TableHeaderOperation
-            v-model:columns="columnChecks"
-            :disabled-delete="checkedRowKeys.length === 0"
-            :loading="loading"
-            :show-add="hasAuth('system:dict:add')"
-            :show-delete="hasAuth('system:dict:remove')"
-            :show-export="hasAuth('system:dict:export')"
-            @add="handleAdd"
-            @delete="handleBatchDelete"
-            @export="handleExport"
-            @refresh="getData"
-          />
-        </NSpace>
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="hasAuth('system:dict:add')"
+          :show-delete="hasAuth('system:dict:remove')"
+          :show-export="hasAuth('system:dict:export')"
+          @add="handleAdd"
+          @delete="handleBatchDelete"
+          @export="handleExport"
+          @refresh="getData"
+        >
+          <template #prefix>
+            <NButton v-if="hasAuth('system:dict:remove')" type="warning" ghost size="small" @click="handleRefreshCache">
+              刷新缓存
+            </NButton>
+          </template>
+        </TableHeaderOperation>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"

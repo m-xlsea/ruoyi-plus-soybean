@@ -612,5 +612,32 @@ declare namespace Api {
       | 'wechat_mp'
       | 'wechat_enterprise'
       | 'gitlab';
+
+    /** oss */
+    type Oss = Common.CommonRecord<{
+      /** 对象存储主键 */
+      ossId: CommonType.IdType;
+      /** 租户编号 */
+      tenantId: CommonType.IdType;
+      /** 文件名 */
+      fileName: string;
+      /** 原名 */
+      originalName: string;
+      /** 后缀名 */
+      fileSuffix: string;
+      /** 文件预览 */
+      url: string;
+      /** 服务商 */
+      service: string;
+      /** 创建者 */
+      createByName: string;
+    }>;
+
+    /** oss search params */
+    type OssSearchParams = CommonType.RecordNullable<
+      Pick<Api.System.Oss, 'fileName' | 'originalName' | 'fileSuffix' | 'service'> & Api.Common.CommonSearchParams
+    >;
+    /** oss list */
+    type OssList = Api.Common.PaginatingQueryRecord<Oss>;
   }
 }
