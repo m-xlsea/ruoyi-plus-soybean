@@ -85,6 +85,12 @@ export function isNull(value: any) {
   return value === undefined || value === null || value === '' || value === 'undefined' || value === 'null';
 }
 
+/** 判断是否为图片类型 */
+export function isImage(suffix: string) {
+  const imgSuffixList = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
+  return imgSuffixList.includes(suffix.toLowerCase());
+}
+
 /**
  * 构造树型结构数据
  *
