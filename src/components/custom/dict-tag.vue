@@ -10,7 +10,7 @@ interface Props {
   value?: string[] | number[] | string | number;
   dictCode?: string;
   immediate?: boolean;
-  dictData?: Api.System.DictData[];
+  dictData?: Api.System.DictData;
   [key: string]: any;
 }
 
@@ -25,7 +25,7 @@ const attrs = useAttrs() as TagProps;
 
 const dictTagData = computed<Api.System.DictData[]>(() => {
   if (props.dictData) {
-    return props.dictData;
+    return [props.dictData];
   }
   // 避免 props.value 为 0 时，无法触发
   if (props.dictCode && isNotNull(props.value)) {
@@ -42,7 +42,7 @@ const dictTagData = computed<Api.System.DictData[]>(() => {
     <NTag
       v-for="item in dictTagData"
       :key="item.dictValue"
-      class="mb-2 mr-2"
+      class="m-1"
       :class="[item.cssClass]"
       :type="item.listClass"
       v-bind="attrs"

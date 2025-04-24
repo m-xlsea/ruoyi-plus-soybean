@@ -201,31 +201,24 @@ async function handleExport() {
     <TenantSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
     <NCard title="租户列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
-        <NSpace>
-          <NPopconfirm v-if="isSuperAdmin" @positive-click="() => handleSyncTenantDict()">
-            <template #trigger>
-              <NButton size="small">
-                <template #icon>
-                  <icon-material-symbols:sync-rounded />
-                </template>
-                同步租户字典
-              </NButton>
-            </template>
-            确认同步租户字典？
-          </NPopconfirm>
-          <TableHeaderOperation
-            v-model:columns="columnChecks"
-            :disabled-delete="checkedRowKeys.length === 0"
-            :loading="loading"
-            :show-add="hasAuth('system:tenant:add')"
-            :show-delete="hasAuth('system:tenant:delete')"
-            :show-export="hasAuth('system:tenant:export')"
-            @add="handleAdd"
-            @delete="handleBatchDelete"
-            @export="handleExport"
-            @refresh="getData"
-          />
-        </NSpace>
+        <TableHeaderOperation
+          v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
+          :loading="loading"
+          :show-add="hasAuth('system:tenant:add')"
+          :show-delete="hasAuth('system:tenant:delete')"
+          :show-export="hasAuth('system:tenant:export')"
+          @add="handleAdd"
+          @delete="handleBatchDelete"
+          @export="handleExport"
+          @refresh="getData"
+        >
+          <template #prefix>
+            <NButton v-if="isSuperAdmin" type="warning" ghost size="small" @click="handleSyncTenantDict">
+              同步租户字典
+            </NButton>
+          </template>
+        </TableHeaderOperation>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"
