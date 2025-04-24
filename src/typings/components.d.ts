@@ -12,6 +12,7 @@ declare module 'vue' {
     BetterScroll: typeof import('./../components/custom/better-scroll.vue')['default']
     BooleanTag: typeof import('./../components/custom/boolean-tag.vue')['default']
     ButtonIcon: typeof import('./../components/custom/button-icon.vue')['default']
+    ButtonPopconfirm: typeof import('./../components/custom/button-popconfirm.vue')['default']
     CodeMirror: typeof import('./../components/custom/code-mirror.vue')['default']
     copy: typeof import('./../components/custom/role-select copy.vue')['default']
     CountTo: typeof import('./../components/custom/count-to.vue')['default']

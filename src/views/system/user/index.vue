@@ -1,13 +1,16 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
-import { NButton, NPopconfirm } from 'naive-ui';
+import { NButton } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
+import { useAuth } from '@/hooks/business/auth';
+import ButtonIcon from '@/components/custom/button-icon.vue';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
+import ButtonPopconfirm from '@/components/custom/button-popconfirm.vue';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
 
@@ -18,6 +21,7 @@ defineOptions({
 useDict('sys_user_sex');
 useDict('sys_normal_disable');
 
+const { hasAuth } = useAuth();
 const appStore = useAppStore();
 
 const {
@@ -104,23 +108,44 @@ const {
       title: $t('common.operate'),
       align: 'center',
       width: 130,
-      render: row => (
-        <div class="flex-center gap-8px">
-          <NButton type="primary" ghost size="small" onClick={() => edit(row.userId!)}>
-            {$t('common.edit')}
-          </NButton>
-          <NPopconfirm onPositiveClick={() => handleDelete(row.userId!)}>
-            {{
-              default: () => $t('common.confirmDelete'),
-              trigger: () => (
-                <NButton type="error" ghost size="small">
-                  {$t('common.delete')}
-                </NButton>
-              )
-            }}
-          </NPopconfirm>
-        </div>
-      )
+      render: row => {
+        const editBtn = () => {
+          if (!hasAuth('system:user:edit')) {
+            return null;
+          }
+          return (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:drive-file-rename-outline-outline"
+              tooltipContent={$t('common.edit')}
+              onClick={() => edit(row.userId!)}
+            />
+          );
+        };
+
+        const deleteBtn = () => {
+          if (!hasAuth('system:user:remove')) {
+            return null;
+          }
+          return (
+            <ButtonPopconfirm
+              text
+              type="error"
+              icon="material-symbols:delete-outline"
+              popconfirmContent={$t('common.confirmDelete')}
+              onPositiveClick={() => handleDelete(row.userId!)}
+            />
+          );
+        };
+
+        return (
+          <div class="flex-center gap-16px">
+            {editBtn()}
+            {deleteBtn()}
+          </div>
+        );
+      }
     }
   ]
 });
@@ -214,6 +239,9 @@ function handleResetTreeData() {
             v-model:columns="columnChecks"
             :disabled-delete="checkedRowKeys.length === 0"
             :loading="loading"
+            :show-add="hasAuth('system:user:add')"
+            :show-delete="hasAuth('system:user:remove')"
+            :show-export="hasAuth('system:user:export')"
             @add="handleAdd"
             @delete="handleBatchDelete"
             @refresh="getData"
@@ -237,6 +265,7 @@ function handleResetTreeData() {
           :operate-type="operateType"
           :row-data="editingData"
           :dept-data="deptData"
+          :dept-id="searchParams.deptId"
           @submitted="getDataByPage"
         />
       </NCard>

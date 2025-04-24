@@ -16,6 +16,8 @@ interface Props {
   rowData?: Api.System.User | null;
   /** the dept tree data */
   deptData?: Api.Common.CommonTreeRecord;
+  /** the dept id */
+  deptId?: CommonType.IdType | null;
 }
 
 const props = defineProps<Props>();
@@ -86,6 +88,7 @@ async function getUserInfo() {
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
     Object.assign(model, createDefaultModel());
+    model.deptId = props.deptId;
     return;
   }
 
