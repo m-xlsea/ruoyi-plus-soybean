@@ -105,6 +105,17 @@ export const generatedRoutes: GeneratedRoute[] = [
     ]
   },
   {
+    name: 'social-callback',
+    path: '/social-callback',
+    component: 'layout.blank$view.social-callback',
+    meta: {
+      title: 'social-callback',
+      i18nKey: 'route.social-callback',
+      constant: true,
+      hideInMenu: true
+    }
+  },
+  {
     name: 'system',
     path: '/system',
     component: 'layout.base',

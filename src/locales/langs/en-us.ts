@@ -181,7 +181,8 @@ const local: App.I18n.Schema = {
     'monitor_login-infor': 'Login Log',
     'monitor_oper-log': 'Operate Log',
     system_client: 'Client Management',
-    system_notice: 'Notice Management'
+    system_notice: 'Notice Management',
+    'social-callback': 'Social Callback'
   },
   page: {
     login: {

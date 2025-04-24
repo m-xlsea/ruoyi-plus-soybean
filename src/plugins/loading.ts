@@ -6,7 +6,7 @@ import { toggleHtmlClass } from '@/utils/common';
 import systemLogo from '@/assets/imgs/logo.png';
 import { $t } from '@/locales';
 
-export function setupLoading() {
+export function loading() {
   const themeColor = localStg.get('themeColor') || '#2080f0';
   const darkMode = localStg.get('darkMode') || false;
   const { r, g, b } = getRgb(themeColor);
@@ -17,7 +17,7 @@ export function setupLoading() {
     toggleHtmlClass(DARK_CLASS).add();
   }
 
-  const loading = `
+  return `
 <div class="fixed-center flex-col bg-layout" style="${primaryColor}">
 <div class="w-120px h-120px my-36px">
     <div class="relative h-full animate-spin">
@@ -26,10 +26,12 @@ export function setupLoading() {
   </div>
   <h2 class="text-28px font-500 text-primary">${$t('system.title')}</h2>
 </div>`;
+}
 
+export function setupLoading() {
   const app = document.getElementById('app');
 
   if (app) {
-    app.innerHTML = loading;
+    app.innerHTML = loading();
   }
 }

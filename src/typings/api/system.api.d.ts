@@ -594,5 +594,23 @@ declare namespace Api {
 
     /** client list */
     type ClientList = Api.Common.PaginatingQueryRecord<Client>;
+
+    /** social source */
+    type SocialSource =
+      | 'maxkey'
+      | 'topiam'
+      | 'qq'
+      | 'weibo'
+      | 'gitee'
+      | 'dingtalk'
+      | 'baidu'
+      | 'csdn'
+      | 'coding'
+      | 'oschina'
+      | 'alipay_wallet'
+      | 'wechat_open'
+      | 'wechat_mp'
+      | 'wechat_enterprise'
+      | 'gitlab';
   }
 }

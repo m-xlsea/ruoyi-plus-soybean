@@ -35,6 +35,15 @@ export function fetchLogin(data: Api.Auth.PwdLoginForm) {
   });
 }
 
+/** social login callback */
+export function fetchSocialLoginCallback(data: Api.Auth.SocialLoginForm) {
+  return request({
+    url: '/auth/social/callback',
+    method: 'post',
+    data
+  });
+}
+
 /** Register */
 export function fetchRegister(data: Api.Auth.RegisterForm) {
   return request<Api.Auth.LoginToken>({

@@ -136,6 +136,7 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       if (response.data.rows) {
         return response.data;
       }
+
       return response.data.data;
     },
     onError(error) {

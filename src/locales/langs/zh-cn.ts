@@ -181,7 +181,8 @@ const local: App.I18n.Schema = {
     'monitor_login-infor': '登录日志',
     'monitor_oper-log': '操作日志',
     system_client: '客户端管理',
-    system_notice: '通知公告'
+    system_notice: '通知公告',
+    'social-callback': '单点登录回调'
   },
   page: {
     login: {

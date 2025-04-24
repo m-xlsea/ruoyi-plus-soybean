@@ -172,6 +172,7 @@ const routeMap: RouteMap = {
   "monitor": "/monitor",
   "monitor_login-infor": "/monitor/login-infor",
   "monitor_oper-log": "/monitor/oper-log",
+  "social-callback": "/social-callback",
   "system": "/system",
   "system_client": "/system/client",
   "system_config": "/system/config",

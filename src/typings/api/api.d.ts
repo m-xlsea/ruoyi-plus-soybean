@@ -114,6 +114,16 @@ declare namespace Api {
       password?: string;
     }
 
+    /** social login form */
+    interface SocialLoginForm extends LoginForm {
+      /** 授权码 */
+      socialCode?: string;
+      /** 授权状态 */
+      socialState?: string;
+      /** 来源 */
+      source?: string;
+    }
+
     /** register form */
     interface RegisterForm extends LoginForm {
       /** 用户名 */

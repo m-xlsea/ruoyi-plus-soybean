@@ -4,6 +4,7 @@ import type { SelectOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchCaptchaCode, fetchTenantList } from '@/service/api';
 // import { fetchGetConfigDetail } from '@/service/api/system/config';
+import { fetchSocialAuthBinding } from '@/service/api/system';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -111,8 +112,10 @@ handleLoginRember();
 
 // handleRegister();
 
-function handleSocialLogin(type: string) {
-  console.log(type);
+async function handleSocialLogin(type: Api.System.SocialSource) {
+  const { data, error } = await fetchSocialAuthBinding(type, model.tenantId);
+  if (error) return;
+  window.location.href = data;
 }
 </script>
 
@@ -151,7 +154,8 @@ function handleSocialLogin(type: string) {
           <ButtonIcon local-icon="topiam" @click="handleSocialLogin('topiam')" />
           <ButtonIcon local-icon="maxkey" @click="handleSocialLogin('maxkey')" />
           <ButtonIcon class="color-#c71d23" icon="simple-icons:gitee" @click="handleSocialLogin('gitee')" />
-          <ButtonIcon class="color-#010409" icon="mdi:github" @click="handleSocialLogin('github')" />
+          <!-- <ButtonIcon class="color-#010409" icon="mdi:github" @click="handleSocialLogin('github')" /> -->
+          <ButtonIcon icon="material-icon-theme:gitlab" @click="handleSocialLogin('gitlab')" />
         </NSpace>
       </div>
       <NButton type="primary" size="large" block :loading="authStore.loginLoading" @click="handleSubmit">
