@@ -35,8 +35,8 @@ const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
 
   return {
     tenantId: tenantEnabled.value ? formRules.tenantId : [],
-    username: formRules.userName,
-    password: formRules.pwd,
+    username: [...formRules.userName, { required: true }],
+    password: [...formRules.pwd, { required: true }],
     confirmPassword: createConfirmPwdRule(model.password!),
     code: captchaEnabled.value ? [createRequiredRule($t('form.code.required'))] : []
   };

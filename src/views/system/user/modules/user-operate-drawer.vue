@@ -70,7 +70,7 @@ type RuleKey = Extract<keyof Model, 'userName' | 'nickName' | 'password' | 'stat
 const rules: Record<RuleKey, App.Global.FormRule[]> = {
   userName: [createRequiredRule('用户名称不能为空')],
   nickName: [createRequiredRule('用户昵称不能为空')],
-  password: [createRequiredRule('密码不能为空'), patternRules.pwd],
+  password: [{ ...patternRules.pwd, required: true }],
   phonenumber: [patternRules.phone],
   status: [createRequiredRule('帐号状态不能为空')]
 };

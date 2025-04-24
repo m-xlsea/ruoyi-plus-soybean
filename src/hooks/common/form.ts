@@ -50,7 +50,7 @@ export function useFormRules() {
   function createRequiredRule(message: string): App.Global.FormRule {
     return {
       required: true,
-      trigger: ['change', 'blur'],
+      trigger: ['input', 'blur'],
       validator: (_rule: any, value: any) => {
         if (value === null || value === undefined || value === '') {
           return new Error(message);

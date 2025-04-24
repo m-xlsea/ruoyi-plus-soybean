@@ -10,7 +10,6 @@ import { useAuth } from '@/hooks/business/auth';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
-import ButtonPopconfirm from '@/components/custom/button-popconfirm.vue';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserSearch from './modules/user-search.vue';
 
@@ -129,10 +128,11 @@ const {
             return null;
           }
           return (
-            <ButtonPopconfirm
+            <ButtonIcon
               text
               type="error"
               icon="material-symbols:delete-outline"
+              tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
               onPositiveClick={() => handleDelete(row.userId!)}
             />
