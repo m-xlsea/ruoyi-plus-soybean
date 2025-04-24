@@ -141,6 +141,7 @@ declare module 'vue' {
     TableHeaderOperation: typeof import('./../components/advanced/table-header-operation.vue')['default']
     TableRowCheckAlert: typeof import('./../components/advanced/table-row-check-alert.vue')['default']
     TableSiderLayout: typeof import('./../components/advanced/table-sider-layout.vue')['default']
+    TenantSelect: typeof import('./../components/custom/tenant-select.vue')['default']
     ThemeSchemaSwitch: typeof import('./../components/common/theme-schema-switch.vue')['default']
     WaveBg: typeof import('./../components/custom/wave-bg.vue')['default']
   }

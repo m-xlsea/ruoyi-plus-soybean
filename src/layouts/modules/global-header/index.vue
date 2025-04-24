@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { ref, watch } from 'vue';
 import { useFullscreen } from '@vueuse/core';
 import { GLOBAL_HEADER_MENU_ID } from '@/constants/app';
+import { fetchChangeTenant } from '@/service/api/system/tenant';
 import { useAppStore } from '@/store/modules/app';
+import { useAuthStore } from '@/store/modules/auth';
 import { useThemeStore } from '@/store/modules/theme';
 import GlobalLogo from '../global-logo/index.vue';
 import GlobalBreadcrumb from '../global-breadcrumb/index.vue';
@@ -25,8 +28,15 @@ interface Props {
 defineProps<Props>();
 
 const appStore = useAppStore();
+const authStore = useAuthStore();
 const themeStore = useThemeStore();
 const { isFullscreen, toggle } = useFullscreen();
+
+const tenantId = ref<CommonType.IdType>(authStore.userInfo?.user?.tenantId || '000000');
+
+watch(tenantId, async () => {
+  await fetchChangeTenant(tenantId.value);
+});
 </script>
 
 <template>
@@ -38,6 +48,7 @@ const { isFullscreen, toggle } = useFullscreen();
       <GlobalBreadcrumb v-if="!appStore.isMobile" class="ml-12px" />
     </div>
     <div class="h-full flex-y-center justify-end">
+      <TenantSelect v-if="authStore.userInfo?.user?.userId === 1" class="mr-12px w-150px" />
       <GlobalSearch />
       <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />
       <LangSwitch

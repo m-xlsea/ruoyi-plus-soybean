@@ -95,7 +95,7 @@ handleFetchCaptchaCode();
 <template>
   <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
     <NFormItem v-if="tenantEnabled" path="tenantId">
-      <NSelect v-model:value="model.tenantId" placeholder="请选择/输入公司名称" :options="tenantOption" />
+      <TenantSelect v-model:value="model.tenantId" :enabled="tenantEnabled" />
     </NFormItem>
     <NFormItem path="username">
       <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />

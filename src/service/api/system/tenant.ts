@@ -46,3 +46,11 @@ export function fetchSyncTenantDict() {
     method: 'get'
   });
 }
+
+/** 动态切换租户 */
+export function fetchChangeTenant(tenantId: CommonType.IdType) {
+  return request<boolean>({
+    url: `/system/tenant/dynamic/${tenantId}`,
+    method: 'get'
+  });
+}
