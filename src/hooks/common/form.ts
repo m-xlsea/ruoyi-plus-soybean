@@ -9,7 +9,7 @@ export function useFormRules() {
     userName: {
       pattern: REG_USER_NAME,
       message: $t('form.userName.invalid'),
-      trigger: 'change'
+      trigger: ['change', 'blur']
     },
     phone: {
       pattern: REG_PHONE,
@@ -19,7 +19,7 @@ export function useFormRules() {
     pwd: {
       pattern: REG_PWD,
       message: $t('form.pwd.invalid'),
-      trigger: 'change'
+      trigger: ['change', 'blur']
     },
     code: {
       pattern: REG_CODE_SIX,

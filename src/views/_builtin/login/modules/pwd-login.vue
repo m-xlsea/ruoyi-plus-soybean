@@ -3,14 +3,12 @@ import { computed, reactive, ref } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchCaptchaCode, fetchTenantList } from '@/service/api';
-// import { fetchGetConfigDetail } from '@/service/api/system/config';
 import { fetchSocialAuthBinding } from '@/service/api/system';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { localStg } from '@/utils/storage';
 import { $t } from '@/locales';
-
 defineOptions({
   name: 'PwdLogin'
 });
@@ -19,12 +17,15 @@ const authStore = useAuthStore();
 const { toggleLoginModule } = useRouterPush();
 const { formRef, validate } = useNaiveForm();
 const { loading: codeLoading, startLoading: startCodeLoading, endLoading: endCodeLoading } = useLoading();
+const { loading: tenantLoading, startLoading: startTenantLoading, endLoading: endTenantLoading } = useLoading();
 
 const codeUrl = ref<string>();
 const captchaEnabled = ref<boolean>(false);
-const tenantEnabled = ref<boolean>(false);
 const registerEnabled = ref<boolean>(false);
 const remberMe = ref<boolean>(false);
+
+const tenantEnabled = ref<boolean>(false);
+
 const tenantOption = ref<SelectOption[]>([]);
 
 const model: Api.Auth.PwdLoginForm = reactive({
@@ -32,7 +33,6 @@ const model: Api.Auth.PwdLoginForm = reactive({
   username: '',
   password: ''
 });
-
 type RuleKey = Extract<keyof Api.Auth.PwdLoginForm, 'username' | 'password' | 'code' | 'tenantId'>;
 
 const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
@@ -41,13 +41,28 @@ const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
 
   const loginRules: Record<RuleKey, App.Global.FormRule[]> = {
     username: [...formRules.userName, { required: true }],
-    password: [...formRules.pwd, { required: true }],
+    password: [createRequiredRule($t('form.pwd.required'))],
     code: captchaEnabled.value ? [createRequiredRule($t('form.code.required'))] : [],
     tenantId: tenantEnabled.value ? formRules.tenantId : []
   };
 
   return loginRules;
 });
+async function handleFetchTenantList() {
+  startTenantLoading();
+  const { data, error } = await fetchTenantList();
+  if (error) return;
+  tenantEnabled.value = data.tenantEnabled;
+  tenantOption.value = data.voList.map(tenant => {
+    return {
+      label: tenant.companyName,
+      value: tenant.tenantId
+    };
+  });
+  endTenantLoading();
+}
+
+handleFetchTenantList();
 
 async function handleSubmit() {
   await validate();
@@ -65,20 +80,6 @@ async function handleSubmit() {
     handleFetchCaptchaCode();
   }
 }
-
-async function handleFetchTenantList() {
-  const { data, error } = await fetchTenantList();
-  if (error) return;
-  tenantEnabled.value = data.tenantEnabled;
-  tenantOption.value = data.voList.map(tenant => {
-    return {
-      label: tenant.companyName,
-      value: tenant.tenantId
-    };
-  });
-}
-
-handleFetchTenantList();
 
 async function handleFetchCaptchaCode() {
   startCodeLoading();
@@ -121,8 +122,14 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
 
 <template>
   <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
-    <NFormItem v-if="tenantEnabled" path="tenantId">
-      <TenantSelect v-model:value="model.tenantId" :enabled="tenantEnabled" />
+    <NFormItem path="tenantId">
+      <NSelect
+        v-if="tenantEnabled"
+        v-model:value="model.tenantId"
+        placeholder="请选择租户"
+        :options="tenantOption"
+        :loading="tenantLoading"
+      />
     </NFormItem>
     <NFormItem path="username">
       <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />

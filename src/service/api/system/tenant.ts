@@ -54,3 +54,11 @@ export function fetchChangeTenant(tenantId: CommonType.IdType) {
     method: 'get'
   });
 }
+
+/** 清空租户 */
+export function fetchClearTenant() {
+  return request<boolean>({
+    url: '/system/tenant/dynamic/clear',
+    method: 'get'
+  });
+}

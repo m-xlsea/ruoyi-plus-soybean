@@ -48,7 +48,7 @@ watch(tenantId, async () => {
       <GlobalBreadcrumb v-if="!appStore.isMobile" class="ml-12px" />
     </div>
     <div class="h-full flex-y-center justify-end">
-      <TenantSelect v-if="authStore.userInfo?.user?.userId === 1" class="mr-12px w-150px" />
+      <TenantSelect class="mr-12px w-150px" :clearable="true" />
       <GlobalSearch />
       <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />
       <LangSwitch
