@@ -176,11 +176,11 @@ public class VelocityUtils {
             fileName = StringUtils.format("{}/domain/bo/{}Bo.java", javaPath, className);
         }
         if (template.contains("soy.index.vue.vm")) {
-            fileName = StringUtils.format("soybean/views/{}/{}/index.vue", moduleName, businessName);
+            fileName = StringUtils.format("soybean/views/{}/{}/index.vue", moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("soy.api.d.ts.vm")) {
             fileName = StringUtils.format("soybean/typings/api/{}.api.d.ts", moduleName);
         } else if (template.contains("soy.api.ts.vm")) {
-            fileName = StringUtils.format("soybean/api/{}/{}.ts", moduleName, businessName);
+            fileName = StringUtils.format("soybean/api/{}/{}.ts", moduleName,  StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("soy.search.vue.vm")) {
             fileName = StringUtils.format("soybean/views/{}/{}/modules/{}-search.vue", moduleName, businessName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("soy.operate-drawer.vue.vm")) {

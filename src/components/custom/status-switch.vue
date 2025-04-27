@@ -51,8 +51,8 @@ const handleUpdateValue = (val: Api.Common.EnableStatus) => {
     v-model:value="value"
     :loading="loading"
     :rubber-band="false"
-    checked-value="1"
-    unchecked-value="0"
+    checked-value="0"
+    unchecked-value="1"
     :disabled="props.disabled"
     @update:value="handleUpdateValue"
   />

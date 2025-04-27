@@ -6,8 +6,8 @@ import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import ${BusinessName}OperateDrawer from './modules/${business_name}-operate-drawer.vue';
-import ${BusinessName}Search from './modules/${business_name}-search.vue';
+import ${BusinessName}OperateDrawer from './modules/${business-name}-operate-drawer.vue';
+import ${BusinessName}Search from './modules/${business-name}-search.vue';
 
 defineOptions({
   name: '${BusinessName}List'

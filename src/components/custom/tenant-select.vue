@@ -1,16 +1,14 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { useRouter } from 'vue-router';
 import type { SelectOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchTenantList } from '@/service/api';
 import { fetchChangeTenant, fetchClearTenant } from '@/service/api/system/tenant';
+import { useAppStore } from '@/store/modules/app';
 import { useTabStore } from '@/store/modules/tab';
 import { useAuth } from '@/hooks/business/auth';
+import { useRouterPush } from '@/hooks/common/router';
 
-const { hasRole } = useAuth();
-const { clearTabs } = useTabStore();
-const router = useRouter();
 defineOptions({ name: 'TenantSelect' });
 
 interface Props {
@@ -20,6 +18,11 @@ interface Props {
 withDefaults(defineProps<Props>(), {
   clearable: false
 });
+
+const appStore = useAppStore();
+const { hasRole } = useAuth();
+const { clearTabs } = useTabStore();
+const { toHome } = useRouterPush();
 
 const tenantId = defineModel<CommonType.IdType>('tenantId', { required: false, default: undefined });
 const enabled = defineModel<boolean>('enabled', { required: false, default: true });
@@ -33,6 +36,20 @@ const showTenantSelect = computed<boolean>(() => {
   return hasRole('superadmin') && enabled.value;
 });
 
+/**
+ * 关闭当前页面并刷新
+ *
+ * @param msg 提示信息
+ * @param val 租户ID
+ */
+async function closeAndRefresh(msg: string, val: CommonType.IdType = '') {
+  lastSelected.value = val;
+  window.$message?.success(msg);
+  clearTabs();
+  toHome();
+  appStore.reloadPage(500);
+}
+
 async function handleChangeTenant(_tenantId: CommonType.IdType) {
   if (!_tenantId) {
     return;
@@ -41,18 +58,12 @@ async function handleChangeTenant(_tenantId: CommonType.IdType) {
     return;
   }
   await fetchChangeTenant(_tenantId);
-  lastSelected.value = _tenantId;
-  window.$message?.success('切换租户成功');
-  clearTabs();
-  router.push('/');
+  closeAndRefresh('切换租户成功', _tenantId);
 }
 
 async function handleClearTenant() {
   await fetchClearTenant();
-  lastSelected.value = '';
-  window.$message?.success('切换为默认租户');
-  clearTabs();
-  router.push('/');
+  closeAndRefresh('切换为默认租户');
 }
 
 async function handleFetchTenantList() {
