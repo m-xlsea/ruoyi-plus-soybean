@@ -37,7 +37,7 @@ declare module "@elegant-router/types" {
     "system_menu": "/system/menu";
     "system_notice": "/system/notice";
     "system_oss": "/system/oss";
-    "system_oss-config": "/oss-config";
+    "system_oss-config": "/system/oss-config";
     "system_post": "/system/post";
     "system_tenant": "/system/tenant";
     "system_user": "/system/user";
@@ -117,8 +117,8 @@ declare module "@elegant-router/types" {
     | "system_dict_type"
     | "system_menu"
     | "system_notice"
-    | "system_oss"
     | "system_oss-config"
+    | "system_oss"
     | "system_post"
     | "system_tenant"
     | "system_user"
@@ -194,7 +194,7 @@ declare module "@elegant-router/types" {
         component: `view.${K}`;
       }
     : never;
-
+  
   /**
    * the center level route
    */
@@ -217,7 +217,7 @@ declare module "@elegant-router/types" {
         children: (CenterLevelRoute<GetChildRouteKey<K>> | LastLevelRoute<GetChildRouteKey<K>>)[];
       }
     : never;
-
+  
   /**
    * the custom first level route
    */

@@ -213,13 +213,14 @@ export const generatedRoutes: GeneratedRoute[] = [
       },
       {
         name: 'system_oss-config',
-        path: '/oss-config',
+        path: '/system/oss-config',
         component: 'view.system_oss-config',
         meta: {
           title: 'system_oss-config',
           i18nKey: 'route.system_oss-config',
           constant: true,
-          hideInMenu: true
+          hideInMenu: true,
+          icon: 'hugeicons:configuration-01'
         }
       },
       {

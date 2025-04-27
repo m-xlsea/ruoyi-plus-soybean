@@ -47,10 +47,10 @@ declare namespace Api {
     /**
      * 是否状态
      *
-     * - "0": 是
-     * - "1": 否
+     * - "Y": 是
+     * - "N": 否
      */
-    type YesOrNoStatus = '0' | '1';
+    type YesOrNoStatus = 'Y' | 'N';
 
     /** common record */
     type CommonRecord<T = any> = {

@@ -126,7 +126,7 @@ const dynamicConstantRoutes: ElegantRoute[] = [
     children: [
       {
         name: 'system_oss-config',
-        path: '/oss-config',
+        path: '/system/oss-config',
         component: 'view.system_oss-config',
         meta: {
           title: 'system_oss-config',

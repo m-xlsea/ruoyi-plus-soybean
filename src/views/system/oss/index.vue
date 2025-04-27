@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
-import { NImage, NTag } from 'naive-ui';
+import { NButton, NEllipsis, NImage, NTag, NTooltip } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { fetchBatchDeleteOss, fetchGetOssList } from '@/service/api/system/oss';
 import { fetchGetConfigByKey, fetchUpdateConfigByKey } from '@/service/api/system/config';
@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useRouterPush } from '@/hooks/common/router';
 import { isImage } from '@/utils/common';
+import { handleCopy } from '@/utils/copy';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import OssSearch from './modules/oss-search.vue';
@@ -71,19 +72,27 @@ const {
       key: 'fileName',
       title: '文件名',
       align: 'center',
+      ellipsis: {
+        tooltip: true,
+        lineClamp: 3
+      },
       minWidth: 120
     },
     {
       key: 'originalName',
       title: '原名',
       align: 'center',
+      ellipsis: {
+        tooltip: true,
+        lineClamp: 3
+      },
       minWidth: 120
     },
     {
       key: 'fileSuffix',
       title: '文件后缀名',
       align: 'center',
-      minWidth: 120
+      minWidth: 100
     },
     {
       key: 'url',
@@ -94,7 +103,20 @@ const {
         if (preview.value && isImage(row.fileSuffix)) {
           return <NImage class="h-40px w-40px object-contain" src={row.url} />;
         }
-        return <span>{row.url}</span>;
+        return (
+          <NTooltip>
+            {{
+              default: () => <span>点击复制</span>,
+              trigger: () => (
+                <div class="cursor-pointer" onClick={async () => await handleCopy(row.url)}>
+                  <NEllipsis line-clamp={3} tooltip={false}>
+                    {row.url}
+                  </NEllipsis>
+                </div>
+              )
+            }}
+          </NTooltip>
+        );
       }
     },
     {
@@ -113,7 +135,7 @@ const {
       key: 'service',
       title: '服务商',
       align: 'center',
-      minWidth: 120,
+      minWidth: 100,
       render: row => {
         return <NTag type="primary">{row.service}</NTag>;
       }

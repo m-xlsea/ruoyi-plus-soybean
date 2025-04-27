@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, reactive, watch } from 'vue';
+import { ossAccessPolicyOptions, ossConfigIsHttpsOptions } from '@/constants/business';
 import { fetchCreateOssConfig, fetchUpdateOssConfig } from '@/service/api/system/oss-config';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
@@ -51,9 +52,9 @@ function createDefaultModel(): Model {
     prefix: '',
     endpoint: '',
     domain: '',
-    isHttps: '0',
+    isHttps: 'N',
     region: '',
-    accessPolicy: '0',
+    accessPolicy: '1',
     remark: ''
   };
 }
@@ -72,12 +73,6 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   endpoint: createRequiredRule('访问站点不能为空'),
   accessPolicy: createRequiredRule('桶权限类型不能为空')
 };
-
-const accessPolicyOptions = ref<CommonType.Option[]>([
-  { label: '私有', value: '0' },
-  { label: '公有', value: '1' },
-  { label: '自定义', value: '2' }
-]);
 
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
@@ -183,7 +178,12 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem label="访问站点" path="endpoint">
           <NInputGroup>
-            <NInputGroupLabel>http://</NInputGroupLabel>
+            <NSelect
+              v-model:value="model.isHttps"
+              class="w-110px"
+              :options="ossConfigIsHttpsOptions"
+              placeholder="请选择访问协议"
+            />
             <NInput v-model:value="model.endpoint" placeholder="请输入访问站点" />
           </NInputGroup>
         </NFormItem>
@@ -192,10 +192,10 @@ watch(visible, () => {
         </NFormItem>
         <NDivider>认证信息</NDivider>
         <NFormItem label="accessKey" path="accessKey">
-          <NInput v-model:value="model.accessKey" placeholder="请输入accessKey" />
+          <NInput v-model:value="model.accessKey" placeholder="请输入 AccessKey" />
         </NFormItem>
         <NFormItem label="secretKey" path="secretKey">
-          <NInput v-model:value="model.secretKey" placeholder="请输入秘钥secretKey" />
+          <NInput v-model:value="model.secretKey" placeholder="请输入秘钥 SecretKey" />
         </NFormItem>
         <NDivider>桶信息</NDivider>
         <NFormItem label="桶名称" path="bucketName">
@@ -206,16 +206,11 @@ watch(visible, () => {
         </NFormItem>
         <NGrid :cols="2" :x-gap="24">
           <NGridItem>
-            <NFormItem label="是否https" path="isHttps">
-              <DictRadio v-model:value="model.isHttps" dict-code="sys_yes_no" />
-            </NFormItem>
-          </NGridItem>
-          <NGridItem>
             <NFormItem label="桶权限类型" path="accessPolicy">
               <NRadioGroup v-model:value="model.accessPolicy">
                 <NSpace>
                   <NRadio
-                    v-for="option in accessPolicyOptions"
+                    v-for="option in ossAccessPolicyOptions"
                     :key="option.value"
                     :value="option.value"
                     :label="option.label"

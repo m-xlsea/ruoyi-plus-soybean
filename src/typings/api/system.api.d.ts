@@ -182,7 +182,7 @@ declare namespace Api {
       /** 是否为外链（0是 1否 2iframe） */
       isFrame: IsMenuFrame;
       /** 是否缓存（0缓存 1不缓存） */
-      isCache: Common.YesOrNoStatus;
+      isCache: Common.EnableStatus;
       /** 菜单类型（M目录 C菜单 F按钮） */
       menuType: MenuType;
       /** 显示状态（0显示 1隐藏） */
@@ -643,6 +643,9 @@ declare namespace Api {
     /** oss list */
     type OssList = Api.Common.PaginatingQueryRecord<Oss>;
 
+    /** oss access policy */
+    type OssAccessPolicy = '0' | '1' | '2';
+
     /** oss config */
     type OssConfig = Common.CommonRecord<{
       /** 主键 */
@@ -664,13 +667,13 @@ declare namespace Api {
       /** 自定义域名 */
       domain: string;
       /** 是否https（Y=是,N=否） */
-      isHttps: string;
+      isHttps: Api.Common.YesOrNoStatus;
       /** 域 */
       region: string;
       /** 桶权限类型 */
-      accessPolicy: string;
+      accessPolicy: Api.System.OssAccessPolicy;
       /** 是否默认（0=是,1=否） */
-      status: string;
+      status: Api.Common.EnableStatus;
       /** 扩展字段 */
       ext1: string;
       /** 备注 */

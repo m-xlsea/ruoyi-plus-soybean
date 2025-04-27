@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAttrs } from 'vue';
+import { ref, useAttrs } from 'vue';
 import type { UploadFileInfo, UploadProps } from 'naive-ui';
 import { fetchBatchDeleteOss } from '@/service/api/system/oss';
 import { getToken } from '@/store/modules/auth/shared';
@@ -29,6 +29,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const attrs: UploadProps = useAttrs();
 
+let fileNum = 0;
+const fileList = ref<UploadFileInfo[]>([]);
+
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
@@ -38,6 +41,7 @@ const headers: Record<string, string> = {
 };
 
 function beforeUpload(options: { file: UploadFileInfo; fileList: UploadFileInfo[] }) {
+  fileNum += 1;
   const { file } = options;
 
   // 校检文件类型
@@ -73,15 +77,19 @@ function isErrorState(xhr: XMLHttpRequest) {
 }
 
 function handleFinish(options: { file: UploadFileInfo; event?: ProgressEvent }) {
+  fileNum -= 1;
   const { file, event } = options;
   // @ts-expect-error Ignore type errors
   const responseText = event?.target?.responseText;
   const response = JSON.parse(responseText);
   const oss: Api.System.Oss = response.data;
+  fileList.value.find(item => item.id === file.id)!.id = String(oss.ossId);
   file.id = String(oss.ossId);
   file.url = oss.url;
   file.name = oss.fileName;
-  window.$message?.success('上传成功');
+  if (fileNum === 0) {
+    window.$message?.success('上传成功');
+  }
   return file;
 }
 
@@ -106,6 +114,7 @@ async function handleRemove(file: UploadFileInfo) {
 <template>
   <NUpload
     v-bind="attrs"
+    v-model:file-list="fileList"
     :action="`${baseURL}${action}`"
     :headers="headers"
     :max="max"
