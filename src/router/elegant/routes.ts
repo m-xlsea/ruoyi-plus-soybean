@@ -212,6 +212,17 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'system_oss-config',
+        path: '/oss-config',
+        component: 'view.system_oss-config',
+        meta: {
+          title: 'system_oss-config',
+          i18nKey: 'route.system_oss-config',
+          constant: true,
+          hideInMenu: true
+        }
+      },
+      {
         name: 'system_post',
         path: '/system/post',
         component: 'view.system_post',

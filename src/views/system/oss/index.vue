@@ -8,24 +8,25 @@ import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
+import { useRouterPush } from '@/hooks/common/router';
 import { isImage } from '@/utils/common';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import OssSearch from './modules/oss-search.vue';
 import OssUploadModal from './modules/oss-upload-modal.vue';
-
 defineOptions({
   name: 'OssList'
 });
 
+const { routerPushByKey } = useRouterPush();
 const { hasAuth } = useAuth();
 const { oss } = useDownload();
 const appStore = useAppStore();
+
 const fileUploadType = ref<'file' | 'image'>('file');
 const { bool: preview, setBool: setPreview } = useBoolean(true);
 const { loading: previewLoading, startLoading: startPreviewLoading, endLoading: endPreviewLoading } = useLoading(false);
 const { bool: uploadVisible, setTrue: showFUploadModal } = useBoolean(false);
-
 const {
   columns,
   columnChecks,
@@ -229,6 +230,10 @@ async function handleUpdatePreview(checked: boolean) {
     }
   });
 }
+
+function handleToOssConfig() {
+  routerPushByKey('system_oss-config');
+}
 </script>
 
 <template>
@@ -275,7 +280,7 @@ async function handleUpdatePreview(checked: boolean) {
               </template>
               上传图片
             </NButton>
-            <NButton type="primary" size="small" ghost>
+            <NButton type="primary" size="small" ghost @click="handleToOssConfig">
               <template #icon>
                 <icon-hugeicons:configuration-01 />
               </template>

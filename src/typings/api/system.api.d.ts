@@ -642,5 +642,67 @@ declare namespace Api {
 
     /** oss list */
     type OssList = Api.Common.PaginatingQueryRecord<Oss>;
+
+    /** oss config */
+    type OssConfig = Common.CommonRecord<{
+      /** 主键 */
+      ossConfigId: CommonType.IdType;
+      /** 租户编号 */
+      tenantId: CommonType.IdType;
+      /** 配置名称 */
+      configKey: string;
+      /** accessKey */
+      accessKey: string;
+      /** 秘钥secretKey */
+      secretKey: string;
+      /** 桶名称 */
+      bucketName: string;
+      /** 前缀 */
+      prefix: string;
+      /** 访问站点 */
+      endpoint: string;
+      /** 自定义域名 */
+      domain: string;
+      /** 是否https（Y=是,N=否） */
+      isHttps: string;
+      /** 域 */
+      region: string;
+      /** 桶权限类型 */
+      accessPolicy: string;
+      /** 是否默认（0=是,1=否） */
+      status: string;
+      /** 扩展字段 */
+      ext1: string;
+      /** 备注 */
+      remark: string;
+    }>;
+
+    /** oss config search params */
+    type OssConfigSearchParams = CommonType.RecordNullable<
+      Pick<Api.System.OssConfig, 'configKey' | 'bucketName' | 'region' | 'status'> & Api.Common.CommonSearchParams
+    >;
+
+    /** oss config operate params */
+    type OssConfigOperateParams = CommonType.RecordNullable<
+      Pick<
+        Api.System.OssConfig,
+        | 'ossConfigId'
+        | 'configKey'
+        | 'accessKey'
+        | 'secretKey'
+        | 'bucketName'
+        | 'prefix'
+        | 'endpoint'
+        | 'domain'
+        | 'isHttps'
+        | 'region'
+        | 'accessPolicy'
+        | 'status'
+        | 'remark'
+      >
+    >;
+
+    /** oss config list */
+    type OssConfigList = Api.Common.PaginatingQueryRecord<OssConfig>;
   }
 }

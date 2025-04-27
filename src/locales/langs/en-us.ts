@@ -184,7 +184,8 @@ const local: App.I18n.Schema = {
     system_client: 'Client Management',
     system_notice: 'Notice Management',
     'social-callback': 'Social Callback',
-    system_oss: 'File Management'
+    system_oss: 'File Management',
+    'system_oss-config': 'OSS Config'
   },
   page: {
     login: {

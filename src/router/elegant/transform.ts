@@ -183,6 +183,7 @@ const routeMap: RouteMap = {
   "system_menu": "/system/menu",
   "system_notice": "/system/notice",
   "system_oss": "/system/oss",
+  "system_oss-config": "/oss-config",
   "system_post": "/system/post",
   "system_tenant": "/system/tenant",
   "system_user": "/system/user",
