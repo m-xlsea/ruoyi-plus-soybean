@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useAttrs } from 'vue';
+import { ref, useAttrs, watch } from 'vue';
 import type { UploadFileInfo, UploadProps } from 'naive-ui';
 import { fetchBatchDeleteOss } from '@/service/api/system/oss';
 import { getToken } from '@/store/modules/auth/shared';
@@ -31,6 +31,16 @@ const attrs: UploadProps = useAttrs();
 
 let fileNum = 0;
 const fileList = ref<UploadFileInfo[]>([]);
+const needRelaodData = defineModel<boolean>('needRelaodData', {
+  default: false
+});
+
+watch(
+  () => fileList.value,
+  newValue => {
+    needRelaodData.value = newValue.length > 0;
+  }
+);
 
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
