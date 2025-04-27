@@ -1,62 +1,36 @@
 <script setup lang="tsx">
-import { NButton } from 'naive-ui';
-import { fetchBatchDeleteLoginInfor, fetchGetLoginInforList } from '@/service/api/monitor/login-infor';
+import dayjs from 'dayjs';
+import { fetchForceLogout, fetchGetOnlineUserList } from '@/service/api/monitor/online';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
-import { useDownload } from '@/hooks/business/download';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { useTable } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { getBrowserIcon, getOsIcon } from '@/utils/format';
+import ButtonIcon from '@/components/custom/button-icon.vue';
 import DictTag from '@/components/custom/dict-tag.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { $t } from '@/locales';
-import LoginInforSearch from './modules/login-infor-search.vue';
-import LoginInforViewDrawer from './modules/login-infor-view-drawer.vue';
+import OnlineSearch from './modules/online-search.vue';
 
 defineOptions({
-  name: 'LoginInforList'
+  name: 'OnlineList'
 });
 
 const appStore = useAppStore();
-const { download } = useDownload();
 const { hasAuth } = useAuth();
 
 useDict('sys_common_status');
 useDict('sys_device_type');
 
-const {
-  columns,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  mobilePagination,
-  searchParams,
-  resetSearchParams
-} = useTable({
-  apiFn: fetchGetLoginInforList,
+const { columns, columnChecks, data, getData, loading, searchParams, resetSearchParams } = useTable({
+  apiFn: fetchGetOnlineUserList,
   apiParams: {
-    pageNum: 1,
-    pageSize: 10,
     // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
     // the value can not be undefined, otherwise the property in Form will not be reactive
     userName: null,
-    ipaddr: null,
-    status: null
+    ipaddr: null
   },
   columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64
-    },
     {
       key: 'userName',
       title: '用户账号',
@@ -117,22 +91,16 @@ const {
       }
     },
     {
-      key: 'status',
-      title: '登录状态',
-      align: 'center',
-      minWidth: 120,
-      render: row => {
-        return <DictTag size="small" value={row.status} dict-code="sys_common_status" />;
-      }
-    },
-    {
       key: 'loginTime',
-      title: '访问时间',
+      title: '登录时间',
       align: 'center',
       ellipsis: {
         tooltip: true
       },
-      minWidth: 120
+      minWidth: 120,
+      render: row => {
+        return dayjs(row.loginTime).format('YYYY-MM-DD HH:mm:ss');
+      }
     },
     {
       key: 'operate',
@@ -140,56 +108,51 @@ const {
       align: 'center',
       width: 130,
       render: row => {
-        const viewBtn = () => {
+        const forceLogoutBtn = () => {
+          if (!hasAuth('monitor:online:forceLogout')) {
+            return null;
+          }
           return (
-            <NButton type="primary" ghost size="small" onClick={() => view(row.infoId!)}>
-              详情
-            </NButton>
+            <ButtonIcon
+              text
+              type="error"
+              icon="material-symbols:person-remove-outline-rounded"
+              class="text-20px"
+              tooltipContent="强制下线"
+              popconfirmContent="确认强制下线吗？"
+              onPositiveClick={() => handleForceLogout(row.tokenId)}
+            />
           );
         };
-        return <div class="flex-center gap-8px">{viewBtn()}</div>;
+        return <div>{forceLogoutBtn()}</div>;
       }
     }
   ]
 });
 
-const { drawerVisible, editingData, handleEdit, checkedRowKeys, onBatchDeleted } = useTableOperate(data, getData);
-
-async function handleBatchDelete() {
+async function handleForceLogout(tokenId: string) {
   // request
-  const { error } = await fetchBatchDeleteLoginInfor(checkedRowKeys.value);
+  const { error } = await fetchForceLogout(tokenId);
   if (error) return;
-  onBatchDeleted();
-}
-
-async function view(infoId: CommonType.IdType) {
-  handleEdit('infoId', infoId);
-}
-
-async function handleExport() {
-  download('/monitor/logininfor/export', searchParams, `登录日志记录_${new Date().getTime()}.xlsx`);
+  getData();
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <LoginInforSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="登录日志列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <OnlineSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
+    <NCard title="在线用户列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
-          :disabled-delete="checkedRowKeys.length === 0"
           :loading="loading"
           :show-add="false"
-          :show-delete="hasAuth('monitor:logininfor:remove')"
-          :show-export="hasAuth('monitor:logininfor:export')"
-          @delete="handleBatchDelete"
-          @export="handleExport"
+          :show-delete="false"
+          :show-export="false"
           @refresh="getData"
         />
       </template>
       <NDataTable
-        v-model:checked-row-keys="checkedRowKeys"
         :columns="columns"
         :data="data"
         size="small"
@@ -197,11 +160,9 @@ async function handleExport() {
         :scroll-x="962"
         :loading="loading"
         remote
-        :row-key="row => row.infoId"
-        :pagination="mobilePagination"
+        :row-key="row => row.tokenId"
         class="sm:h-full"
       />
-      <LoginInforViewDrawer v-model:visible="drawerVisible" :row-data="editingData" />
     </NCard>
   </div>
 </template>

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useDict } from '@/hooks/business/dict';
 import { getBrowserIcon, getOsIcon } from '@/utils/format';
 import { $t } from '@/locales';
 
@@ -17,9 +16,6 @@ const props = defineProps<Props>();
 const visible = defineModel<boolean>('visible', {
   default: false
 });
-
-useDict('sys_device_type');
-useDict('sys_common_status');
 
 const title = '登录信息详情';
 

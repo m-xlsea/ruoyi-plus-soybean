@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useNaiveForm } from '@/hooks/common/form';
-import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 
 defineOptions({
@@ -17,8 +16,6 @@ const emit = defineEmits<Emits>();
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
 const model = defineModel<Api.Monitor.LoginInforSearchParams>('model', { required: true });
-
-useDict('sys_common_status');
 
 async function reset() {
   await restoreValidation();

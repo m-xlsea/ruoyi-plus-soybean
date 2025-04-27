@@ -3,7 +3,7 @@ import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'OperLogSearch'
+  name: 'LoginInforSearch'
 });
 
 interface Emits {
@@ -15,7 +15,7 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const model = defineModel<Api.Monitor.OperLogSearchParams>('model', { required: true });
+const model = defineModel<Api.Monitor.OnlineUserSearchParams>('model', { required: true });
 
 async function reset() {
   await restoreValidation();
@@ -34,30 +34,11 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="系统模块" path="title" class="pr-24px">
-              <NInput v-model:value="model.title" placeholder="请输入系统模块" />
+            <NFormItemGi span="24 s:12 m:6" label="IP地址" path="ipaddr" class="pr-24px">
+              <NInput v-model:value="model.ipaddr" placeholder="请输入IP地址" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="操作类型" path="businessType" class="pr-24px">
-              <DictSelect
-                v-model:value="model.businessType"
-                placeholder="请选择操作类型"
-                dict-code="sys_oper_type"
-                clearable
-              />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="操作人员" path="operName" class="pr-24px">
-              <NInput v-model:value="model.operName" placeholder="请输入操作人员" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="操作IP" path="operIp" class="pr-24px">
-              <NInput v-model:value="model.operIp" placeholder="请输入操作IP" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="操作状态" path="status" class="pr-24px">
-              <DictSelect
-                v-model:value="model.status"
-                placeholder="请选择操作状态"
-                dict-code="sys_common_status"
-                clearable
-              />
+            <NFormItemGi span="24 s:12 m:6" label="用户账号" path="userName" class="pr-24px">
+              <NInput v-model:value="model.userName" placeholder="请输入用户账号" />
             </NFormItemGi>
             <NFormItemGi span="24" class="pr-24px">
               <NSpace class="w-full" justify="end">
