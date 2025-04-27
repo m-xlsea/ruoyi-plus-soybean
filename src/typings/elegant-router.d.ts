@@ -24,6 +24,7 @@ declare module "@elegant-router/types" {
     "iframe-page": "/iframe-page/:url";
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
     "monitor": "/monitor";
+    "monitor_cache": "/monitor/cache";
     "monitor_login-infor": "/monitor/login-infor";
     "monitor_oper-log": "/monitor/oper-log";
     "social-callback": "/social-callback";
@@ -107,6 +108,7 @@ declare module "@elegant-router/types" {
     | "login"
     | "social-callback"
     | "home"
+    | "monitor_cache"
     | "monitor_login-infor"
     | "monitor_oper-log"
     | "system_client"

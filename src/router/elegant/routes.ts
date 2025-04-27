@@ -85,6 +85,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'monitor_cache',
+        path: '/monitor/cache',
+        component: 'view.monitor_cache',
+        meta: {
+          title: 'monitor_cache',
+          i18nKey: 'route.monitor_cache'
+        }
+      },
+      {
         name: 'monitor_login-infor',
         path: '/monitor/login-infor',
         component: 'view.monitor_login-infor',

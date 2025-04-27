@@ -22,6 +22,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   login: () => import("@/views/_builtin/login/index.vue"),
   "social-callback": () => import("@/views/_builtin/social-callback/index.vue"),
   home: () => import("@/views/home/index.vue"),
+  monitor_cache: () => import("@/views/monitor/cache/index.vue"),
   "monitor_login-infor": () => import("@/views/monitor/login-infor/index.vue"),
   "monitor_oper-log": () => import("@/views/monitor/oper-log/index.vue"),
   system_client: () => import("@/views/system/client/index.vue"),

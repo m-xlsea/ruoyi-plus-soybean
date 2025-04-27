@@ -185,7 +185,8 @@ const local: App.I18n.Schema = {
     system_notice: '通知公告',
     'social-callback': '单点登录回调',
     system_oss: '文件管理',
-    'system_oss-config': 'OSS配置'
+    'system_oss-config': 'OSS配置',
+    monitor_cache: '缓存监控'
   },
   page: {
     login: {
