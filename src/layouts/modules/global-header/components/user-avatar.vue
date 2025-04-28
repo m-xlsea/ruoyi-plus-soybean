@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
 import type { VNode } from 'vue';
+import { useBoolean, useLoading } from '@sa/hooks';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { useSvgIcon } from '@/hooks/common/icon';
@@ -15,21 +16,23 @@ const authStore = useAuthStore();
 const { routerPushByKey, toLogin } = useRouterPush();
 const { SvgIconVNode } = useSvgIcon();
 
-const avatarLoading = ref(true);
-const avatarError = ref(false);
+// 使用 useBoolean 管理加载状态
+const { loading: avatarLoading, endLoading: endAvatarLoading } = useLoading(true);
+// 使用 useBoolean 管理错误状态
+const { bool: avatarError, setTrue: setError, setFalse: clearError } = useBoolean(false);
 
 function loginOrRegister() {
   toLogin();
 }
 
 function handleAvatarLoad() {
-  avatarLoading.value = false;
-  avatarError.value = false;
+  endAvatarLoading();
+  clearError();
 }
 
 function handleAvatarError() {
-  avatarLoading.value = false;
-  avatarError.value = true;
+  endAvatarLoading();
+  setError();
 }
 
 type DropdownKey = 'user-center' | 'logout';
@@ -91,9 +94,9 @@ function handleDropdown(key: DropdownKey) {
     {{ $t('page.login.common.loginOrRegister') }}
   </NButton>
   <NDropdown v-else placement="bottom" trigger="click" :options="options" @select="handleDropdown">
-    <div class="avatar-wrapper">
+    <div class="flex cursor-pointer items-center rounded-md px-2 py-1 transition-colors duration-300 hover:bg-black/6">
       <NSpin :show="avatarLoading">
-        <div class="avatar-container" :class="{ 'avatar-error': avatarError }">
+        <div class="flex items-center gap-2" :class="{ 'opacity-50': avatarError }">
           <NAvatar
             v-if="authStore.userInfo.user?.avatar"
             :size="24"
@@ -103,7 +106,9 @@ function handleDropdown(key: DropdownKey) {
             @error="handleAvatarError"
           />
           <NAvatar v-else :size="32" round :src="defaultAvatar" @load="handleAvatarLoad" @error="handleAvatarError" />
-          <span class="user-name">{{ authStore.userInfo.user?.nickName }}</span>
+          <span class="max-w-120px truncate text-14px font-medium">
+            {{ authStore.userInfo.user?.nickName }}
+          </span>
         </div>
       </NSpin>
     </div>
@@ -136,20 +141,9 @@ function handleDropdown(key: DropdownKey) {
 
 .user-name {
   font-size: 14px;
-  font-weight: 500;
-  color: var(--primary-text-color);
   max-width: 120px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.user-role {
-  font-size: 12px;
-  color: var(--secondary-text-color);
-  background-color: var(--tag-color);
-  padding: 2px 6px;
-  border-radius: 4px;
-  margin-left: 4px;
 }
 </style>

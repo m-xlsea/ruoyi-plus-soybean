@@ -3,6 +3,7 @@ import { reactive, ref } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
 import { NButton, NModal, NUpload } from 'naive-ui';
 import { Cropper } from 'vue-advanced-cropper';
+import { useBoolean, useLoading } from '@sa/hooks';
 import { fetchUpdateUserAvatar } from '@/service/api/system';
 import { useAuthStore } from '@/store/modules/auth';
 import defaultAvatar from '@/assets/imgs/soybean.jpg';
@@ -24,7 +25,11 @@ interface CropperRef {
 
 const authStore = useAuthStore();
 
-const showModal = ref(false);
+// 使用 useBoolean 管理模态框显示状态
+const { bool: showModal, setTrue: showDrawer, setFalse: hideDrawer } = useBoolean();
+// 使用 useLoading 管理加载状态
+const { loading, startLoading, endLoading } = useLoading();
+
 const imageUrl = ref(authStore.userInfo.user?.avatar || defaultAvatar);
 const cropperRef = ref<CropperRef | null>(null);
 
@@ -39,7 +44,7 @@ const options = reactive<CropperOptions>({
 
 /** 编辑头像 */
 function handleEdit() {
-  showModal.value = true;
+  showDrawer();
 }
 
 /** 处理文件选择 */
@@ -66,51 +71,74 @@ async function handleFileSelect(data: { file: UploadFileInfo }) {
 async function handleCrop() {
   if (!cropperRef.value) return;
 
-  const { canvas } = cropperRef.value.getResult();
+  startLoading();
+  try {
+    const { canvas } = cropperRef.value.getResult();
 
-  // 将 canvas 转换为 blob
-  canvas.toBlob(async (blob: Blob | null) => {
-    if (!blob) return;
+    // 将 canvas 转换为 blob
+    canvas.toBlob(async (blob: Blob | null) => {
+      if (!blob) return;
 
-    const formData = new FormData();
-    formData.append('avatarfile', blob, options.fileName || 'avatar.png');
+      const formData = new FormData();
+      formData.append('avatarfile', blob, options.fileName || 'avatar.png');
 
-    const { error } = await fetchUpdateUserAvatar(formData);
-    if (!error) {
-      window.$message?.success('头像更新成功！');
-      imageUrl.value = URL.createObjectURL(blob);
-      handleClose();
-    }
-  }, 'image/png');
+      const { error } = await fetchUpdateUserAvatar(formData);
+      if (!error) {
+        window.$message?.success('头像更新成功！');
+        imageUrl.value = URL.createObjectURL(blob);
+        hideDrawer();
+      }
+    }, 'image/png');
+  } finally {
+    endLoading();
+  }
 }
 
 /** 关闭对话框 */
 function handleClose() {
-  showModal.value = false;
+  hideDrawer();
   options.img = imageUrl.value;
 }
 </script>
 
 <template>
-  <div class="avatar-wrapper" @click="handleEdit">
-    <div class="avatar-container">
-      <img :src="imageUrl" alt="user-avatar" class="avatar-image" />
-      <div class="avatar-overlay">
+  <div class="cursor-pointer" @click="handleEdit">
+    <div class="relative h-120px w-120px overflow-hidden rounded-full">
+      <img :src="imageUrl" alt="user-avatar" class="h-full w-full object-cover" />
+      <div
+        class="absolute inset-0 flex-center bg-black/50 text-white opacity-0 transition-opacity duration-300 hover:opacity-100"
+      >
         <SvgIcon icon="ep:plus" class="text-24px" />
       </div>
     </div>
 
     <NModal v-model:show="showModal" preset="card" title="修改头像" class="w-400px" @close="handleClose">
-      <div class="upload-container">
-        <div v-if="options.img !== imageUrl" class="cropper-container">
-          <Cropper ref="cropperRef" class="cropper" :src="options.img" :stencil-props="options.stencilProps" />
+      <div class="flex-col-center gap-20px py-20px">
+        <div v-if="options.img !== imageUrl" class="h-300px w-full">
+          <Cropper
+            ref="cropperRef"
+            class="h-full bg-gray-100"
+            :src="options.img"
+            :stencil-props="options.stencilProps"
+          />
         </div>
-        <img v-else :src="imageUrl" alt="user-avatar" class="preview-image" />
-        <div class="button-group">
+        <img
+          v-else
+          :src="imageUrl"
+          alt="user-avatar"
+          class="h-200px w-200px border border-gray-200 rounded-full object-cover"
+        />
+        <div class="flex gap-12px">
           <NUpload accept=".jpg,.jpeg,.png,.gif" :max="1" :show-file-list="false" @before-upload="handleFileSelect">
-            <NButton class="upload-button">选择图片</NButton>
+            <NButton class="min-w-100px">选择图片</NButton>
           </NUpload>
-          <NButton v-if="options.img !== imageUrl" type="primary" class="upload-button" @click="handleCrop">
+          <NButton
+            v-if="options.img !== imageUrl"
+            type="primary"
+            class="min-w-100px"
+            :loading="loading"
+            @click="handleCrop"
+          >
             确认裁剪
           </NButton>
         </div>
