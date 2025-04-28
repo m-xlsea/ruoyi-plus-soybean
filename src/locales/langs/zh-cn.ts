@@ -186,7 +186,9 @@ const local: App.I18n.Schema = {
     'social-callback': '单点登录回调',
     system_oss: '文件管理',
     'system_oss-config': 'OSS配置',
-    monitor_cache: '缓存监控'
+    monitor_cache: '缓存监控',
+    monitor_online: '在线用户',
+    'user-center': '个人中心'
   },
   page: {
     login: {
