@@ -57,3 +57,30 @@ export function fetchGetDeptTree() {
     method: 'get'
   });
 }
+
+/** 修改用户基本信息 */
+export function fetchUpdateUserProfile(data: Api.System.UserProfileOperateParams) {
+  return request<boolean>({
+    url: '/system/user/profile',
+    method: 'put',
+    data
+  });
+}
+
+/** 修改用户密码 */
+export function fetchUpdateUserPassword(data: Api.System.UserPasswordOperateParams) {
+  return request<boolean>({
+    url: '/system/user/profile/updatePwd',
+    method: 'put',
+    data
+  });
+}
+
+/** 修改用户头像 */
+export function fetchUpdateUserAvatar(formData: FormData) {
+  return request<boolean>({
+    url: '/system/user/profile/avatar',
+    method: 'post',
+    data: formData
+  });
+}

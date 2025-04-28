@@ -155,8 +155,11 @@ declare namespace Api {
     /** userinfo */
     interface UserInfo {
       /** 用户信息 */
-      user?: Api.System.User;
-      /** 角色权限 */
+      user?: Api.System.User & {
+        /** 所属角色 */
+        roles: Api.System.Role[];
+      };
+      /** 角色列表 */
       roles: string[];
       /** 菜单权限 */
       permissions: string[];

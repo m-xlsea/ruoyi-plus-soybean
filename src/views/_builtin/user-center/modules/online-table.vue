@@ -1,0 +1,88 @@
+<script setup lang="tsx">
+import { NTime } from 'naive-ui';
+import { useLoading } from '@sa/hooks';
+import { fetchForceLogout, fetchGetOnlineDeviceList } from '@/service/api/monitor';
+import { useAppStore } from '@/store/modules/app';
+import { useTable } from '@/hooks/common/table';
+import { $t } from '@/locales';
+import ButtonIcon from '@/components/custom/button-icon.vue';
+
+defineOptions({
+  name: 'OnlineTable'
+});
+
+const appStore = useAppStore();
+const { loading: btnLoading, startLoading: startBtnLoading, endLoading: endBtnLoading } = useLoading(false);
+
+const { columns, data, loading, mobilePagination, getData } = useTable({
+  apiFn: fetchGetOnlineDeviceList,
+  apiParams: {
+    pageNum: 1,
+    pageSize: 10
+  },
+  columns: () => [
+    { title: '用户名', key: 'userName', align: 'center', minWidth: 120 },
+    { title: 'IP地址', key: 'ipaddr', align: 'center', minWidth: 120 },
+    { title: '登录地点', key: 'loginLocation', align: 'center', minWidth: 120 },
+    { title: '浏览器', key: 'browser', align: 'center', minWidth: 120 },
+    { title: '操作系统', key: 'os', align: 'center', minWidth: 120 },
+    {
+      title: '登录时间',
+      key: 'loginTime',
+      align: 'center',
+      minWidth: 180,
+      render: row => <NTime time={row.loginTime} format="yyyy-MM-dd HH:mm:ss" />
+    },
+    {
+      key: 'operate',
+      title: $t('common.operate'),
+      align: 'center',
+      minWidth: 80,
+      render: row => {
+        return (
+          <div class="flex-center gap-8px">
+            <ButtonIcon
+              text
+              type="error"
+              icon="material-symbols:delete-outline"
+              loading={btnLoading.value}
+              class="text-18px"
+              tooltipContent="强制下线"
+              popconfirmContent="确定强制下线吗？"
+              onPositiveClick={() => forceLogout(row.tokenId)}
+            />
+          </div>
+        );
+      }
+    }
+  ]
+});
+
+/** 强制下线 */
+async function forceLogout(tokenId: string) {
+  startBtnLoading();
+  const { error } = await fetchForceLogout(tokenId);
+  if (!error) {
+    window.$message?.success('强制下线成功');
+    await getData();
+  }
+  endBtnLoading();
+}
+</script>
+
+<template>
+  <NDataTable
+    :columns="columns"
+    :data="data"
+    size="small"
+    :flex-height="!appStore.isMobile"
+    :scroll-x="962"
+    :loading="loading"
+    remote
+    :row-key="row => row.noticeId"
+    :pagination="mobilePagination"
+    class="h-full"
+  />
+</template>
+
+<style scoped></style>

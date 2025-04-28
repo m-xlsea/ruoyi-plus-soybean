@@ -127,6 +127,12 @@ declare namespace Api {
       > & { roleIds: CommonType.IdType[]; postIds: CommonType.IdType[] }
     >;
 
+    /** user profile operate params */
+    type UserProfileOperateParams = CommonType.RecordNullable<Pick<User, 'nickName' | 'email' | 'phonenumber' | 'sex'>>;
+
+    /** user password operate params */
+    type UserPasswordOperateParams = CommonType.RecordNullable<Pick<User, 'password'> & { newPassword: string }>;
+
     /** user info */
     type UserInfo = {
       /** user post ids */
@@ -137,6 +143,54 @@ declare namespace Api {
 
     /** user list */
     type UserList = Common.PaginatingQueryRecord<User>;
+
+    /** social */
+    type Social = Common.CommonRecord<{
+      /** 用户ID */
+      userId: CommonType.IdType;
+      /** 租户ID */
+      tenantId: CommonType.IdType;
+      /** 认证的唯一ID */
+      authId: string;
+      /** 用户来源 */
+      source: string;
+      /** 用户的授权令牌 */
+      accessToken: string;
+      /** 用户的授权令牌的有效期，部分平台可能没有 */
+      expireIn: number;
+      /** 刷新令牌，部分平台可能没有 */
+      refreshToken: string;
+      /** 用户的 open id */
+      openId: string;
+      /** 授权的第三方账号 */
+      userName: string;
+      /** 授权的第三方昵称 */
+      nickName: string;
+      /** 授权的第三方邮箱 */
+      email: string;
+      /** 授权的第三方头像地址 */
+      avatar: string;
+      /** 平台的授权信息，部分平台可能没有 */
+      accessCode: string;
+      /** 用户的 unionid */
+      unionId: string;
+      /** 授予的权限，部分平台可能没有 */
+      scope: string;
+      /** 个别平台的授权信息，部分平台可能没有 */
+      tokenType: string;
+      /** id token，部分平台可能没有 */
+      idToken: string;
+      /** 小米平台用户的附带属性，部分平台可能没有 */
+      macAlgorithm: string;
+      /** 小米平台用户的附带属性，部分平台可能没有 */
+      macKey: string;
+      /** 用户的授权code，部分平台可能没有 */
+      code: string;
+      /** Twitter平台用户的附带属性，部分平台可能没有 */
+      oauthToken: string;
+      /** Twitter平台用户的附带属性，部分平台可能没有 */
+      oauthTokenSecret: string;
+    }>;
 
     /**
      * icon type
@@ -611,7 +665,8 @@ declare namespace Api {
       | 'wechat_open'
       | 'wechat_mp'
       | 'wechat_enterprise'
-      | 'gitlab';
+      | 'gitlab'
+      | 'github';
 
     /** oss */
     type Oss = Common.CommonRecord<{

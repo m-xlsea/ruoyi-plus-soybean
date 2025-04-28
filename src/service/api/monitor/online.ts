@@ -20,3 +20,12 @@ export function fetchForceLogout(tokenId: string) {
     method: 'delete'
   });
 }
+
+/** 获取在线设备列表 */
+export function fetchGetOnlineDeviceList(params?: Api.Monitor.OnlineUserSearchParams) {
+  return request<Api.Monitor.OnlineUserList>({
+    url: '/monitor/online',
+    method: 'get',
+    params
+  });
+}

@@ -186,7 +186,9 @@ const local: App.I18n.Schema = {
     'social-callback': 'Social Callback',
     system_oss: 'File Management',
     'system_oss-config': 'OSS Config',
-    monitor_cache: 'Cache Monitor'
+    monitor_cache: 'Cache Monitor',
+    monitor_online: 'Online User',
+    'user-center': 'User Center'
   },
   page: {
     login: {

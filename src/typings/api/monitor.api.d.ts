@@ -151,7 +151,7 @@ declare namespace Api {
       /** 设备类型 */
       deviceType: string;
       /** 登录时间 */
-      loginTime: string;
+      loginTime: number;
       /** 令牌ID */
       tokenId: string;
     }>;

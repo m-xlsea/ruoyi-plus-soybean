@@ -157,12 +157,11 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
       <div class="mx-6px flex-y-center justify-between">
         <NCheckbox v-model:checked="remberMe">{{ $t('page.login.pwdLogin.rememberMe') }}</NCheckbox>
         <NSpace :size="1">
-          <ButtonIcon class="color-#44b549" icon="ic:outline-wechat" @click="handleSocialLogin('wechat_enterprise')" />
+          <ButtonIcon class="color-#44b549" icon="ic:outline-wechat" @click="handleSocialLogin('wechat_open')" />
           <ButtonIcon local-icon="topiam" @click="handleSocialLogin('topiam')" />
           <ButtonIcon local-icon="maxkey" @click="handleSocialLogin('maxkey')" />
           <ButtonIcon class="color-#c71d23" icon="simple-icons:gitee" @click="handleSocialLogin('gitee')" />
-          <!-- <ButtonIcon class="color-#010409" icon="mdi:github" @click="handleSocialLogin('github')" /> -->
-          <ButtonIcon icon="material-icon-theme:gitlab" @click="handleSocialLogin('gitlab')" />
+          <ButtonIcon class="color-#010409" icon="mdi:github" @click="handleSocialLogin('github')" />
         </NSpace>
       </div>
       <NButton type="primary" size="large" block :loading="authStore.loginLoading" @click="handleSubmit">

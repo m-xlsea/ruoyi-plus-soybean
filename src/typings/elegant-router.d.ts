@@ -45,6 +45,7 @@ declare module "@elegant-router/types" {
     "system_user": "/system/user";
     "tool": "/tool";
     "tool_gen": "/tool/gen";
+    "user-center": "/user-center";
   };
 
   /**
@@ -86,6 +87,7 @@ declare module "@elegant-router/types" {
     | "social-callback"
     | "system"
     | "tool"
+    | "user-center"
   >;
 
   /**
@@ -108,6 +110,7 @@ declare module "@elegant-router/types" {
     | "iframe-page"
     | "login"
     | "social-callback"
+    | "user-center"
     | "home"
     | "monitor_cache"
     | "monitor_login-infor"
