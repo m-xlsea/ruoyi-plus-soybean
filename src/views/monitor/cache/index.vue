@@ -535,11 +535,6 @@ function forceUpdateCharts() {
 onMounted(async () => {
   try {
     await getCacheInfo();
-
-    // 确保图表被渲染后，再次尝试强制更新
-    setTimeout(() => {
-      forceUpdateCharts();
-    }, 500);
   } catch {
     fetchError.value = '初始化数据失败，请尝试刷新';
   }
@@ -638,9 +633,7 @@ onUnmounted(() => {
       <NGrid :cols="2" :x-gap="16" :y-gap="16" responsive="screen" item-responsive>
         <NGi span="0:24 1000:12">
           <NCard title="命令统计" :bordered="false" class="chart-card card-wrapper">
-            <NSpin :show="loading">
-              <div ref="commandChartRef" class="h-360px overflow-hidden"></div>
-            </NSpin>
+            <div ref="commandChartRef" class="h-360px overflow-hidden"></div>
           </NCard>
         </NGi>
         <NGi span="0:24 1000:12">

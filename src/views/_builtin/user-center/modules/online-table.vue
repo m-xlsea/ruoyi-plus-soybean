@@ -4,8 +4,10 @@ import { useLoading } from '@sa/hooks';
 import { fetchForceLogout, fetchGetOnlineDeviceList } from '@/service/api/monitor';
 import { useAppStore } from '@/store/modules/app';
 import { useTable } from '@/hooks/common/table';
+import { getBrowserIcon, getOsIcon } from '@/utils/format';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
+import SvgIcon from '@/components/custom/svg-icon.vue';
 
 defineOptions({
   name: 'OnlineTable'
@@ -18,14 +20,41 @@ const { columns, data, loading, mobilePagination, getData } = useTable({
   apiFn: fetchGetOnlineDeviceList,
   apiParams: {
     pageNum: 1,
-    pageSize: 10
+    pageSize: 15
   },
   columns: () => [
     { title: '用户名', key: 'userName', align: 'center', minWidth: 120 },
     { title: 'IP地址', key: 'ipaddr', align: 'center', minWidth: 120 },
     { title: '登录地点', key: 'loginLocation', align: 'center', minWidth: 120 },
-    { title: '浏览器', key: 'browser', align: 'center', minWidth: 120 },
-    { title: '操作系统', key: 'os', align: 'center', minWidth: 120 },
+    {
+      title: '浏览器',
+      key: 'browser',
+      align: 'center',
+      minWidth: 120,
+      render: row => {
+        return (
+          <div class="flex items-center justify-center gap-2">
+            <SvgIcon icon={getBrowserIcon(row.browser)} />
+            {row.browser}
+          </div>
+        );
+      }
+    },
+    {
+      title: '操作系统',
+      key: 'os',
+      align: 'center',
+      minWidth: 120,
+      render: row => {
+        const osName = row.os?.split(' or ')[0] ?? '';
+        return (
+          <div class="flex items-center justify-center gap-2">
+            <SvgIcon icon={getOsIcon(osName)} />
+            {osName}
+          </div>
+        );
+      }
+    },
     {
       title: '登录时间',
       key: 'loginTime',

@@ -31,12 +31,13 @@ const browserOptions = [
   { icon: 'arcticons:uc-browser', value: 'uc' },
   { icon: 'ri:baidu-fill', value: 'baidu' }
 ];
+
 const osOptions = [
   { icon: 'devicon:windows8', value: 'windows' },
-  { icon: 'wpf:macoss', value: 'osx' },
+  { icon: 'cbi:imac', value: 'osx' },
   { icon: 'devicon:linux', value: 'linux' },
-  { icon: 'material-icon-theme:android:', value: 'android' },
-  { icon: 'wpf:iphone', value: 'ios' }
+  { icon: 'logos:android-icon', value: 'android' },
+  { icon: 'file-icons:apple', value: 'ios' }
 ];
 /**
  * 获取浏览器图标
@@ -57,5 +58,5 @@ export function getBrowserIcon(browser: string): string {
  */
 export function getOsIcon(os: string): string {
   const icon = osOptions.find(item => os.toLocaleLowerCase().includes(item.value));
-  return icon?.icon ?? 'mingcute:device-fill';
+  return icon?.icon || 'mingcute:device-fill';
 }
