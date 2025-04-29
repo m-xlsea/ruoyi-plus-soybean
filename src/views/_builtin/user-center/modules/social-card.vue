@@ -53,32 +53,25 @@ const socialSources = [
 ];
 
 getSsoUserList();
+
+function getSocial(key: string) {
+  return socialList.value.find(s => s.source.toLowerCase() === key);
+}
 </script>
 
 <template>
   <NSpin :show="loading" class="mt-16px">
     <div class="grid grid-cols-1 gap-16px 2xl:grid-cols-3 xl:grid-cols-2">
       <div v-for="source in socialSources" :key="source.key" class="relative">
-        <NCard
-          class="h-full transition-all duration-300 hover:shadow-md"
-          :class="[socialList.some(s => s.source === source.key) ? 'border-primary' : 'border-transparent']"
-          :bordered="true"
-        >
-          <template v-if="socialList.some(s => s.source === source.key)">
+        <NCard class="h-full transition-all duration-300 hover:shadow-md" :bordered="true">
+          <template v-if="getSocial(source.key)">
             <div class="flex flex-col items-center gap-16px">
-              <NAvatar
-                round
-                size="large"
-                :src="socialList.find(s => s.source === source.key)?.avatar"
-                class="size-80px"
-              />
+              <NAvatar round size="large" :src="getSocial(source.key)?.avatar" class="size-80px" />
               <div class="text-center">
                 <div class="text-16px font-medium">
-                  {{ socialList.find(s => s.source === source.key)?.nickName }}
+                  {{ getSocial(source.key)?.nickName }}
                 </div>
-                <div class="mt-4px text-12px text-gray-500">
-                  绑定时间：{{ socialList.find(s => s.source === source.key)?.createTime }}
-                </div>
+                <div class="mt-4px text-12px text-gray-500">绑定时间：{{ getSocial(source.key)?.createTime }}</div>
               </div>
               <NButton
                 type="error"
