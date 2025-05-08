@@ -23,7 +23,7 @@ declare namespace Api {
       /** 备注 */
       remark?: string;
       /** 角色ID */
-      roleId: number;
+      roleId: CommonType.IdType;
       /** 角色权限字符串 */
       roleKey: string;
       /** 角色名称 */
@@ -143,6 +143,12 @@ declare namespace Api {
 
     /** user list */
     type UserList = Common.PaginatingQueryRecord<User>;
+
+    /** auth role */
+    type AuthRole = {
+      user: User;
+      roles: Role[];
+    };
 
     /** social */
     type Social = Common.CommonRecord<{

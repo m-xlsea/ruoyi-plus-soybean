@@ -44,7 +44,13 @@ async function unbindSsoAccount(socialId: string) {
   endBtnLoading();
 }
 
-const socialSources = [
+const socialSources: {
+  key: Api.System.SocialSource;
+  icon?: string;
+  localIcon?: string;
+  color: string;
+  name: string;
+}[] = [
   { key: 'wechat_open', icon: 'ic:outline-wechat', color: '#44b549', name: '微信' },
   { key: 'topiam', localIcon: 'topiam', color: '', name: 'TopIAM' },
   { key: 'maxkey', localIcon: 'maxkey', color: '', name: 'MaxKey' },
@@ -92,9 +98,7 @@ function getSocial(key: string) {
                 :style="{ color: source.color }"
               />
               <div class="text-16px font-medium">{{ source.name }}</div>
-              <NButton type="primary" size="small" @click="bindSsoAccount(source.key as Api.System.SocialSource)">
-                绑定
-              </NButton>
+              <NButton type="primary" size="small" @click="bindSsoAccount(source.key)">绑定</NButton>
             </div>
           </template>
         </NCard>

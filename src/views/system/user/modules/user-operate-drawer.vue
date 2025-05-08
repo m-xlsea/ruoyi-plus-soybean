@@ -70,7 +70,7 @@ type RuleKey = Extract<keyof Model, 'userName' | 'nickName' | 'password' | 'stat
 const rules: Record<RuleKey, App.Global.FormRule[]> = {
   userName: [createRequiredRule('用户名称不能为空')],
   nickName: [createRequiredRule('用户昵称不能为空')],
-  password: [{ ...patternRules.pwd, required: true }],
+  password: [{ ...patternRules.pwd, required: props.operateType === 'add' }],
   phonenumber: [patternRules.phone],
   status: [createRequiredRule('帐号状态不能为空')]
 };
@@ -95,6 +95,7 @@ function handleUpdateModelWhenEdit() {
   if (props.operateType === 'edit' && props.rowData) {
     startDeptLoading();
     Object.assign(model, props.rowData);
+    model.password = '';
     getUserInfo();
     endDeptLoading();
   }
@@ -107,9 +108,10 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const { userId, deptId, userName, nickName, email, phonenumber, sex, password, status, remark } = model;
+
   // request
   if (props.operateType === 'add') {
-    const { deptId, userName, nickName, email, phonenumber, sex, password, status, remark } = model;
     const { error } = await fetchCreateUser({
       deptId,
       userName,
@@ -125,7 +127,6 @@ async function handleSubmit() {
   }
 
   if (props.operateType === 'edit') {
-    const { userId, deptId, userName, nickName, email, phonenumber, sex, password, status, remark } = model;
     const { error } = await fetchUpdateUser({
       userId,
       deptId,
@@ -183,7 +184,7 @@ watch(visible, () => {
           <NFormItem v-if="operateType === 'add'" label="用户名称" path="userName">
             <NInput v-model:value="model.userName" placeholder="请输入用户名称" />
           </NFormItem>
-          <NFormItem v-if="operateType === 'add'" label="用户密码" path="password">
+          <NFormItem label="用户密码" path="password">
             <NInput
               v-model:value="model.password"
               type="password"

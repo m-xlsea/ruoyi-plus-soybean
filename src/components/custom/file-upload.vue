@@ -11,6 +11,8 @@ defineOptions({
 
 interface Props {
   action?: string;
+  data?: Record<string, any>;
+  defaultUpload?: boolean;
   showTip?: boolean;
   max?: number;
   accept?: string;
@@ -20,6 +22,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   action: `/resource/oss/upload`,
+  data: undefined,
+  defaultUpload: true,
   showTip: true,
   max: 5,
   accept: '.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.pdf',
@@ -28,6 +32,8 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const attrs: UploadProps = useAttrs();
+
+const value = defineModel<CommonType.IdType[]>('value', { required: false, default: [] });
 
 let fileNum = 0;
 const fileList = ref<UploadFileInfo[]>([]);
@@ -39,6 +45,7 @@ watch(
   () => fileList.value,
   newValue => {
     needRelaodData.value = newValue.length > 0;
+    value.value = newValue.map(item => item.id);
   }
 );
 
@@ -126,11 +133,13 @@ async function handleRemove(file: UploadFileInfo) {
     v-bind="attrs"
     v-model:file-list="fileList"
     :action="`${baseURL}${action}`"
+    :data="data"
     :headers="headers"
     :max="max"
     :accept="accept"
-    multiple
+    :multiple="max > 1"
     directory-dnd
+    :default-upload="defaultUpload"
     :list-type="uploadType === 'image' ? 'image-card' : 'text'"
     :is-error-state="isErrorState"
     @finish="handleFinish"
@@ -145,12 +154,12 @@ async function handleRemove(file: UploadFileInfo) {
       <NText class="text-16px">点击或者拖动文件到该区域来上传</NText>
       <NP v-if="showTip" depth="3" class="mt-8px text-center">
         请上传
-        <template v-if="max">
+        <template v-if="fileSize">
           大小不超过
-          <b class="text-red-500">{{ max }}MB</b>
+          <b class="text-red-500">{{ fileSize }}MB</b>
         </template>
         <template v-if="accept">
-          格式为
+          ，且格式为
           <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
         </template>
         的文件
@@ -159,12 +168,12 @@ async function handleRemove(file: UploadFileInfo) {
   </NUpload>
   <NP v-if="showTip && uploadType === 'image'" depth="3" class="mt-12px">
     请上传
-    <template v-if="max">
+    <template v-if="fileSize">
       大小不超过
-      <b class="text-red-500">{{ max }}MB</b>
+      <b class="text-red-500">{{ fileSize }}MB</b>
     </template>
     <template v-if="accept">
-      格式为
+      ，且格式为
       <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
     </template>
     的文件

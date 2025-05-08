@@ -58,6 +58,32 @@ export function fetchGetDeptTree() {
   });
 }
 
+/** 重置用户密码 */
+export function fetchResetUserPassword(userId: CommonType.IdType, password: string) {
+  return request<boolean>({
+    url: '/system/user/resetPwd',
+    method: 'put',
+    data: { userId, password }
+  });
+}
+
+/** 根据用户编号获取授权角色 */
+export function fetchGetAuthRole(userId: CommonType.IdType) {
+  return request<Api.System.AuthRole>({
+    url: `/system/user/authRole/${userId}`,
+    method: 'get'
+  });
+}
+
+/** 用户授权角色 */
+export function fetchAuthUserRole(userId: CommonType.IdType, roleIds: CommonType.IdType[]) {
+  return request<boolean>({
+    url: '/system/user/authRole',
+    method: 'put',
+    data: { userId, roleIds }
+  });
+}
+
 /** 修改用户基本信息 */
 export function fetchUpdateUserProfile(data: Api.System.UserProfileOperateParams) {
   return request<boolean>({

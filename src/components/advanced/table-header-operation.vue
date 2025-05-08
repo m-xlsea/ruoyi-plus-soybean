@@ -75,7 +75,7 @@ function handleExport() {
       </NPopconfirm>
       <NButton v-if="showExport" size="small" ghost @click="handleExport">
         <template #icon>
-          <icon-ic-round-download class="text-icon" />
+          <icon-material-symbols:download-2-rounded class="text-icon" />
         </template>
         导出
       </NButton>

@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 import { NButton } from 'naive-ui';
-import { useLoading } from '@sa/hooks';
+import { useBoolean, useLoading } from '@sa/hooks';
 import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
@@ -11,6 +11,7 @@ import ButtonIcon from '@/components/custom/button-icon.vue';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
+import UserImportModal from './modules/user-import-modal.vue';
 import UserSearch from './modules/user-search.vue';
 
 defineOptions({
@@ -22,6 +23,8 @@ useDict('sys_normal_disable');
 
 const { hasAuth } = useAuth();
 const appStore = useAppStore();
+
+const { bool: importVisible, setTrue: openImportModal } = useBoolean();
 
 const {
   columns,
@@ -198,6 +201,10 @@ function handleResetTreeData() {
   deptPattern.value = undefined;
   getTreeData();
 }
+
+function handleImport() {
+  openImportModal();
+}
 </script>
 
 <template>
@@ -247,7 +254,16 @@ function handleResetTreeData() {
             @add="handleAdd"
             @delete="handleBatchDelete"
             @refresh="getData"
-          />
+          >
+            <template #after>
+              <NButton v-if="hasAuth('system:user:import')" size="small" ghost @click="handleImport">
+                <template #icon>
+                  <icon-material-symbols:upload-2-rounded class="text-icon" />
+                </template>
+                导入
+              </NButton>
+            </template>
+          </TableHeaderOperation>
         </template>
         <NDataTable
           v-model:checked-row-keys="checkedRowKeys"
@@ -262,6 +278,7 @@ function handleResetTreeData() {
           :pagination="mobilePagination"
           class="h-full"
         />
+        <UserImportModal v-model:visible="importVisible" @submitted="getDataByPage" />
         <UserOperateDrawer
           v-model:visible="drawerVisible"
           :operate-type="operateType"
