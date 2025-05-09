@@ -54,7 +54,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
     right: true
   },
   watermark: {
-    visible: false,
+    visible: import.meta.env.VITE_WATERMARK === 'Y',
     text: 'RuoYi-Vue-Plus'
   },
   tokens: {
