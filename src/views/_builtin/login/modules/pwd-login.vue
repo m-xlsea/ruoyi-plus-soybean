@@ -30,8 +30,8 @@ const tenantOption = ref<SelectOption[]>([]);
 
 const model: Api.Auth.PwdLoginForm = reactive({
   tenantId: '000000',
-  username: '',
-  password: ''
+  username: 'admin',
+  password: 'admin123'
 });
 type RuleKey = Extract<keyof Api.Auth.PwdLoginForm, 'username' | 'password' | 'code' | 'tenantId'>;
 

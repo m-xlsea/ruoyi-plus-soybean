@@ -152,6 +152,8 @@ declare namespace Api {
 
     /** social */
     type Social = Common.CommonRecord<{
+      /** 主键 */
+      id: CommonType.IdType;
       /** 用户ID */
       userId: CommonType.IdType;
       /** 租户ID */

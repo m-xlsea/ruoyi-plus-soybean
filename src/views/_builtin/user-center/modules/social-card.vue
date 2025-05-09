@@ -34,7 +34,7 @@ async function bindSsoAccount(type: Api.System.SocialSource) {
 }
 
 /** 解绑SSO账户 */
-async function unbindSsoAccount(socialId: string) {
+async function unbindSsoAccount(socialId: CommonType.IdType) {
   startBtnLoading();
   const { error } = await fetchSocialAuthUnbinding(socialId);
   if (!error) {
@@ -83,7 +83,7 @@ function getSocial(key: string) {
                 type="error"
                 size="small"
                 :loading="btnLoading"
-                @click="unbindSsoAccount(socialList.find(s => s.source === source.key)?.authId || '')"
+                @click="unbindSsoAccount(getSocial(source.key)?.id || '')"
               >
                 解绑
               </NButton>

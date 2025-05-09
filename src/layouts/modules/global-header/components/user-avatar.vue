@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { VNode } from 'vue';
-import { useBoolean, useLoading } from '@sa/hooks';
+import { useBoolean } from '@sa/hooks';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { useSvgIcon } from '@/hooks/common/icon';
@@ -16,9 +16,6 @@ const authStore = useAuthStore();
 const { routerPushByKey, toLogin } = useRouterPush();
 const { SvgIconVNode } = useSvgIcon();
 
-// 使用 useBoolean 管理加载状态
-const { loading: avatarLoading, endLoading: endAvatarLoading } = useLoading(true);
-// 使用 useBoolean 管理错误状态
 const { bool: avatarError, setTrue: setError, setFalse: clearError } = useBoolean(false);
 
 function loginOrRegister() {
@@ -26,12 +23,10 @@ function loginOrRegister() {
 }
 
 function handleAvatarLoad() {
-  endAvatarLoading();
   clearError();
 }
 
 function handleAvatarError() {
-  endAvatarLoading();
   setError();
 }
 
@@ -95,22 +90,20 @@ function handleDropdown(key: DropdownKey) {
   </NButton>
   <NDropdown v-else placement="bottom" trigger="click" :options="options" @select="handleDropdown">
     <div class="flex cursor-pointer items-center rounded-md px-2 py-1 transition-colors duration-300 hover:bg-black/6">
-      <NSpin :show="avatarLoading">
-        <div class="flex items-center gap-2" :class="{ 'opacity-50': avatarError }">
-          <NAvatar
-            v-if="authStore.userInfo.user?.avatar"
-            :size="24"
-            round
-            :src="authStore.userInfo.user?.avatar"
-            @load="handleAvatarLoad"
-            @error="handleAvatarError"
-          />
-          <NAvatar v-else :size="32" round :src="defaultAvatar" @load="handleAvatarLoad" @error="handleAvatarError" />
-          <span class="max-w-120px truncate text-14px font-medium">
-            {{ authStore.userInfo.user?.nickName }}
-          </span>
-        </div>
-      </NSpin>
+      <div class="flex items-center gap-2" :class="{ 'opacity-50': avatarError }">
+        <NAvatar
+          v-if="authStore.userInfo.user?.avatar"
+          :size="24"
+          round
+          :src="authStore.userInfo.user?.avatar"
+          @load="handleAvatarLoad"
+          @error="handleAvatarError"
+        />
+        <NAvatar v-else :size="32" round :src="defaultAvatar" @load="handleAvatarLoad" @error="handleAvatarError" />
+        <span class="max-w-120px truncate text-14px font-medium">
+          {{ authStore.userInfo.user?.nickName }}
+        </span>
+      </div>
     </div>
   </NDropdown>
 </template>

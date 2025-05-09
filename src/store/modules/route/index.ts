@@ -97,7 +97,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
       // @ts-expect-error no query field
       const query = route.query ? String(route.query) : undefined;
       route.path = route.path.startsWith('//') ? route.path.substring(1) : route.path;
+      route.path = parent ? parent.path + route.path : route.path;
       const name = humpToLine(route.path.substring(1).replace('/', '_'));
+
       route.name = parent ? `${parent.name}_${name}` : name;
 
       route.meta = route.meta ? route.meta : { title: route.name };

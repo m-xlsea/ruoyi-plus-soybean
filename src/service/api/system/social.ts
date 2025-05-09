@@ -13,7 +13,7 @@ export function fetchSocialAuthBinding(source: Api.System.SocialSource, tenantId
 }
 
 /** 解绑账户 */
-export function fetchSocialAuthUnbinding(socialId: string) {
+export function fetchSocialAuthUnbinding(socialId: CommonType.IdType) {
   return request<string>({
     url: `/auth/unlock/${socialId}`,
     method: 'delete'
