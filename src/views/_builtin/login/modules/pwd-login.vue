@@ -20,11 +20,11 @@ const { loading: codeLoading, startLoading: startCodeLoading, endLoading: endCod
 const { loading: tenantLoading, startLoading: startTenantLoading, endLoading: endTenantLoading } = useLoading();
 
 const codeUrl = ref<string>();
-const captchaEnabled = ref<boolean>(false);
+const captchaEnabled = ref<boolean>(true);
 const registerEnabled = ref<boolean>(false);
 const remberMe = ref<boolean>(false);
 
-const tenantEnabled = ref<boolean>(false);
+const tenantEnabled = ref<boolean>(true);
 
 const tenantOption = ref<SelectOption[]>([]);
 
@@ -122,9 +122,8 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
 
 <template>
   <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
-    <NFormItem path="tenantId">
+    <NFormItem v-if="tenantEnabled" path="tenantId">
       <NSelect
-        v-if="tenantEnabled"
         v-model:value="model.tenantId"
         placeholder="请选择租户"
         :options="tenantOption"

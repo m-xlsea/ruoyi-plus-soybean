@@ -42,7 +42,8 @@ export function useDownload() {
       body: searchParams,
       headers: {
         Authorization: `Bearer ${token}`,
-        Clientid: clientId!
+        Clientid: clientId!,
+        'Content-Type': 'application/octet-stream'
       }
     })
       .then(async response => {
@@ -69,7 +70,8 @@ export function useDownload() {
       method: 'get',
       headers: {
         Authorization: `Bearer ${token}`,
-        Clientid: clientId!
+        Clientid: clientId!,
+        'Content-Type': 'application/octet-stream'
       }
     })
       .then(async response => {
@@ -90,7 +92,8 @@ export function useDownload() {
       method: 'get',
       headers: {
         Authorization: `Bearer ${token}`,
-        Clientid: clientId!
+        Clientid: clientId!,
+        'Content-Type': 'application/octet-stream'
       }
     })
       .then(async response => {
