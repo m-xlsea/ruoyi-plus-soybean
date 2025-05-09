@@ -15,6 +15,7 @@ declare module 'vue' {
     copy: typeof import('./../components/custom/menu-tree-select copy.vue')['default']
     CountTo: typeof import('./../components/custom/count-to.vue')['default']
     DarkModeContainer: typeof import('./../components/common/dark-mode-container.vue')['default']
+    DeptTree: typeof import('./../components/custom/dept-tree.vue')['default']
     DictRadio: typeof import('./../components/custom/dict-radio.vue')['default']
     DictSelect: typeof import('./../components/custom/dict-select.vue')['default']
     DictTag: typeof import('./../components/custom/dict-tag.vue')['default']

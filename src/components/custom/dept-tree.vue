@@ -1,11 +1,10 @@
 <script setup lang="tsx">
 import { onMounted, ref, useAttrs } from 'vue';
-import type { TreeOption, TreeSelectInst, TreeSelectProps } from 'naive-ui';
+import type { TreeSelectInst, TreeSelectProps } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
-import { fetchGetMenuTreeSelect } from '@/service/api/system';
-import SvgIcon from '@/components/custom/svg-icon.vue';
+import { fetchGetDeptTree } from '@/service/api/system/user';
 
-defineOptions({ name: 'MenuTree' });
+defineOptions({ name: 'DeptTree' });
 
 interface Props {
   immediate?: boolean;
@@ -18,79 +17,71 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { bool: expandAll } = useBoolean();
 const { bool: checkAll } = useBoolean();
-const expandedKeys = ref<CommonType.IdType[]>([0]);
+const expandedKeys = ref<CommonType.IdType[]>([100]);
 
-const menuTreeRef = ref<TreeSelectInst | null>(null);
+const deptTreeRef = ref<TreeSelectInst | null>(null);
 const value = defineModel<CommonType.IdType[]>('value', { required: false, default: [] });
-const options = defineModel<Api.System.MenuList>('options', { required: false, default: [] });
+const options = defineModel<any[]>('options', { required: false, default: [] });
 const cascade = defineModel<boolean>('cascade', { required: false, default: true });
 const loading = defineModel<boolean>('loading', { required: false, default: false });
 
 const attrs: TreeSelectProps = useAttrs();
 
-async function getMenuList() {
+async function getDeptList() {
   loading.value = true;
-  const { error, data } = await fetchGetMenuTreeSelect();
+  const { error, data } = await fetchGetDeptTree();
   if (error) return;
-  options.value = [
-    {
-      id: 0,
-      label: '根目录',
-      icon: 'material-symbols:home-outline-rounded',
-      children: data
-    }
-  ] as Api.System.MenuList;
+
+  // 确保 options.value 是数组
+  if (data) {
+    options.value = Array.isArray(data) ? data : [data];
+  } else {
+    options.value = [];
+  }
+
   loading.value = false;
 }
 
 onMounted(() => {
   if (props.immediate) {
-    getMenuList();
+    getDeptList();
   }
 });
 
-function renderPrefix({ option }: { option: TreeOption }) {
-  const renderLocalIcon = String(option.icon).startsWith('icon-');
-  let icon = renderLocalIcon ? undefined : String(option.icon ?? 'material-symbols:buttons-alt-outline-rounded');
-  const localIcon = renderLocalIcon ? String(option.icon).replace('icon-', 'menu-') : undefined;
-  if (icon === '#') {
-    icon = 'material-symbols:buttons-alt-outline-rounded';
-  }
-  return <SvgIcon icon={icon} localIcon={localIcon} />;
-}
-
-function getAllMenuIds(menu: Api.System.MenuList) {
-  const menuIds: CommonType.IdType[] = [];
-  menu.forEach(item => {
-    menuIds.push(item.menuId);
-    if (item.children) {
-      menuIds.push(...getAllMenuIds(item.children));
+function getAllDeptIds(depts: any[]) {
+  const deptIds: CommonType.IdType[] = [];
+  depts.forEach(item => {
+    if (item.id) {
+      deptIds.push(item.id);
+    }
+    if (item.children && Array.isArray(item.children)) {
+      deptIds.push(...getAllDeptIds(item.children));
     }
   });
-  return menuIds;
+  return deptIds;
 }
 
 function handleCheckedTreeNodeAll(checked: boolean) {
   if (checked) {
-    value.value = getAllMenuIds(options.value);
+    value.value = getAllDeptIds(options.value);
     return;
   }
   value.value = [];
 }
 
 function handleSubmit() {
-  const menuIds = [...value.value];
-  const indeterminateData = menuTreeRef.value?.getIndeterminateData();
+  const deptIds = [...value.value];
+  const indeterminateData = deptTreeRef.value?.getIndeterminateData();
   if (cascade.value) {
-    const parentIds: string[] = indeterminateData?.keys.filter(item => !menuIds?.includes(String(item))) as string[];
-    menuIds?.push(...parentIds);
+    const parentIds: string[] = indeterminateData?.keys.filter(item => !deptIds?.includes(String(item))) as string[];
+    deptIds?.push(...parentIds);
   }
-  return menuIds;
+  return deptIds;
 }
 
 defineExpose({
   submit: handleSubmit,
-  refresh: getMenuList
+  refresh: getDeptList
 });
 </script>
 
@@ -110,21 +101,19 @@ defineExpose({
     </div>
     <NSpin class="resource h-full w-full py-6px pl-3px" content-class="h-full" :show="loading">
       <NTree
-        ref="menuTreeRef"
+        ref="deptTreeRef"
         v-model:checked-keys="value"
         v-model:expanded-keys="expandedKeys"
         multiple
         checkable
-        :selectable="false"
         key-field="id"
         label-field="label"
         :data="options"
         :cascade="cascade"
         :loading="loading"
         virtual-scroll
-        check-strategy="all"
+        :check-strategy="cascade ? 'child' : 'all'"
         :default-expand-all="expandAll"
-        :render-prefix="renderPrefix"
         v-bind="attrs"
       />
     </NSpin>

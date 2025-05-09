@@ -188,7 +188,8 @@ const local: App.I18n.Schema = {
     'system_oss-config': 'OSS Config',
     monitor_cache: 'Cache Monitor',
     monitor_online: 'Online User',
-    'user-center': 'User Center'
+    'user-center': 'User Center',
+    system_role: 'Role Management'
   },
   page: {
     login: {

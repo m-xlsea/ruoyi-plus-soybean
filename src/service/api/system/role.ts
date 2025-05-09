@@ -52,3 +52,20 @@ export function fetchGetRoleSelect(roleIds?: CommonType.IdType[]) {
     params: { roleIds }
   });
 }
+
+/** 获取对应角色部门树列表 */
+export function fetchGetRoleDeptTreeSelect(roleId: CommonType.IdType) {
+  return request<Api.System.RoleDeptTreeSelect>({
+    url: `/system/role/deptTree/${roleId}`,
+    method: 'get'
+  });
+}
+
+/** 获取对应角色用户列表 */
+export function fetchGetRoleUserList(params: Api.System.UserSearchParams) {
+  return request<Api.System.UserList>({
+    url: `/system/role/authUser/allocatedList`,
+    method: 'get',
+    params
+  });
+}

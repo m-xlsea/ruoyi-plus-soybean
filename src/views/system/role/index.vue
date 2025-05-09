@@ -1,5 +1,7 @@
 <script setup lang="tsx">
 import { NDivider, NTag } from 'naive-ui';
+import { jsonClone } from '@sa/utils';
+import { useBoolean } from '@sa/hooks';
 import { dataScopeRecord } from '@/constants/business';
 import { fetchBatchDeleteRole, fetchGetRoleList, fetchUpdateRoleStatus } from '@/service/api/system/role';
 import { useAppStore } from '@/store/modules/app';
@@ -11,6 +13,8 @@ import ButtonIcon from '@/components/custom/button-icon.vue';
 import StatusSwitch from '@/components/custom/status-switch.vue';
 import RoleOperateDrawer from './modules/role-operate-drawer.vue';
 import RoleSearch from './modules/role-search.vue';
+import RoleDataScopeDrawer from './modules/role-data-scope-drawer.vue';
+import RoleAuthUserDrawer from './modules/role-auth-user-drawer.vue';
 
 defineOptions({
   name: 'RoleList'
@@ -20,6 +24,8 @@ const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
 
+const { bool: dataScopeDrawerVisible, setTrue: openDataScopeDrawer } = useBoolean(false);
+const { bool: authUserDrawerVisible, setTrue: openAuthUserDrawer } = useBoolean(false);
 const {
   columns,
   columnChecks,
@@ -107,21 +113,11 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 130,
+      width: 220,
       render: row => {
         if (row.roleId === 1) return null;
 
-        const divider = () => {
-          if (!hasAuth('system:role:edit') || !hasAuth('system:role:remove')) {
-            return null;
-          }
-          return <NDivider vertical />;
-        };
-
         const editBtn = () => {
-          if (!hasAuth('system:role:edit')) {
-            return null;
-          }
           return (
             <ButtonIcon
               text
@@ -133,10 +129,31 @@ const {
           );
         };
 
+        const dataScopeBtn = () => {
+          return (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:database"
+              tooltipContent="数据范权限"
+              onClick={() => handleDataScope(row)}
+            />
+          );
+        };
+
+        const authUserBtn = () => {
+          return (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:assignment-ind-outline"
+              tooltipContent="分配用户"
+              onClick={() => handleAuthUser(row)}
+            />
+          );
+        };
+
         const deleteBtn = () => {
-          if (!hasAuth('system:role:remove')) {
-            return null;
-          }
           return (
             <ButtonIcon
               text
@@ -149,11 +166,22 @@ const {
           );
         };
 
+        const buttons = [];
+        if (hasAuth('system:role:edit')) {
+          buttons.push(editBtn());
+          buttons.push(dataScopeBtn());
+          buttons.push(authUserBtn());
+        }
+        if (hasAuth('system:role:remove')) buttons.push(deleteBtn());
+
         return (
           <div class="flex-center gap-8px">
-            {editBtn()}
-            {divider()}
-            {deleteBtn()}
+            {buttons.map((btn, index) => (
+              <>
+                {index !== 0 && <NDivider vertical />}
+                {btn}
+              </>
+            ))}
           </div>
         );
       }
@@ -204,6 +232,18 @@ async function handleStatusChange(
     getData();
   }
 }
+
+function handleDataScope(row: Api.System.Role) {
+  const findItem = data.value.find(item => item.roleId === row.roleId) || null;
+  editingData.value = jsonClone(findItem);
+  openDataScopeDrawer();
+}
+
+function handleAuthUser(row: Api.System.Role) {
+  const findItem = data.value.find(item => item.roleId === row.roleId) || null;
+  editingData.value = jsonClone(findItem);
+  openAuthUserDrawer();
+}
 </script>
 
 <template>
@@ -243,6 +283,12 @@ async function handleStatusChange(
         :row-data="editingData"
         @submitted="getDataByPage"
       />
+      <RoleDataScopeDrawer
+        v-model:visible="dataScopeDrawerVisible"
+        :row-data="editingData"
+        @submitted="getDataByPage"
+      />
+      <RoleAuthUserDrawer v-model:visible="authUserDrawerVisible" :row-data="editingData" @submitted="getDataByPage" />
     </NCard>
   </div>
 </template>

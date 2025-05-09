@@ -48,8 +48,16 @@ declare namespace Api {
     type RoleOperateParams = CommonType.RecordNullable<
       Pick<
         Api.System.Role,
-        'roleId' | 'roleName' | 'roleKey' | 'roleSort' | 'menuCheckStrictly' | 'status' | 'remark'
-      > & { menuIds: CommonType.IdType[] }
+        | 'roleId'
+        | 'roleName'
+        | 'roleKey'
+        | 'roleSort'
+        | 'menuCheckStrictly'
+        | 'deptCheckStrictly'
+        | 'dataScope'
+        | 'status'
+        | 'remark'
+      > & { menuIds: CommonType.IdType[]; deptIds: CommonType.IdType[] }
     >;
 
     /** role list */
@@ -59,6 +67,12 @@ declare namespace Api {
     type RoleMenuTreeSelect = Common.CommonRecord<{
       checkedKeys: CommonType.IdType[];
       menus: MenuList;
+    }>;
+
+    /** role dept tree select */
+    type RoleDeptTreeSelect = Common.CommonRecord<{
+      checkedKeys: CommonType.IdType[];
+      depts: Dept[];
     }>;
 
     /** all role */
@@ -108,7 +122,9 @@ declare namespace Api {
 
     /** user search params */
     type UserSearchParams = CommonType.RecordNullable<
-      Pick<User, 'deptId' | 'userName' | 'nickName' | 'phonenumber' | 'status'> & Common.CommonSearchParams
+      Pick<User, 'deptId' | 'userName' | 'nickName' | 'phonenumber' | 'status'> & {
+        roleId: CommonType.IdType;
+      } & Common.CommonSearchParams
     >;
 
     /** user operate params */

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
+import { useLoading } from '@sa/hooks';
 import { fetchCreateRole, fetchUpdateRole } from '@/service/api/system/role';
 import { fetchGetRoleMenuTreeSelect } from '@/service/api/system';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -35,6 +36,8 @@ const visible = defineModel<boolean>('visible', {
 const { options: sysNormalDisableOptions } = useDict('sys_normal_disable');
 
 const menuOptions = ref<Api.System.MenuList>([]);
+
+const { loading: menuLoading, startLoading: startMenuLoading, endLoading: stopMenuLoading } = useLoading();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
@@ -83,23 +86,14 @@ async function handleUpdateModelWhenEdit() {
   }
 
   if (props.operateType === 'edit' && props.rowData) {
+    startMenuLoading();
     Object.assign(model, props.rowData);
     const { data, error } = await fetchGetRoleMenuTreeSelect(model.roleId!);
     if (error) return;
     model.menuIds = data.checkedKeys;
-    prepareMenuOptions(data.menus);
     menuOptions.value = data.menus;
+    stopMenuLoading();
   }
-}
-
-function prepareMenuOptions(menus: Api.System.MenuList) {
-  menus.forEach(menu => {
-    menu.menuId = menu.id!;
-    menu.menuName = menu.label!;
-    if (menu.children) {
-      prepareMenuOptions(menu.children);
-    }
-  });
 }
 
 function closeDrawer() {
@@ -182,6 +176,7 @@ watch(visible, () => {
             v-model:value="model.menuIds"
             v-model:options="menuOptions"
             v-model:cascade="model.menuCheckStrictly"
+            v-model:loading="menuLoading"
             :immediate="operateType === 'add'"
           />
         </NFormItem>
