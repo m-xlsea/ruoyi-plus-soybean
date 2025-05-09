@@ -1,5 +1,4 @@
 <script setup lang="tsx">
-import { NButton } from 'naive-ui';
 import { fetchBatchDeleteLoginInfor, fetchGetLoginInforList } from '@/service/api/monitor/login-infor';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
@@ -10,6 +9,7 @@ import { getBrowserIcon, getOsIcon } from '@/utils/format';
 import DictTag from '@/components/custom/dict-tag.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { $t } from '@/locales';
+import ButtonIcon from '@/components/custom/button-icon.vue';
 import LoginInforSearch from './modules/login-infor-search.vue';
 import LoginInforViewDrawer from './modules/login-infor-view-drawer.vue';
 
@@ -142,9 +142,13 @@ const {
       render: row => {
         const viewBtn = () => {
           return (
-            <NButton type="primary" ghost size="small" onClick={() => view(row.infoId!)}>
-              详情
-            </NButton>
+            <ButtonIcon
+              type="primary"
+              text
+              icon="material-symbols:visibility-outline"
+              tooltipContent="详情"
+              onClick={() => view(row.infoId!)}
+            />
           );
         };
         return <div class="flex-center gap-8px">{viewBtn()}</div>;

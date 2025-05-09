@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { NButton, NPopconfirm } from 'naive-ui';
+import { NButton, NDivider } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
 import type { TableDataWithIndex } from '@sa/hooks';
 import { fetchBatchDeleteDept, fetchGetDeptList } from '@/service/api/system/dept';
@@ -9,6 +9,7 @@ import { useTreeTable, useTreeTableOperate } from '@/hooks/common/tree-table';
 import { useDict } from '@/hooks/business/dict';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
+import ButtonIcon from '@/components/custom/button-icon.vue';
 import DeptOperateDrawer from './modules/dept-operate-drawer.vue';
 import DeptSearch from './modules/dept-search.vue';
 
@@ -77,51 +78,58 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 180,
+      width: 150,
       render: row => {
-        const editBtn = () => {
-          if (!hasAuth('system:dept:edit')) {
-            return null;
-          }
-          return (
-            <NButton type="primary" ghost size="small" onClick={() => edit(row)}>
-              {$t('common.edit')}
-            </NButton>
-          );
-        };
         const addBtn = () => {
-          if (!hasAuth('system:dept:add')) {
-            return null;
-          }
           return (
-            <NButton type="success" ghost size="small" onClick={() => addInRow(row)}>
-              {$t('common.add')}
-            </NButton>
-          );
-        };
-        const deleteBtn = () => {
-          if (!hasAuth('system:dept:remove')) {
-            return null;
-          }
-          return (
-            <NPopconfirm onPositiveClick={() => handleDelete(row.deptId!)}>
-              {{
-                default: () => $t('common.confirmDelete'),
-                trigger: () => (
-                  <NButton type="error" ghost size="small">
-                    {$t('common.delete')}
-                  </NButton>
-                )
-              }}
-            </NPopconfirm>
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:add-2-rounded"
+              tooltipContent={$t('common.add')}
+              onClick={() => addInRow(row)}
+            />
           );
         };
 
+        const editBtn = () => {
+          return (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:drive-file-rename-outline-outline"
+              tooltipContent={$t('common.edit')}
+              onClick={() => edit(row)}
+            />
+          );
+        };
+
+        const deleteBtn = () => {
+          return (
+            <ButtonIcon
+              text
+              type="error"
+              icon="material-symbols:delete-outline"
+              tooltipContent={$t('common.delete')}
+              popconfirmContent={$t('common.confirmDelete')}
+              onPositiveClick={() => handleDelete(row.deptId!)}
+            />
+          );
+        };
+
+        const buttons = [];
+        if (hasAuth('system:dept:add')) buttons.push(addBtn());
+        if (hasAuth('system:dept:edit')) buttons.push(editBtn());
+        if (hasAuth('system:dept:remove')) buttons.push(deleteBtn());
+
         return (
           <div class="flex-center gap-8px">
-            {editBtn()}
-            {addBtn()}
-            {deleteBtn()}
+            {buttons.map((btn, index) => (
+              <>
+                {index !== 0 && <NDivider vertical />}
+                {btn}
+              </>
+            ))}
           </div>
         );
       }

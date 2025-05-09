@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
-import { NButton, NEllipsis, NImage, NTag, NTooltip } from 'naive-ui';
+import { NButton, NDivider, NEllipsis, NImage, NTag, NTooltip } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { fetchBatchDeleteOss, fetchGetOssList } from '@/service/api/system/oss';
 import { fetchGetConfigByKey, fetchUpdateConfigByKey } from '@/service/api/system/config';
@@ -146,6 +146,13 @@ const {
       align: 'center',
       width: 130,
       render: row => {
+        const divider = () => {
+          if (!hasAuth('system:oss:download') || !hasAuth('system:oss:delete')) {
+            return null;
+          }
+          return <NDivider vertical />;
+        };
+
         const downloadBtn = () => {
           if (!hasAuth('system:oss:download')) {
             return null;
@@ -180,8 +187,9 @@ const {
         };
 
         return (
-          <div class="flex-center gap-16px">
+          <div class="flex-center gap-8px">
             {downloadBtn()}
+            {divider()}
             {deleteBtn()}
           </div>
         );

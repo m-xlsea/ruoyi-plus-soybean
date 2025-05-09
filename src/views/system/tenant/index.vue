@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { computed } from 'vue';
-import { NButton, NPopconfirm } from 'naive-ui';
+import { NButton, NDivider } from 'naive-ui';
 import { fetchBatchDeleteTenant, fetchGetTenantList, fetchSyncTenantDict } from '@/service/api/system/tenant';
 import { useAppStore } from '@/store/modules/app';
 import { useAuthStore } from '@/store/modules/auth';
@@ -10,6 +10,7 @@ import { useDownload } from '@/hooks/business/download';
 import { useDict } from '@/hooks/business/dict';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
+import ButtonIcon from '@/components/custom/button-icon.vue';
 import TenantOperateDrawer from './modules/tenant-operate-drawer.vue';
 import TenantSearch from './modules/tenant-search.vue';
 
@@ -107,55 +108,59 @@ const {
       width: 180,
       render: row => {
         if (row.tenantId === '000000') return null;
+
         const editBtn = () => {
-          if (!hasAuth('system:tenant:edit')) {
-            return null;
-          }
           return (
-            <NButton type="primary" ghost size="small" onClick={() => edit(row.id!)}>
-              {$t('common.edit')}
-            </NButton>
+            <ButtonIcon
+              type="primary"
+              text
+              icon="material-symbols:drive-file-rename-outline-outline"
+              tooltipContent={$t('common.edit')}
+              onClick={() => edit(row.id!)}
+            />
           );
         };
+
         const syncBtn = () => {
-          if (!hasAuth('system:tenant:edit')) {
-            return null;
-          }
           return (
-            <NPopconfirm onPositiveClick={() => handleDelete(row.id!)}>
-              {{
-                default: () => `确认同步[${row.companyName}]的套餐吗?`,
-                trigger: () => (
-                  <NButton type="success" ghost size="small">
-                    同步
-                  </NButton>
-                )
-              }}
-            </NPopconfirm>
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:sync-outline"
+              tooltipContent="同步套餐"
+              popconfirmContent={`确认同步[${row.companyName}]的套餐吗?`}
+              onPositiveClick={() => handleSyncTenantDict()}
+            />
           );
         };
+
         const deleteBtn = () => {
-          if (!hasAuth('system:tenant:delete')) {
-            return null;
-          }
           return (
-            <NPopconfirm onPositiveClick={() => handleDelete(row.id!)}>
-              {{
-                default: () => $t('common.confirmDelete'),
-                trigger: () => (
-                  <NButton type="error" ghost size="small">
-                    {$t('common.delete')}
-                  </NButton>
-                )
-              }}
-            </NPopconfirm>
+            <ButtonIcon
+              text
+              type="error"
+              icon="material-symbols:delete-outline"
+              tooltipContent={$t('common.delete')}
+              popconfirmContent={$t('common.confirmDelete')}
+              onPositiveClick={() => handleDelete(row.id!)}
+            />
           );
         };
+
+        const buttons = [];
+
+        if (hasAuth('system:tenant:edit')) buttons.push(editBtn());
+        if (hasAuth('system:tenant:edit')) buttons.push(syncBtn());
+        if (hasAuth('system:tenant:delete')) buttons.push(deleteBtn());
+
         return (
           <div class="flex-center gap-8px">
-            {editBtn()}
-            {syncBtn()}
-            {deleteBtn()}
+            {buttons.map((btn, index) => (
+              <>
+                {index !== 0 && <NDivider vertical />}
+                {btn}
+              </>
+            ))}
           </div>
         );
       }

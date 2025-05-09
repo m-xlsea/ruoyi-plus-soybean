@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
-import { NButton } from 'naive-ui';
+import { NButton, NDivider } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
@@ -111,6 +111,13 @@ const {
       align: 'center',
       width: 130,
       render: row => {
+        const divider = () => {
+          if (!hasAuth('system:user:edit') || !hasAuth('system:user:remove')) {
+            return null;
+          }
+          return <NDivider vertical />;
+        };
+
         const editBtn = () => {
           if (!hasAuth('system:user:edit')) {
             return null;
@@ -120,7 +127,6 @@ const {
               text
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
-              class="text-18px"
               tooltipContent={$t('common.edit')}
               onClick={() => edit(row.userId!)}
             />
@@ -136,7 +142,6 @@ const {
               text
               type="error"
               icon="material-symbols:delete-outline"
-              class="text-18px"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
               onPositiveClick={() => handleDelete(row.userId!)}
@@ -145,8 +150,9 @@ const {
         };
 
         return (
-          <div class="flex-center gap-16px">
+          <div class="flex-center gap-6px">
             {editBtn()}
+            {divider()}
             {deleteBtn()}
           </div>
         );

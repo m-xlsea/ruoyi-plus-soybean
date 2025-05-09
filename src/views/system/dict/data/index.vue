@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { NButton, NPopconfirm } from 'naive-ui';
+import { NDivider } from 'naive-ui';
 import { fetchBatchDeleteDictData, fetchGetDictDataList } from '@/service/api/system/dict-data';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
@@ -7,9 +7,11 @@ import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
+import ButtonIcon from '@/components/custom/button-icon.vue';
 import { emitter } from '../mitt';
 import DictDataOperateDrawer from './modules/dict-data-operate-drawer.vue';
 import DictDataSearch from './modules/dict-data-search.vue';
+
 defineOptions({
   name: 'DictDataList'
 });
@@ -103,14 +105,25 @@ const {
       align: 'center',
       width: 160,
       render: row => {
+        const divider = () => {
+          if (!hasAuth('system:dict:edit') || !hasAuth('system:dict:remove')) {
+            return null;
+          }
+          return <NDivider vertical />;
+        };
+
         const editBtn = () => {
           if (!hasAuth('system:dict:edit')) {
             return null;
           }
           return (
-            <NButton type="primary" ghost size="small" onClick={() => edit(row.dictCode!)}>
-              {$t('common.edit')}
-            </NButton>
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:drive-file-rename-outline-outline"
+              tooltipContent={$t('common.edit')}
+              onClick={() => edit(row.dictCode!)}
+            />
           );
         };
 
@@ -119,22 +132,21 @@ const {
             return null;
           }
           return (
-            <NPopconfirm onPositiveClick={() => handleDelete(row.dictCode!)}>
-              {{
-                default: () => $t('common.confirmDelete'),
-                trigger: () => (
-                  <NButton type="error" ghost size="small">
-                    {$t('common.delete')}
-                  </NButton>
-                )
-              }}
-            </NPopconfirm>
+            <ButtonIcon
+              text
+              type="error"
+              icon="material-symbols:delete-outline"
+              tooltipContent={$t('common.delete')}
+              popconfirmContent={$t('common.confirmDelete')}
+              onPositiveClick={() => handleDelete(row.dictCode!)}
+            />
           );
         };
 
         return (
           <div class="flex-center gap-8px">
             {editBtn()}
+            {divider()}
             {deleteBtn()}
           </div>
         );
