@@ -5,6 +5,7 @@ import type { WatermarkProps } from 'naive-ui';
 import { useAppStore } from './store/modules/app';
 import { useThemeStore } from './store/modules/theme';
 import { naiveDateLocales, naiveLocales } from './locales/naive';
+import { useAuthStore } from './store/modules/auth';
 
 defineOptions({
   name: 'App'
@@ -12,6 +13,7 @@ defineOptions({
 
 const appStore = useAppStore();
 const themeStore = useThemeStore();
+const { userInfo } = useAuthStore();
 
 const naiveDarkTheme = computed(() => (themeStore.darkMode ? darkTheme : undefined));
 
@@ -24,17 +26,19 @@ const naiveDateLocale = computed(() => {
 });
 
 const watermarkProps = computed<WatermarkProps>(() => {
+  const appTitle = import.meta.env.VITE_APP_TITLE || 'RuoYi-Vue-Plus';
   return {
-    content: themeStore.watermark.text,
+    content: userInfo.user?.userName ? `${userInfo.user?.nickName}@${appTitle} ${userInfo.user?.userName}` : appTitle,
     cross: true,
     fullscreen: true,
-    fontSize: 16,
-    lineHeight: 16,
-    width: 384,
-    height: 384,
+    fontSize: 14,
+    fontColor: themeStore.darkMode ? 'rgba(200, 200, 200, 0.03)' : 'rgba(200, 200, 200, 0.2)',
+    lineHeight: 14,
+    width: 200,
+    height: 300,
     xOffset: 12,
     yOffset: 60,
-    rotate: -15,
+    rotate: -18,
     zIndex: 9999
   };
 });
