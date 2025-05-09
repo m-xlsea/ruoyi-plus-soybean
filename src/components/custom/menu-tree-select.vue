@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref, useAttrs } from 'vue';
+import { useAttrs } from 'vue';
 import type { TreeOption, TreeSelectProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchGetMenuList } from '@/service/api/system';
@@ -15,9 +15,9 @@ interface Props {
 defineProps<Props>();
 
 const value = defineModel<CommonType.IdType | null>('value', { required: false });
+const options = defineModel<Api.System.MenuList>('options', { required: false, default: [] });
 
 const attrs: TreeSelectProps = useAttrs();
-const options = ref<Api.System.MenuList>([]);
 const { loading, startLoading, endLoading } = useLoading();
 
 async function getMenuList() {
@@ -31,7 +31,7 @@ async function getMenuList() {
       icon: 'material-symbols:home-outline-rounded',
       children: handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' })
     }
-  ] as Api.System.Menu[];
+  ] as Api.System.MenuList;
   endLoading();
 }
 

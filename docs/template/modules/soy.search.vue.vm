@@ -1,7 +1,8 @@
 #set($ModuleName=$moduleName.substring(0, 1).toUpperCase() + $moduleName.substring(1))
 <script setup lang="ts">
-import { $t } from '@/locales';
+import { ref } from 'vue';
 import { useNaiveForm } from '@/hooks/common/form';
+import { $t } from '@/locales';
 #if($dictList && $dictList.size() > 0)import { useDict } from '@/hooks/business/dict';#end
 
 defineOptions({
@@ -20,7 +21,7 @@ const { formRef, validate, restoreValidation } = useNaiveForm();
 #foreach ($column in $columns)
     #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
         #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
-const dateRange${AttrName} = ref<[string, string]>();
+const dateRange${AttrName} = ref<[string, string] | null>(null);
 #end#end
 
 const model = defineModel<Api.$ModuleName.${BusinessName}SearchParams>('model', { required: true });
@@ -34,9 +35,10 @@ async function reset() {
 #foreach ($column in $columns)
     #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
         #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
-  dateRange${AttrName}.value = undefined;
+  dateRange${AttrName}.value = null;
     #end
 #end
+  Object.assign(model.value.params!, {});
   await restoreValidation();
   emit('reset');
 }

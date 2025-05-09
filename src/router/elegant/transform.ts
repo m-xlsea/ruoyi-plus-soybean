@@ -187,6 +187,7 @@ const routeMap: RouteMap = {
   "system_oss": "/system/oss",
   "system_oss-config": "/system/oss-config",
   "system_post": "/system/post",
+  "system_role": "/system/role",
   "system_tenant": "/system/tenant",
   "system_user": "/system/user",
   "tool": "/tool",

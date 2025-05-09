@@ -34,6 +34,15 @@ export function fetchUpdateUser(data: Api.System.UserOperateParams) {
   });
 }
 
+/** 修改用户状态 */
+export function fetchUpdateUserStatus(data: Api.System.UserOperateParams) {
+  return request<boolean>({
+    url: '/system/user/changeStatus',
+    method: 'put',
+    data
+  });
+}
+
 /** 批量删除用户信息 */
 export function fetchBatchDeleteUser(userIds: CommonType.IdType[]) {
   return request<boolean>({

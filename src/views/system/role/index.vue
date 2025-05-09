@@ -1,17 +1,19 @@
 <script setup lang="tsx">
-import { NDivider } from 'naive-ui';
-import { fetchBatchDelete${BusinessName}, fetchGet${BusinessName}List } from '@/service/api/${moduleName}/${businessName}';
+import { NDivider, NTag } from 'naive-ui';
+import { dataScopeRecord } from '@/constants/business';
+import { fetchBatchDeleteRole, fetchGetRoleList, fetchUpdateRoleStatus } from '@/service/api/system/role';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import ${BusinessName}OperateDrawer from './modules/${business__name}-operate-drawer.vue';
-import ${BusinessName}Search from './modules/${business__name}-search.vue';
+import StatusSwitch from '@/components/custom/status-switch.vue';
+import RoleOperateDrawer from './modules/role-operate-drawer.vue';
+import RoleSearch from './modules/role-search.vue';
 
 defineOptions({
-  name: '${BusinessName}List'
+  name: 'RoleList'
 });
 
 const appStore = useAppStore();
@@ -29,17 +31,15 @@ const {
   searchParams,
   resetSearchParams
 } = useTable({
-  apiFn: fetchGet${BusinessName}List,
+  apiFn: fetchGetRoleList,
   apiParams: {
     pageNum: 1,
     pageSize: 10,
     // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
     // the value can not be undefined, otherwise the property in Form will not be reactive
-#foreach ($column in $columns)
-  #if($column.query)
-    $column.javaField: null#if($foreach.hasNext),#end
-  #end
-#end
+    roleName: null,
+    roleKey: null,
+    status: null,
     params: {}
   },
   columns: () => [
@@ -54,31 +54,72 @@ const {
       align: 'center',
       width: 64
     },
-#foreach ($column in $columns)
-  #if($column.list)
     {
-      key: '$column.javaField',
-      title: '$column.columnComment',
+      key: 'roleName',
+      title: '角色名称',
       align: 'center',
       minWidth: 120
     },
-  #end
-#end
+    {
+      key: 'roleKey',
+      title: '角色权限字符串',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'roleSort',
+      title: '显示顺序',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'dataScope',
+      title: '数据范围',
+      align: 'center',
+      minWidth: 120,
+      render: row => {
+        return <NTag type="info">{dataScopeRecord[row.dataScope]}</NTag>;
+      }
+    },
+    {
+      key: 'status',
+      title: '角色状态',
+      align: 'center',
+      minWidth: 120,
+      render(row) {
+        return (
+          <StatusSwitch
+            v-model:value={row.status}
+            disabled={row.roleId === 1}
+            info={row.roleKey}
+            onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
+          />
+        );
+      }
+    },
+    {
+      key: 'createTime',
+      title: '创建时间',
+      align: 'center',
+      minWidth: 120
+    },
     {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
       width: 130,
       render: row => {
+        if (row.roleId === 1) return null;
+
         const divider = () => {
-          if (!hasAuth('${moduleName}:${businessName}:edit') || !hasAuth('${moduleName}:${businessName}:remove')) {
+          if (!hasAuth('system:role:edit') || !hasAuth('system:role:remove')) {
             return null;
           }
           return <NDivider vertical />;
         };
 
         const editBtn = () => {
-          if (!hasAuth('${moduleName}:${businessName}:edit')) {
+          if (!hasAuth('system:role:edit')) {
             return null;
           }
           return (
@@ -87,13 +128,13 @@ const {
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
               tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}
+              onClick={() => edit(row.roleId!)}
             />
           );
         };
 
         const deleteBtn = () => {
-          if (!hasAuth('${moduleName}:${businessName}:remove')) {
+          if (!hasAuth('system:role:remove')) {
             return null;
           }
           return (
@@ -103,7 +144,7 @@ const {
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}
+              onPositiveClick={() => handleDelete(row.roleId!)}
             />
           );
         };
@@ -125,39 +166,58 @@ const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedR
 
 async function handleBatchDelete() {
   // request
-  const { error } = await fetchBatchDelete${BusinessName}(checkedRowKeys.value);
+  const { error } = await fetchBatchDeleteRole(checkedRowKeys.value);
   if (error) return;
   onBatchDeleted();
 }
 
-async function handleDelete(#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end: CommonType.IdType) {
+async function handleDelete(roleId: CommonType.IdType) {
   // request
-  const { error } = await fetchBatchDelete${BusinessName}([#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end]);
+  const { error } = await fetchBatchDeleteRole([roleId]);
   if (error) return;
   onDeleted();
 }
 
-async function edit(#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end: CommonType.IdType) {
-  handleEdit('#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end', #foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end);
+async function edit(roleId: CommonType.IdType) {
+  handleEdit('roleId', roleId);
 }
 
 async function handleExport() {
-  download('/${moduleName}/${businessName}/export', searchParams, `${functionName}_#[[${new Date().getTime()}]]#.xlsx`);
+  download('/system/role/export', searchParams, `角色_${new Date().getTime()}.xlsx`);
+}
+
+/** 处理状态切换 */
+async function handleStatusChange(
+  row: Api.System.Role,
+  value: Api.Common.EnableStatus,
+  callback: (flag: boolean) => void
+) {
+  const { error } = await fetchUpdateRoleStatus({
+    roleId: row.roleId,
+    status: value
+  });
+
+  callback(!error);
+
+  if (!error) {
+    window.$message?.success('状态修改成功');
+    getData();
+  }
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <${BusinessName}Search v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="${functionName}列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <RoleSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <NCard title="角色列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
           :disabled-delete="checkedRowKeys.length === 0"
           :loading="loading"
-          :show-add="hasAuth('${moduleName}:${businessName}:add')"
-          :show-delete="hasAuth('${moduleName}:${businessName}:remove')"
-          :show-export="hasAuth('${moduleName}:${businessName}:export')"
+          :show-add="hasAuth('system:role:add')"
+          :show-delete="hasAuth('system:role:remove')"
+          :show-export="hasAuth('system:role:export')"
           @add="handleAdd"
           @delete="handleBatchDelete"
           @export="handleExport"
@@ -173,11 +233,11 @@ async function handleExport() {
         :scroll-x="962"
         :loading="loading"
         remote
-        :row-key="row => row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end"
+        :row-key="row => row.roleId"
         :pagination="mobilePagination"
         class="sm:h-full"
       />
-      <${BusinessName}OperateDrawer
+      <RoleOperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"

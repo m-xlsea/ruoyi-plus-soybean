@@ -44,6 +44,7 @@ const options = reactive<CropperOptions>({
 
 /** 编辑头像 */
 function handleEdit() {
+  options.img = imageUrl.value;
   showDrawer();
 }
 
@@ -86,6 +87,7 @@ async function handleCrop() {
       if (!error) {
         window.$message?.success('头像更新成功！');
         imageUrl.value = URL.createObjectURL(blob);
+        authStore.userInfo.user!.avatar = imageUrl.value;
         hideDrawer();
       }
     }, 'image/png');
@@ -114,7 +116,7 @@ function handleClose() {
 
     <NModal v-model:show="showModal" preset="card" title="修改头像" class="w-400px" @close="handleClose">
       <div class="flex-col-center gap-20px py-20px">
-        <div v-if="options.img !== imageUrl" class="h-300px w-full">
+        <div class="h-300px w-full">
           <Cropper
             ref="cropperRef"
             class="h-full bg-gray-100"
@@ -122,25 +124,11 @@ function handleClose() {
             :stencil-props="options.stencilProps"
           />
         </div>
-        <img
-          v-else
-          :src="imageUrl"
-          alt="user-avatar"
-          class="h-200px w-200px border border-gray-200 rounded-full object-cover"
-        />
         <div class="flex gap-12px">
           <NUpload accept=".jpg,.jpeg,.png,.gif" :max="1" :show-file-list="false" @before-upload="handleFileSelect">
             <NButton class="min-w-100px">选择图片</NButton>
           </NUpload>
-          <NButton
-            v-if="options.img !== imageUrl"
-            type="primary"
-            class="min-w-100px"
-            :loading="loading"
-            @click="handleCrop"
-          >
-            确认裁剪
-          </NButton>
+          <NButton type="primary" class="min-w-100px" :loading="loading" @click="handleCrop">确认裁剪</NButton>
         </div>
       </div>
     </NModal>

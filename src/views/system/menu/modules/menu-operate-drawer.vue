@@ -153,7 +153,7 @@ async function handleSubmit() {
   } else if (model.menuType === 'C') {
     component = humpToLine(model.component?.replaceAll('/', '_') || '');
   } else if (model.menuType === 'M') {
-    component = model.parentId === 0 ? 'layout.base' : undefined;
+    component = 'layout.base';
   }
 
   // request

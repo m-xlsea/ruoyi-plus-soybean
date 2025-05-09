@@ -220,6 +220,9 @@ async function handleExport() {
         >
           <template #prefix>
             <NButton v-if="isSuperAdmin" type="warning" ghost size="small" @click="handleSyncTenantDict">
+              <template #icon>
+                <icon-material-symbols:sync-outline />
+              </template>
               同步租户字典
             </NButton>
           </template>

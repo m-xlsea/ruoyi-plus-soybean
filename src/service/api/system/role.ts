@@ -27,8 +27,17 @@ export function fetchUpdateRole(data: Api.System.RoleOperateParams) {
   });
 }
 
+/** 修改角色状态 */
+export function fetchUpdateRoleStatus(data: Api.System.RoleOperateParams) {
+  return request<boolean>({
+    url: '/system/role/changeStatus',
+    method: 'put',
+    data
+  });
+}
+
 /** 批量删除角色信息 */
-export function fetchDeleteRole(roleIds: CommonType.IdType[]) {
+export function fetchBatchDeleteRole(roleIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/role/${roleIds.join(',')}`,
     method: 'delete'

@@ -34,3 +34,11 @@ export function fetchDeleteMenu(menuId: CommonType.IdType) {
     method: 'delete'
   });
 }
+
+/** 获取角色菜单权限 */
+export function fetchGetRoleMenuTreeSelect(roleId: CommonType.IdType) {
+  return request<Api.System.RoleMenuTreeSelect>({
+    url: `/system/menu/roleMenuTreeselect/${roleId}`,
+    method: 'get'
+  });
+}
