@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import { useAppStore } from '@/store/modules/app';
 import { useAuthStore } from '@/store/modules/auth';
+import defaultAvatar from '@/assets/imgs/soybean.jpg';
 import { $t } from '@/locales';
 
 defineOptions({
@@ -44,11 +45,15 @@ const statisticData = computed<StatisticData[]>(() => [
       <NGi span="24 s:24 m:18">
         <div class="flex-y-center">
           <div class="size-72px shrink-0 overflow-hidden rd-1/2">
-            <img src="@/assets/imgs/soybean.jpg" class="size-full" />
+            <img :src="authStore.userInfo.user?.avatar || defaultAvatar" class="size-full" />
           </div>
           <div class="pl-12px">
             <h3 class="text-18px font-semibold">
-              {{ $t('page.home.greeting', { userName: authStore.userInfo.user?.userName }) }}
+              {{
+                $t('page.home.greeting', {
+                  userName: authStore.userInfo.user?.nickName || authStore.userInfo.user?.userName
+                })
+              }}
             </h3>
             <p class="text-#999 leading-30px">{{ $t('page.home.weatherDesc') }}</p>
           </div>

@@ -73,6 +73,7 @@ async function handleCopyCode() {
 watch(visible, () => {
   if (visible.value) {
     previewData.value = {};
+    tab.value = 'vm/java/domain.java.vm';
     getGenPreview();
   }
 });
@@ -90,6 +91,7 @@ const genMap: Api.Tool.GenTablePreview = {
   'vm/soybean/api/soy.api.ts.vm': 'api.ts',
   'vm/soybean/typings/soy.api.d.ts.vm': 'type.d.ts',
   'vm/soybean/soy.index.vue.vm': 'index.vue',
+  'vm/soybean/soy.index-tree.vue.vm': 'index-tree.vue',
   'vm/soybean/modules/soy.search.vue.vm': 'search.vue',
   'vm/soybean/modules/soy.operate-drawer.vue.vm': 'operate-drawer.vue'
 };
@@ -125,7 +127,7 @@ function getGenLanguage(name: string) {
       <NSpin :show="loading" class="h-full" content-class="h-full">
         <div class="flex flex-row">
           <NTabs v-model:value="tab" type="line" placement="left" class="h-full" pane-class="h-full">
-            <NTab v-for="(gen, index) in Object.keys(genMap)" :key="index" :name="gen" display-directive="show">
+            <NTab v-for="(gen, index) in Object.keys(previewData)" :key="index" :name="gen" display-directive="show">
               {{ genMap[gen] }}
             </NTab>
           </NTabs>

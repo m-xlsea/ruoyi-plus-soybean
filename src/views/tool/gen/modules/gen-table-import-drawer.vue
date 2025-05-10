@@ -1,6 +1,6 @@
 <script setup lang="tsx">
-import { watch } from 'vue';
-import { fetchGetGenDbList, fetchImportGenTable } from '@/service/api/tool';
+import { ref, watch } from 'vue';
+import { fetchGetGenDataNames, fetchGetGenDbList, fetchImportGenTable } from '@/service/api/tool';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
@@ -9,12 +9,6 @@ import GenTableDbSearch from './gen-table-db-search.vue';
 defineOptions({
   name: 'GenTableImportDrawer'
 });
-
-interface Props {
-  options: CommonType.Option[];
-}
-
-const props = defineProps<Props>();
 
 const visible = defineModel<boolean>('visible', {
   default: false
@@ -34,7 +28,7 @@ const { columns, data, getData, getDataByPage, loading, mobilePagination, search
   showTotal: true,
   apiParams: {
     pageNum: 1,
-    pageSize: 30,
+    pageSize: 15,
     // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
     // the value can not be undefined, otherwise the property in Form will not be reactive
     dataName: null,
@@ -84,10 +78,21 @@ async function handleSubmit() {
   emit('submitted');
 }
 
+const dataNameOptions = ref<CommonType.Option[]>([]);
+
+async function getDataNames() {
+  const { error, data: dataNames } = await fetchGetGenDataNames();
+  if (error) return;
+  dataNameOptions.value = dataNames.map(item => ({ label: item, value: item }));
+}
+
 watch(visible, () => {
   if (visible.value) {
-    searchParams.dataName = props.options.length ? props.options[0].value : null;
-    getData();
+    getDataNames();
+    resetSearchParams();
+    searchParams.dataName = dataNameOptions.value.length ? dataNameOptions.value[0].value : null;
+    data.value = [];
+    checkedRowKeys.value = [];
   }
 });
 </script>
@@ -98,7 +103,7 @@ watch(visible, () => {
       <div class="h-full flex-col">
         <GenTableDbSearch
           v-model:model="searchParams"
-          :options="options"
+          :options="dataNameOptions"
           @reset="resetSearchParams"
           @search="getDataByPage"
         />

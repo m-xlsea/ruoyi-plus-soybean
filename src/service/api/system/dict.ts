@@ -15,6 +15,7 @@ export function fetchGetDictTypeOption() {
     method: 'get'
   });
 }
+
 /** 获取字典类型列表 */
 export function fetchGetDictTypeList(params?: Api.System.DictTypeSearchParams) {
   return request<Api.System.DictTypeList>({

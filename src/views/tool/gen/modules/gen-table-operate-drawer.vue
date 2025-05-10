@@ -132,7 +132,7 @@ watch(visible, () => {
   if (visible.value) {
     genTableInfo.value = undefined;
     tab.value = 'dragTable';
-    getDeptOptions();
+    getDictOptions();
     getGenTableInfo();
   }
 });
@@ -140,7 +140,7 @@ watch(visible, () => {
 const dictOptions = ref<SelectOption[]>([]);
 const { loading: dictLoading, startLoading: startDictLoading, endLoading: endDictLoading } = useLoading();
 
-async function getDeptOptions() {
+async function getDictOptions() {
   startDictLoading();
   const { error, data } = await fetchGetDictTypeOption();
   if (error) return;
@@ -351,7 +351,7 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
                   <NInput v-model:value="genTableInfo.info.functionName" />
                 </NFormItemGi>
                 <NFormItemGi span="24 s:12" label="上级菜单" path="parentMenuId">
-                  <MenuTreeSelect v-model:value="genTableInfo.info.parentMenuId" />
+                  <MenuTreeSelect v-model:value="genTableInfo.info.parentMenuId" :data-name="rowData?.dataName" />
                 </NFormItemGi>
                 <NFormItemGi span="24 s:12" label="生成代码方式" path="genType">
                   <NRadioGroup v-model:value="genTableInfo.info.genType">
