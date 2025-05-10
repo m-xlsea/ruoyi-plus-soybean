@@ -4,16 +4,16 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Dict;
 import cn.hutool.core.util.StrUtil;
-import org.dromara.generator.constant.GenConstants;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.apache.velocity.VelocityContext;
 import org.dromara.common.core.utils.DateUtils;
 import org.dromara.common.core.utils.StringUtils;
 import org.dromara.common.json.utils.JsonUtils;
 import org.dromara.common.mybatis.helper.DataBaseHelper;
+import org.dromara.generator.constant.GenConstants;
 import org.dromara.generator.domain.GenTable;
 import org.dromara.generator.domain.GenTableColumn;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import org.apache.velocity.VelocityContext;
 
 import java.util.*;
 
@@ -143,6 +143,7 @@ public class VelocityUtils {
             templates.add("vm/soybean/soy.index.vue.vm");
         } else if (GenConstants.TPL_TREE.equals(tplCategory)) {
             templates.add("vm/vue/index-tree.vue.vm");
+            templates.add("vm/soybean/soy.index-tree.vue.vm");
         }
         return templates;
     }
@@ -176,6 +177,8 @@ public class VelocityUtils {
             fileName = StringUtils.format("{}/domain/bo/{}Bo.java", javaPath, className);
         }
         if (template.contains("soy.index.vue.vm")) {
+            fileName = StringUtils.format("soybean/views/{}/{}/index.vue", moduleName, StrUtil.toSymbolCase(businessName, '-'));
+        } else if (template.contains("soy.index-tree.vue.vm")) {
             fileName = StringUtils.format("soybean/views/{}/{}/index.vue", moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("soy.api.d.ts.vm")) {
             fileName = StringUtils.format("soybean/typings/api/{}.api.d.ts", moduleName);
