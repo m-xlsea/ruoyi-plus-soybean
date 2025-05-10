@@ -132,18 +132,14 @@ public class VelocityUtils {
         } else {
             templates.add("vm/sql/sql.vm");
         }
-        templates.add("vm/ts/api.ts.vm");
-        templates.add("vm/ts/types.ts.vm");
-        templates.add("vm/soybean/typings/soy.api.d.ts.vm");
-        templates.add("vm/soybean/api/soy.api.ts.vm");
-        templates.add("vm/soybean/modules/soy.search.vue.vm");
-        templates.add("vm/soybean/modules/soy.operate-drawer.vue.vm");
+        templates.add("vm/soy/typings/api.d.ts.vm");
+        templates.add("vm/soy/api/api.ts.vm");
+        templates.add("vm/soy/modules/search.vue.vm");
+        templates.add("vm/soy/modules/operate-drawer.vue.vm");
         if (GenConstants.TPL_CRUD.equals(tplCategory)) {
-            templates.add("vm/vue/index.vue.vm");
-            templates.add("vm/soybean/soy.index.vue.vm");
+            templates.add("vm/soy/index.vue.vm");
         } else if (GenConstants.TPL_TREE.equals(tplCategory)) {
-            templates.add("vm/vue/index-tree.vue.vm");
-            templates.add("vm/soybean/soy.index-tree.vue.vm");
+            templates.add("vm/soy/index-tree.vue.vm");
         }
         return templates;
     }
@@ -165,7 +161,7 @@ public class VelocityUtils {
 
         String javaPath = PROJECT_PATH + "/" + StringUtils.replace(packageName, ".", "/");
         String mybatisPath = MYBATIS_PATH + "/" + moduleName;
-        String vuePath = "vue";
+        String soybeanPath = "soy";
 
         if (template.contains("domain.java.vm")) {
             fileName = StringUtils.format("{}/domain/{}.java", javaPath, className);
@@ -176,19 +172,7 @@ public class VelocityUtils {
         if (template.contains("bo.java.vm")) {
             fileName = StringUtils.format("{}/domain/bo/{}Bo.java", javaPath, className);
         }
-        if (template.contains("soy.index.vue.vm")) {
-            fileName = StringUtils.format("soybean/views/{}/{}/index.vue", moduleName, StrUtil.toSymbolCase(businessName, '-'));
-        } else if (template.contains("soy.index-tree.vue.vm")) {
-            fileName = StringUtils.format("soybean/views/{}/{}/index.vue", moduleName, StrUtil.toSymbolCase(businessName, '-'));
-        } else if (template.contains("soy.api.d.ts.vm")) {
-            fileName = StringUtils.format("soybean/typings/api/{}.api.d.ts", moduleName);
-        } else if (template.contains("soy.api.ts.vm")) {
-            fileName = StringUtils.format("soybean/api/{}/{}.ts", moduleName, StrUtil.toSymbolCase(businessName, '-'));
-        } else if (template.contains("soy.search.vue.vm")) {
-            fileName = StringUtils.format("soybean/views/{}/{}/modules/{}-search.vue", moduleName, businessName, StrUtil.toSymbolCase(businessName, '-'));
-        } else if (template.contains("soy.operate-drawer.vue.vm")) {
-            fileName = StringUtils.format("soybean/views/{}/{}/modules/{}-operate-drawer.vue", moduleName, businessName, StrUtil.toSymbolCase(businessName, '-'));
-        } else if (template.contains("mapper.java.vm")) {
+        if (template.contains("mapper.java.vm")) {
             fileName = StringUtils.format("{}/mapper/{}Mapper.java", javaPath, className);
         } else if (template.contains("service.java.vm")) {
             fileName = StringUtils.format("{}/service/I{}Service.java", javaPath, className);
@@ -200,14 +184,18 @@ public class VelocityUtils {
             fileName = StringUtils.format("{}/{}Mapper.xml", mybatisPath, className);
         } else if (template.contains("sql.vm")) {
             fileName = businessName + "Menu.sql";
-        } else if (template.contains("api.ts.vm")) {
-            fileName = StringUtils.format("{}/api/{}/{}/index.ts", vuePath, moduleName, businessName);
-        } else if (template.contains("types.ts.vm")) {
-            fileName = StringUtils.format("{}/api/{}/{}/types.ts", vuePath, moduleName, businessName);
         } else if (template.contains("index.vue.vm")) {
-            fileName = StringUtils.format("{}/views/{}/{}/index.vue", vuePath, moduleName, businessName);
+            fileName = StringUtils.format("{}/views/{}/{}/index.vue", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("index-tree.vue.vm")) {
-            fileName = StringUtils.format("{}/views/{}/{}/index.vue", vuePath, moduleName, businessName);
+            fileName = StringUtils.format("{}/views/{}/{}/index.vue", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
+        } else if (template.contains("api.d.ts.vm")) {
+            fileName = StringUtils.format("{}/typings/api/{}.api.d.ts", soybeanPath, moduleName);
+        } else if (template.contains("api.ts.vm")) {
+            fileName = StringUtils.format("{}/api/{}/{}.ts", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
+        } else if (template.contains("search.vue.vm")) {
+            fileName = StringUtils.format("{}/views/{}/{}/modules/{}-search.vue", soybeanPath, moduleName, businessName, StrUtil.toSymbolCase(businessName, '-'));
+        } else if (template.contains("operate-drawer.vue.vm")) {
+            fileName = StringUtils.format("{}/views/{}/{}/modules/{}-operate-drawer.vue", soybeanPath, moduleName, businessName, StrUtil.toSymbolCase(businessName, '-'));
         }
         return fileName;
     }
