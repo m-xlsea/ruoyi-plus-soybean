@@ -50,10 +50,12 @@ function createDefaultModel(): Model {
   };
 }
 
-type RuleKey = Extract<keyof Model, 'dictId'>;
+type RuleKey = Extract<keyof Model, 'dictId' | 'dictName' | 'dictType'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  dictId: createRequiredRule('字典主键不能为空')
+  dictId: createRequiredRule('字典主键不能为空'),
+  dictName: createRequiredRule('字典名称不能为空'),
+  dictType: createRequiredRule('字典类型不能为空')
 };
 
 function handleUpdateModelWhenEdit() {

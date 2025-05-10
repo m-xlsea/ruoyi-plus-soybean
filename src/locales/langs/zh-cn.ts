@@ -172,8 +172,6 @@ const local: App.I18n.Schema = {
     tool_gen: '代码生成',
     system_user: '用户管理',
     system_dict: '字典管理',
-    system_dict_data: '字典数据管理',
-    system_dict_type: '字典类型管理',
     system_tenant: '租户管理',
     system_config: '参数设置',
     system_dept: '部门管理',

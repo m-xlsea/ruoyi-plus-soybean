@@ -180,8 +180,6 @@ const routeMap: RouteMap = {
   "system_config": "/system/config",
   "system_dept": "/system/dept",
   "system_dict": "/system/dict",
-  "system_dict_data": "/system/dict/data",
-  "system_dict_type": "/system/dict/type",
   "system_menu": "/system/menu",
   "system_notice": "/system/notice",
   "system_oss": "/system/oss",

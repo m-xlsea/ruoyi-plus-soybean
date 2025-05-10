@@ -219,7 +219,7 @@ async function handleExport() {
           @refresh="getData"
         >
           <template #prefix>
-            <NButton v-if="isSuperAdmin" type="warning" ghost size="small" @click="handleSyncTenantDict">
+            <NButton v-if="isSuperAdmin" ghost size="small" @click="handleSyncTenantDict">
               <template #icon>
                 <icon-material-symbols:sync-outline />
               </template>

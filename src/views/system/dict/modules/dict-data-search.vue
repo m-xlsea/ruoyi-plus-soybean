@@ -3,7 +3,7 @@ import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'DictTypeSearch'
+  name: 'DictDataSearch'
 });
 
 interface Emits {
@@ -15,7 +15,7 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const model = defineModel<Api.System.DictTypeSearchParams>('model', { required: true });
+const model = defineModel<Api.System.DictDataSearchParams>('model', { required: true });
 
 async function reset() {
   await restoreValidation();
@@ -34,13 +34,10 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="self" item-responsive>
-            <NFormItemGi span="12 s:12 m:6" label="字典名称" path="dictName" class="pr-24px">
-              <NInput v-model:value="model.dictName" placeholder="请输入字典名称" />
+            <NFormItemGi :show-feedback="false" span="12" label="字典标签" path="dictLabel" class="pr-24px">
+              <NInput v-model:value="model.dictLabel" placeholder="请输入字典标签" />
             </NFormItemGi>
-            <NFormItemGi span="12 s:12 m:6" label="字典类型" path="dictType" class="pr-24px">
-              <NInput v-model:value="model.dictType" placeholder="请输入字典名称" />
-            </NFormItemGi>
-            <NFormItemGi span="24" class="pr-24px">
+            <NFormItemGi :show-feedback="false" span="12" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

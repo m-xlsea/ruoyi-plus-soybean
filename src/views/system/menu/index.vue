@@ -282,14 +282,14 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
       <ButtonIcon
         v-if="hasAuth('system:menu:add')"
         size="small"
-        icon="ic-round-plus"
+        icon="material-symbols:add-rounded"
         class="h-28px text-icon"
         tooltip-content="新增菜单"
         @click.stop="handleAddMenu(0)"
       />
       <ButtonIcon
         size="small"
-        icon="ic-round-refresh"
+        icon="material-symbols:refresh-rounded"
         class="h-28px text-icon"
         tooltip-content="刷新"
         @click.stop="reset"
@@ -345,13 +345,13 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
                 @click="handleAddMenu(currentMenu.menuId!)"
               >
                 <template #icon>
-                  <icon-ic-round-plus />
+                  <icon-material-symbols-add-rounded />
                 </template>
                 新增子菜单
               </NButton>
               <NButton v-if="hasAuth('system:menu:edit')" size="small" ghost type="primary" @click="handleUpdateMenu">
                 <template #icon>
-                  <icon-ic-round-edit />
+                  <icon-material-symbols-drive-file-rename-outline-outline />
                 </template>
                 编辑
               </NButton>
@@ -365,7 +365,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
                     :disabled="btnData.length > 0 || btnLoading"
                   >
                     <template #icon>
-                      <icon-ic-round-delete />
+                      <icon-material-symbols-delete-outline />
                     </template>
                     {{ $t('common.delete') }}
                   </NButton>

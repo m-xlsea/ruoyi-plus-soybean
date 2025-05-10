@@ -208,13 +208,7 @@ async function handleRefreshCache() {
           @refresh="getData"
         >
           <template #prefix>
-            <NButton
-              v-if="hasAuth('system:config:remove')"
-              type="warning"
-              ghost
-              size="small"
-              @click="handleRefreshCache"
-            >
+            <NButton v-if="hasAuth('system:config:remove')" ghost size="small" @click="handleRefreshCache">
               <template #icon>
                 <icon-material-symbols:sync-outline />
               </template>

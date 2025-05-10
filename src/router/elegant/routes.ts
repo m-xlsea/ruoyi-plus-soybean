@@ -178,27 +178,7 @@ export const generatedRoutes: GeneratedRoute[] = [
         meta: {
           title: 'system_dict',
           i18nKey: 'route.system_dict'
-        },
-        children: [
-          {
-            name: 'system_dict_data',
-            path: '/system/dict/data',
-            component: 'view.system_dict_data',
-            meta: {
-              title: 'system_dict_data',
-              i18nKey: 'route.system_dict_data'
-            }
-          },
-          {
-            name: 'system_dict_type',
-            path: '/system/dict/type',
-            component: 'view.system_dict_type',
-            meta: {
-              title: 'system_dict_type',
-              i18nKey: 'route.system_dict_type'
-            }
-          }
-        ]
+        }
       },
       {
         name: 'system_menu',
