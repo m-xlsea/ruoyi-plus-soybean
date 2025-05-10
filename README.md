@@ -1,4 +1,8 @@
-# RuoYi-Plus-Soybean
+<div  align="center">
+  <img src="https://foruda.gitee.com/images/1679673773341074847/178e8451_1766278.png" width="50%" height="50%">
+</div>
+
+<div style="height: 10px; clear: both;"></div>
 
 <div align="center">
   <p>一个基于 <a href="https://gitee.com/dromara/RuoYi-Vue-Plus" target="_blank">RuoYi-Vue-Plus</a> 的后端能力和 <a href="https://github.com/soybeanjs/soybean-admin" target="_blank">Soybean Admin</a> 前端特性的现代化多租户管理系统</p>
@@ -11,6 +15,15 @@
     <img src="https://img.shields.io/badge/License-MIT-yellow" alt="license">
   </p>
 </div>
+
+# 📢 重要通知
+
+<p style="color: red; font-weight: bold; font-size: 24px;">该项目未首发公测版本，请谨慎在生产环境使用！！！</p>
+<p style="color: red; font-weight: bold; font-size: 24px;">该项目未首发公测版本，请谨慎在生产环境使用！！！</p>
+<p style="color: red; font-weight: bold; font-size: 24px;">该项目未首发公测版本，请谨慎在生产环境使用！！！</p>
+
+> 如果对该项目感兴趣，可以给一个 Star 支持一下，谢谢！
+> 请大家踊跃提交 PR 和 Issue，一起完善这个项目
 
 ## 📋 项目概述
 
@@ -228,7 +241,7 @@ const { tableData, loading, getPaginationData } = useTable(fetchTableData);
 - **布局组件**：支持多种布局模式和主题
 
 ### UnoCSS使用指南
-项目优先使用UnoCSS来实现样式：
+项目优先使用 UnoCSS 来实现样式：
 
 ```html
 <div class="flex flex-col items-center justify-center p-4 m-2 bg-blue-100 dark:bg-blue-800 rounded-md">
@@ -295,7 +308,7 @@ console.log(t('common.confirm'));
 ## 🔗 相关链接
 
 - [RuoYi-Vue-Plus](https://gitee.com/dromara/RuoYi-Vue-Plus) - 后端基础框架
-- [Soybean Admin](https://github.com/honghuangdc/soybean-admin) - 前端设计灵感
+- [Soybean Admin](https://github.com/soybeanjs/soybean-admin) - 前端基础框架
 - [RuoYi-Plus-Soybean](https://ruoyi.xlsea.cn) - 官方演示站点
 
 ## 📮 联系方式
