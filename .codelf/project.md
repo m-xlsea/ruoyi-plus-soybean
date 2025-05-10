@@ -79,6 +79,35 @@ root
     - views             // Page components
 ```
 
+### Key Project Components
+
+#### Build System
+The build system is based on Vite with custom configurations for different environments. The `build/plugins` directory contains custom Vite plugins for optimizing the build process, including router auto-generation and UnoCSS integration.
+
+#### Monorepo Packages
+The project uses a monorepo structure with multiple packages in the `packages` directory:
+- `alova` & `axios`: Two HTTP client implementations allowing flexible API interaction strategies
+- `hooks`: Custom Vue composition API hooks for common functionalities like loading states, boolean toggles, and table operations
+- `materials`: Reusable UI components like admin layouts and tabbed interfaces
+- `color`: Advanced color management system for theme customization
+
+#### Frontend Architecture
+- The application follows a modern Vue 3 + TypeScript architecture
+- Uses Pinia for state management with modular stores
+- Implements router-based code splitting for performance optimization
+- Leverages NaiveUI as the primary UI component library
+- Utilizes UnoCSS for atomic CSS utility classes
+
+#### API Integration
+- Supports multiple HTTP clients (Axios, Alova) through adapter pattern
+- Implements request interceptors for authentication and error handling
+- Uses TypeScript for full API type safety
+
+#### Theming System
+- Comprehensive theme customization through CSS variables
+- Support for light/dark modes and custom color palettes
+- Integration with NaiveUI theming system
+
 ## Dependencies (init from programming language specification like package.json, requirements.txt, etc.)
 
 * package1 (version): simple description

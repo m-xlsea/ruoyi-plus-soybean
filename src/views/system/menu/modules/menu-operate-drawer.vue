@@ -149,7 +149,7 @@ async function handleSubmit() {
   let component = model.component;
   if (isFrame !== '1') {
     component = 'iframe-page';
-    path = !model.path?.startsWith('/') ? `/${model.path}` : model.path;
+    path = model.path;
   } else if (model.menuType === 'C') {
     component = humpToLine(model.component?.replaceAll('/', '_') || '');
   } else if (model.menuType === 'M') {
