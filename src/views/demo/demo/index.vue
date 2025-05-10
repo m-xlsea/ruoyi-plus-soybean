@@ -49,12 +49,6 @@ const {
       width: 48
     },
     {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64
-    },
-    {
       key: 'id',
       title: '主键',
       align: 'center',
@@ -62,13 +56,13 @@ const {
     },
     {
       key: 'deptId',
-      title: '部门id',
+      title: '部门 ID',
       align: 'center',
       minWidth: 120
     },
     {
       key: 'userId',
-      title: '用户id',
+      title: '用户 ID',
       align: 'center',
       minWidth: 120
     },
@@ -80,7 +74,7 @@ const {
     },
     {
       key: 'testKey',
-      title: 'key键',
+      title: 'key 键',
       align: 'center',
       minWidth: 120
     },
@@ -168,14 +162,14 @@ async function edit(id: CommonType.IdType) {
 }
 
 async function handleExport() {
-  download('/demo/demo/export', searchParams, `测试单_${new Date().getTime()}.xlsx`);
+  download('/demo/demo/export', searchParams, `测试单表_${new Date().getTime()}.xlsx`);
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <DemoSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="测试单列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard title="测试单表列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

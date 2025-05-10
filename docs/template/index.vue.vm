@@ -137,11 +137,11 @@ async function handleDelete(#foreach($column in $columns)#if($column.isPk == '1'
   onDeleted();
 }
 
-async function edit(#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end: CommonType.IdType) {
+function edit(#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end: CommonType.IdType) {
   handleEdit('#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end', #foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end);
 }
 
-async function handleExport() {
+function handleExport() {
   download('/${moduleName}/${businessName}/export', searchParams, `${functionName}_#[[${new Date().getTime()}]]#.xlsx`);
 }
 </script>

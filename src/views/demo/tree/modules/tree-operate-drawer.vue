@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
-import { fetchCreateDemo, fetchUpdateDemo } from '@/service/api/demo/demo';
+import { fetchCreateTree, fetchUpdateTree } from '@/service/api/demo/tree';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'DemoOperateDrawer'
+  name: 'TreeOperateDrawer'
 });
 
 interface Props {
   /** the type of operation */
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
-  rowData?: Api.Demo.Demo | null;
+  rowData?: Api.Demo.Tree | null;
+  /** the tree data */
+  treeList?: Api.Demo.Tree[] | null;
 }
 
 const props = defineProps<Props>();
@@ -32,40 +34,39 @@ const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增测试单表',
-    edit: '编辑测试单表'
+    add: '新增测试树',
+    edit: '编辑测试树'
   };
   return titles[props.operateType];
 });
 
-type Model = Api.Demo.DemoOperateParams;
+type Model = Api.Demo.TreeOperateParams;
 
 const model: Model = reactive(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
+    parentId: null,
     deptId: null,
     userId: null,
-    orderNum: null,
-    testKey: '',
-    value: '',
-    remark: ''
+    treeName: ''
   };
 }
 
-type RuleKey = Extract<keyof Model, 'id' | 'deptId' | 'userId' | 'testKey' | 'value'>;
+type RuleKey = Extract<keyof Model, 'id' | 'parentId' | 'deptId' | 'userId' | 'treeName'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   id: createRequiredRule('主键不能为空'),
+  parentId: createRequiredRule('父 ID 不能为空'),
   deptId: createRequiredRule('部门不能为空'),
   userId: createRequiredRule('用户不能为空'),
-  testKey: createRequiredRule('key 键不能为空'),
-  value: createRequiredRule('值不能为空')
+  treeName: createRequiredRule('值不能为空')
 };
 
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
     Object.assign(model, createDefaultModel());
+    model.parentId = props.rowData?.id || 0;
     return;
   }
 
@@ -83,14 +84,14 @@ async function handleSubmit() {
 
   // request
   if (props.operateType === 'add') {
-    const { deptId, userId, orderNum, testKey, value } = model;
-    const { error } = await fetchCreateDemo({ deptId, userId, orderNum, testKey, value });
+    const { parentId, deptId, userId, treeName } = model;
+    const { error } = await fetchCreateTree({ parentId, deptId, userId, treeName });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { id, deptId, userId, orderNum, testKey, value } = model;
-    const { error } = await fetchUpdateDemo({ id, deptId, userId, orderNum, testKey, value });
+    const { id, parentId, deptId, userId, treeName } = model;
+    const { error } = await fetchUpdateTree({ id, parentId, deptId, userId, treeName });
     if (error) return;
   }
 
@@ -105,29 +106,41 @@ watch(visible, () => {
     restoreValidation();
   }
 });
+
+const treeOptions = computed(() => {
+  return [
+    {
+      id: 0,
+      treeName: '顶级节点',
+      children: props.treeList!
+    }
+  ];
+});
 </script>
 
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
+        <NFormItem label="父 ID" path="parentId">
+          <NTreeSelect
+            v-model:value="model.parentId"
+            filterable
+            class="h-full"
+            key-field="id"
+            label-field="treeName"
+            :options="treeOptions"
+            :default-expanded-keys="[0]"
+          />
+        </NFormItem>
         <NFormItem label="部门" path="deptId">
           <DeptTreeSelect v-model:value="model.deptId" placeholder="请选择部门" />
         </NFormItem>
         <NFormItem label="用户" path="userId">
           <UserSelect v-model:value="model.userId" placeholder="请选择用户" />
         </NFormItem>
-        <NFormItem label="排序号" path="orderNum">
-          <NInputNumber v-model:value="model.orderNum" placeholder="请输入排序号" />
-        </NFormItem>
-        <NFormItem label="key 键" path="testKey">
-          <NInput v-model:value="model.testKey" placeholder="请输入 key 键" />
-        </NFormItem>
-        <NFormItem label="值" path="value">
-          <NInput v-model:value="model.value" placeholder="请输入值" />
-        </NFormItem>
-        <NFormItem label="备注" path="remark">
-          <NInput v-model:value="model.remark" type="textarea" placeholder="请输入备注" />
+        <NFormItem label="值" path="treeName">
+          <NInput v-model:value="model.treeName" placeholder="请输入值" />
         </NFormItem>
       </NForm>
       <template #footer>

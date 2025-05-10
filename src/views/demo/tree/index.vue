@@ -1,25 +1,23 @@
 <script setup lang="tsx">
-import { NButton, NDivider } from 'naive-ui';
+import { NDivider } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
 import { type TableDataWithIndex } from '@sa/hooks';
-import { fetchBatchDeleteDept, fetchGetDeptList } from '@/service/api/system/dept';
+import { fetchBatchDeleteTree, fetchGetTreeList } from '@/service/api/demo/tree';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useTreeTable, useTreeTableOperate } from '@/hooks/common/tree-table';
-import { useDict } from '@/hooks/business/dict';
-import DictTag from '@/components/custom/dict-tag.vue';
+import { useDownload } from '@/hooks/business/download';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import DeptOperateDrawer from './modules/dept-operate-drawer.vue';
-import DeptSearch from './modules/dept-search.vue';
+import TreeOperateDrawer from './modules/tree-operate-drawer.vue';
+import TreeSearch from './modules/tree-search.vue';
 
 defineOptions({
-  name: 'DeptList'
+  name: 'TreeList'
 });
 
-useDict('sys_normal_disable');
-
 const appStore = useAppStore();
+const { download } = useDownload();
 const { hasAuth } = useAuth();
 
 const {
@@ -35,43 +33,52 @@ const {
   expandAll,
   collapseAll
 } = useTreeTable({
-  apiFn: fetchGetDeptList,
+  apiFn: fetchGetTreeList,
   apiParams: {
-    deptName: null,
-    status: null
+    pageNum: 1,
+    pageSize: 10,
+    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
+    // the value can not be undefined, otherwise the property in Form will not be reactive
+    parentId: null,
+    deptId: null,
+    userId: null,
+    treeName: null,
+    params: {}
   },
-  idField: 'deptId',
+  idField: 'id',
   columns: () => [
     {
-      key: 'deptName',
-      title: '部门名称',
+      type: 'selection',
+      align: 'center',
+      width: 48
+    },
+    {
+      key: 'id',
+      title: '主键',
       align: 'center',
       minWidth: 120
     },
     {
-      key: 'deptCategory',
-      title: '类别编码',
+      key: 'parentId',
+      title: '父 ID',
       align: 'center',
       minWidth: 120
     },
     {
-      key: 'orderNum',
-      title: '排序',
+      key: 'deptId',
+      title: '部门 ID',
       align: 'center',
-      minWidth: 60
+      minWidth: 120
     },
     {
-      key: 'status',
-      title: '部门状态',
+      key: 'userId',
+      title: '用户 ID',
       align: 'center',
-      minWidth: 120,
-      render(row) {
-        return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
-      }
+      minWidth: 120
     },
     {
-      key: 'createTime',
-      title: '创建时间',
+      key: 'treeName',
+      title: '值',
       align: 'center',
       minWidth: 120
     },
@@ -79,7 +86,7 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 150,
+      width: 130,
       render: row => {
         const addBtn = () => {
           return (
@@ -113,15 +120,15 @@ const {
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.deptId!)}
+              onPositiveClick={() => handleDelete(row.id!)}
             />
           );
         };
 
         const buttons = [];
-        if (hasAuth('system:dept:add')) buttons.push(addBtn());
-        if (hasAuth('system:dept:edit')) buttons.push(editBtn());
-        if (hasAuth('system:dept:remove')) buttons.push(deleteBtn());
+        if (hasAuth('demo:tree:add')) buttons.push(addBtn());
+        if (hasAuth('demo:tree:edit')) buttons.push(editBtn());
+        if (hasAuth('demo:tree:remove')) buttons.push(deleteBtn());
 
         return (
           <div class="flex-center gap-8px">
@@ -138,49 +145,63 @@ const {
   ]
 });
 
-const { drawerVisible, operateType, editingData, handleAdd, handleEdit, onDeleted } = useTreeTableOperate(
-  data,
-  getData
-);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
+  useTreeTableOperate(data, getData);
 
-async function handleDelete(deptId: CommonType.IdType) {
+async function handleBatchDelete() {
   // request
-  const { error } = await fetchBatchDeleteDept([deptId]);
+  const { error } = await fetchBatchDeleteTree(checkedRowKeys.value);
+  if (error) return;
+  onBatchDeleted();
+}
+
+async function handleDelete(id: CommonType.IdType) {
+  // request
+  const { error } = await fetchBatchDeleteTree([id]);
   if (error) return;
   onDeleted();
 }
 
-async function edit(row: TableDataWithIndex<Api.System.Dept>) {
+async function edit(row: TableDataWithIndex<Api.Demo.Tree>) {
   handleEdit(row);
 }
 
-async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
-  handleAdd();
+function addInRow(row: TableDataWithIndex<Api.Demo.Tree>) {
   editingData.value = jsonClone(row);
+  handleAdd();
+}
+
+function handleExport() {
+  download('/demo/tree/export', searchParams, `demo_tree_#[[${new Date().getTime()}]]#.xlsx`);
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <DeptSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
-    <NCard title="部门列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <TreeSearch v-model:model="searchParams" :tree-list="data" @reset="resetSearchParams" @search="getData" />
+    {{ expandedRowKeys }}
+    <NCard title="测试树列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
+          :disabled-delete="checkedRowKeys.length === 0"
           :loading="loading"
-          :show-add="hasAuth('system:dept:add')"
-          :show-delete="false"
+          :show-add="hasAuth('demo:tree:add')"
+          :show-delete="hasAuth('demo:tree:remove')"
+          :show-export="false"
           @add="handleAdd"
+          @delete="handleBatchDelete"
+          @export="handleExport"
           @refresh="getData"
         >
           <template #prefix>
-            <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
+            <NButton v-if="!isCollapse" :disabled="!expandedRowKeys.length" size="small" @click="expandAll">
               <template #icon>
                 <icon-quill:expand />
               </template>
               全部展开
             </NButton>
-            <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
+            <NButton v-if="isCollapse" :disabled="!expandedRowKeys.length" size="small" @click="collapseAll">
               <template #icon>
                 <icon-quill:collapse />
               </template>
@@ -190,6 +211,7 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
         </TableHeaderOperation>
       </template>
       <NDataTable
+        v-model:checked-row-keys="checkedRowKeys"
         v-model:expanded-row-keys="expandedRowKeys"
         :columns="columns"
         :data="data"
@@ -197,14 +219,15 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
         :flex-height="!appStore.isMobile"
         :scroll-x="962"
         :loading="loading"
-        :indent="28"
-        :row-key="row => row.deptId"
+        remote
+        :row-key="row => row.id"
         class="sm:h-full"
       />
-      <DeptOperateDrawer
+      <TreeOperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
+        :tree-list="data"
         @submitted="getData"
       />
     </NCard>

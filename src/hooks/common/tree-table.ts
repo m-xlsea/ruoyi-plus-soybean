@@ -57,7 +57,9 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
       });
 
       // if defaultExpandAll is true, expand all nodes
-      expandedRowKeys.value = defaultExpandAll ? records.map(item => item[idField]) : [records[0][idField]];
+      expandedRowKeys.value = defaultExpandAll
+        ? records.map(item => item[idField])
+        : records.filter(item => item[parentIdField] === 0).map(item => item[idField]) || [];
 
       return { data: treeData };
     },
@@ -138,7 +140,7 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
   /** collapse all nodes */
   function collapseAll() {
     toggleCollapse();
-    expandedRowKeys.value = data.value.length ? [data.value[0][idField]] : [];
+    expandedRowKeys.value = [];
   }
 
   scope.run(() => {

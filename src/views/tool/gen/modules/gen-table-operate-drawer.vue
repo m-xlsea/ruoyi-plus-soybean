@@ -65,6 +65,9 @@ type InfoRuleKey = Extract<
   | 'parentMenuId'
   | 'genType'
   | 'genPath'
+  | 'treeCode'
+  | 'treeParentCode'
+  | 'treeName'
 >;
 
 const infoRules: Record<InfoRuleKey, App.Global.FormRule> = {
@@ -75,7 +78,10 @@ const infoRules: Record<InfoRuleKey, App.Global.FormRule> = {
   functionName: defaultRequiredRule,
   parentMenuId: defaultRequiredRule,
   genType: defaultRequiredRule,
-  genPath: defaultRequiredRule
+  genPath: defaultRequiredRule,
+  treeCode: defaultRequiredRule,
+  treeParentCode: defaultRequiredRule,
+  treeName: defaultRequiredRule
 };
 
 async function getGenTableInfo() {
@@ -369,6 +375,67 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
                   <NInput v-model:value="genTableInfo.info.genPath" />
                 </NFormItemGi>
               </NGrid>
+
+              <template v-if="genTableInfo.info.tplCategory === 'tree'">
+                <NDivider>其他信息</NDivider>
+
+                <NGrid :x-gap="16" responsive="screen" item-responsive>
+                  <NFormItemGi span="24 s:12" path="treeCode">
+                    <template #label>
+                      <div class="flex-center">
+                        <FormTip content="树显示的编码字段名， 如：dept_id" />
+                        <span>树编码字段</span>
+                      </div>
+                    </template>
+                    <NSelect
+                      v-model:value="genTableInfo.info.treeCode"
+                      placeholder="请选择树编码字段"
+                      :options="
+                        genTableInfo.rows.map(column => ({
+                          value: column.columnName,
+                          label: column.columnName + '：' + column.columnComment
+                        }))
+                      "
+                    />
+                  </NFormItemGi>
+                  <NFormItemGi span="24 s:12" path="treeParentCode">
+                    <template #label>
+                      <div class="flex-center">
+                        <FormTip content="树显示的父编码字段名， 如：parent_Id" />
+                        <span>树父编码字段</span>
+                      </div>
+                    </template>
+                    <NSelect
+                      v-model:value="genTableInfo.info.treeParentCode"
+                      placeholder="请选择树父编码字段"
+                      :options="
+                        genTableInfo.rows.map(column => ({
+                          value: column.columnName,
+                          label: column.columnName + '：' + column.columnComment
+                        }))
+                      "
+                    />
+                  </NFormItemGi>
+                  <NFormItemGi span="24 s:12" path="treeName">
+                    <template #label>
+                      <div class="flex-center">
+                        <FormTip content="树节点的显示名称字段名， 如：dept_name" />
+                        <span>树名称字段</span>
+                      </div>
+                    </template>
+                    <NSelect
+                      v-model:value="genTableInfo.info.treeName"
+                      placeholder="请选择树名称字段"
+                      :options="
+                        genTableInfo.rows.map(column => ({
+                          value: column.columnName,
+                          label: column.columnName + '：' + column.columnComment
+                        }))
+                      "
+                    />
+                  </NFormItemGi>
+                </NGrid>
+              </template>
             </NForm>
           </NTabPane>
         </NTabs>

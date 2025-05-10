@@ -6,6 +6,7 @@ import { fetchBatchDelete${BusinessName}, fetchGet${BusinessName}List } from '@/
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useTreeTable, useTreeTableOperate } from '@/hooks/common/tree-table';
+import { useDownload } from '@/hooks/business/download';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import ${BusinessName}OperateDrawer from './modules/${business__name}-operate-drawer.vue';
@@ -45,7 +46,7 @@ const {
 #end
     params: {}
   },
-  idField: #foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!,
+  idField: '#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end',
   columns: () => [
     {
       type: 'selection',
@@ -93,7 +94,7 @@ const {
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
               tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}
+              onClick={() => edit(row)}
             />
           );
         };
@@ -148,19 +149,23 @@ async function handleDelete(#foreach($column in $columns)#if($column.isPk == '1'
   onDeleted();
 }
 
-async function edit(row: TableDataWithIndex<Api.$ModuleName.${BusinessName}>) {
+function edit(row: TableDataWithIndex<Api.$ModuleName.${BusinessName}>) {
   handleEdit(row);
 }
 
-async function addInRow(row: TableDataWithIndex<Api.$ModuleName.${BusinessName}>) {
+function addInRow(row: TableDataWithIndex<Api.$ModuleName.${BusinessName}>) {
   editingData.value = jsonClone(row);
   handleAdd();
+}
+
+function handleExport() {
+  download('/${moduleName}/${businessName}/export', searchParams, `${functionName}_#[[${new Date().getTime()}]]#.xlsx`);
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <${BusinessName}Search v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <${BusinessName}Search v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
     <NCard title="${functionName}列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
@@ -176,13 +181,13 @@ async function addInRow(row: TableDataWithIndex<Api.$ModuleName.${BusinessName}>
           @refresh="getData"
         >
           <template #prefix>
-            <NButton v-if="!isCollapse" :disabled="!expandedRowKeys.length" size="small" @click="expandAll">
+            <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
               <template #icon>
                 <icon-quill:expand />
               </template>
               全部展开
             </NButton>
-            <NButton v-if="isCollapse" :disabled="!expandedRowKeys.length" size="small" @click="collapseAll">
+            <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
                 <icon-quill:collapse />
               </template>
@@ -193,6 +198,7 @@ async function addInRow(row: TableDataWithIndex<Api.$ModuleName.${BusinessName}>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"
+        v-model::expanded-row-keys="expandedRowKeys"
         :columns="columns"
         :data="data"
         size="small"
@@ -201,14 +207,13 @@ async function addInRow(row: TableDataWithIndex<Api.$ModuleName.${BusinessName}>
         :loading="loading"
         remote
         :row-key="row => row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end"
-        :pagination="mobilePagination"
         class="sm:h-full"
       />
       <${BusinessName}OperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
-        @submitted="getDataByPage"
+        @submitted="getData"
       />
     </NCard>
   </div>

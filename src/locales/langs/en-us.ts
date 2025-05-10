@@ -189,7 +189,8 @@ const local: App.I18n.Schema = {
     'user-center': 'User Center',
     system_role: 'Role Management',
     demo: 'Demo',
-    demo_demo: 'Demo Table'
+    demo_demo: 'Demo Table',
+    demo_tree: 'Demo Tree'
   },
   page: {
     login: {
