@@ -187,7 +187,9 @@ const local: App.I18n.Schema = {
     monitor_cache: 'Cache Monitor',
     monitor_online: 'Online User',
     'user-center': 'User Center',
-    system_role: 'Role Management'
+    system_role: 'Role Management',
+    demo: 'Demo',
+    demo_demo: 'Demo Table'
   },
   page: {
     login: {

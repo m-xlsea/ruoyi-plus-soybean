@@ -34,6 +34,14 @@ export function fetchUpdateUser(data: Api.System.UserOperateParams) {
   });
 }
 
+/** 获取用户选择框列表 */
+export function fetchGetUserSelect() {
+  return request<Api.System.User[]>({
+    url: '/system/user/optionselect',
+    method: 'get'
+  });
+}
+
 /** 修改用户状态 */
 export function fetchUpdateUserStatus(data: Api.System.UserOperateParams) {
   return request<boolean>({

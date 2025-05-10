@@ -41,3 +41,11 @@ export function fetchBatchDeleteDept(deptIds: CommonType.IdType[]) {
     method: 'delete'
   });
 }
+
+/** 获取部门选择框列表 */
+export function fetchGetDeptSelect() {
+  return request<Api.System.Dept[]>({
+    url: '/system/dept/optionselect',
+    method: 'get'
+  });
+}

@@ -12,9 +12,11 @@ declare module 'vue' {
     BetterScroll: typeof import('./../components/custom/better-scroll.vue')['default']
     BooleanTag: typeof import('./../components/custom/boolean-tag.vue')['default']
     ButtonIcon: typeof import('./../components/custom/button-icon.vue')['default']
+    copy: typeof import('./../components/custom/role-select copy.vue')['default']
     CountTo: typeof import('./../components/custom/count-to.vue')['default']
     DarkModeContainer: typeof import('./../components/common/dark-mode-container.vue')['default']
     DeptTree: typeof import('./../components/custom/dept-tree.vue')['default']
+    DeptTreeSelect: typeof import('./../components/custom/dept-tree-select.vue')['default']
     DictRadio: typeof import('./../components/custom/dict-radio.vue')['default']
     DictSelect: typeof import('./../components/custom/dict-select.vue')['default']
     DictTag: typeof import('./../components/custom/dict-tag.vue')['default']
@@ -140,6 +142,7 @@ declare module 'vue' {
     TableSiderLayout: typeof import('./../components/advanced/table-sider-layout.vue')['default']
     TenantSelect: typeof import('./../components/custom/tenant-select.vue')['default']
     ThemeSchemaSwitch: typeof import('./../components/common/theme-schema-switch.vue')['default']
+    UserSelect: typeof import('./../components/custom/user-select.vue')['default']
     WaveBg: typeof import('./../components/custom/wave-bg.vue')['default']
   }
 }
