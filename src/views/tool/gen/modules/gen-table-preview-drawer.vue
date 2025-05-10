@@ -88,12 +88,12 @@ const genMap: Api.Tool.GenTablePreview = {
   'vm/java/controller.java.vm': 'controller.java',
   'vm/xml/mapper.xml.vm': 'mapper.xml',
   'vm/sql/sql.vm': 'sql',
-  'vm/soybean/api/soy.api.ts.vm': 'api.ts',
-  'vm/soybean/typings/soy.api.d.ts.vm': 'type.d.ts',
-  'vm/soybean/soy.index.vue.vm': 'index.vue',
-  'vm/soybean/soy.index-tree.vue.vm': 'index-tree.vue',
-  'vm/soybean/modules/soy.search.vue.vm': 'search.vue',
-  'vm/soybean/modules/soy.operate-drawer.vue.vm': 'operate-drawer.vue'
+  'vm/soy/api/api.ts.vm': 'api.ts',
+  'vm/soy/typings/api.d.ts.vm': 'type.d.ts',
+  'vm/soy/index.vue.vm': 'index.vue',
+  'vm/soy/index-tree.vue.vm': 'index-tree.vue',
+  'vm/soy/modules/search.vue.vm': 'search.vue',
+  'vm/soy/modules/operate-drawer.vue.vm': 'operate-drawer.vue'
 };
 
 function getGenLanguage(name: string) {
