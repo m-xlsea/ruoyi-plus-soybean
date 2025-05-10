@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { onMounted, ref, useAttrs } from 'vue';
+import { onMounted, ref, useAttrs, watch } from 'vue';
 import type { TreeOption, TreeSelectInst, TreeSelectProps } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import { fetchGetMenuTreeSelect } from '@/service/api/system';
@@ -40,6 +40,7 @@ async function getMenuList() {
       children: data
     }
   ] as Api.System.MenuList;
+  // 折叠到只显示根节点
   loading.value = false;
 }
 
@@ -48,6 +49,21 @@ onMounted(() => {
     getMenuList();
   }
 });
+
+// 添加 watch 监听 expandAll 的变化,options有值后，计算expandedKeys
+watch(
+  [expandAll, options],
+  ([newVal]) => {
+    if (newVal) {
+      // 展开所有节点
+      expandedKeys.value = getAllMenuIds(options.value);
+    } else {
+      // 折叠到只显示根节点
+      expandedKeys.value = [0];
+    }
+  },
+  { immediate: true }
+);
 
 function renderPrefix({ option }: { option: TreeOption }) {
   const renderLocalIcon = String(option.icon).startsWith('icon-');
@@ -62,7 +78,7 @@ function renderPrefix({ option }: { option: TreeOption }) {
 function getAllMenuIds(menu: Api.System.MenuList) {
   const menuIds: CommonType.IdType[] = [];
   menu.forEach(item => {
-    menuIds.push(item.menuId);
+    menuIds.push(item.id!);
     if (item.children) {
       menuIds.push(...getAllMenuIds(item.children));
     }
@@ -123,7 +139,6 @@ defineExpose({
         :loading="loading"
         virtual-scroll
         check-strategy="all"
-        :default-expand-all="expandAll"
         :render-prefix="renderPrefix"
         v-bind="attrs"
       />

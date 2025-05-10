@@ -116,7 +116,7 @@ const { columns, columnChecks, data, getData, loading, searchParams, resetSearch
             <ButtonIcon
               text
               type="error"
-              icon="material-symbols:person-remove-outline-rounded"
+              icon="material-symbols:delete-outline"
               class="text-20px"
               tooltipContent="强制下线"
               popconfirmContent="确认强制下线吗？"
