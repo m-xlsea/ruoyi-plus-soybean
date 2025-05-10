@@ -1,15 +1,15 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
-import { NButton } from 'naive-ui';
+import { NButton, NDivider } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
-import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList } from '@/service/api/system';
+import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList, fetchUpdateUserStatus } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { useAuth } from '@/hooks/business/auth';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
+import StatusSwitch from '@/components/custom/status-switch.vue';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserImportModal from './modules/user-import-modal.vue';
 import UserSearch from './modules/user-search.vue';
@@ -19,7 +19,6 @@ defineOptions({
 });
 
 useDict('sys_user_sex');
-useDict('sys_normal_disable');
 
 const { hasAuth } = useAuth();
 const appStore = useAppStore();
@@ -96,7 +95,14 @@ const {
       align: 'center',
       minWidth: 80,
       render(row) {
-        return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
+        return (
+          <StatusSwitch
+            v-model:value={row.status}
+            disabled={row.userId === 1}
+            info={row.userName}
+            onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
+          />
+        );
       }
     },
     {
@@ -111,6 +117,13 @@ const {
       align: 'center',
       width: 130,
       render: row => {
+        const divider = () => {
+          if (!hasAuth('system:user:edit') || !hasAuth('system:user:remove')) {
+            return null;
+          }
+          return <NDivider vertical />;
+        };
+
         const editBtn = () => {
           if (!hasAuth('system:user:edit')) {
             return null;
@@ -120,7 +133,6 @@ const {
               text
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
-              class="text-18px"
               tooltipContent={$t('common.edit')}
               onClick={() => edit(row.userId!)}
             />
@@ -136,7 +148,6 @@ const {
               text
               type="error"
               icon="material-symbols:delete-outline"
-              class="text-18px"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
               onPositiveClick={() => handleDelete(row.userId!)}
@@ -145,8 +156,9 @@ const {
         };
 
         return (
-          <div class="flex-center gap-16px">
+          <div class="flex-center gap-6px">
             {editBtn()}
+            {divider()}
             {deleteBtn()}
           </div>
         );
@@ -204,6 +216,25 @@ function handleResetTreeData() {
 
 function handleImport() {
   openImportModal();
+}
+
+/** 处理状态切换 */
+async function handleStatusChange(
+  row: Api.System.User,
+  value: Api.Common.EnableStatus,
+  callback: (flag: boolean) => void
+) {
+  const { error } = await fetchUpdateUserStatus({
+    userId: row.userId,
+    status: value
+  });
+
+  callback(!error);
+
+  if (!error) {
+    window.$message?.success('状态修改成功');
+    getData();
+  }
 }
 </script>
 

@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
-import { NButton, NPopconfirm, NTooltip } from 'naive-ui';
+import { NButton, NDivider } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import { jsonClone } from '@sa/utils';
 import {
@@ -13,14 +13,15 @@ import {
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDownload } from '@/hooks/business/download';
+import { useAuth } from '@/hooks/business/auth';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import SvgIcon from '@/components/custom/svg-icon.vue';
 import GenTableSearch from './modules/gen-table-search.vue';
 import GenTableImportDrawer from './modules/gen-table-import-drawer.vue';
 import GenTableOperateDrawer from './modules/gen-table-operate-drawer.vue';
 import GenTablePreviewDrawer from './modules/gen-table-preview-drawer.vue';
 
+const { hasAuth } = useAuth();
 const appStore = useAppStore();
 const { zip } = useDownload();
 const { bool: importVisible, setTrue: openImportVisible } = useBoolean();
@@ -101,62 +102,87 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 180,
-      render: row => (
-        <div class="flex-center gap-16px">
-          <ButtonIcon
-            type="primary"
-            text
-            icon="ep:view"
-            tooltipContent="预览"
-            onClick={() => handlePreview(row.tableId!)}
-          />
-          <ButtonIcon
-            type="primary"
-            text
-            icon="ep:edit"
-            tooltipContent={$t('common.edit')}
-            onClick={() => edit(row.tableId!)}
-          />
-          <ButtonIcon
-            type="primary"
-            text
-            icon="ep:refresh"
-            tooltipContent="同步"
-            onClick={() => refresh(row.tableId!)}
-          />
-          <ButtonIcon
-            type="primary"
-            text
-            icon="ep:download"
-            tooltipContent="生成代码"
-            onClick={() => handleGenCode(row)}
-          />
-          <NTooltip placement="bottom">
-            {{
-              trigger: () => (
-                <NPopconfirm onPositiveClick={() => handleDelete(row.tableId!)}>
-                  {{
-                    default: () => $t('common.confirmDelete'),
-                    trigger: () => (
-                      <NButton class="h-36px text-icon" type="error" text>
-                        {{
-                          default: () => (
-                            <div class="flex-center gap-8px">
-                              <SvgIcon icon="ep:delete" />
-                            </div>
-                          )
-                        }}
-                      </NButton>
-                    )
-                  }}
-                </NPopconfirm>
-              ),
-              default: () => <>{$t('common.delete')}</>
-            }}
-          </NTooltip>
-        </div>
-      )
+      width: 300,
+      render: row => {
+        const previewBtn = () => {
+          return (
+            <ButtonIcon
+              type="primary"
+              text
+              icon="material-symbols:visibility-outline"
+              tooltipContent="预览"
+              onClick={() => handlePreview(row.tableId!)}
+            />
+          );
+        };
+
+        const editBtn = () => {
+          return (
+            <ButtonIcon
+              type="primary"
+              text
+              icon="material-symbols:drive-file-rename-outline-outline"
+              tooltipContent={$t('common.edit')}
+              onClick={() => edit(row.tableId!)}
+            />
+          );
+        };
+
+        const refreshBtn = () => {
+          return (
+            <ButtonIcon
+              type="primary"
+              text
+              icon="material-symbols:sync-outline"
+              tooltipContent="同步"
+              onClick={() => refresh(row.tableId!)}
+            />
+          );
+        };
+
+        const genCodeBtn = () => {
+          return (
+            <ButtonIcon
+              type="primary"
+              text
+              icon="material-symbols:download-rounded"
+              tooltipContent="生成代码"
+              onClick={() => handleGenCode(row)}
+            />
+          );
+        };
+
+        const deleteBtn = () => {
+          return (
+            <ButtonIcon
+              type="error"
+              text
+              icon="material-symbols:delete-outline"
+              tooltipContent={$t('common.delete')}
+              popconfirmContent={$t('common.confirmDelete')}
+              onPositiveClick={() => handleDelete(row.tableId!)}
+            />
+          );
+        };
+
+        const buttons = [];
+        if (hasAuth('tool:gen:preview')) buttons.push(previewBtn());
+        if (hasAuth('tool:gen:edit')) buttons.push(editBtn());
+        if (hasAuth('tool:gen:refresh')) buttons.push(refreshBtn());
+        if (hasAuth('tool:gen:genCode')) buttons.push(genCodeBtn());
+        if (hasAuth('tool:gen:delete')) buttons.push(deleteBtn());
+
+        return (
+          <div class="flex-center gap-8px">
+            {buttons.map((btn, index) => (
+              <>
+                {index !== 0 && <NDivider vertical />}
+                {btn}
+              </>
+            ))}
+          </div>
+        );
+      }
     }
   ]
 });

@@ -27,8 +27,17 @@ export function fetchUpdateRole(data: Api.System.RoleOperateParams) {
   });
 }
 
+/** 修改角色状态 */
+export function fetchUpdateRoleStatus(data: Api.System.RoleOperateParams) {
+  return request<boolean>({
+    url: '/system/role/changeStatus',
+    method: 'put',
+    data
+  });
+}
+
 /** 批量删除角色信息 */
-export function fetchDeleteRole(roleIds: CommonType.IdType[]) {
+export function fetchBatchDeleteRole(roleIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/role/${roleIds.join(',')}`,
     method: 'delete'
@@ -41,5 +50,22 @@ export function fetchGetRoleSelect(roleIds?: CommonType.IdType[]) {
     url: '/system/role/optionselect',
     method: 'get',
     params: { roleIds }
+  });
+}
+
+/** 获取对应角色部门树列表 */
+export function fetchGetRoleDeptTreeSelect(roleId: CommonType.IdType) {
+  return request<Api.System.RoleDeptTreeSelect>({
+    url: `/system/role/deptTree/${roleId}`,
+    method: 'get'
+  });
+}
+
+/** 获取对应角色用户列表 */
+export function fetchGetRoleUserList(params: Api.System.UserSearchParams) {
+  return request<Api.System.UserList>({
+    url: `/system/role/authUser/allocatedList`,
+    method: 'get',
+    params
   });
 }

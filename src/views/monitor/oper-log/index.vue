@@ -8,6 +8,7 @@ import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
+import ButtonIcon from '@/components/custom/button-icon.vue';
 import OperLogViewDrawer from './modules/oper-log-view-drawer.vue';
 import OperLogSearch from './modules/oper-log-search.vue';
 
@@ -123,9 +124,13 @@ const {
       render: row => {
         const viewBtn = () => {
           return (
-            <NButton type="primary" ghost size="small" onClick={() => view(row.operId!)}>
-              详情
-            </NButton>
+            <ButtonIcon
+              type="primary"
+              text
+              icon="material-symbols:visibility-outline"
+              tooltipContent="详情"
+              onClick={() => view(row.operId!)}
+            />
           );
         };
         return <div class="flex-center gap-8px">{viewBtn()}</div>;

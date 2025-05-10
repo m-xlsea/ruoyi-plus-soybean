@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { NButton, NPopconfirm } from 'naive-ui';
+import { NDivider } from 'naive-ui';
 import { fetchBatchDeleteConfig, fetchGetConfigList, fetchRefreshCache } from '@/service/api/system/config';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
@@ -8,8 +8,10 @@ import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
+import ButtonIcon from '@/components/custom/button-icon.vue';
 import ConfigOperateDrawer from './modules/config-operate-drawer.vue';
 import ConfigSearch from './modules/config-search.vue';
+
 defineOptions({
   name: 'ConfigList'
 });
@@ -105,14 +107,25 @@ const {
       align: 'center',
       width: 130,
       render: row => {
+        const divider = () => {
+          if (!hasAuth('system:config:edit') || !hasAuth('system:config:remove')) {
+            return null;
+          }
+          return <NDivider vertical />;
+        };
+
         const editBtn = () => {
           if (!hasAuth('system:config:edit')) {
             return null;
           }
           return (
-            <NButton type="primary" ghost size="small" onClick={() => edit(row.configId!)}>
-              {$t('common.edit')}
-            </NButton>
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:drive-file-rename-outline-outline"
+              tooltipContent={$t('common.edit')}
+              onClick={() => edit(row.configId!)}
+            />
           );
         };
 
@@ -121,22 +134,21 @@ const {
             return null;
           }
           return (
-            <NPopconfirm onPositiveClick={() => handleDelete(row.configId!)}>
-              {{
-                default: () => $t('common.confirmDelete'),
-                trigger: () => (
-                  <NButton type="error" ghost size="small">
-                    {$t('common.delete')}
-                  </NButton>
-                )
-              }}
-            </NPopconfirm>
+            <ButtonIcon
+              text
+              type="error"
+              icon="material-symbols:delete-outline"
+              tooltipContent={$t('common.delete')}
+              popconfirmContent={$t('common.confirmDelete')}
+              onPositiveClick={() => handleDelete(row.configId!)}
+            />
           );
         };
 
         return (
           <div class="flex-center gap-8px">
             {editBtn()}
+            {divider()}
             {deleteBtn()}
           </div>
         );

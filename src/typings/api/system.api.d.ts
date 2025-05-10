@@ -10,10 +10,13 @@ declare namespace Api {
    * backend api module: "system"
    */
   namespace System {
+    /** data scope */
+    type DataScope = '1' | '2' | '3' | '4' | '5' | '6';
+
     /** role */
     type Role = Common.CommonRecord<{
       /** 数据范围（1：全部数据权限 2：自定数据权限 3：本部门数据权限 4：本部门及以下数据权限） */
-      dataScope: string;
+      dataScope: DataScope;
       /** 部门树选择项是否关联显示 */
       deptCheckStrictly: boolean;
       /** 用户是否存在此角色标识 默认不存在 */
@@ -49,16 +52,28 @@ declare namespace Api {
         | 'roleName'
         | 'roleKey'
         | 'roleSort'
-        | 'dataScope'
         | 'menuCheckStrictly'
         | 'deptCheckStrictly'
+        | 'dataScope'
         | 'status'
         | 'remark'
-      >
+      > & { menuIds: CommonType.IdType[]; deptIds: CommonType.IdType[] }
     >;
 
     /** role list */
     type RoleList = Common.PaginatingQueryRecord<Role>;
+
+    /** role menu tree select */
+    type RoleMenuTreeSelect = Common.CommonRecord<{
+      checkedKeys: CommonType.IdType[];
+      menus: MenuList;
+    }>;
+
+    /** role dept tree select */
+    type RoleDeptTreeSelect = Common.CommonRecord<{
+      checkedKeys: CommonType.IdType[];
+      depts: Dept[];
+    }>;
 
     /** all role */
     type AllRole = Pick<Role, 'roleId' | 'roleName' | 'roleKey'>;
@@ -107,7 +122,9 @@ declare namespace Api {
 
     /** user search params */
     type UserSearchParams = CommonType.RecordNullable<
-      Pick<User, 'deptId' | 'userName' | 'nickName' | 'phonenumber' | 'status'> & Common.CommonSearchParams
+      Pick<User, 'deptId' | 'userName' | 'nickName' | 'phonenumber' | 'status'> & {
+        roleId: CommonType.IdType;
+      } & Common.CommonSearchParams
     >;
 
     /** user operate params */
@@ -261,6 +278,8 @@ declare namespace Api {
       parentName: string;
       /** 子菜单 */
       children: MenuList;
+      id?: CommonType.IdType;
+      label?: string;
     }>;
 
     /** menu list */

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
+import { fetchCreate${BusinessName}, fetchUpdate${BusinessName} } from '@/service/api/${moduleName}/${business__name}';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-import { $t } from '@/locales';
-import { fetchCreate${BusinessName}, fetchUpdate${BusinessName} } from '@/service/api/${moduleName}/${business-name}';
 #if($dictList && $dictList.size() > 0)import { useDict } from '@/hooks/business/dict';#end
+import { $t } from '@/locales';
 
 defineOptions({
   name: '${BusinessName}OperateDrawer'
@@ -177,7 +177,7 @@ watch(visible, () => {
             value-format="yyyy-MM-dd HH:mm:ss"
             clearable
           />
-#else              <NInput v-model:value="model.$column.javaField" placeholder="请输入$column.columnComment" />
+#else          <NInput v-model:value="model.$column.javaField" placeholder="请输入$column.columnComment" />
     #end
         </NFormItem>
 #end

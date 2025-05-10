@@ -38,6 +38,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   "system_oss-config": () => import("@/views/system/oss-config/index.vue"),
   system_oss: () => import("@/views/system/oss/index.vue"),
   system_post: () => import("@/views/system/post/index.vue"),
+  system_role: () => import("@/views/system/role/index.vue"),
   system_tenant: () => import("@/views/system/tenant/index.vue"),
   system_user: () => import("@/views/system/user/index.vue"),
   tool_gen: () => import("@/views/tool/gen/index.vue"),

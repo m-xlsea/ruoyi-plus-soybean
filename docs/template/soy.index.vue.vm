@@ -1,13 +1,14 @@
 <script setup lang="tsx">
-import { NButton, NPopconfirm } from 'naive-ui';
+import { NDivider } from 'naive-ui';
 import { fetchBatchDelete${BusinessName}, fetchGet${BusinessName}List } from '@/service/api/${moduleName}/${businessName}';
-import { $t } from '@/locales';
-import { useAuth } from '@/hooks/business/auth';
 import { useAppStore } from '@/store/modules/app';
+import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
-import ${BusinessName}OperateDrawer from './modules/${business-name}-operate-drawer.vue';
-import ${BusinessName}Search from './modules/${business-name}-search.vue';
+import { $t } from '@/locales';
+import ButtonIcon from '@/components/custom/button-icon.vue';
+import ${BusinessName}OperateDrawer from './modules/${business__name}-operate-drawer.vue';
+import ${BusinessName}Search from './modules/${business__name}-search.vue';
 
 defineOptions({
   name: '${BusinessName}List'
@@ -39,6 +40,7 @@ const {
     $column.javaField: null#if($foreach.hasNext),#end
   #end
 #end
+    params: {}
   },
   columns: () => [
     {
@@ -68,67 +70,69 @@ const {
       align: 'center',
       width: 130,
       render: row => {
+        const divider = () => {
+          if (!hasAuth('${moduleName}:${businessName}:edit') || !hasAuth('${moduleName}:${businessName}:remove')) {
+            return null;
+          }
+          return <NDivider vertical />;
+        };
+
         const editBtn = () => {
-            if (!hasAuth('${moduleName}:${businessName}:edit')) {
-                return null;
-            }
-            return (
-                <NButton type="primary" ghost size="small" onClick={() => edit(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}>
-                    {$t('common.edit')}
-                </NButton>
-            );
+          if (!hasAuth('${moduleName}:${businessName}:edit')) {
+            return null;
+          }
+          return (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:drive-file-rename-outline-outline"
+              tooltipContent={$t('common.edit')}
+              onClick={() => edit(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}
+            />
+          );
         };
 
         const deleteBtn = () => {
-            if (!hasAuth('${moduleName}:${businessName}:remove')) {
-                return null;
-            }
-            return (
-                <NPopconfirm onPositiveClick={() => handleDelete(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}>
-                    {{
-                        default: () => $t('common.confirmDelete'),
-                        trigger: () => (
-                            <NButton type="error" ghost size="small">
-                                {$t('common.delete')}
-                            </NButton>
-                        )
-                    }}
-                </NPopconfirm>
-            );
+          if (!hasAuth('${moduleName}:${businessName}:remove')) {
+            return null;
+          }
+          return (
+            <ButtonIcon
+              text
+              type="error"
+              icon="material-symbols:delete-outline"
+              tooltipContent={$t('common.delete')}
+              popconfirmContent={$t('common.confirmDelete')}
+              onPositiveClick={() => handleDelete(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}
+            />
+          );
         };
 
         return (
-            <div class="flex-center gap-8px">
-                {editBtn()}
-                {deleteBtn()}
-            </div>
+          <div class="flex-center gap-8px">
+            {editBtn()}
+            {divider()}
+            {deleteBtn()}
+          </div>
         );
       }
     }
   ]
 });
 
-const {
-  drawerVisible,
-  operateType,
-  editingData,
-  handleAdd,
-  handleEdit,
-  checkedRowKeys,
-  onBatchDeleted,
-  onDeleted
-} = useTableOperate(data, getData);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
+  useTableOperate(data, getData);
 
 async function handleBatchDelete() {
   // request
-  const { error } = await fetchBatchDelete${BusinessName}(checkedRowKeys.value)
+  const { error } = await fetchBatchDelete${BusinessName}(checkedRowKeys.value);
   if (error) return;
   onBatchDeleted();
 }
 
 async function handleDelete(#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end: CommonType.IdType) {
   // request
-  const { error } = await fetchBatchDelete${BusinessName}([#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end])
+  const { error } = await fetchBatchDelete${BusinessName}([#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end]);
   if (error) return;
   onDeleted();
 }
@@ -138,7 +142,7 @@ async function edit(#foreach($column in $columns)#if($column.isPk == '1')$column
 }
 
 async function handleExport() {
-    download('/${moduleName}/${businessName}/export', searchParams, `${functionName}_#[[${new Date().getTime()}]]#.xlsx`);
+  download('/${moduleName}/${businessName}/export', searchParams, `${functionName}_#[[${new Date().getTime()}]]#.xlsx`);
 }
 </script>
 
@@ -169,7 +173,7 @@ async function handleExport() {
         :scroll-x="962"
         :loading="loading"
         remote
-        :row-key="row => row.id"
+        :row-key="row => row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end"
         :pagination="mobilePagination"
         class="sm:h-full"
       />

@@ -251,6 +251,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'system_role',
+        path: '/system/role',
+        component: 'view.system_role',
+        meta: {
+          title: 'system_role',
+          i18nKey: 'route.system_role'
+        }
+      },
+      {
         name: 'system_tenant',
         path: '/system/tenant',
         component: 'view.system_tenant',

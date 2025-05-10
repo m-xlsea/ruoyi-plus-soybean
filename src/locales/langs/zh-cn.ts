@@ -188,7 +188,8 @@ const local: App.I18n.Schema = {
     'system_oss-config': 'OSS配置',
     monitor_cache: '缓存监控',
     monitor_online: '在线用户',
-    'user-center': '个人中心'
+    'user-center': '个人中心',
+    system_role: '角色管理'
   },
   page: {
     login: {

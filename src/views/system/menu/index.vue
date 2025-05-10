@@ -1,21 +1,24 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 import type { DataTableColumns, TreeInst, TreeOption } from 'naive-ui';
-import { NButton, NIcon, NInput, NPopconfirm, NTooltip } from 'naive-ui';
+import { NButton, NDivider, NIcon, NInput, NPopconfirm } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { menuIsFrameRecord, menuTypeRecord } from '@/constants/business';
 import { fetchDeleteMenu, fetchGetMenuList } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { useDict } from '@/hooks/business/dict';
+import { useAuth } from '@/hooks/business/auth';
 import { handleTree } from '@/utils/common';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import MenuOperateDrawer from './modules/menu-operate-drawer.vue';
+
 useDict('sys_show_hide');
 useDict('sys_normal_disable');
 
+const { hasAuth } = useAuth();
 const appStore = useAppStore();
 const editingData = ref<Api.System.Menu>();
 const operateType = ref<NaiveUI.TableOperateType>('add');
@@ -97,25 +100,23 @@ function renderPrefix({ option }: { option: TreeOption }) {
 }
 
 function renderSuffix({ option }: { option: TreeOption }) {
-  if (!['M'].includes(String(option.menuType))) {
-    return <></>;
+  if (!['M'].includes(String(option.menuType)) || !hasAuth('system:menu:add')) {
+    return null;
   }
 
   return (
-    <>
-      <div class="flex-center gap-8px">
-        <ButtonIcon
-          text
-          class="h-18px"
-          icon="ic-round-plus"
-          tooltip-content="新增子菜单"
-          onClick={(event: Event) => {
-            event.stopPropagation();
-            handleAddMenu(option.menuId as CommonType.IdType);
-          }}
-        />
-      </div>
-    </>
+    <div class="flex-center gap-8px">
+      <ButtonIcon
+        text
+        class="h-18px"
+        icon="ic-round-plus"
+        tooltip-content="新增子菜单"
+        onClick={(event: Event) => {
+          event.stopPropagation();
+          handleAddMenu(option.menuId as CommonType.IdType);
+        }}
+      />
+    </div>
   );
 }
 
@@ -224,39 +225,50 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
     width: 80,
     align: 'center',
     render(row) {
-      return (
-        <>
+      const divider = () => {
+        if (!hasAuth('system:menu:edit') || !hasAuth('system:menu:remove')) {
+          return null;
+        }
+        return <NDivider vertical />;
+      };
+
+      const editBtn = () => {
+        if (!hasAuth('system:menu:edit')) {
+          return null;
+        }
+        return (
           <ButtonIcon
-            type="primary"
             text
-            icon="ep:edit"
-            tooltipContent="修改"
+            type="primary"
+            icon="material-symbols:drive-file-rename-outline-outline"
+            tooltipContent={$t('common.edit')}
             onClick={() => handleUpdateBtnMenu(row)}
           />
-          <NTooltip placement="bottom">
-            {{
-              trigger: () => (
-                <NPopconfirm onPositiveClick={() => handleDeleteBtnMenu(row.menuId!)}>
-                  {{
-                    default: () => $t('common.confirmDelete'),
-                    trigger: () => (
-                      <NButton class="ml-16px h-36px text-icon" type="error" text>
-                        {{
-                          default: () => (
-                            <div class="flex-center gap-8px">
-                              <SvgIcon icon="ep:delete" />
-                            </div>
-                          )
-                        }}
-                      </NButton>
-                    )
-                  }}
-                </NPopconfirm>
-              ),
-              default: () => <>{$t('common.delete')}</>
-            }}
-          </NTooltip>
-        </>
+        );
+      };
+
+      const deleteBtn = () => {
+        if (!hasAuth('system:menu:remove')) {
+          return null;
+        }
+        return (
+          <ButtonIcon
+            text
+            type="error"
+            icon="material-symbols:delete-outline"
+            tooltipContent={$t('common.delete')}
+            popconfirmContent={$t('common.confirmDelete')}
+            onPositiveClick={() => handleDeleteBtnMenu(row.menuId!)}
+          />
+        );
+      };
+
+      return (
+        <div class="flex-center gap-8px">
+          {editBtn()}
+          {divider()}
+          {deleteBtn()}
+        </div>
       );
     }
   }
@@ -268,6 +280,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
     <template #header>菜单列表</template>
     <template #header-extra>
       <ButtonIcon
+        v-if="hasAuth('system:menu:add')"
         size="small"
         icon="ic-round-plus"
         class="h-28px text-icon"
@@ -325,7 +338,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
           <template #header-extra>
             <NSpace>
               <NButton
-                v-if="currentMenu.menuType === 'M'"
+                v-if="currentMenu.menuType === 'M' && hasAuth('system:menu:add')"
                 size="small"
                 ghost
                 type="primary"
@@ -336,7 +349,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
                 </template>
                 新增子菜单
               </NButton>
-              <NButton size="small" ghost type="primary" @click="handleUpdateMenu">
+              <NButton v-if="hasAuth('system:menu:edit')" size="small" ghost type="primary" @click="handleUpdateMenu">
                 <template #icon>
                   <icon-ic-round-edit />
                 </template>
@@ -344,7 +357,13 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
               </NButton>
               <NPopconfirm @positive-click="() => handleDeleteMenu()">
                 <template #trigger>
-                  <NButton size="small" ghost type="error" :disabled="btnData.length > 0 || btnLoading">
+                  <NButton
+                    v-if="hasAuth('system:menu:remove')"
+                    size="small"
+                    ghost
+                    type="error"
+                    :disabled="btnData.length > 0 || btnLoading"
+                  >
                     <template #icon>
                       <icon-ic-round-delete />
                     </template>

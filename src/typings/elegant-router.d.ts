@@ -41,6 +41,7 @@ declare module "@elegant-router/types" {
     "system_oss": "/system/oss";
     "system_oss-config": "/system/oss-config";
     "system_post": "/system/post";
+    "system_role": "/system/role";
     "system_tenant": "/system/tenant";
     "system_user": "/system/user";
     "tool": "/tool";
@@ -127,6 +128,7 @@ declare module "@elegant-router/types" {
     | "system_oss-config"
     | "system_oss"
     | "system_post"
+    | "system_role"
     | "system_tenant"
     | "system_user"
     | "tool_gen"

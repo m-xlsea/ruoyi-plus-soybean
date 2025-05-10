@@ -62,7 +62,7 @@ public class VelocityUtils {
         velocityContext.put("BusinessName", StringUtils.capitalize(genTable.getBusinessName()));
         velocityContext.put("businessName", genTable.getBusinessName());
         velocityContext.put("business_name", StrUtil.toUnderlineCase(genTable.getBusinessName()));
-        velocityContext.put("business-name", StrUtil.toSymbolCase(genTable.getBusinessName(),'-'));
+        velocityContext.put("business__name", StrUtil.toSymbolCase(genTable.getBusinessName(), '-'));
         velocityContext.put("businessname", StrUtil.toSymbolCase(genTable.getBusinessName(), ' '));
         velocityContext.put("basePackage", getPackagePrefix(packageName));
         velocityContext.put("packageName", packageName);
@@ -180,7 +180,7 @@ public class VelocityUtils {
         } else if (template.contains("soy.api.d.ts.vm")) {
             fileName = StringUtils.format("soybean/typings/api/{}.api.d.ts", moduleName);
         } else if (template.contains("soy.api.ts.vm")) {
-            fileName = StringUtils.format("soybean/api/{}/{}.ts", moduleName,  StrUtil.toSymbolCase(businessName, '-'));
+            fileName = StringUtils.format("soybean/api/{}/{}.ts", moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("soy.search.vue.vm")) {
             fileName = StringUtils.format("soybean/views/{}/{}/modules/{}-search.vue", moduleName, businessName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("soy.operate-drawer.vue.vm")) {
