@@ -16,3 +16,19 @@ export function fetchBatchDeleteLoginInfor(infoIds: CommonType.IdType[]) {
     method: 'delete'
   });
 }
+
+/** 解锁系统访问记录 */
+export function fetchUnlockLoginInfor(username: string) {
+  return request<boolean>({
+    url: `/monitor/logininfor/unlock/${username}`,
+    method: 'get'
+  });
+}
+
+/** 清空系统访问记录 */
+export function fetchCleanLoginInfor() {
+  return request<boolean>({
+    url: '/monitor/logininfor/clean',
+    method: 'delete'
+  });
+}

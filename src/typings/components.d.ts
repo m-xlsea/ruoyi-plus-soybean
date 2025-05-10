@@ -47,6 +47,7 @@ declare module 'vue' {
     'IconMaterialSymbols:downloadRounded': typeof import('~icons/material-symbols/download-rounded')['default']
     'IconMaterialSymbols:expandAllRounded': typeof import('~icons/material-symbols/expand-all-rounded')['default']
     'IconMaterialSymbols:imageOutline': typeof import('~icons/material-symbols/image-outline')['default']
+    'IconMaterialSymbols:lockOpenOutlineRounded': typeof import('~icons/material-symbols/lock-open-outline-rounded')['default']
     'IconMaterialSymbols:refreshRounded': typeof import('~icons/material-symbols/refresh-rounded')['default']
     'IconMaterialSymbols:settingsOutlineRounded': typeof import('~icons/material-symbols/settings-outline-rounded')['default']
     'IconMaterialSymbols:syncOutline': typeof import('~icons/material-symbols/sync-outline')['default']

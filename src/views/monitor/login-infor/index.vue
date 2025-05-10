@@ -1,5 +1,11 @@
 <script setup lang="tsx">
-import { fetchBatchDeleteLoginInfor, fetchGetLoginInforList } from '@/service/api/monitor/login-infor';
+import { NDivider } from 'naive-ui';
+import {
+  fetchBatchDeleteLoginInfor,
+  fetchCleanLoginInfor,
+  fetchGetLoginInforList,
+  fetchUnlockLoginInfor
+} from '@/service/api/monitor/login-infor';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
@@ -151,7 +157,28 @@ const {
             />
           );
         };
-        return <div class="flex-center gap-8px">{viewBtn()}</div>;
+
+        const unlockBtn = () => {
+          return (
+            <>
+              <NDivider vertical />
+              <ButtonIcon
+                type="primary"
+                text
+                icon="material-symbols:lock-open-outline"
+                tooltipContent="解锁"
+                popconfirmContent={`确认解锁用户 ${row.userName} 吗？`}
+                onPositiveClick={() => handleUnlockLoginInfor(row.userName!)}
+              />
+            </>
+          );
+        };
+        return (
+          <div class="flex-center gap-8px">
+            {viewBtn()}
+            {unlockBtn()}
+          </div>
+        );
       }
     }
   ]
@@ -173,6 +200,28 @@ async function view(infoId: CommonType.IdType) {
 async function handleExport() {
   download('/monitor/logininfor/export', searchParams, `登录日志记录_${new Date().getTime()}.xlsx`);
 }
+
+async function handleCleanLoginInfor() {
+  window.$dialog?.error({
+    title: '提示',
+    content: '是否确认清空所有登录日志数据项?',
+    positiveText: '确认清空',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      const { error } = await fetchCleanLoginInfor();
+      if (error) return;
+      window.$message?.success('清空成功');
+      await getData();
+    }
+  });
+}
+
+async function handleUnlockLoginInfor(username: string) {
+  const { error } = await fetchUnlockLoginInfor(username);
+  if (error) return;
+  window.$message?.success('解锁成功');
+  await getDataByPage();
+}
 </script>
 
 <template>
@@ -190,7 +239,22 @@ async function handleExport() {
           @delete="handleBatchDelete"
           @export="handleExport"
           @refresh="getData"
-        />
+        >
+          <template #prefix>
+            <NButton
+              v-if="hasAuth('monitor:logininfor:remove')"
+              type="error"
+              ghost
+              size="small"
+              @click="handleCleanLoginInfor"
+            >
+              <template #icon>
+                <icon-material-symbols:warning-outline-rounded />
+              </template>
+              清空
+            </NButton>
+          </template>
+        </TableHeaderOperation>
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"
