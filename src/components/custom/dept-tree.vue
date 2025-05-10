@@ -106,6 +106,7 @@ defineExpose({
         v-model:expanded-keys="expandedKeys"
         multiple
         checkable
+        :selectable="false"
         key-field="id"
         label-field="label"
         :data="options"

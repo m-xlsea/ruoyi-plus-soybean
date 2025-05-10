@@ -287,13 +287,13 @@ getDataNames();
               @click="() => handleGenCode()"
             >
               <template #icon>
-                <icon-ic-round-download class="text-icon" />
+                <icon-material-symbols:download-rounded class="text-icon" />
               </template>
               生成代码
             </NButton>
             <NButton size="small" ghost type="primary" @click="handleImport">
               <template #icon>
-                <icon-ic-round-upload class="text-icon" />
+                <icon-material-symbols:upload-rounded class="text-icon" />
               </template>
               导入
             </NButton>

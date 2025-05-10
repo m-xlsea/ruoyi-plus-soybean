@@ -305,13 +305,13 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
           v-model:checked-keys="checkedKeys"
           v-model:expanded-keys="expandedKeys"
           :cancelable="false"
+          block-node
           show-line
           :data="treeData as []"
           :default-expanded-keys="[0]"
           :show-irrelevant-nodes="false"
           :pattern="name"
-          block-line
-          class="h-full min-h-200px py-3"
+          class="menu-tree h-full min-h-200px py-3"
           key-field="menuId"
           label-field="menuName"
           virtual-scroll
@@ -482,11 +482,11 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
 
 .menu-tree {
   :deep(.n-tree-node) {
-    height: 33px;
+    height: 25px;
   }
 
   :deep(.n-tree-node-switcher) {
-    height: 33px;
+    height: 25px;
   }
 
   :deep(.n-tree-node-switcher__icon) {

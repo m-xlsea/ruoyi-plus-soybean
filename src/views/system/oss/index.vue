@@ -161,7 +161,7 @@ const {
             <ButtonIcon
               text
               type="primary"
-              icon="material-symbols:download"
+              icon="material-symbols:download-rounded"
               class="text-20px"
               tooltipContent={$t('common.download')}
               onClick={() => download(row.ossId!)}
@@ -298,15 +298,15 @@ function handleToOssConfig() {
               </template>
             </NSwitch>
 
-            <NButton type="primary" size="small" ghost @click="handleUpload('file')">
+            <NButton size="small" ghost @click="handleUpload('file')">
               <template #icon>
-                <icon-ic-round-file-upload />
+                <icon-material-symbols:upload-rounded />
               </template>
               上传文件
             </NButton>
-            <NButton type="primary" size="small" ghost @click="handleUpload('image')">
+            <NButton size="small" ghost @click="handleUpload('image')">
               <template #icon>
-                <icon-ic-round-image />
+                <icon-material-symbols:image-outline />
               </template>
               上传图片
             </NButton>

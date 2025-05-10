@@ -257,7 +257,6 @@ async function handleStatusChange(
           :default-expanded-keys="deptData?.length ? [deptData[0].id!] : []"
           :show-irrelevant-nodes="false"
           :pattern="deptPattern"
-          block-line
           class="infinite-scroll h-full min-h-200px py-3"
           key-field="id"
           label-field="label"
@@ -289,7 +288,7 @@ async function handleStatusChange(
             <template #after>
               <NButton v-if="hasAuth('system:user:import')" size="small" ghost @click="handleImport">
                 <template #icon>
-                  <icon-material-symbols:upload-2-rounded class="text-icon" />
+                  <icon-material-symbols:upload-rounded class="text-icon" />
                 </template>
                 导入
               </NButton>
@@ -351,11 +350,11 @@ async function handleStatusChange(
   }
 
   :deep(.n-tree-node) {
-    height: 33px;
+    height: 25px;
   }
 
   :deep(.n-tree-node-switcher) {
-    height: 33px;
+    height: 25px;
   }
 
   :deep(.n-tree-node-switcher__icon) {

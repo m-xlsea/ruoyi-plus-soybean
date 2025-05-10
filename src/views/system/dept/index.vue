@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { NButton, NDivider } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
-import type { TableDataWithIndex } from '@sa/hooks';
+import { type TableDataWithIndex } from '@sa/hooks';
 import { fetchBatchDeleteDept, fetchGetDeptList } from '@/service/api/system/dept';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
@@ -31,6 +31,7 @@ const {
   searchParams,
   resetSearchParams,
   expandedRowKeys,
+  isCollapse,
   expandAll,
   collapseAll
 } = useTreeTable({
@@ -173,8 +174,18 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
           @refresh="getData"
         >
           <template #prefix>
-            <NButton size="small" @click="expandAll">展开</NButton>
-            <NButton size="small" @click="collapseAll">收起</NButton>
+            <NButton v-if="!isCollapse" :disabled="!expandedRowKeys.length" size="small" @click="expandAll">
+              <template #icon>
+                <icon-quill:expand />
+              </template>
+              全部展开
+            </NButton>
+            <NButton v-if="isCollapse" :disabled="!expandedRowKeys.length" size="small" @click="collapseAll">
+              <template #icon>
+                <icon-quill:collapse />
+              </template>
+              全部收起
+            </NButton>
           </template>
         </TableHeaderOperation>
       </template>

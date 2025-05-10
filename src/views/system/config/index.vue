@@ -215,6 +215,9 @@ async function handleRefreshCache() {
               size="small"
               @click="handleRefreshCache"
             >
+              <template #icon>
+                <icon-material-symbols:sync-outline />
+              </template>
               刷新缓存
             </NButton>
           </template>

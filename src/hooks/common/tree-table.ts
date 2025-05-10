@@ -23,7 +23,7 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
     idField,
     parentIdField = 'parentId',
     childrenField = 'children',
-    defaultExpandAll = true
+    defaultExpandAll = false
   } = config;
 
   const SELECTION_KEY = '__selection__';
@@ -56,10 +56,8 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
         childrenField
       });
 
-      // 如果设置了默认展开所有，则收集所有节点的key
-      if (defaultExpandAll) {
-        expandedRowKeys.value = records.map(item => item[idField]);
-      }
+      // if defaultExpandAll is true, expand all nodes
+      expandedRowKeys.value = defaultExpandAll ? records.map(item => item[idField]) : [records[0][idField]];
 
       return { data: treeData };
     },
@@ -129,14 +127,18 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
     return keys;
   }
 
-  /** 展开所有节点 */
+  const { bool: isCollapse, toggle: toggleCollapse } = useBoolean(defaultExpandAll);
+
+  /** expand all nodes */
   function expandAll() {
+    toggleCollapse();
     expandedRowKeys.value = collectAllNodeKeys(data.value);
   }
 
-  /** 收起所有节点 */
+  /** collapse all nodes */
   function collapseAll() {
-    expandedRowKeys.value = [];
+    toggleCollapse();
+    expandedRowKeys.value = data.value.length ? [data.value[0][idField]] : [];
   }
 
   scope.run(() => {
@@ -164,6 +166,7 @@ export function useTreeTable<A extends NaiveUI.TreeTableApiFn>(
     updateSearchParams,
     resetSearchParams,
     expandedRowKeys,
+    isCollapse,
     expandAll,
     collapseAll
   };

@@ -156,10 +156,18 @@ async function handleExport() {
 }
 
 async function handleCleanOperLog() {
-  const { error } = await fetchCleanOperLog();
-  if (error) return;
-  window.$message?.success('清理成功');
-  await getData();
+  window.$dialog?.error({
+    title: '提示',
+    content: '是否确认清空所有操作日志数据项?',
+    positiveText: '确认清空',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      const { error } = await fetchCleanOperLog();
+      if (error) return;
+      window.$message?.success('清空成功');
+      await getData();
+    }
+  });
 }
 </script>
 
@@ -182,11 +190,14 @@ async function handleCleanOperLog() {
           <template #prefix>
             <NButton
               v-if="hasAuth('monitor:operlog:remove')"
-              type="warning"
+              type="error"
               ghost
               size="small"
               @click="handleCleanOperLog"
             >
+              <template #icon>
+                <icon-material-symbols:warning-outline-rounded />
+              </template>
               清空
             </NButton>
           </template>
