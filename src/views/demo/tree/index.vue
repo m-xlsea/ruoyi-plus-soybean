@@ -179,7 +179,6 @@ function handleExport() {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <TreeSearch v-model:model="searchParams" :tree-list="data" @reset="resetSearchParams" @search="getData" />
-    {{ expandedRowKeys }}
     <NCard title="测试树列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
@@ -195,13 +194,13 @@ function handleExport() {
           @refresh="getData"
         >
           <template #prefix>
-            <NButton v-if="!isCollapse" :disabled="!expandedRowKeys.length" size="small" @click="expandAll">
+            <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
               <template #icon>
                 <icon-quill:expand />
               </template>
               全部展开
             </NButton>
-            <NButton v-if="isCollapse" :disabled="!expandedRowKeys.length" size="small" @click="collapseAll">
+            <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
                 <icon-quill:collapse />
               </template>

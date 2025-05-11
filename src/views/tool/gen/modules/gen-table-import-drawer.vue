@@ -84,15 +84,16 @@ async function getDataNames() {
   const { error, data: dataNames } = await fetchGetGenDataNames();
   if (error) return;
   dataNameOptions.value = dataNames.map(item => ({ label: item, value: item }));
+
+  resetSearchParams();
+  searchParams.dataName = dataNameOptions.value.length ? dataNameOptions.value[0].value : null;
+  data.value = [];
+  checkedRowKeys.value = [];
 }
 
 watch(visible, () => {
   if (visible.value) {
     getDataNames();
-    resetSearchParams();
-    searchParams.dataName = dataNameOptions.value.length ? dataNameOptions.value[0].value : null;
-    data.value = [];
-    checkedRowKeys.value = [];
   }
 });
 </script>
