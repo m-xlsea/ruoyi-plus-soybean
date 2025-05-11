@@ -173,6 +173,7 @@ const local: App.I18n.Schema = {
     system_user: '用户管理',
     system_dict: '字典管理',
     system_tenant: '租户管理',
+    'system_tenant-package': '租户套餐',
     system_config: '参数设置',
     system_dept: '部门管理',
     system_post: '岗位管理',

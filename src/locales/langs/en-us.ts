@@ -173,6 +173,7 @@ const local: App.I18n.Schema = {
     system_user: 'User Management',
     system_dict: 'Dict Management',
     system_tenant: 'Tenant Management',
+    'system_tenant-package': 'Tenant Package Management',
     system_config: 'Config Management',
     system_dept: 'Dept Management',
     system_post: 'Post Management',
