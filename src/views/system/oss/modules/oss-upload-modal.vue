@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import FileUpload from '@/components/custom/file-upload.vue';
 
 defineOptions({
   name: 'OssUploadModal'
 });
-
+const fileUploadRef = ref<InstanceType<typeof FileUpload> | null>(null);
 interface Props {
   uploadType: 'file' | 'image';
 }
@@ -21,8 +22,6 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const needRelaodData = ref<boolean>(false);
-
 const accept = computed(() => {
   return props.uploadType === 'file' ? '.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.pdf' : '.jpg,.jpeg,.png,.gif,.bmp,.webp';
 });
@@ -35,7 +34,7 @@ function closeDrawer() {
 
 function handleClose() {
   closeDrawer();
-  if (needRelaodData.value) {
+  if (fileUploadRef.value?.refreshList) {
     emit('close');
   }
 }
@@ -57,7 +56,7 @@ watch(visible, () => {
     :bordered="false"
     @after-leave="handleClose"
   >
-    <FileUpload v-model:need-relaod-data="needRelaodData" :upload-type="uploadType" :accept="accept" />
+    <FileUpload ref="fileUploadRef" :upload-type="uploadType" :accept="accept" />
   </NModal>
 </template>
 

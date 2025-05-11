@@ -40,7 +40,9 @@ const fileList = ref<UploadFileInfo[]>([]);
 const needRelaodData = defineModel<boolean>('needRelaodData', {
   default: false
 });
-
+defineExpose({
+  refreshList: needRelaodData
+});
 watch(
   () => fileList.value,
   newValue => {
