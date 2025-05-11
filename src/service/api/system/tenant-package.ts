@@ -41,3 +41,12 @@ export function fetchBatchDeleteTenantPackage(packageIds: CommonType.IdType[]) {
     method: 'delete'
   });
 }
+
+/** 修改租户套餐状态 */
+export function fetchUpdateTenantPackageStatus(data: Api.System.TenantPackageOperateParams) {
+  return request<boolean>({
+    url: `/system/tenant/package/changeStatus`,
+    method: 'put',
+    data
+  });
+}

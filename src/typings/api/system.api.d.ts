@@ -68,7 +68,11 @@ declare namespace Api {
       checkedKeys: CommonType.IdType[];
       menus: MenuList;
     }>;
-
+    /** teannt-package menu tree select */
+    type TenantPackageMenuTreeSelect = Common.CommonRecord<{
+      checkedKeys: CommonType.IdType[];
+      menus: MenuList;
+    }>;
     /** role dept tree select */
     type RoleDeptTreeSelect = Common.CommonRecord<{
       checkedKeys: CommonType.IdType[];
@@ -562,7 +566,7 @@ declare namespace Api {
       /** 套餐名称 */
       packageName: string;
       /** 关联菜单id */
-      menuIds: CommonType.IdType;
+      menuIds: CommonType.IdType[];
       /** 备注 */
       remark: string;
       /** 菜单树选择项是否关联显示 */

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { useNaiveForm } from '@/hooks/common/form';
 import { useDict } from '@/hooks/business/dict';
+import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
+
 defineOptions({
-  name: 'DeptSearch'
+  name: 'TenantPackageSearch'
 });
 
 interface Emits {
@@ -15,11 +16,12 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const model = defineModel<Api.System.DeptSearchParams>('model', { required: true });
+const model = defineModel<Api.System.TenantPackageSearchParams>('model', { required: true });
 
 const { options: sysNormalDisableOptions } = useDict('sys_normal_disable');
 
 async function reset() {
+  Object.assign(model.value.params!, {});
   await restoreValidation();
   emit('reset');
 }
@@ -36,13 +38,13 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="8" label="部门名称" path="deptName" class="pr-24px">
-              <NInput v-model:value="model.deptName" placeholder="请输入部门名称" />
+            <NFormItemGi span="8" label="套餐名称" path="packageName" class="pr-24px">
+              <NInput v-model:value="model.packageName" placeholder="请输入套餐名称" />
             </NFormItemGi>
-            <NFormItemGi span="8 " label="部门状态" path="status" class="pr-24px">
+            <NFormItemGi span="8" label="状态" path="status" class="pr-24px">
               <NSelect
                 v-model:value="model.status"
-                placeholder="请选择部门状态"
+                placeholder="请选择状态"
                 :options="sysNormalDisableOptions"
                 clearable
               />

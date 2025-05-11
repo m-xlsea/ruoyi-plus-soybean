@@ -34,13 +34,13 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="参数名称" path="configName" class="pr-24px">
+            <NFormItemGi span="6 s:12 m:6" label="参数名称" path="configName" class="pr-24px">
               <NInput v-model:value="model.configName" placeholder="请输入参数名称" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="参数键名" path="configKey" class="pr-24px">
+            <NFormItemGi span="6 s:12 m:6" label="参数键名" path="configKey" class="pr-24px">
               <NInput v-model:value="model.configKey" placeholder="请输入参数键名" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="是否内置" path="configType" class="pr-24px">
+            <NFormItemGi span="6 s:12 m:6" label="是否内置" path="configType" class="pr-24px">
               <DictSelect
                 v-model:value="model.configType"
                 placeholder="请选择是否内置"
@@ -48,7 +48,7 @@ async function search() {
                 clearable
               />
             </NFormItemGi>
-            <NFormItemGi span="24" class="pr-24px">
+            <NFormItemGi span="6" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

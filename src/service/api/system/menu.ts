@@ -50,3 +50,11 @@ export function fetchGetRoleMenuTreeSelect(roleId: CommonType.IdType) {
     method: 'get'
   });
 }
+
+/** 获取租户套餐关联菜单 */
+export function fetchGetTenantPackageMenuTreeSelect(packageId: CommonType.IdType) {
+  return request<Api.System.TenantPackageMenuTreeSelect>({
+    url: `/system/menu/tenantPackageMenuTreeselect/${packageId}`,
+    method: 'get'
+  });
+}
