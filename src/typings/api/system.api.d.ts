@@ -570,7 +570,7 @@ declare namespace Api {
       /** 备注 */
       remark: string;
       /** 菜单树选择项是否关联显示 */
-      menuCheckStrictly: number;
+      menuCheckStrictly: boolean;
       /** 状态（0正常 1停用） */
       status: string;
       /** 删除标志（0代表存在 1代表删除） */

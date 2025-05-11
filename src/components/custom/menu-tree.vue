@@ -51,19 +51,14 @@ onMounted(() => {
 });
 
 // 添加 watch 监听 expandAll 的变化,options有值后，计算expandedKeys
-watch(
-  [expandAll, options],
-  ([newVal]) => {
-    if (newVal) {
-      // 展开所有节点
-      expandedKeys.value = getAllMenuIds(options.value);
-    } else {
-      // 折叠到只显示根节点
-      expandedKeys.value = [0];
-    }
-  },
-  { immediate: true }
-);
+watch([expandAll, options], ([newVal]) => {
+  if (newVal) {
+    // 展开所有节点
+    expandedKeys.value = getAllMenuIds(options.value);
+  } else {
+    expandedKeys.value = [0];
+  }
+});
 
 function renderPrefix({ option }: { option: TreeOption }) {
   const renderLocalIcon = String(option.icon).startsWith('icon-');

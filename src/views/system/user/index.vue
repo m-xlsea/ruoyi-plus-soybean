@@ -7,6 +7,7 @@ import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { useAuth } from '@/hooks/business/auth';
+import { useDownload } from '@/hooks/business/download';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import { $t } from '@/locales';
 import StatusSwitch from '@/components/custom/status-switch.vue';
@@ -22,6 +23,7 @@ useDict('sys_user_sex');
 
 const { hasAuth } = useAuth();
 const appStore = useAppStore();
+const { download } = useDownload();
 
 const { bool: importVisible, setTrue: openImportModal } = useBoolean();
 
@@ -236,6 +238,10 @@ async function handleStatusChange(
     getData();
   }
 }
+
+function handleExport() {
+  download('/system/user/export', searchParams, `用户列表_${new Date().getTime()}.xlsx`);
+}
 </script>
 
 <template>
@@ -283,6 +289,7 @@ async function handleStatusChange(
             :show-export="hasAuth('system:user:export')"
             @add="handleAdd"
             @delete="handleBatchDelete"
+            @export="handleExport"
             @refresh="getData"
           >
             <template #after>

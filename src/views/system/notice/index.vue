@@ -3,7 +3,6 @@ import { NDivider } from 'naive-ui';
 import { fetchBatchDeleteNotice, fetchGetNoticeList } from '@/service/api/system/notice';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
-import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
@@ -19,7 +18,6 @@ defineOptions({
 useDict('sys_notice_type');
 useDict('sys_normal_disable');
 const appStore = useAppStore();
-const { download } = useDownload();
 const { hasAuth } = useAuth();
 
 const {
@@ -160,10 +158,6 @@ async function handleDelete(noticeId: CommonType.IdType) {
 async function edit(noticeId: CommonType.IdType) {
   handleEdit('noticeId', noticeId);
 }
-
-async function handleExport() {
-  download('/system/notice/export', searchParams, `通知公告_${new Date().getTime()}.xlsx`);
-}
 </script>
 
 <template>
@@ -177,10 +171,9 @@ async function handleExport() {
           :loading="loading"
           :show-add="hasAuth('system:notice:add')"
           :show-delete="hasAuth('system:notice:remove')"
-          :show-export="hasAuth('system:notice:export')"
+          :show-export="false"
           @add="handleAdd"
           @delete="handleBatchDelete"
-          @export="handleExport"
           @refresh="getData"
         />
       </template>
