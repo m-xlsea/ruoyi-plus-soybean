@@ -56,14 +56,15 @@ function createDefaultModel(): Model {
     packageName: '',
     menuIds: [],
     remark: '',
-    menuCheckStrictly: null
+    menuCheckStrictly: true
   };
 }
 
-type RuleKey = Extract<keyof Model, 'packageId'>;
+type RuleKey = Extract<keyof Model, 'packageId' | 'packageName'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  packageId: createRequiredRule('租户套餐id不能为空')
+  packageId: createRequiredRule('租户套餐id不能为空'),
+  packageName: createRequiredRule('租户套餐名称不能为空')
 };
 
 async function handleUpdateModelWhenEdit() {
@@ -78,7 +79,7 @@ async function handleUpdateModelWhenEdit() {
 
   if (props.operateType === 'edit' && props.rowData) {
     startMenuLoading();
-    Object.assign(model, props.rowData);
+    Object.assign(model, { ...props.rowData, menuIds: [] });
     const { data, error } = await fetchGetTenantPackageMenuTreeSelect(model.packageId!);
     if (error) return;
     model.menuIds = data.checkedKeys;
@@ -94,15 +95,14 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const { packageId, packageName, menuIds, remark, menuCheckStrictly } = model;
   // request
   if (props.operateType === 'add') {
-    const { packageName, menuIds, remark, menuCheckStrictly } = model;
     const { error } = await fetchCreateTenantPackage({ packageName, menuIds, remark, menuCheckStrictly });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { packageId, packageName, menuIds, remark, menuCheckStrictly } = model;
     const { error } = await fetchUpdateTenantPackage({
       packageId,
       packageName,
@@ -144,7 +144,7 @@ watch(visible, () => {
           />
         </NFormItem>
         <NFormItem label="备注" path="remark">
-          <NInput v-model:value="model.remark" placeholder="请输入备注" />
+          <NInput v-model:value="model.remark" placeholder="请输入备注" type="textarea" />
         </NFormItem>
       </NForm>
       <template #footer>

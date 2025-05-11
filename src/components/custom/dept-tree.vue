@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { onMounted, ref, useAttrs } from 'vue';
+import { onMounted, ref, useAttrs, watch } from 'vue';
 import type { TreeSelectInst, TreeSelectProps } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import { fetchGetDeptTree } from '@/service/api/system/user';
@@ -45,6 +45,16 @@ async function getDeptList() {
 onMounted(() => {
   if (props.immediate) {
     getDeptList();
+  }
+});
+
+watch([expandAll, options], ([newVal]) => {
+  if (newVal) {
+    // 展开所有节点
+    expandedKeys.value = getAllDeptIds(options.value);
+  } else {
+    // 折叠到只显示根节点
+    expandedKeys.value = [100];
   }
 });
 
@@ -114,7 +124,6 @@ defineExpose({
         :loading="loading"
         virtual-scroll
         :check-strategy="cascade ? 'child' : 'all'"
-        :default-expand-all="expandAll"
         v-bind="attrs"
       />
     </NSpin>
