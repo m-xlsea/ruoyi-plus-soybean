@@ -34,7 +34,7 @@ function closeDrawer() {
         </NDescriptionsItem>
         <NDescriptionsItem label="系统模块">
           <NSpace>
-            <NTag size="small" type="primary">{{ props.rowData?.title }}模块</NTag>
+            <NTag class="m-1" size="small" type="primary">{{ props.rowData?.title }}模块</NTag>
             <DictTag size="small" :value="props.rowData?.businessType" dict-code="sys_oper_type" />
           </NSpace>
         </NDescriptionsItem>
