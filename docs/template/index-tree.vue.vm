@@ -47,6 +47,9 @@ const {
     params: {}
   },
   idField: '#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end',
+#if(${treeParentCode} && ${treeParentCode} != 'parentId')
+  parentIdField: '${treeParentCode}',
+#end
   columns: () => [
     {
       type: 'selection',
