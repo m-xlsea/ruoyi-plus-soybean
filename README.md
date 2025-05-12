@@ -317,6 +317,10 @@ console.log(t('common.confirm'));
 - **邮箱**: xlsea@linux.do
 - **项目地址**: https://gitee.com/xlsea/ruoyi-plus-soybean
 
+## 💬 交流群
+
+<img src="https://foruda.gitee.com/images/1747014836531779417/f3b29a34_5601833.png" width="300px" />
+
 ## 🧧 捐献作者
 
 作者为兼职做开源，平时还需要工作，如果帮到了您可以请作者吃个盒饭
