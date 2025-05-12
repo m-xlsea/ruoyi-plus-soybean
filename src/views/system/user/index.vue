@@ -20,6 +20,7 @@ defineOptions({
 });
 
 useDict('sys_user_sex');
+useDict('sys_normal_disable');
 
 const { hasAuth } = useAuth();
 const appStore = useAppStore();
