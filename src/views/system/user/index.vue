@@ -65,35 +65,35 @@ const {
     },
     {
       key: 'userName',
-      title: '用户名称',
+      title: $t('page.system.user.userName'),
       align: 'center',
       minWidth: 120,
       ellipsis: true
     },
     {
       key: 'nickName',
-      title: '用户昵称',
+      title: $t('page.system.user.nickName'),
       align: 'center',
       minWidth: 120,
       ellipsis: true
     },
     {
       key: 'deptName',
-      title: '部门',
+      title: $t('page.system.user.deptName'),
       align: 'center',
       minWidth: 120,
       ellipsis: true
     },
     {
       key: 'phonenumber',
-      title: '手机号码',
+      title: $t('page.system.user.phonenumber'),
       align: 'center',
       minWidth: 120,
       ellipsis: true
     },
     {
       key: 'status',
-      title: '状态',
+      title: $t('page.system.user.status'),
       align: 'center',
       minWidth: 80,
       render(row) {
@@ -109,7 +109,7 @@ const {
     },
     {
       key: 'createTime',
-      title: '创建时间',
+      title: $t('page.system.user.createTime'),
       align: 'center',
       minWidth: 120
     },
@@ -234,18 +234,18 @@ async function handleStatusChange(
   callback(!error);
 
   if (!error) {
-    window.$message?.success('状态修改成功');
+    window.$message?.success($t('page.system.user.statusChangeSuccess'));
     getData();
   }
 }
 
 function handleExport() {
-  download('/system/user/export', searchParams, `用户列表_${new Date().getTime()}.xlsx`);
+  download('/system/user/export', searchParams, `${$t('page.system.user.title')}_${new Date().getTime()}.xlsx`);
 }
 </script>
 
 <template>
-  <TableSiderLayout sider-title="部门列表">
+  <TableSiderLayout :sider-title="$t('page.system.dept.title')">
     <template #header-extra>
       <NButton size="small" text class="h-18px" @click.stop="() => handleResetTreeData()">
         <template #icon>
@@ -270,7 +270,7 @@ function handleExport() {
           @update:selected-keys="handleClickTree"
         >
           <template #empty>
-            <NEmpty description="暂无部门信息" class="h-full min-h-200px justify-center" />
+            <NEmpty :description="$t('page.system.dept.empty')" class="h-full min-h-200px justify-center" />
           </template>
         </NTree>
       </NSpin>
@@ -278,7 +278,7 @@ function handleExport() {
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
       <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
-      <NCard title="用户列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+      <NCard :title="$t('page.system.user.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
         <template #header-extra>
           <TableHeaderOperation
             v-model:columns="columnChecks"
@@ -297,7 +297,7 @@ function handleExport() {
                 <template #icon>
                   <icon-material-symbols:upload-rounded class="text-icon" />
                 </template>
-                导入
+                {{ $t('common.import') }}
               </NButton>
             </template>
           </TableHeaderOperation>

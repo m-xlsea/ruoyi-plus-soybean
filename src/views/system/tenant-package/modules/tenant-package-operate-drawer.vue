@@ -41,8 +41,8 @@ const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增租户套餐',
-    edit: '编辑租户套餐'
+    add: $t('page.system.tenantPackage.addTenantPackage'),
+    edit: $t('page.system.tenantPackage.editTenantPackage')
   };
   return titles[props.operateType];
 });
@@ -63,8 +63,8 @@ function createDefaultModel(): Model {
 type RuleKey = Extract<keyof Model, 'packageId' | 'packageName'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  packageId: createRequiredRule('租户套餐id不能为空'),
-  packageName: createRequiredRule('租户套餐名称不能为空')
+  packageId: createRequiredRule($t('page.system.tenantPackage.form.packageName.invalid')),
+  packageName: createRequiredRule($t('page.system.tenantPackage.form.packageName.required'))
 };
 
 async function handleUpdateModelWhenEdit() {
@@ -113,7 +113,7 @@ async function handleSubmit() {
     if (error) return;
   }
 
-  window.$message?.success($t('common.updateSuccess'));
+  window.$message?.success($t('common.saveSuccess'));
   closeDrawer();
   emit('submitted');
 }
@@ -130,10 +130,13 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="套餐名称" path="packageName">
-          <NInput v-model:value="model.packageName" placeholder="请输入套餐名称" />
+        <NFormItem :label="$t('page.system.tenantPackage.packageName')" path="packageName">
+          <NInput
+            v-model:value="model.packageName"
+            :placeholder="$t('page.system.tenantPackage.form.packageName.required')"
+          />
         </NFormItem>
-        <NFormItem label="关联菜单" path="menuIds">
+        <NFormItem :label="$t('page.system.tenantPackage.menuIds')" path="menuIds">
           <MenuTree
             ref="menuTreeRef"
             v-model:value="model.menuIds"
@@ -143,8 +146,12 @@ watch(visible, () => {
             :immediate="operateType === 'add'"
           />
         </NFormItem>
-        <NFormItem label="备注" path="remark">
-          <NInput v-model:value="model.remark" placeholder="请输入备注" type="textarea" />
+        <NFormItem :label="$t('page.system.tenantPackage.remark')" path="remark">
+          <NInput
+            v-model:value="model.remark"
+            :placeholder="$t('page.system.tenantPackage.form.remark.required')"
+            type="textarea"
+          />
         </NFormItem>
       </NForm>
       <template #footer>

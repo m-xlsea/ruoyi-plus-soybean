@@ -1,11 +1,11 @@
 <script setup lang="ts">
-// import { fetchUserResetPwd } from '@/service/api/system';
 import { ref, watch } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
 import { getToken } from '@/store/modules/auth/shared';
 import { useDownload } from '@/hooks/business/download';
 import { getServiceBaseURL } from '@/utils/service';
 import type FileUpload from '@/components/custom/file-upload.vue';
+import { $t } from '@/locales';
 
 defineOptions({
   name: 'UserImportModal'
@@ -66,7 +66,7 @@ function handleFinish(options: { file: UploadFileInfo; event?: ProgressEvent }) 
   const responseText = event?.target?.responseText;
   const response = JSON.parse(responseText);
   message.value = response.msg;
-  window.$message?.success('导入成功');
+  window.$message?.success($t('common.importSuccess'));
   success.value = true;
   return file;
 }
@@ -77,12 +77,16 @@ function handleError(options: { file: UploadFileInfo; event?: ProgressEvent }) {
   const responseText = event?.target?.responseText;
   const msg = JSON.parse(responseText).msg;
   message.value = msg;
-  window.$message?.error(msg || '导入失败');
+  window.$message?.error(msg || $t('common.importFail'));
   success.value = false;
 }
 
 function handleDownloadTemplate() {
-  download('/system/user/importTemplate', {}, `user_template_${new Date().getTime()}.xlsx`);
+  download(
+    '/system/user/importTemplate',
+    {},
+    `${$t('page.system.user.title')}_${$t('common.importTemplate')}_${new Date().getTime()}.xlsx`
+  );
 }
 
 watch(visible, () => {
@@ -97,7 +101,7 @@ watch(visible, () => {
 <template>
   <NModal
     v-model:show="visible"
-    title="导入用户"
+    :title="$t('common.import')"
     preset="card"
     :bordered="false"
     display-directive="show"
@@ -125,26 +129,26 @@ watch(visible, () => {
         <div class="mb-12px flex-center">
           <SvgIcon icon="material-symbols:unarchive-outline" class="text-58px color-#d8d8db dark:color-#a1a1a2" />
         </div>
-        <NText class="text-16px">点击或者拖动文件到该区域来上传</NText>
+        <NText class="text-16px">{{ $t('common.importTip') }}</NText>
         <NP depth="3" class="mt-8px text-center">
-          请上传大小不超过
+          {{ $t('common.importSize') }}
           <b class="text-red-500">50MB</b>
-          ，且格式为
+          {{ $t('common.importFormat') }}
           <b class="text-red-500">xls/xlsx</b>
-          的文件
+          {{ $t('common.importEnd') }}
         </NP>
       </NUploadDragger>
     </NUpload>
     <div class="flex-center">
-      <NCheckbox v-model="data.updateSupport">是否更新已经存在的用户数据</NCheckbox>
+      <NCheckbox v-model="data.updateSupport">{{ $t('common.updateExisting') }}</NCheckbox>
     </div>
-    <NAlert v-if="message" title="导入结果" :type="success ? 'success' : 'error'" :bordered="false">
+    <NAlert v-if="message" :title="$t('common.importResult')" :type="success ? 'success' : 'error'" :bordered="false">
       {{ message }}
     </NAlert>
     <template #footer>
       <NSpace justify="end" :size="16">
-        <NButton @click="handleDownloadTemplate">下载模板</NButton>
-        <NButton type="primary" @click="handleSubmit">导入用户</NButton>
+        <NButton @click="handleDownloadTemplate">{{ $t('common.downloadTemplate') }}</NButton>
+        <NButton type="primary" @click="handleSubmit">{{ $t('common.import') }}</NButton>
       </NSpace>
     </template>
   </NModal>

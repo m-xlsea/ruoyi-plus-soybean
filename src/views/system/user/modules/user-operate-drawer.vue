@@ -39,8 +39,8 @@ const { createRequiredRule, patternRules } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增用户信息',
-    edit: '编辑用户信息'
+    add: $t('page.system.user.addUser'),
+    edit: $t('page.system.user.editUser')
   };
   return titles[props.operateType];
 });
@@ -68,11 +68,11 @@ function createDefaultModel(): Model {
 type RuleKey = Extract<keyof Model, 'userName' | 'nickName' | 'password' | 'status' | 'phonenumber'>;
 
 const rules: Record<RuleKey, App.Global.FormRule[]> = {
-  userName: [createRequiredRule('用户名称不能为空')],
-  nickName: [createRequiredRule('用户昵称不能为空')],
+  userName: [createRequiredRule($t('page.system.user.form.userName.required'))],
+  nickName: [createRequiredRule($t('page.system.user.form.nickName.required'))],
   password: [{ ...patternRules.pwd, required: props.operateType === 'add' }],
   phonenumber: [patternRules.phone],
-  status: [createRequiredRule('帐号状态不能为空')]
+  status: [createRequiredRule($t('page.system.user.form.status.required'))]
 };
 
 async function getUserInfo() {
@@ -160,10 +160,10 @@ watch(visible, () => {
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NSpin :show="loading">
         <NForm ref="formRef" :model="model" :rules="rules">
-          <NFormItem label="用户昵称" path="nickName">
-            <NInput v-model:value="model.nickName" placeholder="请输入用户昵称" />
+          <NFormItem :label="$t('page.system.user.nickName')" path="nickName">
+            <NInput v-model:value="model.nickName" :placeholder="$t('page.system.user.form.nickName.required')" />
           </NFormItem>
-          <NFormItem label="归属部门" path="deptId">
+          <NFormItem :label="$t('page.system.user.deptName')" path="deptId">
             <NTreeSelect
               v-model:value="model.deptId"
               :loading="deptLoading"
@@ -172,40 +172,44 @@ watch(visible, () => {
               label-field="label"
               key-field="id"
               :default-expanded-keys="deptData?.length ? [deptData[0].id] : []"
-              placeholder="请选择归属部门"
+              :placeholder="$t('page.system.user.form.deptId.required')"
             />
           </NFormItem>
-          <NFormItem label="手机号码" path="phonenumber">
-            <NInput v-model:value="model.phonenumber" placeholder="请输入手机号码" />
+          <NFormItem :label="$t('page.system.user.phonenumber')" path="phonenumber">
+            <NInput v-model:value="model.phonenumber" :placeholder="$t('page.system.user.form.phonenumber.required')" />
           </NFormItem>
-          <NFormItem label="邮箱" path="email">
-            <NInput v-model:value="model.email" placeholder="请输入邮箱" />
+          <NFormItem :label="$t('page.system.user.email')" path="email">
+            <NInput v-model:value="model.email" :placeholder="$t('page.system.user.form.email.required')" />
           </NFormItem>
-          <NFormItem v-if="operateType === 'add'" label="用户名称" path="userName">
-            <NInput v-model:value="model.userName" placeholder="请输入用户名称" />
+          <NFormItem v-if="operateType === 'add'" :label="$t('page.system.user.userName')" path="userName">
+            <NInput v-model:value="model.userName" :placeholder="$t('page.system.user.form.userName.required')" />
           </NFormItem>
-          <NFormItem label="用户密码" path="password">
+          <NFormItem :label="$t('page.system.user.password')" path="password">
             <NInput
               v-model:value="model.password"
               type="password"
               show-password-on="click"
-              placeholder="请输入用户密码"
+              :placeholder="$t('page.system.user.form.password.required')"
             />
           </NFormItem>
-          <NFormItem label="用户性别" path="sex">
-            <DictRadio v-model:value="model.sex" dict-code="sys_user_sex" placeholder="请选择用户性别" />
+          <NFormItem :label="$t('page.system.user.sex')" path="sex">
+            <DictRadio
+              v-model:value="model.sex"
+              dict-code="sys_user_sex"
+              :placeholder="$t('page.system.user.form.sex.required')"
+            />
           </NFormItem>
-          <NFormItem label="岗位" path="postIds">
+          <NFormItem :label="$t('page.system.user.postIds')" path="postIds">
             <PostSelect v-model:value="model.postIds" :dept-id="model.deptId" multiple clearable />
           </NFormItem>
-          <NFormItem label="角色" path="roleIds">
+          <NFormItem :label="$t('page.system.user.roleIds')" path="roleIds">
             <RoleSelect v-model:value="model.roleIds" multiple clearable />
           </NFormItem>
-          <NFormItem label="状态" path="status">
+          <NFormItem :label="$t('page.system.user.status')" path="status">
             <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
           </NFormItem>
-          <NFormItem label="备注" path="remark">
-            <NInput v-model:value="model.remark" placeholder="请输入备注" />
+          <NFormItem :label="$t('page.system.user.remark')" path="remark">
+            <NInput v-model:value="model.remark" :placeholder="$t('page.system.user.form.remark.required')" />
           </NFormItem>
         </NForm>
       </NSpin>

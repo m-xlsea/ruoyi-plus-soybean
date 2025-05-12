@@ -14,6 +14,18 @@ const local: App.I18n.Schema = {
     batchDelete: '批量删除',
     import: '导入',
     export: '导出',
+    importSuccess: '导入成功',
+    importFail: '导入失败',
+    importTemplate: '导入模板',
+    downloadTemplate: '下载模板',
+    importResult: '导入结果',
+    importSize: '请上传大小不超过',
+    importEnd: '的文件',
+    importFormat: '且格式为',
+    importTip: '请上传大小不超过',
+    exportSuccess: '导出成功',
+    exportFail: '导出失败',
+    updateExisting: '是否更新已经存在的数据',
     cancel: '取消',
     close: '关闭',
     check: '勾选',
@@ -378,6 +390,7 @@ const local: App.I18n.Schema = {
         editConfig: '编辑参数配置'
       },
       dept: {
+        empty: '暂无部门信息',
         title: '部门列表',
         deptName: '部门名称',
         leader: '负责人',
@@ -418,6 +431,511 @@ const local: App.I18n.Schema = {
         },
         addDept: '新增部门',
         editDept: '编辑部门'
+      },
+      dict: {
+        title: '字典列表',
+        dictName: '字典名称',
+        dictType: '字典类型',
+        status: '状态',
+        remark: '备注',
+        createTime: '创建时间',
+        data: {
+          title: '字典数据列表',
+          label: '字典标签',
+          value: '字典键值',
+          dictSort: '字典排序',
+          isDefault: '是否默认',
+          listClass: '回显样式',
+          cssClass: 'CSS样式',
+          status: '状态',
+          remark: '备注',
+          createTime: '创建时间'
+        },
+        form: {
+          dictName: {
+            required: '请输入字典名称',
+            invalid: '字典名称不能为空'
+          },
+          dictType: {
+            required: '请输入字典类型',
+            invalid: '字典类型不能为空'
+          },
+          status: {
+            required: '请选择状态',
+            invalid: '状态不能为空'
+          },
+          remark: {
+            required: '请输入备注',
+            invalid: '备注不能为空'
+          },
+          dictLabel: {
+            required: '请输入字典标签',
+            invalid: '字典标签不能为空'
+          },
+          dictValue: {
+            required: '请输入字典键值',
+            invalid: '字典键值不能为空'
+          },
+          dictSort: {
+            required: '请输入字典排序',
+            invalid: '字典排序不能为空'
+          },
+          isDefault: {
+            required: '请选择是否默认',
+            invalid: '是否默认不能为空'
+          },
+          listClass: {
+            required: '请选择回显样式',
+            invalid: '回显样式不能为空'
+          },
+          cssClass: {
+            required: '请输入CSS样式',
+            invalid: 'CSS样式不能为空'
+          }
+        },
+        addDict: '新增字典',
+        editDict: '编辑字典',
+        addDictData: '新增字典数据',
+        editDictData: '编辑字典数据'
+      },
+      menu: {
+        title: '菜单列表',
+        menuName: '菜单名称',
+        icon: '菜单图标',
+        sort: '排序',
+        permission: '权限标识',
+        component: '组件路径',
+        path: '路由地址',
+        query: '路由参数',
+        isFrame: '是否外链',
+        isCache: '是否缓存',
+        menuType: '菜单类型',
+        visible: '显示状态',
+        status: '菜单状态',
+        createTime: '创建时间',
+        form: {
+          parentId: {
+            required: '请选择上级菜单',
+            invalid: '上级菜单不能为空'
+          },
+          menuType: {
+            required: '请选择菜单类型',
+            invalid: '菜单类型不能为空'
+          },
+          icon: {
+            required: '请选择菜单图标',
+            invalid: '菜单图标不能为空'
+          },
+          menuName: {
+            required: '请输入菜单名称',
+            invalid: '菜单名称不能为空'
+          },
+          sort: {
+            required: '请输入排序',
+            invalid: '排序不能为空'
+          },
+          isFrame: {
+            required: '请选择是否外链',
+            invalid: '是否外链不能为空'
+          },
+          path: {
+            required: '请输入路由地址',
+            invalid: '路由地址不能为空'
+          },
+          component: {
+            required: '请输入组件路径',
+            invalid: '组件路径不能为空'
+          },
+          query: {
+            required: '请输入路由参数',
+            invalid: '路由参数不能为空'
+          },
+          isCache: {
+            required: '请选择是否缓存',
+            invalid: '是否缓存不能为空'
+          },
+          visible: {
+            required: '请选择显示状态',
+            invalid: '显示状态不能为空'
+          },
+          status: {
+            required: '请选择菜单状态',
+            invalid: '菜单状态不能为空'
+          },
+          permission: {
+            required: '请输入权限标识',
+            invalid: '权限标识不能为空'
+          }
+        },
+        directory: '目录',
+        menu: '菜单',
+        button: '按钮',
+        addMenu: '新增菜单',
+        editMenu: '编辑菜单'
+      },
+      notice: {
+        title: '通知公告列表',
+        noticeTitle: '公告标题',
+        noticeType: '公告类型',
+        noticeContent: '公告内容',
+        status: '状态',
+        createTime: '创建时间',
+        form: {
+          noticeTitle: {
+            required: '请输入公告标题',
+            invalid: '公告标题不能为空'
+          },
+          noticeType: {
+            required: '请选择公告类型',
+            invalid: '公告类型不能为空'
+          },
+          noticeContent: {
+            required: '请输入公告内容',
+            invalid: '公告内容不能为空'
+          },
+          status: {
+            required: '请选择状态',
+            invalid: '状态不能为空'
+          }
+        },
+        addNotice: '新增公告',
+        editNotice: '编辑公告'
+      },
+      oss: {
+        title: '文件列表',
+        fileName: '文件名称',
+        originalName: '原始名称',
+        fileSuffix: '文件后缀',
+        url: '文件地址',
+        createTime: '创建时间',
+        service: '服务商',
+        form: {
+          file: {
+            required: '请选择文件',
+            invalid: '文件不能为空'
+          }
+        },
+        upload: '上传文件',
+        preview: '预览',
+        download: '下载',
+        copy: '复制链接',
+        copySuccess: '复制成功'
+      },
+      ossConfig: {
+        title: 'OSS配置列表',
+        configKey: '配置键',
+        accessKey: 'accessKey',
+        secretKey: 'secretKey',
+        bucketName: '桶名称',
+        prefix: '前缀',
+        endpoint: '域名',
+        domain: '自定义域名',
+        isHttps: '是否https',
+        region: '地域',
+        status: '状态',
+        remark: '备注',
+        createTime: '创建时间',
+        form: {
+          configKey: {
+            required: '请输入配置键',
+            invalid: '配置键不能为空'
+          },
+          accessKey: {
+            required: '请输入accessKey',
+            invalid: 'accessKey不能为空'
+          },
+          secretKey: {
+            required: '请输入secretKey',
+            invalid: 'secretKey不能为空'
+          },
+          bucketName: {
+            required: '请输入桶名称',
+            invalid: '桶名称不能为空'
+          },
+          prefix: {
+            required: '请输入前缀',
+            invalid: '前缀不能为空'
+          },
+          endpoint: {
+            required: '请输入域名',
+            invalid: '域名不能为空'
+          },
+          domain: {
+            required: '请输入自定义域名',
+            invalid: '自定义域名不能为空'
+          },
+          isHttps: {
+            required: '请选择是否https',
+            invalid: '是否https不能为空'
+          },
+          region: {
+            required: '请输入地域',
+            invalid: '地域不能为空'
+          },
+          status: {
+            required: '请选择状态',
+            invalid: '状态不能为空'
+          },
+          remark: {
+            required: '请输入备注',
+            invalid: '备注不能为空'
+          }
+        },
+        addOssConfig: '新增OSS配置',
+        editOssConfig: '编辑OSS配置'
+      },
+      post: {
+        title: '岗位列表',
+        postCode: '岗位编码',
+        postName: '岗位名称',
+        postSort: '岗位排序',
+        status: '状态',
+        remark: '备注',
+        createTime: '创建时间',
+        form: {
+          postCode: {
+            required: '请输入岗位编码',
+            invalid: '岗位编码不能为空'
+          },
+          postName: {
+            required: '请输入岗位名称',
+            invalid: '岗位名称不能为空'
+          },
+          postSort: {
+            required: '请输入岗位排序',
+            invalid: '岗位排序不能为空'
+          },
+          status: {
+            required: '请选择状态',
+            invalid: '状态不能为空'
+          },
+          remark: {
+            required: '请输入备注',
+            invalid: '备注不能为空'
+          }
+        },
+        addPost: '新增岗位',
+        editPost: '编辑岗位'
+      },
+      role: {
+        title: '角色列表',
+        roleName: '角色名称',
+        roleKey: '权限字符',
+        roleSort: '角色排序',
+        status: '状态',
+        remark: '备注',
+        menuPermission: '菜单权限',
+        dataScope: '数据权限',
+        createTime: '创建时间',
+        form: {
+          roleName: {
+            required: '请输入角色名称',
+            invalid: '角色名称不能为空'
+          },
+          roleKey: {
+            required: '请输入权限字符',
+            invalid: '权限字符不能为空'
+          },
+          roleSort: {
+            required: '请输入角色排序',
+            invalid: '角色排序不能为空'
+          },
+          status: {
+            required: '请选择状态',
+            invalid: '状态不能为空'
+          },
+          remark: {
+            required: '请输入备注',
+            invalid: '备注不能为空'
+          },
+          menuIds: {
+            required: '请选择菜单权限',
+            invalid: '菜单权限不能为空'
+          },
+          deptIds: {
+            required: '请选择部门权限',
+            invalid: '部门权限不能为空'
+          }
+        },
+        addRole: '新增角色',
+        editRole: '编辑角色',
+        configPermission: '分配权限',
+        authorizedUsers: '分配用户',
+        selectMenuPermission: '选择菜单权限',
+        selectDataScope: '选择数据权限',
+        selectDeptPermission: '选择部门权限'
+      },
+      tenant: {
+        title: '租户列表',
+        tenantName: '租户名称',
+        tenantId: '租户编号',
+        contactUserName: '联系人',
+        contactPhone: '联系电话',
+        companyName: '公司名称',
+        licenseNumber: '营业执照编号',
+        address: '地址',
+        intro: '企业简介',
+        domain: '域名',
+        packageId: '租户套餐',
+        expireTime: '过期时间',
+        accountCount: '账号数量',
+        status: '状态',
+        createTime: '创建时间',
+        form: {
+          tenantName: {
+            required: '请输入租户名称',
+            invalid: '租户名称不能为空'
+          },
+          contactUserName: {
+            required: '请输入联系人',
+            invalid: '联系人不能为空'
+          },
+          contactPhone: {
+            required: '请输入联系电话',
+            invalid: '联系电话不能为空'
+          },
+          companyName: {
+            required: '请输入公司名称',
+            invalid: '公司名称不能为空'
+          },
+          licenseNumber: {
+            required: '请输入营业执照编号',
+            invalid: '营业执照编号不能为空'
+          },
+          address: {
+            required: '请输入地址',
+            invalid: '地址不能为空'
+          },
+          intro: {
+            required: '请输入企业简介',
+            invalid: '企业简介不能为空'
+          },
+          domain: {
+            required: '请输入域名',
+            invalid: '域名不能为空'
+          },
+          packageId: {
+            required: '请选择租户套餐',
+            invalid: '租户套餐不能为空'
+          },
+          expireTime: {
+            required: '请选择过期时间',
+            invalid: '过期时间不能为空'
+          },
+          accountCount: {
+            required: '请输入账号数量',
+            invalid: '账号数量不能为空'
+          },
+          status: {
+            required: '请选择状态',
+            invalid: '状态不能为空'
+          }
+        },
+        addTenant: '新增租户',
+        editTenant: '编辑租户'
+      },
+      tenantPackage: {
+        title: '租户套餐列表',
+        packageName: '套餐名称',
+        menuIds: '菜单权限',
+        remark: '备注',
+        status: '状态',
+        createTime: '创建时间',
+        form: {
+          packageName: {
+            required: '请输入套餐名称',
+            invalid: '套餐名称不能为空'
+          },
+          menuIds: {
+            required: '请选择菜单权限',
+            invalid: '菜单权限不能为空'
+          },
+          status: {
+            required: '请选择状态',
+            invalid: '状态不能为空'
+          },
+          remark: {
+            required: '请输入备注',
+            invalid: '备注不能为空'
+          }
+        },
+        addTenantPackage: '新增租户套餐',
+        editTenantPackage: '编辑租户套餐',
+        statusChangeSuccess: '状态修改成功'
+      },
+      user: {
+        title: '用户列表',
+        userName: '用户名称',
+        nickName: '用户昵称',
+        deptName: '部门',
+        phonenumber: '手机号码',
+        status: '状态',
+        createTime: '创建时间',
+        password: '密码',
+        confirmPassword: '确认密码',
+        sex: '性别',
+        roleIds: '角色',
+        postIds: '岗位',
+        email: '邮箱',
+        avatar: '头像',
+        remark: '备注',
+        form: {
+          userName: {
+            required: '请输入用户名称',
+            invalid: '用户名称不能为空'
+          },
+          nickName: {
+            required: '请输入用户昵称',
+            invalid: '用户昵称不能为空'
+          },
+          deptId: {
+            required: '请选择部门',
+            invalid: '部门不能为空'
+          },
+          phonenumber: {
+            required: '请输入手机号码',
+            invalid: '手机号码不能为空'
+          },
+          status: {
+            required: '请选择状态',
+            invalid: '状态不能为空'
+          },
+          password: {
+            required: '请输入密码',
+            invalid: '密码不能为空'
+          },
+          confirmPassword: {
+            required: '请输入确认密码',
+            invalid: '确认密码不能为空'
+          },
+          sex: {
+            required: '请选择性别',
+            invalid: '性别不能为空'
+          },
+          roleIds: {
+            required: '请选择角色',
+            invalid: '角色不能为空'
+          },
+          postIds: {
+            required: '请选择岗位',
+            invalid: '岗位不能为空'
+          },
+          email: {
+            required: '请输入邮箱',
+            invalid: '邮箱不能为空'
+          },
+          remark: {
+            required: '请输入备注',
+            invalid: '备注不能为空'
+          }
+        },
+        addUser: '新增用户',
+        editUser: '编辑用户',
+        resetPassword: '重置密码',
+        importUsers: '导入用户',
+        exportTemplate: '导出模板',
+        importSuccess: '导入成功',
+        statusChangeSuccess: '状态修改成功'
       }
     }
   },

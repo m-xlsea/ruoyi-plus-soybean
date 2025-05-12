@@ -38,13 +38,21 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="8" label="套餐名称" path="packageName" class="pr-24px">
-              <NInput v-model:value="model.packageName" placeholder="请输入套餐名称" />
+            <NFormItemGi
+              span="8"
+              :label="$t('page.system.tenantPackage.packageName')"
+              path="packageName"
+              class="pr-24px"
+            >
+              <NInput
+                v-model:value="model.packageName"
+                :placeholder="$t('page.system.tenantPackage.form.packageName.required')"
+              />
             </NFormItemGi>
-            <NFormItemGi span="8" label="状态" path="status" class="pr-24px">
+            <NFormItemGi span="8" :label="$t('page.system.tenantPackage.status')" path="status" class="pr-24px">
               <NSelect
                 v-model:value="model.status"
-                placeholder="请选择状态"
+                :placeholder="$t('page.system.tenantPackage.form.status.required')"
                 :options="sysNormalDisableOptions"
                 clearable
               />

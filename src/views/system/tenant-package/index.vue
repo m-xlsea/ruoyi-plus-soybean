@@ -59,13 +59,13 @@ const {
     },
     {
       key: 'packageName',
-      title: '套餐名称',
+      title: $t('page.system.tenantPackage.packageName'),
       align: 'center',
       minWidth: 120
     },
     {
       key: 'status',
-      title: '状态',
+      title: $t('page.system.tenantPackage.status'),
       align: 'center',
       minWidth: 120,
       render: row => {
@@ -80,7 +80,7 @@ const {
     },
     {
       key: 'remark',
-      title: '备注',
+      title: $t('page.system.tenantPackage.remark'),
       align: 'center',
       minWidth: 120
     },
@@ -162,7 +162,11 @@ function edit(packageId: CommonType.IdType) {
 }
 
 function handleExport() {
-  download('/system/tenant/package/export', searchParams, `租户套餐_${new Date().getTime()}.xlsx`);
+  download(
+    '/system/tenant/package/export',
+    searchParams,
+    `${$t('page.system.tenantPackage.title')}_${new Date().getTime()}.xlsx`
+  );
 }
 
 /** 处理状态切换 */
@@ -179,7 +183,7 @@ async function handleStatusChange(
   callback(!error);
 
   if (!error) {
-    window.$message?.success('状态修改成功');
+    window.$message?.success($t('page.system.tenantPackage.statusChangeSuccess'));
     getData();
   }
 }
@@ -188,7 +192,12 @@ async function handleStatusChange(
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <TenantPackageSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="租户套餐列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard
+      :title="$t('page.system.tenantPackage.title')"
+      :bordered="false"
+      size="small"
+      class="sm:flex-1-hidden card-wrapper"
+    >
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

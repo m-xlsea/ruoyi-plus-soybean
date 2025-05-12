@@ -42,24 +42,37 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="用户名称" path="userName" class="pr-24px">
-              <NInput v-model:value="model.userName" placeholder="请输入用户名称" />
+            <NFormItemGi span="24 s:12 m:6" :label="$t('page.system.user.userName')" path="userName" class="pr-24px">
+              <NInput v-model:value="model.userName" :placeholder="$t('page.system.user.form.userName.required')" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="用户昵称" path="nickName" class="pr-24px">
-              <NInput v-model:value="model.nickName" placeholder="请输入用户昵称" />
+            <NFormItemGi span="24 s:12 m:6" :label="$t('page.system.user.nickName')" path="nickName" class="pr-24px">
+              <NInput v-model:value="model.nickName" :placeholder="$t('page.system.user.form.nickName.required')" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="手机号码" path="phonenumber" class="pr-24px">
-              <NInput v-model:value="model.phonenumber" placeholder="请输入手机号码" />
+            <NFormItemGi
+              span="24 s:12 m:6"
+              :label="$t('page.system.user.phonenumber')"
+              path="phonenumber"
+              class="pr-24px"
+            >
+              <NInput
+                v-model:value="model.phonenumber"
+                :placeholder="$t('page.system.user.form.phonenumber.required')"
+              />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="帐号状态" path="status" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:6" :label="$t('page.system.user.status')" path="status" class="pr-24px">
               <DictSelect
                 v-model:value="model.status"
-                placeholder="请选择帐号状态"
+                :placeholder="$t('page.system.user.form.status.required')"
                 dict-code="sys_normal_disable"
                 clearable
               />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:12" label="创建时间" path="createTime" class="pr-24px">
+            <NFormItemGi
+              span="24 s:12 m:12"
+              :label="$t('page.system.user.createTime')"
+              path="createTime"
+              class="pr-24px"
+            >
               <NDatePicker
                 v-model:formatted-value="dateRangeCreateTime"
                 type="datetimerange"
