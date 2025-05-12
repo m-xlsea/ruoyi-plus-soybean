@@ -134,11 +134,11 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="客户端id" path="clientId">
-          <NInput v-if="operateType === 'edit'" v-model:value="model.clientId" disabled placeholder="请输入客户端id" />
+        <NFormItem v-if="operateType === 'edit'" label="客户端 ID" path="clientId">
+          <NInput v-model:value="model.clientId" disabled placeholder="请输入客户端 ID" />
         </NFormItem>
-        <NFormItem label="客户端key" path="clientKey">
-          <NInput v-model:value="model.clientKey" :disabled="operateType === 'edit'" placeholder="请输入客户端key" />
+        <NFormItem label="客户端 key" path="clientKey">
+          <NInput v-model:value="model.clientKey" :disabled="operateType === 'edit'" placeholder="请输入客户端 key" />
         </NFormItem>
         <NFormItem label="客户端秘钥" path="clientSecret">
           <NInput
