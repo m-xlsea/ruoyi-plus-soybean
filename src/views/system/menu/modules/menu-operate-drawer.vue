@@ -238,7 +238,7 @@ function onCreate() {
               placeholder="请选择上级菜单"
             />
           </NFormItemGi>
-          <NFormItemGi v-if="menuType !== 'F'" :span="24" label="菜单类型" path="menuType">
+          <NFormItemGi v-if="model.menuType !== 'F'" :span="24" label="菜单类型" path="menuType">
             <NRadioGroup v-model:value="model.menuType">
               <NRadioButton
                 v-for="item in menuTypeOptions.filter(item => item.value !== 'F')"

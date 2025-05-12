@@ -383,7 +383,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
             content-class="w-100px"
           >
             <NDescriptionsItem label="菜单类型">
-              <NTag size="small" type="primary">{{ menuTypeRecord[currentMenu.menuType!] }}</NTag>
+              <NTag class="m-1" size="small" type="primary">{{ menuTypeRecord[currentMenu.menuType!] }}</NTag>
             </NDescriptionsItem>
             <NDescriptionsItem label="菜单状态">
               <DictTag size="small" :value="currentMenu.status" dict-code="sys_normal_disable" />
@@ -405,7 +405,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
               {{ currentMenu.perms }}
             </NDescriptionsItem>
             <NDescriptionsItem label="是否外链">
-              <NTag v-if="currentMenu.isFrame" size="small" :type="tagMap[currentMenu.isFrame]">
+              <NTag v-if="currentMenu.isFrame" class="m-1" size="small" :type="tagMap[currentMenu.isFrame]">
                 {{ menuIsFrameRecord[currentMenu.isFrame] }}
               </NTag>
             </NDescriptionsItem>
@@ -413,7 +413,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
               <DictTag size="small" :value="currentMenu.visible" dict-code="sys_show_hide" />
             </NDescriptionsItem>
             <NDescriptionsItem v-if="currentMenu.menuType === 'C'" label="是否缓存">
-              <NTag v-if="currentMenu.isCache" size="small" :type="tagMap[currentMenu.isCache]">
+              <NTag v-if="currentMenu.isCache" class="m-1" size="small" :type="tagMap[currentMenu.isCache]">
                 {{ currentMenu.isCache === '0' ? '缓存' : '不缓存' }}
               </NTag>
             </NDescriptionsItem>
