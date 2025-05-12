@@ -107,7 +107,7 @@ root
 - pnpm >= 8.7.0
 - Git
 
-### 安装步骤
+### 安装步骤及说明
 
 1. 克隆仓库
 ```bash
@@ -129,6 +129,18 @@ pnpm dev
 ```bash
 pnpm build
 ```
+
+### 代码生成与菜单更新
+
+项目提供了代码生成工具和菜单SQL更新文件，位于 `docs` 目录下：
+
+1. **代码生成工具**
+   - 代码生成工具类位于 `docs/java` 目录，如果没有修改过VelocityUtils.java文件，直接替换即可
+   - 代码生成模板位于 `docs/template` 目录，请在ruoyi-generator模块的`resource/vm`下新建 `soy`文件夹，并将所有模板拷贝至`soy`文件夹中
+
+2. **菜单SQL更新**
+   - 菜单数据更新SQL文件位于 `docs/sql` 目录
+   - 在系统初始化或更新时，需要执行相应的SQL文件来更新菜单数据
 
 ## 📝 开发指南
 
@@ -318,7 +330,7 @@ console.log(t('common.confirm'));
 - **作者主页**: https://gitee.com/xlsea
 
 - **作者**: Elio
-- **邮箱**: 19912156302@163.com
+- **邮箱**: 1983933789@qq.com
 - **作者主页**: https://gitee.com/ahcode
 
 ## 💬 交流群
