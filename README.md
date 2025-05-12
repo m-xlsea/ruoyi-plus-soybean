@@ -315,7 +315,11 @@ console.log(t('common.confirm'));
 
 - **作者**: xlsea
 - **邮箱**: xlsea@linux.do
-- **项目地址**: https://gitee.com/xlsea/ruoyi-plus-soybean
+- **作者主页**: https://gitee.com/xlsea
+
+- **作者**: Elio
+- **邮箱**: 19912156302@163.com
+- **作者主页**: https://gitee.com/ahcode
 
 ## 💬 交流群
 
@@ -326,3 +330,12 @@ console.log(t('common.confirm'));
 作者为兼职做开源，平时还需要工作，如果帮到了您可以请作者吃个盒饭
 
 <img src="https://foruda.gitee.com/images/1746840166037207866/f8c6f06b_5601833.png" width="300px" height="300px" />
+
+## 🫡 捐赠列表
+
+感谢下方各位老板的捐赠 🫡
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747030503230216352/6879cbe5_5601833.jpeg" width="24px" >
+    <span>酷酷冬天 20元</span>
+</div>
