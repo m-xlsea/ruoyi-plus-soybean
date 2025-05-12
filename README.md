@@ -134,11 +134,11 @@ pnpm build
 
 项目提供了代码生成工具和菜单SQL更新文件，位于 `docs` 目录下：
 
-1. **代码生成工具**
+- **代码生成工具**
    - 代码生成工具类位于 `docs/java` 目录，如果没有修改过VelocityUtils.java文件，直接替换即可
    - 代码生成模板位于 `docs/template` 目录，请在ruoyi-generator模块的`resource/vm`下新建 `soy`文件夹，并将所有模板拷贝至`soy`文件夹中
 
-2. **菜单SQL更新**
+- **菜单SQL更新**
    - 菜单数据更新SQL文件位于 `docs/sql` 目录
    - 在系统初始化或更新时，需要执行相应的SQL文件来更新菜单数据
 
