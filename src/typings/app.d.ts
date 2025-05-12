@@ -532,6 +532,48 @@ declare namespace App {
             addClient: string;
             editClient: string;
           };
+          config: {
+            title: string;
+            configName: string;
+            configKey: string;
+            configValue: string;
+            configType: string;
+            remark: string;
+            createTime: string;
+            refreshCache: string;
+            refreshCacheSuccess: string;
+            form: {
+              configId: FormMsg;
+              configName: FormMsg;
+              configKey: FormMsg;
+              configValue: FormMsg;
+              configType: FormMsg;
+              remark: FormMsg;
+            };
+            addConfig: string;
+            editConfig: string;
+          };
+          dept: {
+            title: string;
+            deptName: string;
+            leader: string;
+            phone: string;
+            email: string;
+            status: string;
+            sort: string;
+            createTime: string;
+            form: {
+              parentId: FormMsg;
+              deptName: FormMsg;
+              leader: FormMsg;
+              phone: FormMsg;
+              email: FormMsg;
+              status: FormMsg;
+              sort: FormMsg;
+            };
+            addDept: string;
+            editDept: string;
+          };
         };
       };
       form: {

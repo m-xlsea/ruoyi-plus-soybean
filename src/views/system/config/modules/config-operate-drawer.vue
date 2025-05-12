@@ -32,8 +32,8 @@ const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增参数配置',
-    edit: '编辑参数配置'
+    add: $t('page.system.config.addConfig'),
+    edit: $t('page.system.config.editConfig')
   };
   return titles[props.operateType];
 });
@@ -55,11 +55,11 @@ function createDefaultModel(): Model {
 type RuleKey = Extract<keyof Model, 'configId' | 'configName' | 'configKey' | 'configValue' | 'configType'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  configId: createRequiredRule('参数主键不能为空'),
-  configName: createRequiredRule('参数名称不能为空'),
-  configKey: createRequiredRule('参数键名不能为空'),
-  configValue: createRequiredRule('参数键值不能为空'),
-  configType: createRequiredRule('是否内置不能为空')
+  configId: createRequiredRule($t('page.system.config.form.configId.required')),
+  configName: createRequiredRule($t('page.system.config.form.configName.required')),
+  configKey: createRequiredRule($t('page.system.config.form.configKey.required')),
+  configValue: createRequiredRule($t('page.system.config.form.configValue.required')),
+  configType: createRequiredRule($t('page.system.config.form.configType.required'))
 };
 
 function handleUpdateModelWhenEdit() {
@@ -110,20 +110,29 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="参数名称" path="configName">
-          <NInput v-model:value="model.configName" placeholder="请输入参数名称" />
+        <NFormItem :label="$t('page.system.config.configName')" path="configName">
+          <NInput v-model:value="model.configName" :placeholder="$t('page.system.config.form.configName.required')" />
         </NFormItem>
-        <NFormItem label="参数键名" path="configKey">
-          <NInput v-model:value="model.configKey" placeholder="请输入参数键名" />
+        <NFormItem :label="$t('page.system.config.configKey')" path="configKey">
+          <NInput v-model:value="model.configKey" :placeholder="$t('page.system.config.form.configKey.required')" />
         </NFormItem>
-        <NFormItem label="参数键值" path="configValue">
-          <NInput v-model:value="model.configValue" :rows="3" placeholder="请输入参数键值" />
+        <NFormItem :label="$t('page.system.config.configValue')" path="configValue">
+          <NInput
+            v-model:value="model.configValue"
+            :rows="3"
+            :placeholder="$t('page.system.config.form.configValue.required')"
+          />
         </NFormItem>
-        <NFormItem label="是否内置" path="configType">
+        <NFormItem :label="$t('page.system.config.configType')" path="configType">
           <DictRadio v-model:value="model.configType" dict-code="sys_yes_no" />
         </NFormItem>
-        <NFormItem label="备注" path="remark">
-          <NInput v-model:value="model.remark" :rows="3" type="textarea" placeholder="请输入备注" />
+        <NFormItem :label="$t('page.system.config.remark')" path="remark">
+          <NInput
+            v-model:value="model.remark"
+            :rows="3"
+            type="textarea"
+            :placeholder="$t('page.system.config.form.remark.required')"
+          />
         </NFormItem>
       </NForm>
       <template #footer>

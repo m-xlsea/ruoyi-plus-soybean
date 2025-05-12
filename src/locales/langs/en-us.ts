@@ -337,6 +337,87 @@ const local: App.I18n.Schema = {
         },
         addClient: 'Add Client',
         editClient: 'Edit Client'
+      },
+      config: {
+        title: 'Config List',
+        configName: 'Config Name',
+        configKey: 'Config Key',
+        configValue: 'Config Value',
+        configType: 'Built-in',
+        remark: 'Remark',
+        createTime: 'Create Time',
+        refreshCache: 'Refresh Cache',
+        refreshCacheSuccess: 'Refresh cache successfully',
+        form: {
+          configId: {
+            required: 'Please enter Config ID',
+            invalid: 'Config ID cannot be empty'
+          },
+          configName: {
+            required: 'Please enter Config Name',
+            invalid: 'Config Name cannot be empty'
+          },
+          configKey: {
+            required: 'Please enter Config Key',
+            invalid: 'Config Key cannot be empty'
+          },
+          configValue: {
+            required: 'Please enter Config Value',
+            invalid: 'Config Value cannot be empty'
+          },
+          configType: {
+            required: 'Please select Built-in status',
+            invalid: 'Built-in status cannot be empty'
+          },
+          remark: {
+            required: 'Please enter Remark',
+            invalid: 'Remark cannot be empty'
+          }
+        },
+        addConfig: 'Add Config',
+        editConfig: 'Edit Config'
+      },
+      dept: {
+        title: 'Department List',
+        deptName: 'Department Name',
+        leader: 'Leader',
+        phone: 'Phone',
+        email: 'Email',
+        status: 'Status',
+        sort: 'Sort',
+        createTime: 'Create Time',
+        form: {
+          parentId: {
+            required: 'Please select Parent Department',
+            invalid: 'Parent Department cannot be empty'
+          },
+          deptName: {
+            required: 'Please enter Department Name',
+            invalid: 'Department Name cannot be empty'
+          },
+          leader: {
+            required: 'Please enter Leader',
+            invalid: 'Leader cannot be empty'
+          },
+          phone: {
+            required: 'Please enter Phone',
+            invalid: 'Phone cannot be empty'
+          },
+          email: {
+            required: 'Please enter Email',
+            invalid: 'Email cannot be empty'
+          },
+          status: {
+            required: 'Please select Status',
+            invalid: 'Status cannot be empty'
+          },
+          sort: {
+            required: 'Please enter Sort',
+            invalid: 'Sort cannot be empty'
+          }
+        },
+        addDept: 'Add Department',
+        editDept: 'Edit Department'
       }
     }
   },

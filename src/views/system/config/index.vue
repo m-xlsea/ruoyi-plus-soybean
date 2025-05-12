@@ -58,25 +58,25 @@ const {
     },
     {
       key: 'configName',
-      title: '参数名称',
+      title: $t('page.system.config.configName'),
       align: 'center',
       minWidth: 120
     },
     {
       key: 'configKey',
-      title: '参数键名',
+      title: $t('page.system.config.configKey'),
       align: 'center',
       minWidth: 120
     },
     {
       key: 'configValue',
-      title: '参数键值',
+      title: $t('page.system.config.configValue'),
       align: 'center',
       minWidth: 120
     },
     {
       key: 'configType',
-      title: '是否内置',
+      title: $t('page.system.config.configType'),
       align: 'center',
       minWidth: 120,
       render(row) {
@@ -85,7 +85,7 @@ const {
     },
     {
       key: 'remark',
-      title: '备注',
+      title: $t('page.system.config.remark'),
       align: 'center',
       minWidth: 120,
       ellipsis: {
@@ -94,7 +94,7 @@ const {
     },
     {
       key: 'createTime',
-      title: '创建时间',
+      title: $t('page.system.config.createTime'),
       align: 'center',
       minWidth: 120,
       ellipsis: {
@@ -185,7 +185,7 @@ async function handleExport() {
 async function handleRefreshCache() {
   const { error } = await fetchRefreshCache();
   if (error) return;
-  window.$message?.success('刷新缓存成功');
+  window.$message?.success($t('page.system.config.refreshCacheSuccess'));
   await getData();
 }
 </script>
@@ -193,7 +193,7 @@ async function handleRefreshCache() {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <ConfigSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="参数配置列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard :title="$t('page.system.config.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
@@ -212,7 +212,7 @@ async function handleRefreshCache() {
               <template #icon>
                 <icon-material-symbols:sync-outline />
               </template>
-              刷新缓存
+              {{ $t('page.system.config.refreshCache') }}
             </NButton>
           </template>
         </TableHeaderOperation>

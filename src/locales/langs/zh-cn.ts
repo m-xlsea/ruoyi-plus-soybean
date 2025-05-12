@@ -337,6 +337,87 @@ const local: App.I18n.Schema = {
         },
         addClient: '新增客户端',
         editClient: '编辑客户端'
+      },
+      config: {
+        title: '参数配置列表',
+        configName: '参数名称',
+        configKey: '参数键名',
+        configValue: '参数键值',
+        configType: '是否内置',
+        remark: '备注',
+        createTime: '创建时间',
+        refreshCache: '刷新缓存',
+        refreshCacheSuccess: '刷新缓存成功',
+        form: {
+          configId: {
+            required: '请输入参数主键',
+            invalid: '参数主键不能为空'
+          },
+          configName: {
+            required: '请输入参数名称',
+            invalid: '参数名称不能为空'
+          },
+          configKey: {
+            required: '请输入参数键名',
+            invalid: '参数键名不能为空'
+          },
+          configValue: {
+            required: '请输入参数键值',
+            invalid: '参数键值不能为空'
+          },
+          configType: {
+            required: '请选择是否内置',
+            invalid: '是否内置不能为空'
+          },
+          remark: {
+            required: '请输入备注',
+            invalid: '备注不能为空'
+          }
+        },
+        addConfig: '新增参数配置',
+        editConfig: '编辑参数配置'
+      },
+      dept: {
+        title: '部门列表',
+        deptName: '部门名称',
+        leader: '负责人',
+        phone: '联系电话',
+        email: '邮箱',
+        status: '状态',
+        sort: '排序',
+        createTime: '创建时间',
+        form: {
+          parentId: {
+            required: '请选择上级部门',
+            invalid: '上级部门不能为空'
+          },
+          deptName: {
+            required: '请输入部门名称',
+            invalid: '部门名称不能为空'
+          },
+          leader: {
+            required: '请输入负责人',
+            invalid: '负责人不能为空'
+          },
+          phone: {
+            required: '请输入联系电话',
+            invalid: '联系电话不能为空'
+          },
+          email: {
+            required: '请输入邮箱',
+            invalid: '邮箱不能为空'
+          },
+          status: {
+            required: '请选择状态',
+            invalid: '状态不能为空'
+          },
+          sort: {
+            required: '请输入排序',
+            invalid: '排序不能为空'
+          }
+        },
+        addDept: '新增部门',
+        editDept: '编辑部门'
       }
     }
   },
