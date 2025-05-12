@@ -15,9 +15,11 @@ import ClientSearch from './modules/client-search.vue';
 defineOptions({
   name: 'ClientList'
 });
+
 useDict('sys_grant_type');
 useDict('sys_device_type');
 useDict('sys_normal_disable');
+
 const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
@@ -58,25 +60,25 @@ const {
     },
     {
       key: 'clientId',
-      title: '客户端id',
+      title: $t('page.system.client.clientId'),
       align: 'center',
       minWidth: 120
     },
     {
       key: 'clientKey',
-      title: '客户端key',
+      title: $t('page.system.client.clientKey'),
       align: 'center',
       minWidth: 120
     },
     {
       key: 'clientSecret',
-      title: '客户端秘钥',
+      title: $t('page.system.client.clientSecret'),
       align: 'center',
       minWidth: 120
     },
     {
       key: 'grantTypeList',
-      title: '授权类型',
+      title: $t('page.system.client.grantTypeList'),
       align: 'center',
       minWidth: 120,
       render: row => {
@@ -85,7 +87,7 @@ const {
     },
     {
       key: 'deviceType',
-      title: '设备类型',
+      title: $t('page.system.client.deviceType'),
       align: 'center',
       minWidth: 120,
       render: row => {
@@ -94,25 +96,25 @@ const {
     },
     {
       key: 'activeTimeout',
-      title: 'token活跃超时时间',
+      title: $t('page.system.client.activeTimeout'),
       align: 'center',
       minWidth: 120,
       render: row => {
-        return `${row.activeTimeout}秒`;
+        return `${row.activeTimeout}${$t('common.second')}`;
       }
     },
     {
       key: 'timeout',
-      title: 'token固定超时',
+      title: $t('page.system.client.timeout'),
       align: 'center',
       minWidth: 120,
       render: row => {
-        return `${row.timeout}秒`;
+        return `${row.timeout}${$t('common.second')}`;
       }
     },
     {
       key: 'status',
-      title: '状态',
+      title: $t('page.system.client.status'),
       align: 'center',
       minWidth: 120,
       render: row => {
@@ -205,7 +207,7 @@ async function handleExport() {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <ClientSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="客户端列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard :title="$t('page.system.client.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

@@ -290,6 +290,7 @@ declare namespace App {
     type FormMsg = {
       required: string;
       invalid: string;
+      tooltip?: string;
     };
 
     type Schema = {
@@ -306,6 +307,8 @@ declare namespace App {
         addSuccess: string;
         backToHome: string;
         batchDelete: string;
+        import: string;
+        export: string;
         cancel: string;
         close: string;
         check: string;
@@ -340,11 +343,13 @@ declare namespace App {
         trigger: string;
         update: string;
         updateSuccess: string;
+        saveSuccess: string;
         userCenter: string;
         yesOrNo: {
           yes: string;
           no: string;
         };
+        second: string;
       };
       request: {
         logout: string;
@@ -417,6 +422,17 @@ declare namespace App {
       };
       route: Record<I18nRouteKey, string>;
       page: {
+        common: {
+          id: string;
+          createBy: string;
+          createTime: string;
+          updateBy: string;
+          updateTime: string;
+          remark: string;
+          form: {
+            remark: FormMsg;
+          };
+        };
         login: {
           common: {
             loginOrRegister: string;
@@ -491,6 +507,31 @@ declare namespace App {
             desc5: string;
           };
           creativity: string;
+        };
+        system: {
+          client: {
+            title: string;
+            clientId: string;
+            clientKey: string;
+            clientSecret: string;
+            grantTypeList: string;
+            deviceType: string;
+            activeTimeout: string;
+            timeout: string;
+            status: string;
+            form: {
+              clientId: FormMsg;
+              clientKey: FormMsg;
+              clientSecret: FormMsg;
+              grantTypeList: FormMsg;
+              deviceType: FormMsg;
+              activeTimeout: FormMsg;
+              timeout: FormMsg;
+              status: FormMsg;
+            };
+            addClient: string;
+            editClient: string;
+          };
         };
       };
       form: {

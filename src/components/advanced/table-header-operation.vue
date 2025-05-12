@@ -77,7 +77,7 @@ function handleExport() {
         <template #icon>
           <icon-material-symbols:download-rounded class="text-icon" />
         </template>
-        导出
+        {{ $t('common.export') }}
       </NButton>
     </slot>
     <slot name="after"></slot>

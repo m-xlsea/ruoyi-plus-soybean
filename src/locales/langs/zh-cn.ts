@@ -12,6 +12,8 @@ const local: App.I18n.Schema = {
     addSuccess: '添加成功',
     backToHome: '返回首页',
     batchDelete: '批量删除',
+    import: '导入',
+    export: '导出',
     cancel: '取消',
     close: '关闭',
     check: '勾选',
@@ -45,12 +47,14 @@ const local: App.I18n.Schema = {
     tip: '提示',
     trigger: '触发',
     update: '更新',
+    saveSuccess: '保存成功',
     updateSuccess: '更新成功',
     userCenter: '个人中心',
     yesOrNo: {
       yes: '是',
       no: '否'
-    }
+    },
+    second: '秒'
   },
   request: {
     logout: '请求失败后登出用户',
@@ -269,6 +273,71 @@ const local: App.I18n.Schema = {
         desc5: 'Soybean 刚才把工作台页面随便写了一些，凑合能看了！'
       },
       creativity: '创意'
+    },
+    common: {
+      id: 'ID',
+      createBy: '创建者',
+      createTime: '创建时间',
+      updateBy: '更新者',
+      updateTime: '更新时间',
+      remark: '备注',
+      form: {
+        remark: {
+          required: '请输入备注',
+          invalid: '备注不能为空'
+        }
+      }
+    },
+    system: {
+      client: {
+        title: '客户端列表',
+        clientId: '客户端 ID',
+        clientKey: '客户端 Key',
+        clientSecret: '客户端秘钥',
+        grantTypeList: '授权类型',
+        deviceType: '设备类型',
+        activeTimeout: 'Token 活跃超时时间',
+        timeout: 'Token 固定超时',
+        status: '状态',
+        form: {
+          clientId: {
+            required: '请输入客户端 ID',
+            invalid: '客户端 ID 不能为空'
+          },
+          clientKey: {
+            required: '请输入客户端 Key',
+            invalid: '客户端 Key 不能为空'
+          },
+          clientSecret: {
+            required: '请输入客户端秘钥',
+            invalid: '客户端秘钥不能为空'
+          },
+          grantTypeList: {
+            required: '请选择授权类型',
+            invalid: '授权类型不能为空'
+          },
+          deviceType: {
+            required: '请选择设备类型',
+            invalid: '设备类型不能为空'
+          },
+          activeTimeout: {
+            required: '请输入 Token 活跃超时时间',
+            invalid: 'Token 活跃超时时间不能为空',
+            tooltip: '指定时间无操作则过期(单位：秒), 默认30分钟(1800秒)'
+          },
+          timeout: {
+            required: '请输入 Token 固定超时',
+            invalid: 'Token 固定超时不能为空',
+            tooltip: '指定时间必定过期(单位：秒)，默认七天(604800秒)'
+          },
+          status: {
+            required: '请选择状态',
+            invalid: '状态不能为空'
+          }
+        },
+        addClient: '新增客户端',
+        editClient: '编辑客户端'
+      }
     }
   },
   form: {

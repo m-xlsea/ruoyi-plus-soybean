@@ -3,6 +3,7 @@ import { computed, reactive, watch } from 'vue';
 import { fetchCreateClient, fetchUpdateClient } from '@/service/api/system/client';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
+
 defineOptions({
   name: 'ClientOperateDrawer'
 });
@@ -31,8 +32,8 @@ const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增客户端',
-    edit: '编辑客户端'
+    add: $t('page.system.client.addClient'),
+    edit: $t('page.system.client.editClient')
   };
   return titles[props.operateType];
 });
@@ -46,7 +47,7 @@ function createDefaultModel(): Model {
     clientKey: '',
     clientSecret: '',
     grantTypeList: [],
-    deviceType: '',
+    deviceType: undefined,
     activeTimeout: 1800,
     timeout: 604800,
     status: '0'
@@ -59,13 +60,13 @@ type RuleKey = Extract<
 >;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  id: createRequiredRule('id不能为空'),
-  clientKey: createRequiredRule('客户端key不能为空'),
-  clientSecret: createRequiredRule('客户端秘钥不能为空'),
-  grantTypeList: createRequiredRule('授权类型不能为空'),
-  deviceType: createRequiredRule('设备类型不能为空'),
-  activeTimeout: createRequiredRule('token活跃超时时间不能为空'),
-  timeout: createRequiredRule('token固定超时不能为空')
+  id: createRequiredRule($t('page.system.client.form.clientId.required')),
+  clientKey: createRequiredRule($t('page.system.client.form.clientKey.required')),
+  clientSecret: createRequiredRule($t('page.system.client.form.clientSecret.required')),
+  grantTypeList: createRequiredRule($t('page.system.client.form.grantTypeList.required')),
+  deviceType: createRequiredRule($t('page.system.client.form.deviceType.required')),
+  activeTimeout: createRequiredRule($t('page.system.client.form.activeTimeout.required')),
+  timeout: createRequiredRule($t('page.system.client.form.timeout.required'))
 };
 
 function handleUpdateModelWhenEdit() {
@@ -117,7 +118,7 @@ async function handleSubmit() {
     if (error) return;
   }
 
-  window.$message?.success($t('common.updateSuccess'));
+  window.$message?.success($t('common.saveSuccess'));
   closeDrawer();
   emit('submitted');
 }
@@ -134,59 +135,84 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem v-if="operateType === 'edit'" label="客户端 ID" path="clientId">
-          <NInput v-model:value="model.clientId" disabled placeholder="请输入客户端 ID" />
+        <NFormItem v-if="operateType === 'edit'" :label="$t('page.system.client.clientId')" path="clientId">
+          <NInput
+            v-model:value="model.clientId"
+            disabled
+            :placeholder="$t('page.system.client.form.clientId.required')"
+          />
         </NFormItem>
-        <NFormItem label="客户端 key" path="clientKey">
-          <NInput v-model:value="model.clientKey" :disabled="operateType === 'edit'" placeholder="请输入客户端 key" />
+        <NFormItem :label="$t('page.system.client.clientKey')" path="clientKey">
+          <NInput
+            v-model:value="model.clientKey"
+            :disabled="operateType === 'edit'"
+            :placeholder="$t('page.system.client.form.clientKey.required')"
+          />
         </NFormItem>
-        <NFormItem label="客户端秘钥" path="clientSecret">
+        <NFormItem :label="$t('page.system.client.clientSecret')" path="clientSecret">
           <NInput
             v-model:value="model.clientSecret"
             :disabled="operateType === 'edit'"
-            placeholder="请输入客户端秘钥"
+            :placeholder="$t('page.system.client.form.clientSecret.required')"
           />
         </NFormItem>
-        <NFormItem label="授权类型" path="grantType">
-          <DictSelect v-model:value="model.grantTypeList" dict-code="sys_grant_type" multiple />
+        <NFormItem :label="$t('page.system.client.grantTypeList')" path="grantTypeList">
+          <DictSelect
+            v-model:value="model.grantTypeList"
+            :placeholder="$t('page.system.client.form.grantTypeList.required')"
+            dict-code="sys_grant_type"
+            multiple
+          />
         </NFormItem>
-        <NFormItem label="设备类型" path="deviceType">
-          <DictSelect v-model:value="model.deviceType" dict-code="sys_device_type" />
+        <NFormItem :label="$t('page.system.client.deviceType')" path="deviceType">
+          <DictSelect
+            v-model:value="model.deviceType"
+            :placeholder="$t('page.system.client.form.deviceType.required')"
+            dict-code="sys_device_type"
+          />
         </NFormItem>
-        <NFormItem label="token活跃超时时间" path="activeTimeout">
+        <NFormItem :label="$t('page.system.client.activeTimeout')" path="activeTimeout">
           <template #label>
             <div class="flex-center">
-              <FormTip content="指定时间无操作则过期(单位：秒), 默认30分钟(1800秒)" />
-              <span class="pl-3px">token活跃超时时间</span>
+              <FormTip :content="$t('page.system.client.form.activeTimeout.tooltip')" />
+              <span class="pl-3px">{{ $t('page.system.client.activeTimeout') }}</span>
             </div>
           </template>
-          <NInputNumber v-model:value="model.activeTimeout" placeholder="请输入token活跃超时时间">
+          <NInputNumber
+            v-model:value="model.activeTimeout"
+            :placeholder="$t('page.system.client.form.activeTimeout.required')"
+          >
             <template #suffix>
-              <span class="text-sm">秒</span>
+              <span class="text-sm">{{ $t('common.second') }}</span>
             </template>
           </NInputNumber>
         </NFormItem>
-        <NFormItem label="token固定超时" path="timeout">
+        <NFormItem :label="$t('page.system.client.timeout')" path="timeout">
           <template #label>
             <div class="flex-center">
-              <FormTip content="指定时间必定过期(单位：秒)，默认七天(604800秒)" />
-              <span class="pl-3px">token固定超时</span>
+              <FormTip :content="$t('page.system.client.form.timeout.tooltip')" />
+              <span class="pl-3px">{{ $t('page.system.client.timeout') }}</span>
             </div>
           </template>
-          <NInputNumber v-model:value="model.timeout" placeholder="请输入token固定超时">
+          <NInputNumber v-model:value="model.timeout" :placeholder="$t('page.system.client.form.timeout.required')">
             <template #suffix>
-              <span class="text-sm">秒</span>
+              <span class="text-sm">{{ $t('common.second') }}</span>
             </template>
           </NInputNumber>
         </NFormItem>
-        <NFormItem label="状态" path="status">
-          <DictRadio v-model:value="model.status" :disabled="model.id == 1" dict-code="sys_normal_disable" />
+        <NFormItem :label="$t('page.system.client.status')" path="status">
+          <DictRadio
+            v-model:value="model.status"
+            :placeholder="$t('page.system.client.form.status.required')"
+            :disabled="model.id == 1"
+            dict-code="sys_normal_disable"
+          />
         </NFormItem>
       </NForm>
       <template #footer>
         <NSpace :size="16">
           <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>
-          <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
+          <NButton type="primary" @click="handleSubmit">{{ $t('common.save') }}</NButton>
         </NSpace>
       </template>
     </NDrawerContent>

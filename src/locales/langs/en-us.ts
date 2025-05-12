@@ -12,6 +12,8 @@ const local: App.I18n.Schema = {
     addSuccess: 'Add Success',
     backToHome: 'Back to home',
     batchDelete: 'Batch Delete',
+    import: 'Import',
+    export: 'Export',
     cancel: 'Cancel',
     close: 'Close',
     check: 'Check',
@@ -45,12 +47,14 @@ const local: App.I18n.Schema = {
     tip: 'Tip',
     trigger: 'Trigger',
     update: 'Update',
+    saveSuccess: 'Save Success',
     updateSuccess: 'Update Success',
     userCenter: 'User Center',
     yesOrNo: {
       yes: 'Yes',
       no: 'No'
-    }
+    },
+    second: 'Second'
   },
   request: {
     logout: 'Logout user after request failed',
@@ -269,6 +273,71 @@ const local: App.I18n.Schema = {
         desc5: 'Soybean just wrote some of the workbench pages casually, and it was enough to see!'
       },
       creativity: 'Creativity'
+    },
+    common: {
+      id: 'ID',
+      createBy: 'Creator',
+      createTime: 'Create Time',
+      updateBy: 'Updater',
+      updateTime: 'Update Time',
+      remark: 'Remark',
+      form: {
+        remark: {
+          required: 'Please enter remark',
+          invalid: 'Remark cannot be empty'
+        }
+      }
+    },
+    system: {
+      client: {
+        title: 'Client List',
+        clientId: 'Client ID',
+        clientKey: 'Client Key',
+        clientSecret: 'Client Secret',
+        grantTypeList: 'Grant Type',
+        deviceType: 'Device Type',
+        activeTimeout: 'Token Active Timeout',
+        timeout: 'Token Timeout',
+        status: 'Status',
+        form: {
+          clientId: {
+            required: 'Please enter Client ID',
+            invalid: 'Client ID cannot be empty'
+          },
+          clientKey: {
+            required: 'Please enter Client Key',
+            invalid: 'Client Key cannot be empty'
+          },
+          clientSecret: {
+            required: 'Please enter Client Secret',
+            invalid: 'Client Secret cannot be empty'
+          },
+          grantTypeList: {
+            required: 'Please select Grant Type',
+            invalid: 'Grant Type cannot be empty'
+          },
+          deviceType: {
+            required: 'Please select Device Type',
+            invalid: 'Device Type cannot be empty'
+          },
+          activeTimeout: {
+            required: 'Please enter Active Timeout',
+            invalid: 'Active Timeout cannot be empty',
+            tooltip: 'Specify time without operation will expire (unit: second), default 30 minutes (1800 seconds)'
+          },
+          timeout: {
+            required: 'Please enter Timeout',
+            invalid: 'Timeout cannot be empty',
+            tooltip: 'Specify time will expire (unit: second), default 7 days (604800 seconds)'
+          },
+          status: {
+            required: 'Please select Status',
+            invalid: 'Status cannot be empty'
+          }
+        },
+        addClient: 'Add Client',
+        editClient: 'Edit Client'
+      }
     }
   },
   form: {

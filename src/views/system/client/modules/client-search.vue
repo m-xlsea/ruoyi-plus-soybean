@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
+
 defineOptions({
   name: 'ClientSearch'
 });
@@ -33,16 +34,29 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="90">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="客户端key" path="clientKey" class="pr-24px">
-              <NInput v-model:value="model.clientKey" placeholder="请输入客户端key" />
+            <NFormItemGi
+              span="24 s:12 m:6"
+              :label="$t('page.system.client.clientKey')"
+              path="clientKey"
+              class="pr-24px"
+            >
+              <NInput v-model:value="model.clientKey" :placeholder="$t('page.system.client.form.clientKey.required')" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="客户端秘钥" path="clientSecret" class="pr-24px">
-              <NInput v-model:value="model.clientSecret" placeholder="请输入客户端秘钥" />
+            <NFormItemGi
+              span="24 s:12 m:6"
+              :label="$t('page.system.client.clientSecret')"
+              path="clientSecret"
+              class="pr-24px"
+            >
+              <NInput
+                v-model:value="model.clientSecret"
+                :placeholder="$t('page.system.client.form.clientSecret.required')"
+              />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="状态" path="status" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:6" :label="$t('page.system.client.status')" path="status" class="pr-24px">
               <DictSelect
                 v-model:value="model.status"
-                placeholder="请选择状态"
+                :placeholder="$t('page.system.client.form.status.required')"
                 dict-code="sys_normal_disable"
                 clearable
               />
