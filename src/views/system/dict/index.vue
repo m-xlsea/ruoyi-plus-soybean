@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { TreeOption } from 'naive-ui';
 import { NDivider, NTooltip } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
@@ -301,6 +301,10 @@ async function handleDeleteType(dictType: Api.System.DictType) {
 async function handleExportType() {
   download('/system/dict/type/export', searchParams, `字典类型_${new Date().getTime()}.xlsx`);
 }
+
+const selectable = computed(() => {
+  return !loading.value;
+});
 </script>
 
 <template>
@@ -337,7 +341,6 @@ async function handleExportType() {
           block-node
           show-line
           :data="dictData as []"
-          :default-expanded-keys="dictData?.length ? [dictData[0].dictType!] : []"
           :show-irrelevant-nodes="false"
           :pattern="dictPattern"
           :filter="dictFilter"
@@ -345,6 +348,7 @@ async function handleExportType() {
           key-field="dictType"
           label-field="dictName"
           virtual-scroll
+          :selectable="selectable"
           :render-label="renderLabel"
           :render-suffix="renderSuffix"
           @update:selected-keys="handleClickTree"

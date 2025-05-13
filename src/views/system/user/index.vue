@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { NButton, NDivider } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList, fetchUpdateUserStatus } from '@/service/api/system';
@@ -243,6 +243,12 @@ async function handleStatusChange(
 function handleExport() {
   download('/system/user/export', searchParams, `${$t('page.system.user.title')}_${new Date().getTime()}.xlsx`);
 }
+
+const expandedKeys = ref<CommonType.IdType[]>([100]);
+
+const selectable = computed(() => {
+  return !loading.value;
+});
 </script>
 
 <template>
@@ -258,16 +264,17 @@ function handleExport() {
       <NInput v-model:value="deptPattern" clearable :placeholder="$t('common.keywordSearch')" />
       <NSpin class="dept-tree" :show="treeLoading">
         <NTree
+          v-model:expanded-keys="expandedKeys"
           block-node
           show-line
           :data="deptData as []"
-          :default-expanded-keys="deptData?.length ? [deptData[0].id!] : []"
           :show-irrelevant-nodes="false"
           :pattern="deptPattern"
           class="infinite-scroll h-full min-h-200px py-3"
           key-field="id"
           label-field="label"
           virtual-scroll
+          :selectable="selectable"
           @update:selected-keys="handleClickTree"
         >
           <template #empty>
