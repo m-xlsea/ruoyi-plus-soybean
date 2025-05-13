@@ -1,5 +1,5 @@
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { BACKEND_ERROR_CODE, createFlatRequest } from '@sa/axios';
+import { BACKEND_ERROR_CODE, REQUEST_CANCELED_CODE, createFlatRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
 import { localStg, sessionStg } from '@/utils/storage';
 import { getServiceBaseURL } from '@/utils/service';
@@ -142,7 +142,12 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
     onError(error) {
       // when the request is fail, you can show error message
 
+      if (error.code === REQUEST_CANCELED_CODE) {
+        return;
+      }
+
       let message = error.message;
+
       let backendErrorCode = '';
 
       // get backend error message and code

@@ -142,13 +142,20 @@ const tagMap: Record<'0' | '1' | '2', NaiveUI.ThemeColor> = {
   '2': 'primary'
 };
 
+let controller = new AbortController();
+
 async function getBtnMenuList() {
   if (!currentMenu.value?.menuId) {
     return;
   }
+  controller.abort();
+  controller = new AbortController();
   startBtnLoading();
   btnData.value = [];
-  const { data, error } = await fetchGetMenuList({ parentId: currentMenu.value?.menuId, menuType: 'F' });
+  const { data, error } = await fetchGetMenuList(
+    { parentId: currentMenu.value?.menuId, menuType: 'F' },
+    controller.signal
+  );
   if (error) return;
   btnData.value = data || [];
   endBtnLoading();
