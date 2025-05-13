@@ -16,5 +16,8 @@
   "unocss.root": ["./"],
   "vue.server.hybridMode": true,
   "files.exclude": { "/docs": true },
-  "search.exclude": { "/docs": true }
+  "search.exclude": {
+    "/docs": true
+  },
+  "cSpell.words": ["Axios", "tinymce"]
 }

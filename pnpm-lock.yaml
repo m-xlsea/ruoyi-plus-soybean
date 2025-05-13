@@ -29,6 +29,9 @@ importers:
       '@sa/utils':
         specifier: workspace:*
         version: link:packages/utils
+      '@tinymce/tinymce-vue':
+        specifier: ^6.1.0
+        version: 6.1.0(tinymce@7.8.0)(vue@3.5.13(typescript@5.8.2))
       '@vueuse/core':
         specifier: 13.0.0
         version: 13.0.0(vue@3.5.13(typescript@5.8.2))
@@ -68,6 +71,9 @@ importers:
       tailwind-merge:
         specifier: 3.0.2
         version: 3.0.2
+      tinymce:
+        specifier: ^7.8.0
+        version: 7.8.0
       vue:
         specifier: 3.5.13
         version: 3.5.13(typescript@5.8.2)
@@ -1048,6 +1054,15 @@ packages:
       prettier-plugin-toml:
         optional: true
       vue-eslint-parser:
+        optional: true
+
+  '@tinymce/tinymce-vue@6.1.0':
+    resolution: {integrity: sha512-7JdaKMOaohuFWpjKwRmaZJbT/eNVUUYHG93R7+lUf7SUN+hSqd2spbuqZcki+tG9kaSAGd2ZmvJIsmzWDNAzpw==}
+    peerDependencies:
+      tinymce: ^7.0.0 || ^6.0.0 || ^5.5.1
+      vue: ^3.0.0
+    peerDependenciesMeta:
+      tinymce:
         optional: true
 
   '@trysound/sax@0.2.0':
@@ -3785,6 +3800,9 @@ packages:
     resolution: {integrity: sha512-qkf4trmKSIiMTs/E63cxH+ojC2unam7rJ0WrauAzpT3ECNTxGRMlaXxVbfxMUC/w0LaYk6jQ4y/nGR9uBO3tww==}
     engines: {node: '>=12.0.0'}
 
+  tinymce@7.8.0:
+    resolution: {integrity: sha512-MUER5MWV9mkOB4expgbWknh/C5ZJvOXQlMVSx4tJxTuYtcUCDB6bMZ34fWNOIc8LvrnXmGHGj0eGQuxjQyRgrA==}
+
   to-object-path@0.3.0:
     resolution: {integrity: sha512-9mWHdnGRuh3onocaHzukyvCZhzvr6tiflAy/JRFXcJX0TjgfWA9pk9t8CMbzmBE4Jfw58pXbkngtBtqYxzNEyg==}
     engines: {node: '>=0.10.0'}
@@ -4877,6 +4895,12 @@ snapshots:
     transitivePeerDependencies:
       - '@types/eslint'
       - supports-color
+
+  '@tinymce/tinymce-vue@6.1.0(tinymce@7.8.0)(vue@3.5.13(typescript@5.8.2))':
+    dependencies:
+      vue: 3.5.13(typescript@5.8.2)
+    optionalDependencies:
+      tinymce: 7.8.0
 
   '@trysound/sax@0.2.0': {}
 
@@ -8043,6 +8067,8 @@ snapshots:
     dependencies:
       fdir: 6.4.3(picomatch@4.0.2)
       picomatch: 4.0.2
+
+  tinymce@7.8.0: {}
 
   to-object-path@0.3.0:
     dependencies:

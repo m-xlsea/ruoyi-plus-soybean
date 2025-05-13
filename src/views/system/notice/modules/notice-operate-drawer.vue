@@ -3,6 +3,7 @@ import { computed, reactive, watch } from 'vue';
 import { fetchCreateNotice, fetchUpdateNotice } from '@/service/api/system/notice';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
+import { Tinymce } from '@/components/tinymce';
 defineOptions({
   name: 'NoticeOperateDrawer'
 });
@@ -115,7 +116,7 @@ watch(visible, () => {
           <DictRadio v-model:value="model.noticeType" dict-code="sys_notice_type" />
         </NFormItem>
         <NFormItem label="公告内容" path="noticeContent">
-          <NInput v-model:value="model.noticeContent" type="textarea" placeholder="请输入公告内容" />
+          <Tinymce v-model="model.noticeContent" />
         </NFormItem>
         <NFormItem label="公告状态" path="status">
           <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />

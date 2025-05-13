@@ -20,6 +20,7 @@ declare module 'vue' {
     DictRadio: typeof import('./../components/custom/dict-radio.vue')['default']
     DictSelect: typeof import('./../components/custom/dict-select.vue')['default']
     DictTag: typeof import('./../components/custom/dict-tag.vue')['default']
+    Editor: typeof import('./../components/tinymce/src/editor.vue')['default']
     ExceptionBase: typeof import('./../components/common/exception-base.vue')['default']
     FileUpload: typeof import('./../components/custom/file-upload.vue')['default']
     FormTip: typeof import('./../components/custom/form-tip.vue')['default']
