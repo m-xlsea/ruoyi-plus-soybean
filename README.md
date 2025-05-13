@@ -351,3 +351,8 @@ console.log(t('common.confirm'));
     <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747030503230216352/6879cbe5_5601833.jpeg" width="24px" >
     <span>酷酷冬天 20元</span>
 </div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747105640574377313/6d259bba_5601833.jpeg" width="24px" >
+    <span>Selfish Altruism(JackSue) 200元</span>
+</div>
