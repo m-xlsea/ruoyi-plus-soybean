@@ -6,7 +6,6 @@
 import type { RouteRecordRaw, RouteComponent } from 'vue-router';
 import type { ElegantConstRoute } from '@elegant-router/vue';
 import type { RouteMap, RouteKey, RoutePath } from '@elegant-router/types';
-import { createCustomNameComponent, RouteComponentLoader } from './helper';
 
 /**
  * transform elegant const routes to vue routes
@@ -126,11 +125,8 @@ function transformElegantRouteToVueRoute(
 
       if (isView(component)) {
         const viewName = getViewName(component);
-        // 给组件设置name 与route.name一致
-        vueRoute.component = createCustomNameComponent(views[viewName] as RouteComponentLoader,
-          { name: route.name });
-        // 路由名称与组件名称保持一致，解决keepAlive问题
-        vueRoute.name = route.name;
+
+        vueRoute.component = views[viewName];
       }
 
     }

@@ -96,11 +96,11 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
       route.path = route.path.startsWith('//') ? route.path.substring(1) : route.path;
       route.path = parent ? parent.path + route.path : route.path;
 
-      // route.name = route.component!;
-      // if (['layout.base', 'iframe-page'].includes(route.component!)) {
-      const name = humpToLine(route.path.substring(1).replace('/', '_'));
-      route.name = parent ? `${parent.name}_${name}` : name;
-      // }
+      route.name = route.component!;
+      if (['layout.base', 'iframe-page'].includes(route.component!)) {
+        const name = humpToLine(route.path.substring(1).replace('/', '_'));
+        route.name = parent ? `${parent.name}_${name}` : name;
+      }
 
       route.meta = route.meta ? route.meta : { title: route.name };
 
