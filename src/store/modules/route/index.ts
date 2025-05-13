@@ -113,8 +113,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
       // @ts-expect-error no hidden field
       route.meta.hideInMenu = Boolean(route.hidden) || false;
-
-      route.meta.keepAlive = Boolean(route.meta.noCache) || false;
+      // 是否需要keepAlive
+      route.meta.keepAlive = !route.meta.noCache || false;
 
       if (route.component !== 'layout.base') {
         route.component = parent ? `view.${route.component}` : `layout.base$view.${route.component}`;
