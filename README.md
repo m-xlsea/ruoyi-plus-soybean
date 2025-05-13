@@ -27,9 +27,9 @@
 
 # ❗开发前必看
 
-<p style="font-weight: bold; font-size: 24px;">本项目强制使用 pnpm 构建，详细请看 <a href="#install">安装步骤及说明</a></p>
+<p style="font-weight: bold; font-size: 24px;">本项目强制使用 pnpm 构建，详细请看 <a href="#安装步骤及说明">安装步骤及说明</a></p>
 
-<p style="font-weight: bold; font-size: 24px;">后端需要替换代码生成模板与菜单 SQL，详细请看 <a href="#backend">代码生成与菜单更新</a></p>
+<p style="font-weight: bold; font-size: 24px;">后端需要替换代码生成模板与菜单 SQL，详细请看 <a href="#代码生成与菜单更新">代码生成与菜单更新</a></p>
 
 ## 📋 项目概述
 
@@ -113,7 +113,7 @@ root
 - pnpm >= 8.7.0
 - Git
 
-### <h3 id="install">安装步骤及说明</h3>
+### 安装步骤及说明
 
 1. 克隆仓库
 ```bash
@@ -147,9 +147,9 @@ pnpm dev
 pnpm build
 ```
 
-### <h3 id="backend">代码生成与菜单更新</h3>
+### 代码生成与菜单更新
 
-项目提供了代码生成工具和菜单SQL更新文件，`docs` 目录下：
+项目提供了代码生成工具和菜单SQL更新文件，在 <a href="https://gitee.com/xlsea/ruoyi-plus-soybean/tree/master/docs" target="_blank">docs</a> 目录下：
 
 - **代码生成工具**
    - 代码生成工具类位于 `docs/java` 目录，如果没有修改过VelocityUtils.java文件，直接替换即可
