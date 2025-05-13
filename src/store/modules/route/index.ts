@@ -91,16 +91,16 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
   function parseRouter(route: ElegantConstRoute, parent?: ElegantConstRoute) {
     if (authRouteMode.value === 'dynamic') {
-      if (route.component === 'Layout' && route.path === '/' && route.children?.length) {
-        Object.assign(route, route.children[0]);
-      }
       // @ts-expect-error no query field
       const query = route.query ? String(route.query) : undefined;
       route.path = route.path.startsWith('//') ? route.path.substring(1) : route.path;
       route.path = parent ? parent.path + route.path : route.path;
-      const name = humpToLine(route.path.substring(1).replace('/', '_'));
 
+      // route.name = route.component!;
+      // if (['layout.base', 'iframe-page'].includes(route.component!)) {
+      const name = humpToLine(route.path.substring(1).replace('/', '_'));
       route.name = parent ? `${parent.name}_${name}` : name;
+      // }
 
       route.meta = route.meta ? route.meta : { title: route.name };
 
