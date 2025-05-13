@@ -25,6 +25,12 @@
 > 如果对该项目感兴趣，可以给一个 Star 支持一下，谢谢！
 > 请大家踊跃提交 PR 和 Issue，一起完善这个项目
 
+# ❗开发前必看
+
+<p style="font-weight: bold; font-size: 24px;">本项目强制使用 pnpm 构建，详细请看 <a href="#install">安装步骤及说明</a></p>
+
+<p style="font-weight: bold; font-size: 24px;">后端需要替换代码生成模板与菜单 SQL，详细请看 <a href="#backend">代码生成与菜单更新</a></p>
+
 ## 📋 项目概述
 
 RuoYi-Plus-Soybean 是一个现代化的企业级多租户管理系统，它结合了 RuoYi-Vue-Plus 的强大后端功能和 Soybean Admin 的现代化前端特性，为开发者提供了完整的企业管理解决方案。
@@ -107,7 +113,7 @@ root
 - pnpm >= 8.7.0
 - Git
 
-### 安装步骤及说明
+### <h3 id="install">安装步骤及说明</h3>
 
 1. 克隆仓库
 ```bash
@@ -115,24 +121,35 @@ git clone https://gitee.com/xlsea/ruoyi-plus-soybean.git
 cd ruoyi-plus-soybean
 ```
 
-2. 安装依赖
+2. 安装 pnpm (如果未安装)
+
+```bash
+npm install pnpm -g
+```
+
+设置淘宝镜像
+```bash
+pnpm config set registry https://registry.npmmirror.com
+```
+
+3. 安装依赖
 ```bash
 pnpm install
 ```
 
-3. 运行开发服务器
+4. 运行开发服务器
 ```bash
 pnpm dev
 ```
 
-4. 构建生产版本
+5. 构建生产版本
 ```bash
 pnpm build
 ```
 
-### 代码生成与菜单更新
+### <h3 id="backend">代码生成与菜单更新</h3>
 
-项目提供了代码生成工具和菜单SQL更新文件，位于 `docs` 目录下：
+项目提供了代码生成工具和菜单SQL更新文件，`docs` 目录下：
 
 - **代码生成工具**
    - 代码生成工具类位于 `docs/java` 目录，如果没有修改过VelocityUtils.java文件，直接替换即可
