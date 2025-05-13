@@ -144,7 +144,7 @@ watch(visible, () => {
             :lang="appStore.locale"
             :is-dark="themeStore.darkMode"
             :upload-url="`${baseURL}/resource/oss/upload`"
-            :headers="headers"
+            :upload-headers="headers"
           />
         </NFormItem>
         <NFormItem label="公告状态" path="status">

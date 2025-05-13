@@ -15,6 +15,22 @@ const gap = computed(() => (appStore.isMobile ? 0 : 16));
 
 <template>
   <NSpace vertical :size="16">
+    <NAlert title="如遇问题请先看这里" type="warning">
+      <div class="text-18px">
+        <div>
+          开发前请先查看 ReadMe.md 文件中的
+          <NA
+            href="https://gitee.com/xlsea/ruoyi-plus-soybean#%E5%BC%80%E5%8F%91%E5%89%8D%E5%BF%85%E7%9C%8B"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            开发前必看
+          </NA>
+        </div>
+        <div>如遇菜单无法点击，请检查是否已替换菜单 SQL</div>
+        <div>如遇代码无法生成，请检查是否已替换代码生成模板</div>
+      </div>
+    </NAlert>
     <HeaderBanner />
     <CardData />
     <NGrid :x-gap="gap" :y-gap="16" responsive="screen" item-responsive>
