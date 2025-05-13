@@ -1,0 +1,18 @@
+{
+  "name": "@sa/tinymce",
+  "version": "1.3.13",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "typesVersions": {
+    "*": {
+      "*": ["./src/*"]
+    }
+  },
+  "dependencies": {
+    "tinymce": "7.8.0"
+  },
+  "devDependencies": {
+    "@tinymce/tinymce-vue": "6.1.0"
+  }
+}

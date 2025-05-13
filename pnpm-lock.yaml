@@ -30,7 +30,7 @@ importers:
         specifier: workspace:*
         version: link:packages/utils
       '@tinymce/tinymce-vue':
-        specifier: ^6.1.0
+        specifier: 6.1.0
         version: 6.1.0(tinymce@7.8.0)(vue@3.5.13(typescript@5.8.2))
       '@vueuse/core':
         specifier: 13.0.0
@@ -72,7 +72,7 @@ importers:
         specifier: 3.0.2
         version: 3.0.2
       tinymce:
-        specifier: ^7.8.0
+        specifier: 7.8.0
         version: 7.8.0
       vue:
         specifier: 3.5.13
@@ -290,6 +290,16 @@ importers:
       rimraf:
         specifier: 6.0.1
         version: 6.0.1
+
+  packages/tinymce:
+    dependencies:
+      tinymce:
+        specifier: 7.8.0
+        version: 7.8.0
+    devDependencies:
+      '@tinymce/tinymce-vue':
+        specifier: 6.1.0
+        version: 6.1.0(tinymce@7.8.0)(vue@3.5.13(typescript@5.8.2))
 
   packages/uno-preset: {}
 
