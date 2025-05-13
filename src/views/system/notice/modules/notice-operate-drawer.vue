@@ -1,9 +1,14 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
+import { Tinymce } from '@sa/tinymce';
 import { fetchCreateNotice, fetchUpdateNotice } from '@/service/api/system/notice';
+import { getToken } from '@/store/modules/auth/shared';
+import { useAppStore } from '@/store/modules/app';
+import { useThemeStore } from '@/store/modules/theme';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
+import { getServiceBaseURL } from '@/utils/service';
 import { $t } from '@/locales';
-import { Tinymce } from '@/components/tinymce';
+
 defineOptions({
   name: 'NoticeOperateDrawer'
 });
@@ -26,6 +31,17 @@ const emit = defineEmits<Emits>();
 const visible = defineModel<boolean>('visible', {
   default: false
 });
+
+const appStore = useAppStore();
+const themeStore = useThemeStore();
+
+const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
+const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
+
+const headers: Record<string, string> = {
+  Authorization: `Bearer ${getToken()}`,
+  clientid: import.meta.env.VITE_APP_CLIENT_ID!
+};
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
@@ -106,7 +122,14 @@ watch(visible, () => {
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
+  <NDrawer
+    v-model:show="visible"
+    :trap-focus="false"
+    :title="title"
+    display-directive="show"
+    :width="800"
+    class="max-w-90%"
+  >
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem label="公告标题" path="noticeTitle">
@@ -116,7 +139,13 @@ watch(visible, () => {
           <DictRadio v-model:value="model.noticeType" dict-code="sys_notice_type" />
         </NFormItem>
         <NFormItem label="公告内容" path="noticeContent">
-          <Tinymce v-model="model.noticeContent" />
+          <Tinymce
+            v-model="model.noticeContent"
+            :lang="appStore.locale"
+            :is-dark="themeStore.darkMode"
+            :upload-url="`${baseURL}/resource/oss/upload`"
+            :headers="headers"
+          />
         </NFormItem>
         <NFormItem label="公告状态" path="status">
           <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />

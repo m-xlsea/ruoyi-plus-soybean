@@ -201,11 +201,12 @@ const events = computed(() => {
 </script>
 
 <template>
-  <div class="app-tinymce">
-    <NSpin :show="loading">
+  <div class="app-tinymce w-full">
+    <NSpin :show="loading" class="min-h-400px w-full">
       <Editor
         v-if="init"
         v-model="content"
+        class="h-full w-full"
         :init="initOptions"
         :tinymce-script-src="tinymceScriptSrc"
         :disabled="disabled"

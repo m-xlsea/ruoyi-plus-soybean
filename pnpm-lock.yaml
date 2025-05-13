@@ -26,6 +26,9 @@ importers:
       '@sa/materials':
         specifier: workspace:*
         version: link:packages/materials
+      '@sa/tinymce':
+        specifier: workspace:*
+        version: link:packages/tinymce
       '@sa/utils':
         specifier: workspace:*
         version: link:packages/utils
@@ -177,6 +180,9 @@ importers:
       vite-plugin-progress:
         specifier: 0.0.7
         version: 0.0.7(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(sass@1.86.0)(tsx@4.19.3)(yaml@2.7.0))
+      vite-plugin-static-copy:
+        specifier: ^3.0.0
+        version: 3.0.0(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(sass@1.86.0)(tsx@4.19.3)(yaml@2.7.0))
       vite-plugin-svg-icons:
         specifier: 2.0.1
         version: 2.0.1(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(sass@1.86.0)(tsx@4.19.3)(yaml@2.7.0))
@@ -2185,6 +2191,14 @@ packages:
       picomatch:
         optional: true
 
+  fdir@6.4.4:
+    resolution: {integrity: sha512-1NZP+GK4GfuAv3PqKvxQRDMjdSRZjnkq7KfhlNrCNNlZ0ygQFpebfrnfnq/W7fpUnAv9aGWmY1zKx7FYL3gwhg==}
+    peerDependencies:
+      picomatch: ^3 || ^4
+    peerDependenciesMeta:
+      picomatch:
+        optional: true
+
   figures@6.1.0:
     resolution: {integrity: sha512-d+l3qxjSesT4V7v2fh+QnmFnUWv9lSpjarhShNTgBOfA0ttejbQUAlHLitbjkoRiDulW0OPoQPYIGhIC8ohejg==}
     engines: {node: '>=18'}
@@ -3172,6 +3186,10 @@ packages:
     resolution: {integrity: sha512-LaNjtRWUBY++zB5nE/NwcaoMylSPk+S+ZHNB1TzdbMJMny6dynpAGt7X/tl/QYq3TIeE6nxHppbo2LGymrG5Pw==}
     engines: {node: '>=10'}
 
+  p-map@7.0.3:
+    resolution: {integrity: sha512-VkndIv2fIB99swvQoA65bm+fsmt6UNdGeIB0oxBs+WhAhdh08QA04JXpI7rbB9r08/nkbysKoya9rtDERYOYMA==}
+    engines: {node: '>=18'}
+
   package-json-from-dist@1.0.1:
     resolution: {integrity: sha512-UEZIS3/by4OC8vL3P2dTXRETpebLI2NiI5vIrjaD/5UtrkFX/tNbwjTSRAGC/+7CAo2pIcBaRgWmcBBHcsaCIw==}
 
@@ -3810,6 +3828,10 @@ packages:
     resolution: {integrity: sha512-qkf4trmKSIiMTs/E63cxH+ojC2unam7rJ0WrauAzpT3ECNTxGRMlaXxVbfxMUC/w0LaYk6jQ4y/nGR9uBO3tww==}
     engines: {node: '>=12.0.0'}
 
+  tinyglobby@0.2.13:
+    resolution: {integrity: sha512-mEwzpUgrLySlveBwEVDMKk5B57bhLPYovRfPAXD5gA/98Opn0rCDj3GtLwFvCvH5RK9uPCExUROW5NjDwvqkxw==}
+    engines: {node: '>=12.0.0'}
+
   tinymce@7.8.0:
     resolution: {integrity: sha512-MUER5MWV9mkOB4expgbWknh/C5ZJvOXQlMVSx4tJxTuYtcUCDB6bMZ34fWNOIc8LvrnXmGHGj0eGQuxjQyRgrA==}
 
@@ -4036,6 +4058,12 @@ packages:
     engines: {node: '>=14', pnpm: '>=7.0.0'}
     peerDependencies:
       vite: '>2.0.0-0'
+
+  vite-plugin-static-copy@3.0.0:
+    resolution: {integrity: sha512-Uki9pPUQ4ZnoMEdIFabvoh9h6Bh9Q1m3iF7BrZvoiF30reREpJh2gZb4jOnW1/uYFzyRiLCmFSkM+8hwiq1vWQ==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      vite: ^5.0.0 || ^6.0.0
 
   vite-plugin-svg-icons@2.0.1:
     resolution: {integrity: sha512-6ktD+DhV6Rz3VtedYvBKKVA2eXF+sAQVaKkKLDSqGUfnhqXl3bj5PPkVTl3VexfTuZy66PmINi8Q6eFnVfRUmA==}
@@ -6316,6 +6344,10 @@ snapshots:
     optionalDependencies:
       picomatch: 4.0.2
 
+  fdir@6.4.4(picomatch@4.0.2):
+    optionalDependencies:
+      picomatch: 4.0.2
+
   figures@6.1.0:
     dependencies:
       is-unicode-supported: 2.1.0
@@ -7387,6 +7419,8 @@ snapshots:
     dependencies:
       p-limit: 3.1.0
 
+  p-map@7.0.3: {}
+
   package-json-from-dist@1.0.1: {}
 
   package-manager-detector@0.2.11:
@@ -8078,6 +8112,11 @@ snapshots:
       fdir: 6.4.3(picomatch@4.0.2)
       picomatch: 4.0.2
 
+  tinyglobby@0.2.13:
+    dependencies:
+      fdir: 6.4.4(picomatch@4.0.2)
+      picomatch: 4.0.2
+
   tinymce@7.8.0: {}
 
   to-object-path@0.3.0:
@@ -8334,6 +8373,15 @@ snapshots:
       picocolors: 1.1.1
       progress: 2.0.3
       rd: 2.0.1
+      vite: 6.2.2(@types/node@22.13.10)(jiti@2.4.2)(sass@1.86.0)(tsx@4.19.3)(yaml@2.7.0)
+
+  vite-plugin-static-copy@3.0.0(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(sass@1.86.0)(tsx@4.19.3)(yaml@2.7.0)):
+    dependencies:
+      chokidar: 3.6.0
+      fs-extra: 11.3.0
+      p-map: 7.0.3
+      picocolors: 1.1.1
+      tinyglobby: 0.2.13
       vite: 6.2.2(@types/node@22.13.10)(jiti@2.4.2)(sass@1.86.0)(tsx@4.19.3)(yaml@2.7.0)
 
   vite-plugin-svg-icons@2.0.1(vite@6.2.2(@types/node@22.13.10)(jiti@2.4.2)(sass@1.86.0)(tsx@4.19.3)(yaml@2.7.0)):
