@@ -45,7 +45,7 @@ const {
     operName: null,
     operIp: null,
     status: null,
-    operTime: null
+    params: {}
   },
   columns: () => [
     {

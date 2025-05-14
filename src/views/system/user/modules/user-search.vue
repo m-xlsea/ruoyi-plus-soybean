@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { NDatePicker } from 'naive-ui';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -16,12 +17,14 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const dateRangeCreateTime = ref<[string, string]>();
+const dateRangeCreateTime = ref<[string, string] | null>(null);
+
+const datePickerRef = ref<InstanceType<typeof NDatePicker>>();
 
 const model = defineModel<Api.System.UserSearchParams>('model', { required: true });
 
 async function reset() {
-  dateRangeCreateTime.value = undefined;
+  dateRangeCreateTime.value = null;
   await restoreValidation();
   emit('reset');
 }
@@ -29,8 +32,8 @@ async function reset() {
 async function search() {
   await validate();
   if (dateRangeCreateTime.value?.length) {
-    model.value.params!.beginCreateTime = dateRangeCreateTime.value[0];
-    model.value.params!.endCreateTime = dateRangeCreateTime.value[0];
+    model.value.params!.beginTime = dateRangeCreateTime.value[0];
+    model.value.params!.endTime = dateRangeCreateTime.value[1];
   }
   emit('search');
 }
@@ -74,6 +77,7 @@ async function search() {
               class="pr-24px"
             >
               <NDatePicker
+                ref="datePickerRef"
                 v-model:formatted-value="dateRangeCreateTime"
                 type="datetimerange"
                 value-format="yyyy-MM-dd HH:mm:ss"

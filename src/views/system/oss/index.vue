@@ -48,7 +48,8 @@ const {
     fileName: null,
     originalName: null,
     fileSuffix: null,
-    service: null
+    service: null,
+    params: {}
   },
   columns: () => [
     {

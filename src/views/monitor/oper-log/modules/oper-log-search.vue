@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -15,15 +16,22 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
+const dateRangeOperTime = ref<[string, string] | null>(null);
+
 const model = defineModel<Api.Monitor.OperLogSearchParams>('model', { required: true });
 
 async function reset() {
+  dateRangeOperTime.value = null;
   await restoreValidation();
   emit('reset');
 }
 
 async function search() {
   await validate();
+  if (dateRangeOperTime.value?.length) {
+    model.value.params!.beginTime = dateRangeOperTime.value[0];
+    model.value.params!.endTime = dateRangeOperTime.value[1];
+  }
   emit('search');
 }
 </script>
@@ -51,7 +59,7 @@ async function search() {
             <NFormItemGi span="24 s:12 m:6" label="操作IP" path="operIp" class="pr-24px">
               <NInput v-model:value="model.operIp" placeholder="请输入操作IP" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="操作状态" path="status" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:8" label="操作状态" path="status" class="pr-24px">
               <DictSelect
                 v-model:value="model.status"
                 placeholder="请选择操作状态"
@@ -59,7 +67,15 @@ async function search() {
                 clearable
               />
             </NFormItemGi>
-            <NFormItemGi span="24" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:8" label="操作时间" path="operTime" class="pr-24px">
+              <NDatePicker
+                v-model:formatted-value="dateRangeOperTime"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                clearable
+              />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:8" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

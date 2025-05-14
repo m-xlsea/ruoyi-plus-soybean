@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -15,15 +16,22 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
+const dateRangeCreateTime = ref<[string, string] | null>(null);
+
 const model = defineModel<Api.System.ConfigSearchParams>('model', { required: true });
 
 async function reset() {
+  dateRangeCreateTime.value = null;
   await restoreValidation();
   emit('reset');
 }
 
 async function search() {
   await validate();
+  if (dateRangeCreateTime.value?.length) {
+    model.value.params!.beginTime = dateRangeCreateTime.value[0];
+    model.value.params!.endTime = dateRangeCreateTime.value[1];
+  }
   emit('search');
 }
 </script>
@@ -35,7 +43,7 @@ async function search() {
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
             <NFormItemGi
-              span="6 s:12 m:6"
+              span="24 s:12 m:6"
               :label="$t('page.system.config.configName')"
               path="configName"
               class="pr-24px"
@@ -45,11 +53,16 @@ async function search() {
                 :placeholder="$t('page.system.config.form.configName.required')"
               />
             </NFormItemGi>
-            <NFormItemGi span="6 s:12 m:6" :label="$t('page.system.config.configKey')" path="configKey" class="pr-24px">
+            <NFormItemGi
+              span="24 s:12 m:6"
+              :label="$t('page.system.config.configKey')"
+              path="configKey"
+              class="pr-24px"
+            >
               <NInput v-model:value="model.configKey" :placeholder="$t('page.system.config.form.configKey.required')" />
             </NFormItemGi>
             <NFormItemGi
-              span="6 s:12 m:6"
+              span="24 s:12 m:6"
               :label="$t('page.system.config.configType')"
               path="configType"
               class="pr-24px"
@@ -61,7 +74,15 @@ async function search() {
                 clearable
               />
             </NFormItemGi>
-            <NFormItemGi span="6" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:12" label="创建时间" path="createTime" class="pr-24px">
+              <NDatePicker
+                v-model:formatted-value="dateRangeCreateTime"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                clearable
+              />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:12" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -15,15 +16,22 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
+const dateRangeLoginTime = ref<[string, string] | null>(null);
+
 const model = defineModel<Api.Monitor.LoginInforSearchParams>('model', { required: true });
 
 async function reset() {
+  dateRangeLoginTime.value = null;
   await restoreValidation();
   emit('reset');
 }
 
 async function search() {
   await validate();
+  if (dateRangeLoginTime.value?.length) {
+    model.value.params!.beginTime = dateRangeLoginTime.value[0];
+    model.value.params!.endTime = dateRangeLoginTime.value[1];
+  }
   emit('search');
 }
 </script>
@@ -45,6 +53,14 @@ async function search() {
                 v-model:value="model.status"
                 placeholder="请选择登录状态"
                 dict-code="sys_common_status"
+                clearable
+              />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:6" label="登录时间" path="loginTime" class="pr-24px">
+              <NDatePicker
+                v-model:formatted-value="dateRangeLoginTime"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
               />
             </NFormItemGi>

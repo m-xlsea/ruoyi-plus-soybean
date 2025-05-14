@@ -16,12 +16,12 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const dateRangeCreateTime = ref<[string, string]>();
+const dateRangeCreateTime = ref<[string, string] | null>(null);
 
 const model = defineModel<Api.System.OssSearchParams>('model', { required: true });
 
 async function reset() {
-  dateRangeCreateTime.value = undefined;
+  dateRangeCreateTime.value = null;
   await restoreValidation();
   emit('reset');
 }
@@ -30,7 +30,7 @@ async function search() {
   await validate();
   if (dateRangeCreateTime.value?.length) {
     model.value.params!.beginCreateTime = dateRangeCreateTime.value[0];
-    model.value.params!.endCreateTime = dateRangeCreateTime.value[0];
+    model.value.params!.endCreateTime = dateRangeCreateTime.value[1];
   }
   emit('search');
 }

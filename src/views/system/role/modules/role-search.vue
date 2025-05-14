@@ -25,7 +25,6 @@ const { options: sysNormalDisableOptions } = useDict('sys_normal_disable');
 
 async function reset() {
   dateRangeCreateTime.value = null;
-  Object.assign(model.value.params!, {});
   await restoreValidation();
   emit('reset');
 }

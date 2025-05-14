@@ -49,7 +49,8 @@ const {
     // the value can not be undefined, otherwise the property in Form will not be reactive
     userName: null,
     ipaddr: null,
-    status: null
+    status: null,
+    params: {}
   },
   columns: () => [
     {

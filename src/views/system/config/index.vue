@@ -42,7 +42,7 @@ const {
     configName: null,
     configKey: null,
     configType: null,
-    createTime: null
+    params: {}
   },
   columns: () => [
     {
