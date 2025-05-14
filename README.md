@@ -375,6 +375,11 @@ console.log(t('common.confirm'));
 </div>
 
 <div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://c-ssl.duitang.com/uploads/item/201705/07/20170507160739_8tNSP.jpeg" width="24px" >
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747190127964232140/5ffa5ac4_5601833.jpeg" width="24px" >
     <span>匿名用户 50元</span>
+</div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747190127964232140/5ffa5ac4_5601833.jpeg" width="24px" >
+    <span>匿名用户 10元</span>
 </div>
