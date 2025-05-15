@@ -97,6 +97,7 @@ watch(visible, () => {
             v-model:value="model.password"
             type="password"
             show-password-on="click"
+            :input-props="{ autocomplete: 'off' }"
             :placeholder="$t('page.system.user.form.password.required')"
           />
         </NFormItem>
