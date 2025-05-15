@@ -194,8 +194,8 @@ const local: App.I18n.Schema = {
     system_dept: '部门管理',
     system_post: '岗位管理',
     monitor: '系统监控',
-    'monitor_login-infor': '登录日志',
-    'monitor_oper-log': '操作日志',
+    monitor_logininfor: '登录日志',
+    monitor_operlog: '操作日志',
     system_client: '客户端管理',
     system_notice: '通知公告',
     'social-callback': '单点登录回调',
@@ -207,7 +207,11 @@ const local: App.I18n.Schema = {
     system_role: '角色管理',
     demo: '测试',
     demo_demo: '测试单表',
-    demo_tree: '测试树表'
+    demo_tree: '测试树表',
+    exception: '异常页',
+    exception_403: '403',
+    exception_404: '404',
+    exception_500: '500'
   },
   page: {
     login: {

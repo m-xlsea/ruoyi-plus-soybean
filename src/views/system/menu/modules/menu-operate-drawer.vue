@@ -5,7 +5,7 @@ import { menuIconTypeOptions, menuIsFrameOptions, menuTypeOptions } from '@/cons
 import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api/system';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { getLocalMenuIcons } from '@/utils/icon';
-import { humpToLine, isNotNull } from '@/utils/common';
+import { isNotNull } from '@/utils/common';
 import { $t } from '@/locales';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 
@@ -93,7 +93,7 @@ const localIconOptions = localIcons.map<SelectOption>(item => ({
       <span>{item}</span>
     </div>
   ),
-  value: `icon-${item}`
+  value: `local-icon-${item}`
 }));
 
 function handleInitModel() {
@@ -102,8 +102,7 @@ function handleInitModel() {
 
   if (props.operateType === 'edit' && props.rowData) {
     Object.assign(model, props.rowData);
-    model.component = model.component?.replaceAll('_', '/');
-    iconType.value = model.icon?.startsWith('icon-') ? '2' : '1';
+    iconType.value = model.icon?.startsWith('local-icon-') ? '2' : '1';
 
     if (model.isFrame !== '2') {
       const queryObj: { [key: string]: string } = JSON.parse(model.queryParam || '{}');
@@ -123,6 +122,7 @@ async function handleSubmit() {
     menuId,
     parentId,
     menuName,
+    icon,
     orderNum,
     queryParam,
     isFrame,
@@ -140,20 +140,13 @@ async function handleSubmit() {
     model.queryParam = JSON.stringify(queryObj);
   }
 
-  let icon;
-  if (model.icon) {
-    icon = iconType.value === '1' ? model.icon : model.icon?.replace('menu-', 'icon-');
-  }
+  const path = model.path?.startsWith('/') ? model.path?.substring(1) : model.path;
 
-  let path = model.path;
   let component = model.component;
-  if (isFrame !== '1') {
-    component = 'iframe-page';
-    path = model.path;
-  } else if (model.menuType === 'C') {
-    component = humpToLine(model.component?.replaceAll('/', '_') || '');
-  } else if (model.menuType === 'M') {
-    component = 'layout.base';
+  if (isFrame === '1' && menuType === 'M') {
+    component = 'Layout';
+  } else {
+    component = 'FrameView';
   }
 
   // request
@@ -277,7 +270,7 @@ function onCreate() {
           <NFormItemGi v-if="!isBtn" :span="24" path="path">
             <template #label>
               <div class="flex-center">
-                <FormTip content="访问的路由地址，如：`/user`，如外网地址需内链访问则以 `http(s)://` 开头" />
+                <FormTip content="访问的路由地址，如：`user`，如外网地址需内链访问则以 `http(s)://` 开头" />
                 <span>{{ model.isFrame !== '0' ? '路由地址' : '外链地址' }}</span>
               </div>
             </template>

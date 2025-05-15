@@ -194,8 +194,8 @@ const local: App.I18n.Schema = {
     system_dept: 'Dept Management',
     system_post: 'Post Management',
     monitor: 'Monitor Management',
-    'monitor_login-infor': 'Login Log',
-    'monitor_oper-log': 'Operate Log',
+    monitor_logininfor: 'Login Log',
+    monitor_operlog: 'Operate Log',
     system_client: 'Client Management',
     system_notice: 'Notice Management',
     'social-callback': 'Social Callback',
@@ -207,7 +207,11 @@ const local: App.I18n.Schema = {
     system_role: 'Role Management',
     demo: 'Demo',
     demo_demo: 'Demo Table',
-    demo_tree: 'Demo Tree'
+    demo_tree: 'Demo Tree',
+    exception: 'Exception',
+    exception_403: '403',
+    exception_404: '404',
+    exception_500: '500'
   },
   page: {
     login: {

@@ -71,7 +71,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     const authRoutesMap = new Map<string, ElegantConstRoute>([]);
 
     routes.forEach(route => {
-      parseRouter(route);
+      if (authRouteMode.value === 'dynamic') {
+        parseRouter(route);
+      }
       authRoutesMap.set(route.name, route);
     });
 
@@ -90,61 +92,60 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   }
 
   function parseRouter(route: ElegantConstRoute, parent?: ElegantConstRoute) {
-    if (authRouteMode.value === 'dynamic') {
-      // @ts-expect-error no query field
-      const query = route.query ? String(route.query) : undefined;
-      route.path = route.path.startsWith('//') ? route.path.substring(1) : route.path;
-      route.path = parent ? parent.path + route.path : route.path;
+    route.meta = route.meta ? route.meta : { title: route.name };
+    const isLayout = route.component === 'Layout';
+    const isFramePage = route.component === 'FrameView';
+    const isParentLayout = route.component === 'ParentView';
 
-      route.name = route.component!;
-      if (['layout.base', 'iframe-page'].includes(route.component!)) {
-        const name = humpToLine(route.path.substring(1).replace('/', '_'));
-        route.name = parent ? `${parent.name}_${name}` : name;
-      }
+    route.path = route.path.startsWith('/') ? route.path : `/${route.path}`;
+    route.path = parent ? parent.path + route.path : route.path;
 
-      route.meta = route.meta ? route.meta : { title: route.name };
-
-      if (route.meta.icon) {
-        if (route.meta.icon.startsWith('icon-')) {
-          route.meta.localIcon = route.meta.icon.replace('icon-', 'menu-');
-          delete route.meta.icon;
-        }
-      }
-
-      // @ts-expect-error no hidden field
-      route.meta.hideInMenu = Boolean(route.hidden) || false;
-      // 是否需要keepAlive
-      route.meta.keepAlive = !route.meta.noCache || false;
-
-      if (route.component !== 'layout.base') {
-        route.component = parent ? `view.${route.component}` : `layout.base$view.${route.component}`;
-      }
-
-      if (route.component.endsWith('iframe-page')) {
-        route.component = 'view.iframe-page';
-        if (query) {
-          route.props = {
-            url: query
-          };
-        } else {
-          route.meta.href = String(route.meta.link);
-          const randomValue = Math.random().toString(36).slice(2, 12);
-          route.path = `/iframe-page/${randomValue}`;
-          route.name = `iframe_page_${randomValue}`;
-        }
-      }
-
-      delete route.meta.link;
-      delete route.meta.noCache;
-      // @ts-expect-error no query field
-      delete route.query;
-      // @ts-expect-error no hidden field
-      delete route.hidden;
+    route.name = route
+      .component!.replace(/\/index$/, '')
+      .replace(/\//g, '_')
+      .replace(/([A-Z])/g, '-$1')
+      .toLowerCase();
+    if (isLayout || isFramePage || isParentLayout) {
+      const name = humpToLine(route.path.substring(1).replace('/', '_'));
+      route.name = parent ? `${parent.name}_${name}` : name;
     }
 
-    if (route.children) {
-      route.children.forEach(child => parseRouter(child, route));
+    if (route.meta.icon?.startsWith('local-icon-')) {
+      route.meta.localIcon = route.meta.icon.replace('local-icon-', 'menu-');
+      delete route.meta.icon;
     }
+
+    // @ts-expect-error no hidden field
+    route.meta.hideInMenu = route.hidden;
+    // 是否需要keepAlive
+    route.meta.keepAlive = !route.meta.noCache;
+
+    if (isFramePage) {
+      if (route.meta.link) {
+        route.meta.href = String(route.meta.link);
+        route.path = '';
+        route.name = Math.random().toString(36).slice(2, 12);
+      } else {
+        route.props = {
+          // @ts-expect-error no query field
+          url: route.query
+        };
+      }
+      route.component = parent ? 'view.iframe-page' : 'layout.base$view.iframe-page';
+    } else if (!isLayout && !isParentLayout) {
+      route.component = parent ? `view.${route.name}` : `layout.base$view.${route.name}`;
+    } else {
+      route.component = isParentLayout ? undefined : 'layout.base';
+    }
+
+    delete route.meta.link;
+    delete route.meta.noCache;
+    // @ts-expect-error no query field
+    delete route.query;
+    // @ts-expect-error no hidden field
+    delete route.hidden;
+
+    route.children?.forEach(child => parseRouter(child, route));
   }
 
   const removeRouteFns: (() => void)[] = [];
