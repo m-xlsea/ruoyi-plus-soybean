@@ -108,7 +108,8 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
-  const { userId, deptId, userName, nickName, email, phonenumber, sex, password, status, remark } = model;
+  const { userId, deptId, userName, nickName, email, phonenumber, sex, password, status, roleIds, postIds, remark } =
+    model;
 
   // request
   if (props.operateType === 'add') {
@@ -121,6 +122,8 @@ async function handleSubmit() {
       phonenumber,
       sex,
       status,
+      roleIds,
+      postIds,
       remark
     });
     if (error) return;
@@ -136,6 +139,8 @@ async function handleSubmit() {
       phonenumber,
       sex,
       status,
+      roleIds,
+      postIds,
       remark
     });
     if (error) return;
