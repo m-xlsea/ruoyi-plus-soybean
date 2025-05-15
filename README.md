@@ -364,6 +364,8 @@ console.log(t('common.confirm'));
 
 感谢下方各位老板的捐赠 🫡
 
+> 如果不想出现在下方捐赠列表，请在备注中说明，我会匿名处理
+
 <div style="display: flex; gap: 8px;">
     <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747030503230216352/6879cbe5_5601833.jpeg" width="24px" >
     <span>酷酷冬天 20元</span>
@@ -382,4 +384,9 @@ console.log(t('common.confirm'));
 <div style="display: flex; gap: 8px;">
     <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747190127964232140/5ffa5ac4_5601833.jpeg" width="24px" >
     <span>匿名用户 10元</span>
+</div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747280244120267391/6d719481_5601833.jpeg" width="24px" >
+    <span>DAS 20元</span>
 </div>
