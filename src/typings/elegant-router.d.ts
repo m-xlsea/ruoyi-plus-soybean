@@ -17,6 +17,10 @@ declare module "@elegant-router/types" {
   export type RouteMap = {
     "root": "/";
     "not-found": "/:pathMatch(.*)*";
+    "exception": "/exception";
+    "exception_403": "/exception/403";
+    "exception_404": "/exception/404";
+    "exception_500": "/exception/500";
     "403": "/403";
     "404": "/404";
     "500": "/500";
@@ -28,9 +32,9 @@ declare module "@elegant-router/types" {
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
     "monitor": "/monitor";
     "monitor_cache": "/monitor/cache";
-    "monitor_login-infor": "/monitor/login-infor";
+    "monitor_logininfor": "/monitor/logininfor";
     "monitor_online": "/monitor/online";
-    "monitor_oper-log": "/monitor/oper-log";
+    "monitor_operlog": "/monitor/operlog";
     "social-callback": "/social-callback";
     "system": "/system";
     "system_client": "/system/client";
@@ -68,6 +72,10 @@ declare module "@elegant-router/types" {
     RouteKey,
     | "root"
     | "not-found"
+    | "exception"
+    | "exception_403"
+    | "exception_404"
+    | "exception_500"
   >;
 
   /**
@@ -101,6 +109,7 @@ declare module "@elegant-router/types" {
     CustomRouteKey,
     | "root"
     | "not-found"
+    | "exception"
   >;
 
   /**
@@ -119,9 +128,9 @@ declare module "@elegant-router/types" {
     | "demo_tree"
     | "home"
     | "monitor_cache"
-    | "monitor_login-infor"
+    | "monitor_logininfor"
     | "monitor_online"
-    | "monitor_oper-log"
+    | "monitor_operlog"
     | "system_client"
     | "system_config"
     | "system_dept"
@@ -145,6 +154,9 @@ declare module "@elegant-router/types" {
     CustomRouteKey,
     | "root"
     | "not-found"
+    | "exception_403"
+    | "exception_404"
+    | "exception_500"
   >;
 
   /**

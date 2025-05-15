@@ -123,12 +123,12 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
-        name: 'monitor_login-infor',
-        path: '/monitor/login-infor',
-        component: 'view.monitor_login-infor',
+        name: 'monitor_logininfor',
+        path: '/monitor/logininfor',
+        component: 'view.monitor_logininfor',
         meta: {
-          title: 'monitor_login-infor',
-          i18nKey: 'route.monitor_login-infor'
+          title: 'monitor_logininfor',
+          i18nKey: 'route.monitor_logininfor'
         }
       },
       {
@@ -141,12 +141,12 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
-        name: 'monitor_oper-log',
-        path: '/monitor/oper-log',
-        component: 'view.monitor_oper-log',
+        name: 'monitor_operlog',
+        path: '/monitor/operlog',
+        component: 'view.monitor_operlog',
         meta: {
-          title: 'monitor_oper-log',
-          i18nKey: 'route.monitor_oper-log'
+          title: 'monitor_operlog',
+          i18nKey: 'route.monitor_operlog'
         }
       }
     ]
