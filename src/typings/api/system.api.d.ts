@@ -152,7 +152,9 @@ declare namespace Api {
     type UserProfileOperateParams = CommonType.RecordNullable<Pick<User, 'nickName' | 'email' | 'phonenumber' | 'sex'>>;
 
     /** user password operate params */
-    type UserPasswordOperateParams = CommonType.RecordNullable<Pick<User, 'password'> & { newPassword: string }>;
+    type UserPasswordOperateParams = CommonType.RecordNullable<
+      Pick<User, 'userId' | 'password'> & { newPassword: string }
+    >;
 
     /** user info */
     type UserInfo = {

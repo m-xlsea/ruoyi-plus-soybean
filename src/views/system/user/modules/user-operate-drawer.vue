@@ -115,11 +115,11 @@ async function handleSubmit() {
     const { error } = await fetchCreateUser({
       deptId,
       userName,
+      password,
       nickName,
       email,
       phonenumber,
       sex,
-      password,
       status,
       remark
     });
@@ -135,7 +135,6 @@ async function handleSubmit() {
       email,
       phonenumber,
       sex,
-      password,
       status,
       remark
     });
@@ -156,7 +155,7 @@ watch(visible, () => {
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
+  <NDrawer v-model:show="visible" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NSpin :show="loading">
         <NForm ref="formRef" :model="model" :rules="rules">
@@ -184,7 +183,7 @@ watch(visible, () => {
           <NFormItem v-if="operateType === 'add'" :label="$t('page.system.user.userName')" path="userName">
             <NInput v-model:value="model.userName" :placeholder="$t('page.system.user.form.userName.required')" />
           </NFormItem>
-          <NFormItem :label="$t('page.system.user.password')" path="password">
+          <NFormItem v-if="operateType === 'add'" :label="$t('page.system.user.password')" path="password">
             <NInput
               v-model:value="model.password"
               type="password"
@@ -216,7 +215,7 @@ watch(visible, () => {
       <template #footer>
         <NSpace :size="16">
           <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>
-          <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
+          <NButton type="primary" @click="handleSubmit">{{ $t('common.save') }}</NButton>
         </NSpace>
       </template>
     </NDrawerContent>

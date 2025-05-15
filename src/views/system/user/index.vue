@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { NButton, NDivider } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
+import { jsonClone } from '@sa/utils';
 import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList, fetchUpdateUserStatus } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
@@ -13,6 +14,7 @@ import { $t } from '@/locales';
 import StatusSwitch from '@/components/custom/status-switch.vue';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserImportModal from './modules/user-import-modal.vue';
+import UserPasswordDrawer from './modules/user-password-drawer.vue';
 import UserSearch from './modules/user-search.vue';
 
 defineOptions({
@@ -27,6 +29,7 @@ const appStore = useAppStore();
 const { download } = useDownload();
 
 const { bool: importVisible, setTrue: openImportModal } = useBoolean();
+const { bool: passwordVisible, setTrue: openPasswordDrawer } = useBoolean();
 
 const {
   columns,
@@ -118,19 +121,9 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 130,
+      width: 150,
       render: row => {
-        const divider = () => {
-          if (!hasAuth('system:user:edit') || !hasAuth('system:user:remove')) {
-            return null;
-          }
-          return <NDivider vertical />;
-        };
-
         const editBtn = () => {
-          if (!hasAuth('system:user:edit')) {
-            return null;
-          }
           return (
             <ButtonIcon
               text
@@ -142,10 +135,19 @@ const {
           );
         };
 
+        const passwordBtn = () => {
+          return (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:key-vertical-outline"
+              tooltipContent="重置密码"
+              onClick={() => handleResetPwd(row.userId!)}
+            />
+          );
+        };
+
         const deleteBtn = () => {
-          if (!hasAuth('system:user:remove')) {
-            return null;
-          }
           return (
             <ButtonIcon
               text
@@ -158,11 +160,19 @@ const {
           );
         };
 
+        const buttons = [];
+        if (hasAuth('system:user:edit')) buttons.push(editBtn());
+        if (hasAuth('system:user:resetPwd')) buttons.push(passwordBtn());
+        if (hasAuth('system:user:remove')) buttons.push(deleteBtn());
+
         return (
-          <div class="flex-center gap-6px">
-            {editBtn()}
-            {divider()}
-            {deleteBtn()}
+          <div class="flex-center gap-8px">
+            {buttons.map((btn, index) => (
+              <>
+                {index !== 0 && <NDivider vertical />}
+                {btn}
+              </>
+            ))}
           </div>
         );
       }
@@ -189,6 +199,12 @@ async function handleDelete(userId: CommonType.IdType) {
 
 async function edit(userId: CommonType.IdType) {
   handleEdit('userId', userId);
+}
+
+async function handleResetPwd(userId: CommonType.IdType) {
+  const findItem = data.value.find(item => item.userId === userId) || null;
+  editingData.value = jsonClone(findItem);
+  openPasswordDrawer();
 }
 
 const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
@@ -332,6 +348,7 @@ const selectable = computed(() => {
           :dept-id="searchParams.deptId"
           @submitted="getDataByPage"
         />
+        <UserPasswordDrawer v-model:visible="passwordVisible" :row-data="editingData" />
       </NCard>
     </div>
   </TableSiderLayout>
