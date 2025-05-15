@@ -93,9 +93,9 @@ async function handleDeleteMenu(id?: CommonType.IdType) {
 }
 
 function renderPrefix({ option }: { option: TreeOption }) {
-  const renderLocalIcon = String(option.icon).startsWith('icon-');
+  const renderLocalIcon = String(option.icon).startsWith('local-icon-');
   const icon = renderLocalIcon ? undefined : String(option.icon);
-  const localIcon = renderLocalIcon ? String(option.icon).replace('icon-', 'menu-') : undefined;
+  const localIcon = renderLocalIcon ? String(option.icon).replace('local-icon-', 'menu-') : undefined;
   return <SvgIcon icon={icon} localIcon={localIcon} />;
 }
 

@@ -123,6 +123,8 @@ const {
       align: 'center',
       width: 150,
       render: row => {
+        if (row.userId === 1) return null;
+
         const editBtn = () => {
           return (
             <ButtonIcon

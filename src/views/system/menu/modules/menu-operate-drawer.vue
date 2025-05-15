@@ -122,12 +122,12 @@ async function handleSubmit() {
     menuId,
     parentId,
     menuName,
-    icon,
     orderNum,
     queryParam,
     isFrame,
     isCache,
     menuType,
+    icon,
     visible: menuVisible,
     status,
     perms,
@@ -264,7 +264,7 @@ function onCreate() {
               </NInput>
             </template>
             <template v-if="iconType === '2'">
-              <NSelect v-model:value="model.icon" placeholder="请选择本地图标" :options="localIconOptions" />
+              <NSelect v-model:value="model.icon" placeholder="请选择本地图标" filterable :options="localIconOptions" />
             </template>
           </NFormItemGi>
           <NFormItemGi v-if="!isBtn" :span="24" path="path">

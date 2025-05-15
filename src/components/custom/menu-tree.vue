@@ -61,9 +61,9 @@ watch([expandAll, options], ([newVal]) => {
 });
 
 function renderPrefix({ option }: { option: TreeOption }) {
-  const renderLocalIcon = String(option.icon).startsWith('icon-');
+  const renderLocalIcon = String(option.icon).startsWith('local-icon-');
   let icon = renderLocalIcon ? undefined : String(option.icon ?? 'material-symbols:buttons-alt-outline-rounded');
-  const localIcon = renderLocalIcon ? String(option.icon).replace('icon-', 'menu-') : undefined;
+  const localIcon = renderLocalIcon ? String(option.icon).replace('local-icon-', 'menu-') : undefined;
   if (icon === '#') {
     icon = 'material-symbols:buttons-alt-outline-rounded';
   }
