@@ -28,8 +28,7 @@ UPDATE `sys_menu` SET `icon` = 'gg:debug' WHERE `menu_id` = 1500;
 UPDATE `sys_menu` SET `icon` = 'gg:debug' WHERE `menu_id` = 1506;
 
 -- IFrame 类型
-UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = 'https://ruoyi.xlsea.cn/admin/', `icon` = 'bx:bxl-spring-boot' WHERE `menu_id` = 117;
-UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = 'https://preview.snailjob.opensnail.com/', `icon` = 'gridicons:scheduled' WHERE `menu_id` = 120;
-
+UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = 'https://ruoyi.xlsea.cn/admin/', `is_frame` = 2, `icon` = 'bx:bxl-spring-boot' WHERE `menu_id` = 117;
+UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = 'https://preview.snailjob.opensnail.com/', `is_frame` = 2, `icon` = 'gridicons:scheduled' WHERE `menu_id` = 120;
 -- 外链类型
 UPDATE `sys_menu` SET `path` = 'https://gitee.com/xlsea/ruoyi-plus-soybean', `component` = 'FrameView', `icon` = 'local-icon-gitee' WHERE `menu_id` = 4;

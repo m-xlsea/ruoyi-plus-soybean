@@ -5,7 +5,7 @@ import { useBoolean } from '@sa/hooks';
 import type { CustomRoute, ElegantConstRoute, LastLevelRouteKey, RouteKey, RouteMap } from '@elegant-router/types';
 import { router } from '@/router';
 import { fetchGetRoutes } from '@/service/api';
-import { humpToLine } from '@/utils/common';
+import { humpToLine, isNotNull } from '@/utils/common';
 import { SetupStoreId } from '@/enum';
 import { createDynamicRoutes, createStaticRoutes, getAuthVueRoutes } from '@/router/routes';
 import { ROOT_ROUTE } from '@/router/routes/builtin';
@@ -121,10 +121,11 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     route.meta.keepAlive = !route.meta.noCache;
 
     if (isFramePage) {
-      if (route.meta.link) {
+      if (isNotNull(route.meta.link)) {
         route.meta.href = String(route.meta.link);
-        route.path = '';
-        route.name = Math.random().toString(36).slice(2, 12);
+        const random = Math.random().toString(36).slice(2, 12);
+        route.path = `/${random}`;
+        route.name = random;
       } else {
         route.props = {
           // @ts-expect-error no query field
