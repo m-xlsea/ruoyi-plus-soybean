@@ -568,21 +568,38 @@ declare namespace App {
           dept: {
             empty: string;
             title: string;
+            parentId: string;
             deptName: string;
+            orderNum: string;
+            deptCategory: string;
             leader: string;
             phone: string;
             email: string;
             status: string;
             sort: string;
             createTime: string;
+            expandAll: string;
+            collapseAll: string;
             form: {
               parentId: FormMsg;
               deptName: FormMsg;
+              orderNum: FormMsg;
+              deptCategory: FormMsg;
               leader: FormMsg;
               phone: FormMsg;
               email: FormMsg;
               status: FormMsg;
               sort: FormMsg;
+              deptId: FormMsg;
+            };
+            error: {
+              getDeptDataFail: string;
+              getDeptUserDataFail: string;
+            };
+            placeholder: {
+              defaultLeaderPlaceHolder: string;
+              addDataLeaderPlaceHolder: string;
+              deptUserIsEmptyLeaderPlaceHolder: string;
             };
             addDept: string;
             editDept: string;
@@ -896,13 +913,21 @@ declare namespace App {
 
     interface $T {
       (key: I18nKey): string;
+
       (key: I18nKey, plural: number, options?: TranslateOptions<LangType>): string;
+
       (key: I18nKey, defaultMsg: string, options?: TranslateOptions<I18nKey>): string;
+
       (key: I18nKey, list: unknown[], options?: TranslateOptions<I18nKey>): string;
+
       (key: I18nKey, list: unknown[], plural: number): string;
+
       (key: I18nKey, list: unknown[], defaultMsg: string): string;
+
       (key: I18nKey, named: Record<string, unknown>, options?: TranslateOptions<LangType>): string;
+
       (key: I18nKey, named: Record<string, unknown>, plural: number): string;
+
       (key: I18nKey, named: Record<string, unknown>, defaultMsg: string): string;
     }
   }
