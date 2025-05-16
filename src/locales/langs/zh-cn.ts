@@ -396,13 +396,18 @@ const local: App.I18n.Schema = {
       dept: {
         empty: '暂无部门信息',
         title: '部门列表',
+        parentId: '上级部门',
         deptName: '部门名称',
+        orderNum: '排序',
+        deptCategory: '类别编码',
         leader: '负责人',
         phone: '联系电话',
         email: '邮箱',
         status: '状态',
         sort: '排序',
         createTime: '创建时间',
+        expandAll: '全部展开',
+        collapseAll: '全部收起',
         form: {
           parentId: {
             required: '请选择上级部门',
@@ -411,6 +416,14 @@ const local: App.I18n.Schema = {
           deptName: {
             required: '请输入部门名称',
             invalid: '部门名称不能为空'
+          },
+          orderNum: {
+            required: '请输入排序',
+            invalid: '排序不能为空'
+          },
+          deptCategory: {
+            required: '请输入类别编码',
+            invalid: '类别编码不能为空'
           },
           leader: {
             required: '请输入负责人',
@@ -431,7 +444,20 @@ const local: App.I18n.Schema = {
           sort: {
             required: '请输入排序',
             invalid: '排序不能为空'
+          },
+          deptId: {
+            required: '请输入部门id',
+            invalid: '部门id不能为空'
           }
+        },
+        error: {
+          getDeptDataFail: '获取部门用户数据失败',
+          getDeptUserDataFail: '获取部门用户数据失败'
+        },
+        placeholder: {
+          defaultLeaderPlaceHolder: '请选择负责人',
+          addDataLeaderPlaceHolder: '仅在更新时可选择部门负责人',
+          deptUserIsEmptyLeaderPlaceHolder: '该部门没有负责人'
         },
         addDept: '新增部门',
         editDept: '编辑部门'

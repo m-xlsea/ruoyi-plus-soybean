@@ -38,13 +38,13 @@ const { loading: deptLoading, startLoading: startDeptLoading, endLoading: endDep
 const { loading: userLoading, startLoading: startUserLoading, endLoading: endUserLoading } = useLoading();
 const deptData = ref<Api.System.Dept[]>([]);
 const userOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
-const placeholder = ref<string>('请选择负责人');
+const placeholder = ref<string>($t('page.system.dept.placeholder.defaultLeaderPlaceHolder'));
 const disabled = ref<boolean>(false);
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增部门',
-    edit: '编辑部门'
+    add: $t('page.system.dept.addDept'),
+    edit: $t('page.system.dept.editDept')
   };
   return titles[props.operateType];
 });
@@ -69,10 +69,10 @@ function createDefaultModel(): Model {
 type RuleKey = Extract<keyof Model, 'deptId' | 'parentId' | 'orderNum' | 'deptName' | 'phone' | 'email'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  deptId: createRequiredRule('部门id不能为空'),
-  parentId: createRequiredRule('上级部门不能为空'),
-  orderNum: createRequiredRule('显示顺序不能为空'),
-  deptName: createRequiredRule('部门名称不能为空'),
+  deptId: createRequiredRule($t('page.system.dept.form.deptId.invalid')),
+  parentId: createRequiredRule($t('page.system.dept.form.parentId.invalid')),
+  orderNum: createRequiredRule($t('page.system.dept.form.orderNum.invalid')),
+  deptName: createRequiredRule($t('page.system.dept.form.deptName.invalid')),
   phone: patternRules.phone,
   email: patternRules.email
 };
@@ -137,7 +137,7 @@ async function getDeptData() {
     props.operateType === 'add' ? await fetchGetDeptList() : await fetchGetExcludeDeptList(props.rowData?.deptId);
 
   if (error) {
-    window.$message?.error(error.message || '获取部门数据失败');
+    window.$message?.error(error.message || $t('page.system.dept.error.getDeptDataFail'));
     return;
   }
 
@@ -149,18 +149,18 @@ async function getDeptData() {
 
 async function getUserData() {
   if (props.operateType === 'add' || !props.rowData?.deptId) {
-    placeholder.value = '仅在更新时可选择部门负责人';
+    placeholder.value = $t('page.system.dept.placeholder.addDataLeaderPlaceHolder');
     disabled.value = true;
     return;
   }
   startUserLoading();
   const { data, error } = await fetchGetDeptUserList(props.rowData.deptId);
   if (error) {
-    window.$message?.error(error.message || '获取部门用户数据失败');
+    window.$message?.error(error.message || $t('page.system.dept.error.getDeptUserDataFail'));
     return;
   }
   if (data.length === 0) {
-    placeholder.value = '该部门没有负责人';
+    placeholder.value = $t('page.system.dept.placeholder.deptUserIsEmptyLeaderPlaceHolder');
     disabled.value = true;
   }
   userOptions.value = data.map(item => ({
@@ -185,7 +185,7 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="上级部门" path="parentId">
+        <NFormItem :label="$t('page.system.dept.parentId')" path="parentId">
           <NTreeSelect
             v-model:value="model.parentId"
             :loading="deptLoading"
@@ -194,20 +194,24 @@ watch(visible, () => {
             label-field="deptName"
             key-field="deptId"
             default-expand-all
-            placeholder="请选择上级部门"
+            :placeholder="$t('page.system.dept.form.parentId.required')"
           />
         </NFormItem>
-        <NFormItem label="部门名称" path="deptName">
-          <NInput v-model:value="model.deptName" placeholder="请输入部门名称" />
+        <NFormItem :label="$t('page.system.dept.deptName')" path="deptName">
+          <NInput v-model:value="model.deptName" :placeholder="$t('page.system.dept.form.deptName.required')" />
         </NFormItem>
-        <NFormItem label="显示顺序" path="orderNum">
-          <NInputNumber v-model:value="model.orderNum" class="w-full" placeholder="请输入显示顺序" />
+        <NFormItem :label="$t('page.system.dept.orderNum')" path="orderNum">
+          <NInputNumber
+            v-model:value="model.orderNum"
+            class="w-full"
+            :placeholder="$t('page.system.dept.form.orderNum.required')"
+          />
         </NFormItem>
-        <NFormItem label="部门类别编码" path="deptCategory">
-          <NInput v-model:value="model.deptCategory" placeholder="请输入部门类别编码" />
+        <NFormItem :label="$t('page.system.dept.deptCategory')" path="deptCategory">
+          <NInput v-model:value="model.deptCategory" :placeholder="$t('page.system.dept.form.deptCategory.required')" />
         </NFormItem>
 
-        <NFormItem label="负责人" path="leader">
+        <NFormItem :label="$t('page.system.dept.leader')" path="leader">
           <NSelect
             v-model:value="model.leader"
             :loading="userLoading"
@@ -217,13 +221,13 @@ watch(visible, () => {
           />
         </NFormItem>
 
-        <NFormItem label="联系电话" path="phone">
-          <NInput v-model:value="model.phone" placeholder="请输入联系电话" />
+        <NFormItem :label="$t('page.system.dept.phone')" path="phone">
+          <NInput v-model:value="model.phone" :placeholder="$t('page.system.dept.form.phone.required')" />
         </NFormItem>
-        <NFormItem label="邮箱" path="email">
-          <NInput v-model:value="model.email" placeholder="请输入邮箱" />
+        <NFormItem :label="$t('page.system.dept.email')" path="email">
+          <NInput v-model:value="model.email" :placeholder="$t('page.system.dept.form.email.required')" />
         </NFormItem>
-        <NFormItem label="部门状态" path="status">
+        <NFormItem :label="$t('page.system.dept.status')" path="status">
           <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
         </NFormItem>
       </NForm>
