@@ -25,7 +25,7 @@ const { clearTabs } = useTabStore();
 const { toHome } = useRouterPush();
 
 const tenantId = defineModel<CommonType.IdType>('tenantId', { required: false, default: undefined });
-const enabled = defineModel<boolean>('enabled', { required: false, default: true });
+const enabled = defineModel<boolean>('enabled', { required: false, default: false });
 
 const lastSelected = ref<CommonType.IdType>();
 
@@ -71,12 +71,14 @@ async function handleFetchTenantList() {
   const { data, error } = await fetchTenantList();
   if (error) return;
   enabled.value = data.tenantEnabled;
-  tenantOption.value = data.voList.map(tenant => {
-    return {
-      label: tenant.companyName,
-      value: tenant.tenantId
-    };
-  });
+  if (data.tenantEnabled) {
+    tenantOption.value = data.voList.map(tenant => {
+      return {
+        label: tenant.companyName,
+        value: tenant.tenantId
+      };
+    });
+  }
   endLoading();
 }
 onMounted(async () => {
