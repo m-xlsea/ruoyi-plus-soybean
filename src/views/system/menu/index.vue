@@ -18,6 +18,8 @@ import MenuOperateDrawer from './modules/menu-operate-drawer.vue';
 useDict('sys_show_hide');
 useDict('sys_normal_disable');
 
+const defaultIcon = import.meta.env.VITE_MENU_ICON;
+
 const { hasAuth } = useAuth();
 const appStore = useAppStore();
 const editingData = ref<Api.System.Menu>();
@@ -96,7 +98,7 @@ function renderPrefix({ option }: { option: TreeOption }) {
   const renderLocalIcon = String(option.icon).startsWith('local-icon-');
   const icon = renderLocalIcon ? undefined : String(option.icon);
   const localIcon = renderLocalIcon ? String(option.icon).replace('local-icon-', 'menu-') : undefined;
-  return <SvgIcon icon={icon} localIcon={localIcon} />;
+  return <SvgIcon icon={icon || defaultIcon} localIcon={localIcon} />;
 }
 
 function renderSuffix({ option }: { option: TreeOption }) {

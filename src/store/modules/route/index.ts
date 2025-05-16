@@ -24,6 +24,8 @@ import {
   updateLocaleOfGlobalMenus
 } from './shared';
 
+const defaultIcon = import.meta.env.VITE_MENU_ICON;
+
 export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   const authStore = useAuthStore();
   const tabStore = useTabStore();
@@ -120,6 +122,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     if (route.meta.icon?.startsWith('local-icon-')) {
       route.meta.localIcon = route.meta.icon.replace('local-icon-', 'menu-');
       delete route.meta.icon;
+    } else if (!isNotNull(route.meta.icon)) {
+      route.meta.icon = defaultIcon;
     }
 
     // @ts-expect-error no hidden field
