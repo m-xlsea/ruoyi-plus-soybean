@@ -102,6 +102,9 @@ function handleInitModel() {
 
   if (props.operateType === 'edit' && props.rowData) {
     Object.assign(model, props.rowData);
+    if (isMenu.value && model.isFrame === '1') {
+      model.component = model.component?.slice(0, -6);
+    }
     iconType.value = model.icon?.startsWith('local-icon-') ? '2' : '1';
 
     if (model.isFrame !== '2') {
@@ -147,6 +150,8 @@ async function handleSubmit() {
     component = 'Layout';
   } else if (isFrame === '2') {
     component = 'FrameView';
+  } else if (isMenu.value && model.isFrame === '1') {
+    component = component?.endsWith('/index') ? component : `${component}/index`;
   }
 
   // request
@@ -286,6 +291,7 @@ function onCreate() {
             <NInputGroup>
               <NInputGroupLabel>views/</NInputGroupLabel>
               <NInput v-model:value="model.component" placeholder="请输入组件地址" />
+              <NInputGroupLabel>/index.vue</NInputGroupLabel>
             </NInputGroup>
           </NFormItemGi>
           <NFormItemGi
