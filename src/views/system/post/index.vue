@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { NButton, NDivider } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchBatchDeletePost, fetchGetPostList } from '@/service/api/system/post';
@@ -43,7 +43,8 @@ const {
     // the value can not be undefined, otherwise the property in Form will not be reactive
     postCode: null,
     postName: null,
-    status: null
+    status: null,
+    belongDeptId: null
   },
   columns: () => [
     {
@@ -180,10 +181,16 @@ async function handleExport() {
   download('/system/post/export', searchParams, `岗位信息_${new Date().getTime()}.xlsx`);
 }
 
+const expandedKeys = ref<CommonType.IdType[]>([100]);
+
+const selectable = computed(() => {
+  return !loading.value;
+});
+
 const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
 const deptPattern = ref<string>();
 const deptData = ref<Api.Common.CommonTreeRecord>([]);
-
+const selectedKeys = ref<string[]>([]);
 async function getTreeData() {
   startTreeLoading();
   const { data: tree, error } = await fetchGetDeptTree();
@@ -203,9 +210,12 @@ function handleClickTree(keys: string[]) {
 
 function handleResetTreeData() {
   deptPattern.value = undefined;
-  searchParams.belongDeptId = null;
   getTreeData();
-  getDataByPage();
+}
+
+function handleResetSearch() {
+  resetSearchParams();
+  selectedKeys.value = [];
 }
 </script>
 
@@ -222,10 +232,11 @@ function handleResetTreeData() {
       <NInput v-model:value="deptPattern" clearable :placeholder="$t('common.keywordSearch')" />
       <NSpin class="dept-tree" :show="treeLoading">
         <NTree
+          v-model:expanded-keys="expandedKeys"
+          v-model:selected-keys="selectedKeys"
           block-node
           show-line
           :data="deptData as []"
-          :default-expanded-keys="deptData?.length ? [deptData[0].id!] : []"
           :show-irrelevant-nodes="false"
           :pattern="deptPattern"
           block-line
@@ -233,6 +244,7 @@ function handleResetTreeData() {
           key-field="id"
           label-field="label"
           virtual-scroll
+          :selectable="selectable"
           @update:selected-keys="handleClickTree"
         >
           <template #empty>
@@ -242,7 +254,7 @@ function handleResetTreeData() {
       </NSpin>
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
-      <PostSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+      <PostSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
       <NCard title="岗位信息列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
         <template #header-extra>
           <TableHeaderOperation

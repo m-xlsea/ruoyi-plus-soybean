@@ -204,6 +204,7 @@ async function handleStatusChange(
   callback: (flag: boolean) => void
 ) {
   const { error } = await fetchUpdateOssConfigStatus({
+    configKey: row.configKey,
     ossConfigId: row.ossConfigId,
     status: value
   });

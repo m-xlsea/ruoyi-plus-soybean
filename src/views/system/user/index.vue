@@ -212,6 +212,7 @@ async function handleResetPwd(userId: CommonType.IdType) {
 const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
 const deptPattern = ref<string>();
 const deptData = ref<Api.Common.CommonTreeRecord>([]);
+const selectedKeys = ref<string[]>([]);
 
 async function getTreeData() {
   startTreeLoading();
@@ -267,6 +268,11 @@ const expandedKeys = ref<CommonType.IdType[]>([100]);
 const selectable = computed(() => {
   return !loading.value;
 });
+
+function handleResetSearch() {
+  resetSearchParams();
+  selectedKeys.value = [];
+}
 </script>
 
 <template>
@@ -283,6 +289,7 @@ const selectable = computed(() => {
       <NSpin class="dept-tree" :show="treeLoading">
         <NTree
           v-model:expanded-keys="expandedKeys"
+          v-model:selected-keys="selectedKeys"
           block-node
           show-line
           :data="deptData as []"
@@ -302,7 +309,7 @@ const selectable = computed(() => {
       </NSpin>
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
-      <UserSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+      <UserSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
       <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
       <NCard :title="$t('page.system.user.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
         <template #header-extra>
