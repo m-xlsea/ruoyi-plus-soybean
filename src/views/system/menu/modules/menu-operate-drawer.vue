@@ -145,7 +145,7 @@ async function handleSubmit() {
   let component = model.component;
   if (isFrame === '1' && menuType === 'M') {
     component = 'Layout';
-  } else {
+  } else if (isFrame === '2') {
     component = 'FrameView';
   }
 
@@ -279,14 +279,13 @@ function onCreate() {
           <NFormItemGi v-if="isMenu && model.isFrame === '1'" :span="24" path="component">
             <template #label>
               <div class="flex-center">
-                <FormTip content="访问的组件路径，如：`system/user`，默认在`views`目录下" />
+                <FormTip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" />
                 <span>组件路径</span>
               </div>
             </template>
             <NInputGroup>
               <NInputGroupLabel>views/</NInputGroupLabel>
               <NInput v-model:value="model.component" placeholder="请输入组件地址" />
-              <NInputGroupLabel>/index.vue</NInputGroupLabel>
             </NInputGroup>
           </NFormItemGi>
           <NFormItemGi
