@@ -42,6 +42,8 @@ declare namespace StorageType {
       layout: UnionKey.ThemeLayoutMode;
       siderCollapse: boolean;
     };
+    /** The last login user id */
+    lastLoginUserId: CommonType.IdType;
     /** The login form rember */
     loginRember: Api.Auth.PwdLoginForm;
     /** The tenant id */
