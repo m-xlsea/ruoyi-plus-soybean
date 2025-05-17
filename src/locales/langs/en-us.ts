@@ -66,7 +66,11 @@ const local: App.I18n.Schema = {
       yes: 'Yes',
       no: 'No'
     },
-    second: 'Second'
+    second: 'Second',
+    selected: 'selected',
+    anyRecords: 'records',
+    clear: 'Clear',
+    noSelectRecord: 'No Records Selected'
   },
   request: {
     logout: 'Logout user after request failed',
@@ -464,11 +468,15 @@ const local: App.I18n.Schema = {
       },
       dict: {
         title: 'Dictionary List',
+        dictTypeTitle: 'Dictionary Type List',
         dictName: 'Dictionary Name',
         dictType: 'Dictionary Type',
         status: 'Status',
         remark: 'Remark',
         createTime: 'Create Time',
+        refreshCacheSuccess: 'Refresh cache successfully',
+        refreshCache: 'Refresh Cache',
+        confirmDeleteDictType: 'Are you sure you want to delete dic type',
         data: {
           title: 'Dictionary Data List',
           label: 'Dictionary Label',
@@ -482,6 +490,14 @@ const local: App.I18n.Schema = {
           createTime: 'Create Time'
         },
         form: {
+          dictId: {
+            required: 'Please enter Dictionary Id',
+            invalid: 'Dictionary Id cannot be empty'
+          },
+          dictCode: {
+            required: 'Please enter Dictionary Code',
+            invalid: 'Dictionary Code cannot be empty'
+          },
           dictName: {
             required: 'Please enter Dictionary Name',
             invalid: 'Dictionary Name cannot be empty'
@@ -526,7 +542,12 @@ const local: App.I18n.Schema = {
         addDict: 'Add Dictionary',
         editDict: 'Edit Dictionary',
         addDictData: 'Add Dictionary Data',
-        editDictData: 'Edit Dictionary Data'
+        editDictData: 'Edit Dictionary Data',
+        addDictType: 'Add Dictionary Type',
+        editDictType: 'Edit Dictionary Type',
+        exportDictType: 'Export Dictionary Type',
+        refreshDictType: 'Refresh Dictionary Type',
+        dictTypeIsEmpty: 'Dictionary type is empty'
       },
       menu: {
         title: 'Menu List',

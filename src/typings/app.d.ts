@@ -362,6 +362,10 @@ declare namespace App {
           no: string;
         };
         second: string;
+        selected: string;
+        anyRecords: string;
+        clear: string;
+        noSelectRecord: string;
       };
       request: {
         logout: string;
@@ -606,11 +610,15 @@ declare namespace App {
           };
           dict: {
             title: string;
+            dictTypeTitle: string;
             dictName: string;
             dictType: string;
             status: string;
             remark: string;
             createTime: string;
+            refreshCacheSuccess: string;
+            refreshCache: string;
+            confirmDeleteDictType: string;
             data: {
               title: string;
               label: string;
@@ -624,6 +632,8 @@ declare namespace App {
               createTime: string;
             };
             form: {
+              dictId: FormMsg;
+              dictCode: FormMsg;
               dictName: FormMsg;
               dictType: FormMsg;
               status: FormMsg;
@@ -639,6 +649,11 @@ declare namespace App {
             editDict: string;
             addDictData: string;
             editDictData: string;
+            addDictType: string;
+            editDictType: string;
+            exportDictType: string;
+            refreshDictType: string;
+            dictTypeIsEmpty: string;
           };
           menu: {
             title: string;

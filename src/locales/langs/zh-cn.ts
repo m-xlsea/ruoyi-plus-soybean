@@ -66,7 +66,11 @@ const local: App.I18n.Schema = {
       yes: '是',
       no: '否'
     },
-    second: '秒'
+    second: '秒',
+    selected: '已选择',
+    anyRecords: '条记录',
+    clear: '清空',
+    noSelectRecord: '未选中任何记录'
   },
   request: {
     logout: '请求失败后登出用户',
@@ -464,24 +468,36 @@ const local: App.I18n.Schema = {
       },
       dict: {
         title: '字典列表',
+        dictTypeTitle: '字典类型列表',
         dictName: '字典名称',
         dictType: '字典类型',
         status: '状态',
         remark: '备注',
         createTime: '创建时间',
+        refreshCacheSuccess: '刷新缓存成功',
+        refreshCache: '刷新缓存',
+        confirmDeleteDictType: '确定删除字典类型',
         data: {
           title: '字典数据列表',
           label: '字典标签',
           value: '字典键值',
           dictSort: '字典排序',
           isDefault: '是否默认',
-          listClass: '回显样式',
+          listClass: '标签样式',
           cssClass: 'CSS样式',
           status: '状态',
           remark: '备注',
           createTime: '创建时间'
         },
         form: {
+          dictId: {
+            required: '请输入字典主键',
+            invalid: '字典主键不能为空'
+          },
+          dictCode: {
+            required: '请输入字典编码',
+            invalid: '字典编码不能为空'
+          },
           dictName: {
             required: '请输入字典名称',
             invalid: '字典名称不能为空'
@@ -519,14 +535,19 @@ const local: App.I18n.Schema = {
             invalid: '回显样式不能为空'
           },
           cssClass: {
-            required: '请输入CSS样式',
+            required: '请输入样式属性（其他样式扩展）',
             invalid: 'CSS样式不能为空'
           }
         },
         addDict: '新增字典',
         editDict: '编辑字典',
         addDictData: '新增字典数据',
-        editDictData: '编辑字典数据'
+        editDictData: '编辑字典数据',
+        addDictType: '新增字典类型',
+        editDictType: '编辑字典类型',
+        exportDictType: '导出字典类型',
+        refreshDictType: '刷新列表',
+        dictTypeIsEmpty: '暂无字典类型'
       },
       menu: {
         title: '菜单列表',
