@@ -107,7 +107,7 @@ function handleInitModel() {
     }
     iconType.value = model.icon?.startsWith('local-icon-') ? '2' : '1';
 
-    if (model.isFrame !== '2') {
+    if (model.isFrame === '1') {
       const queryObj: { [key: string]: string } = JSON.parse(model.queryParam || '{}');
       queryList.value = Object.keys(queryObj).map(item => ({ key: item, value: queryObj[item] }));
     }
@@ -126,7 +126,6 @@ async function handleSubmit() {
     parentId,
     menuName,
     orderNum,
-    queryParam,
     isFrame,
     isCache,
     menuType,
@@ -137,10 +136,13 @@ async function handleSubmit() {
     remark
   } = model;
 
-  if (isFrame !== '2' && queryList.value.length) {
+  let queryParam = model.queryParam;
+  if (isFrame === '0') {
+    queryParam = '';
+  } else if (isFrame === '1' && queryList.value.length) {
     const queryObj: { [key: string]: string } = {};
     queryList.value.forEach(item => (queryObj[item.key] = item.value));
-    model.queryParam = JSON.stringify(queryObj);
+    queryParam = JSON.stringify(queryObj);
   }
 
   const path = model.path?.startsWith('/') ? model.path?.substring(1) : model.path;
