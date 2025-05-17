@@ -3,10 +3,10 @@ import { computed, onMounted, ref } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchTenantList } from '@/service/api';
-import { fetchChangeTenant, fetchClearTenant } from '@/service/api/system/tenant';
+import { fetchClearTenant } from '@/service/api/system/tenant';
 import { useAppStore } from '@/store/modules/app';
 import { useTabStore } from '@/store/modules/tab';
-import { useAuth } from '@/hooks/business/auth';
+import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 
 defineOptions({ name: 'TenantSelect' });
@@ -20,7 +20,7 @@ withDefaults(defineProps<Props>(), {
 });
 
 const appStore = useAppStore();
-const { hasRole } = useAuth();
+const { userInfo } = useAuthStore();
 const { clearTabs } = useTabStore();
 const { toHome } = useRouterPush();
 
@@ -33,7 +33,7 @@ const tenantOption = ref<SelectOption[]>([]);
 const { loading, startLoading, endLoading } = useLoading();
 
 const showTenantSelect = computed<boolean>(() => {
-  return hasRole('superadmin') && enabled.value;
+  return userInfo.user?.userId === 1 && enabled.value;
 });
 
 /**
@@ -57,7 +57,6 @@ async function handleChangeTenant(_tenantId: CommonType.IdType) {
   if (lastSelected.value === _tenantId) {
     return;
   }
-  await fetchChangeTenant(_tenantId);
   closeAndRefresh('切换租户成功', _tenantId);
 }
 
@@ -82,7 +81,7 @@ async function handleFetchTenantList() {
   endLoading();
 }
 onMounted(async () => {
-  if (!hasRole('superadmin')) {
+  if (userInfo.user?.userId !== 1) {
     return;
   }
   await handleFetchTenantList();

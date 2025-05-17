@@ -1,7 +1,12 @@
 <script setup lang="tsx">
 import { computed } from 'vue';
 import { NButton, NDivider } from 'naive-ui';
-import { fetchBatchDeleteTenant, fetchGetTenantList, fetchSyncTenantDict } from '@/service/api/system/tenant';
+import {
+  fetchBatchDeleteTenant,
+  fetchGetTenantList,
+  fetchSyncTenantDict,
+  fetchSyncTenantPackage
+} from '@/service/api/system/tenant';
 import { useAppStore } from '@/store/modules/app';
 import { useAuthStore } from '@/store/modules/auth';
 import { useAuth } from '@/hooks/business/auth';
@@ -129,7 +134,7 @@ const {
               icon="material-symbols:sync-outline"
               tooltipContent="同步套餐"
               popconfirmContent={`确认同步[${row.companyName}]的套餐吗?`}
-              onPositiveClick={() => handleSyncTenantDict()}
+              onPositiveClick={() => handleSyncTenantPackage(row)}
             />
           );
         };
@@ -193,6 +198,17 @@ async function handleSyncTenantDict() {
   const { error } = await fetchSyncTenantDict();
   if (error) return;
   window.$message?.success('同步租户字典成功');
+  await getData();
+}
+
+async function handleSyncTenantPackage(row: Api.System.Tenant) {
+  const params: Api.System.SyncTenantPackageParams = {
+    tenantId: row.tenantId,
+    packageId: row.packageId
+  };
+  const { error } = await fetchSyncTenantPackage(params);
+  if (error) return;
+  window.$message?.success('同步租户套餐成功');
   await getData();
 }
 
