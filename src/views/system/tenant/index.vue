@@ -202,7 +202,7 @@ async function handleSyncTenantDict() {
 }
 
 async function handleSyncTenantPackage(row: Api.System.Tenant) {
-  const params: Api.System.SyncTenantPackageParams = {
+  const params: Api.System.TenantPackageSyncParams = {
     tenantId: row.tenantId,
     packageId: row.packageId
   };

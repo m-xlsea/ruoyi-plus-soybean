@@ -48,7 +48,7 @@ export function fetchSyncTenantDict() {
 }
 
 /** 同步租户套餐 */
-export function fetchSyncTenantPackage(params: Api.System.SyncTenantPackageParams) {
+export function fetchSyncTenantPackage(params: Api.System.TenantPackageSyncParams) {
   return request<boolean>({
     url: '/system/tenant/syncTenantPackage',
     method: 'get',
