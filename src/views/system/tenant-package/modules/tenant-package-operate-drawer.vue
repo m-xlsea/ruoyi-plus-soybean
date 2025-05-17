@@ -138,6 +138,7 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem :label="$t('page.system.tenantPackage.menuIds')" path="menuIds">
           <MenuTree
+            v-if="visible"
             ref="menuTreeRef"
             v-model:value="model.menuIds"
             v-model:options="menuOptions"

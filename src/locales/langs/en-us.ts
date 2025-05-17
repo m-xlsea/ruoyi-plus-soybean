@@ -396,13 +396,18 @@ const local: App.I18n.Schema = {
       dept: {
         empty: 'No department information',
         title: 'Department List',
+        parentId: 'Parent Department',
         deptName: 'Department Name',
+        orderNum: 'Order Num',
+        deptCategory: 'Department Category',
         leader: 'Leader',
         phone: 'Phone',
         email: 'Email',
         status: 'Status',
         sort: 'Sort',
         createTime: 'Create Time',
+        expandAll: 'Expand All',
+        collapseAll: 'Collapse All',
         form: {
           parentId: {
             required: 'Please select Parent Department',
@@ -411,6 +416,14 @@ const local: App.I18n.Schema = {
           deptName: {
             required: 'Please enter Department Name',
             invalid: 'Department Name cannot be empty'
+          },
+          orderNum: {
+            required: 'Please enter Order Num',
+            invalid: 'Order num cannot be empty'
+          },
+          deptCategory: {
+            required: 'Please enter Department Category',
+            invalid: 'Department category cannot be empty'
           },
           leader: {
             required: 'Please enter Leader',
@@ -431,7 +444,20 @@ const local: App.I18n.Schema = {
           sort: {
             required: 'Please enter Sort',
             invalid: 'Sort cannot be empty'
+          },
+          deptId: {
+            required: 'Please enter deptId',
+            invalid: 'Dept Id cannot be empty'
           }
+        },
+        error: {
+          getDeptDataFail: 'Get dept data fail',
+          getDeptUserDataFail: 'Get dept user data fail'
+        },
+        placeholder: {
+          defaultLeaderPlaceHolder: 'Please select leader',
+          addDataLeaderPlaceHolder: 'Department leader can be selected only when updating',
+          deptUserIsEmptyLeaderPlaceHolder: 'Current dept no leader'
         },
         addDept: 'Add Department',
         editDept: 'Edit Department'

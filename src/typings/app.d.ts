@@ -568,21 +568,38 @@ declare namespace App {
           dept: {
             empty: string;
             title: string;
+            parentId: string;
             deptName: string;
+            orderNum: string;
+            deptCategory: string;
             leader: string;
             phone: string;
             email: string;
             status: string;
             sort: string;
             createTime: string;
+            expandAll: string;
+            collapseAll: string;
             form: {
               parentId: FormMsg;
               deptName: FormMsg;
+              orderNum: FormMsg;
+              deptCategory: FormMsg;
               leader: FormMsg;
               phone: FormMsg;
               email: FormMsg;
               status: FormMsg;
               sort: FormMsg;
+              deptId: FormMsg;
+            };
+            error: {
+              getDeptDataFail: string;
+              getDeptUserDataFail: string;
+            };
+            placeholder: {
+              defaultLeaderPlaceHolder: string;
+              addDataLeaderPlaceHolder: string;
+              deptUserIsEmptyLeaderPlaceHolder: string;
             };
             addDept: string;
             editDept: string;

@@ -20,11 +20,11 @@ const { loading: codeLoading, startLoading: startCodeLoading, endLoading: endCod
 const { loading: tenantLoading, startLoading: startTenantLoading, endLoading: endTenantLoading } = useLoading();
 
 const codeUrl = ref<string>();
-const captchaEnabled = ref<boolean>(true);
+const captchaEnabled = ref<boolean>(false);
 const registerEnabled = ref<boolean>(false);
 const remberMe = ref<boolean>(false);
 
-const tenantEnabled = ref<boolean>(true);
+const tenantEnabled = ref<boolean>(false);
 
 const tenantOption = ref<SelectOption[]>([]);
 

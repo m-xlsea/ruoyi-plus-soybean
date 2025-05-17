@@ -44,25 +44,25 @@ const {
   columns: () => [
     {
       key: 'deptName',
-      title: '部门名称',
+      title: $t('page.system.dept.deptName'),
       align: 'center',
       minWidth: 120
     },
     {
       key: 'deptCategory',
-      title: '类别编码',
+      title: $t('page.system.dept.deptCategory'),
       align: 'center',
       minWidth: 120
     },
     {
       key: 'orderNum',
-      title: '排序',
+      title: $t('page.system.dept.sort'),
       align: 'center',
       minWidth: 60
     },
     {
       key: 'status',
-      title: '部门状态',
+      title: $t('page.system.dept.status'),
       align: 'center',
       minWidth: 120,
       render(row) {
@@ -71,7 +71,7 @@ const {
     },
     {
       key: 'createTime',
-      title: '创建时间',
+      title: $t('page.system.dept.createTime'),
       align: 'center',
       minWidth: 120
     },
@@ -163,7 +163,7 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <DeptSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
-    <NCard title="部门列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard :title="$t('page.system.dept.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
@@ -178,13 +178,13 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
               <template #icon>
                 <icon-quill:expand />
               </template>
-              全部展开
+              {{ $t('page.system.dept.expandAll') }}
             </NButton>
             <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
                 <icon-quill:collapse />
               </template>
-              全部收起
+              {{ $t('page.system.dept.collapseAll') }}
             </NButton>
           </template>
         </TableHeaderOperation>
