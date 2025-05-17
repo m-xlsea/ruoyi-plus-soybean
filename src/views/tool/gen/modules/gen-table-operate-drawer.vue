@@ -285,7 +285,7 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
 
 <template>
   <NDrawer v-model:show="visible" display-directive="show" width="100%">
-    <NDrawerContent title="导入表" :native-scrollbar="false" closable>
+    <NDrawerContent title="编辑表" :native-scrollbar="false" closable>
       <NSpin :show="loading" class="h-full" content-class="h-full">
         <NTabs v-model:value="tab" type="segment" animated class="h-full" pane-class="h-full">
           <NTabPane name="basic" tab="基本信息" display-directive="show">

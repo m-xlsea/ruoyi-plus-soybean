@@ -22,7 +22,7 @@ const emit = defineEmits<Emits>();
 
 const appStore = useAppStore();
 
-const { columns, data, getData, getDataByPage, loading, mobilePagination, searchParams, resetSearchParams } = useTable({
+const { columns, data, getData, getDataByPage, loading, mobilePagination, searchParams } = useTable({
   apiFn: fetchGetGenDbList,
   immediate: false,
   showTotal: true,
@@ -69,31 +69,37 @@ function closeDrawer() {
 }
 
 async function handleSubmit() {
-  // request
-  const { error } = await fetchImportGenTable(checkedRowKeys.value as string[], searchParams.dataName!);
-  if (error) return;
-  window.$message?.success('导入成功');
-
+  if (checkedRowKeys.value.length > 0) {
+    // request
+    const { error } = await fetchImportGenTable(checkedRowKeys.value as string[], searchParams.dataName!);
+    if (error) return;
+    window.$message?.success('导入成功');
+    emit('submitted');
+  }
   closeDrawer();
-  emit('submitted');
 }
 
 const dataNameOptions = ref<CommonType.Option[]>([]);
+
+async function handleResetSearchParams() {
+  searchParams.dataName = dataNameOptions.value.length ? dataNameOptions.value[0].value : null;
+  searchParams.tableName = null;
+  searchParams.tableComment = null;
+  data.value = [];
+  checkedRowKeys.value = [];
+  await getDataByPage();
+}
 
 async function getDataNames() {
   const { error, data: dataNames } = await fetchGetGenDataNames();
   if (error) return;
   dataNameOptions.value = dataNames.map(item => ({ label: item, value: item }));
-
-  resetSearchParams();
-  searchParams.dataName = dataNameOptions.value.length ? dataNameOptions.value[0].value : null;
-  data.value = [];
-  checkedRowKeys.value = [];
 }
 
-watch(visible, () => {
+watch(visible, async () => {
   if (visible.value) {
-    getDataNames();
+    await getDataNames();
+    await handleResetSearchParams();
   }
 });
 </script>
@@ -105,7 +111,7 @@ watch(visible, () => {
         <GenTableDbSearch
           v-model:model="searchParams"
           :options="dataNameOptions"
-          @reset="resetSearchParams"
+          @reset="handleResetSearchParams"
           @search="getDataByPage"
         />
         <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" class="mb-16px" />

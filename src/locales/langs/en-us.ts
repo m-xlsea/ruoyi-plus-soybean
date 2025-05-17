@@ -457,7 +457,7 @@ const local: App.I18n.Schema = {
         placeholder: {
           defaultLeaderPlaceHolder: 'Please select leader',
           addDataLeaderPlaceHolder: 'Department leader can be selected only when updating',
-          deptUserIsEmptyLeaderPlaceHolder: 'Current dept no leader'
+          deptUserIsEmptyLeaderPlaceHolder: 'Current dept has no leader'
         },
         addDept: 'Add Department',
         editDept: 'Edit Department'
