@@ -131,6 +131,7 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem v-if="model.dataScope === '2'" label="数据权限" path="deptIds" class="pr-24px">
           <DeptTree
+            v-if="visible"
             ref="deptTreeRef"
             v-model:value="model.deptIds"
             v-model:options="deptOptions"

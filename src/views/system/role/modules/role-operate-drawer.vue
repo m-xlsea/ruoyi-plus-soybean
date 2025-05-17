@@ -172,6 +172,7 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem label="菜单权限" path="menuIds" class="pr-24px">
           <MenuTree
+            v-if="visible"
             ref="menuTreeRef"
             v-model:value="model.menuIds"
             v-model:options="menuOptions"
