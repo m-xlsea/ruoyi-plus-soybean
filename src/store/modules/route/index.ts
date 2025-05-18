@@ -105,6 +105,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     const isLayout = route.component === 'Layout';
     const isFramePage = route.component === 'FrameView';
     const isParentLayout = route.component === 'ParentView';
+    const isExternalLink = isNotNull(route.meta.link);
 
     route.path = route.path.startsWith('/') ? route.path : `/${route.path}`;
     route.path = parent ? parent.path + route.path : route.path;
@@ -132,18 +133,19 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     route.meta.keepAlive = !route.meta.noCache;
 
     if (isFramePage) {
-      if (isNotNull(route.meta.link)) {
+      if (isExternalLink) {
         route.meta.href = String(route.meta.link);
         const random = Math.random().toString(36).slice(2, 12);
         route.path = `/${random}`;
         route.name = random;
+        route.component = 'layout.base$view.iframe-page';
       } else {
         route.props = {
           // @ts-expect-error no query field
           url: route.query
         };
       }
-      route.component = parent ? 'view.iframe-page' : 'layout.base$view.iframe-page';
+      route.component = parent && !isExternalLink ? 'view.iframe-page' : 'layout.base$view.iframe-page';
     } else if (!isLayout && !isParentLayout) {
       route.component = parent ? `view.${route.name}` : `layout.base$view.${route.name}`;
     } else {
