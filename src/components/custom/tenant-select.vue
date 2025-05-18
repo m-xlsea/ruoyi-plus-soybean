@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchTenantList } from '@/service/api';
-import { fetchClearTenant } from '@/service/api/system/tenant';
+import { fetchChangeTenant, fetchClearTenant } from '@/service/api/system/tenant';
 import { useAppStore } from '@/store/modules/app';
 import { useTabStore } from '@/store/modules/tab';
 import { useAuthStore } from '@/store/modules/auth';
@@ -45,7 +45,7 @@ const showTenantSelect = computed<boolean>(() => {
 async function closeAndRefresh(msg: string, val: CommonType.IdType = '') {
   lastSelected.value = val;
   window.$message?.success(msg);
-  clearTabs();
+  clearTabs([], true);
   toHome();
   appStore.reloadPage(500);
 }
@@ -57,6 +57,7 @@ async function handleChangeTenant(_tenantId: CommonType.IdType) {
   if (lastSelected.value === _tenantId) {
     return;
   }
+  await fetchChangeTenant(_tenantId);
   closeAndRefresh('切换租户成功', _tenantId);
 }
 
