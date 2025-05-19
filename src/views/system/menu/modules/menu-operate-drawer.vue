@@ -45,8 +45,8 @@ const queryList = ref<{ key: string; value: string }[]>([]);
 
 const drawerTitle = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增菜单',
-    edit: '编辑菜单'
+    add: $t('page.system.menu.addMenu'),
+    edit: $t('page.system.menu.editMenu')
   };
   return titles[props.operateType];
 });
@@ -69,7 +69,7 @@ function createDefaultModel(): Model {
     visible: '0',
     status: '0',
     perms: '',
-    icon: '',
+    icon: undefined,
     remark: ''
   };
 }
@@ -77,10 +77,10 @@ function createDefaultModel(): Model {
 type RuleKey = Extract<keyof Model, 'menuName' | 'orderNum' | 'path' | 'component'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  menuName: createRequiredRule('菜单名称不能为空'),
-  orderNum: createNumberRequiredRule('菜单排序不能为空'),
-  path: createRequiredRule('路由地址不能为空'),
-  component: createRequiredRule('组件路径不能为空')
+  menuName: createRequiredRule($t('page.system.menu.form.menuName.invalid')),
+  orderNum: createNumberRequiredRule($t('page.system.menu.form.orderNum.invalid')),
+  path: createRequiredRule($t('page.system.menu.form.path.invalid')),
+  component: createRequiredRule($t('page.system.menu.form.component.invalid'))
 };
 
 const isBtn = computed(() => model.menuType === 'F');
@@ -228,17 +228,22 @@ function onCreate() {
     <NDrawerContent :title="drawerTitle" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
         <NGrid responsive="screen" item-responsive>
-          <NFormItemGi :span="24" label="上级菜单" path="pid">
+          <NFormItemGi :span="24" :label="$t('page.system.menu.parentId')" path="pid">
             <NTreeSelect
               v-model:value="model.parentId"
               :options="treeData as []"
               label-field="menuName"
               key-field="menuId"
               :default-expanded-keys="[0]"
-              placeholder="请选择上级菜单"
+              :placeholder="$t('page.system.menu.form.parentId.required')"
             />
           </NFormItemGi>
-          <NFormItemGi v-if="model.menuType !== 'F'" :span="24" label="菜单类型" path="menuType">
+          <NFormItemGi
+            v-if="model.menuType !== 'F'"
+            :span="24"
+            :label="$t('page.system.menu.menuType')"
+            path="menuType"
+          >
             <NRadioGroup v-model:value="model.menuType">
               <NRadioButton
                 v-for="item in menuTypeOptions.filter(item => item.value !== 'F')"
@@ -248,10 +253,10 @@ function onCreate() {
               />
             </NRadioGroup>
           </NFormItemGi>
-          <NFormItemGi :span="24" label="菜单名称" path="menuName">
-            <NInput v-model:value="model.menuName" placeholder="请输入菜单名称" />
+          <NFormItemGi :span="24" :label="$t('page.system.menu.menuName')" path="menuName">
+            <NInput v-model:value="model.menuName" :placeholder="$t('page.system.menu.form.menuName.required')" />
           </NFormItemGi>
-          <NFormItemGi v-if="!isBtn" span="24" label="图标类型">
+          <NFormItemGi v-if="!isBtn" span="24" :label="$t('page.system.menu.iconType')">
             <NRadioGroup v-model:value="iconType">
               <NRadio v-for="item in menuIconTypeOptions" :key="item.value" :value="item.value" :label="item.label" />
             </NRadioGroup>
@@ -259,40 +264,51 @@ function onCreate() {
           <NFormItemGi v-if="!isBtn" span="24" path="icon">
             <template #label>
               <div class="flex-center">
-                <FormTip content="iconify 地址：`https://icones.js.org`" />
-                <span class="pl-3px">菜单图标</span>
+                <FormTip :content="$t('page.system.menu.iconifyTip')" />
+                <span class="pl-3px">{{ $t('page.system.menu.icon') }}</span>
               </div>
             </template>
             <template v-if="iconType === '1'">
-              <NInput v-model:value="model.icon" placeholder="请输入图标" class="flex-1">
+              <NInput
+                v-model:value="model.icon"
+                :placeholder="$t('page.system.menu.placeholder.iconifyIconPlaceholder')"
+                class="flex-1"
+              >
                 <template #suffix>
                   <SvgIcon v-if="model.icon" :icon="model.icon" class="text-icon" />
                 </template>
               </NInput>
             </template>
             <template v-if="iconType === '2'">
-              <NSelect v-model:value="model.icon" placeholder="请选择本地图标" filterable :options="localIconOptions" />
+              <NSelect
+                v-model:value="model.icon"
+                :placeholder="$t('page.system.menu.placeholder.localIconPlaceholder')"
+                filterable
+                :options="localIconOptions"
+              />
             </template>
           </NFormItemGi>
           <NFormItemGi v-if="!isBtn" :span="24" path="path">
             <template #label>
               <div class="flex-center">
-                <FormTip content="访问的路由地址，如：`user`，如外网地址需内链访问则以 `http(s)://` 开头" />
-                <span>{{ model.isFrame !== '0' ? '路由地址' : '外链地址' }}</span>
+                <FormTip :content="$t('page.system.menu.pathTip')" />
+                <span>
+                  {{ model.isFrame !== '0' ? $t('page.system.menu.path') : $t('page.system.menu.externalPath') }}
+                </span>
               </div>
             </template>
-            <NInput v-model:value="model.path" placeholder="请输入路由地址" />
+            <NInput v-model:value="model.path" :placeholder="$t('page.system.menu.form.path.required')" />
           </NFormItemGi>
           <NFormItemGi v-if="isMenu && model.isFrame === '1'" :span="24" path="component">
             <template #label>
               <div class="flex-center">
-                <FormTip content="访问的组件路径，如：`system/user/index`，默认在`views`目录下" />
-                <span>组件路径</span>
+                <FormTip :content="$t('page.system.menu.componentTip')" />
+                <span>{{ $t('page.system.menu.component') }}</span>
               </div>
             </template>
             <NInputGroup>
               <NInputGroupLabel>views/</NInputGroupLabel>
-              <NInput v-model:value="model.component" placeholder="请输入组件地址" />
+              <NInput v-model:value="model.component" :placeholder="$t('page.system.menu.form.path.required')" />
               <NInputGroupLabel>/index.vue</NInputGroupLabel>
             </NInputGroup>
           </NFormItemGi>
@@ -300,7 +316,7 @@ function onCreate() {
             v-if="isMenu && model.isFrame !== '0'"
             span="24"
             :show-feedback="!queryList.length"
-            :label="model.isFrame !== '2' ? '路由参数' : 'iframe 地址'"
+            :label="model.isFrame !== '2' ? $t('page.system.menu.query') : $t('page.system.menu.iframeQuery')"
           >
             <NDynamicInput
               v-if="model.isFrame !== '2'"
@@ -315,7 +331,10 @@ function onCreate() {
                     ignore-path-change
                     :show-label="false"
                     :path="`query[${index}].key`"
-                    :rule="{ ...createRequiredRule('请输入 Key'), validator: value => isNotNull(value) }"
+                    :rule="{
+                      ...createRequiredRule($t('page.system.menu.placeholder.queryKey')),
+                      validator: value => isNotNull(value)
+                    }"
                   >
                     <NInput v-model:value="queryList[index].key" placeholder="Key" @keydown.enter.prevent />
                   </NFormItem>
@@ -325,29 +344,36 @@ function onCreate() {
                     ignore-path-change
                     :show-label="false"
                     :path="`query[${index}].value`"
-                    :rule="{ ...createRequiredRule('请输入 Value'), validator: value => isNotNull(value) }"
+                    :rule="{
+                      ...createRequiredRule($t('page.system.menu.placeholder.queryValue')),
+                      validator: value => isNotNull(value)
+                    }"
                   >
                     <NInput v-model:value="queryList[index].value" placeholder="Value" @keydown.enter.prevent />
                   </NFormItem>
                 </div>
               </template>
             </NDynamicInput>
-            <NInput v-else v-model:value="model.queryParam" placeholder="请输入 iframe 地址" />
+            <NInput
+              v-else
+              v-model:value="model.queryParam"
+              :placeholder="$t('page.system.menu.placeholder.queryIframe')"
+            />
           </NFormItemGi>
           <NFormItemGi :span="24" path="perms">
             <template #label>
               <div class="flex-center">
-                <FormTip content="控制器中定义的权限字符，如：@SaCheckPermission('system:user:list')" />
-                <span>权限字符</span>
+                <FormTip :content="$t('page.system.menu.permsTip')" />
+                <span>{{ $t('page.system.menu.perms') }}</span>
               </div>
             </template>
-            <NInput v-model:value="model.perms" placeholder="请输入菜单名称" />
+            <NInput v-model:value="model.perms" :placeholder="$t('page.system.menu.form.perms.required')" />
           </NFormItemGi>
           <NFormItemGi v-if="!isBtn" :span="12" path="isFrame">
             <template #label>
               <div class="flex-center">
-                <FormTip content="选择是外链则路由地址需要以`http(s)://`开头" />
-                <span>是否外链</span>
+                <FormTip :content="$t('page.system.menu.isFrameTip')" />
+                <span>{{ $t('page.system.menu.isFrame') }}</span>
               </div>
             </template>
             <NRadioGroup v-model:value="model.isFrame">
@@ -364,8 +390,8 @@ function onCreate() {
           <NFormItemGi v-if="isMenu" :span="12" path="isCache">
             <template #label>
               <div class="flex-center">
-                <FormTip content="选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致" />
-                <span>是否缓存</span>
+                <FormTip :content="$t('page.system.menu.isCacheTip')" />
+                <span>{{ $t('page.system.menu.isCache') }}</span>
               </div>
             </template>
             <NRadioGroup v-model:value="model.isCache">
@@ -375,11 +401,11 @@ function onCreate() {
               </NSpace>
             </NRadioGroup>
           </NFormItemGi>
-          <NFormItemGi v-if="!isBtn" :span="12" label="显示状态" path="visible">
+          <NFormItemGi v-if="!isBtn" :span="12" :label="$t('page.system.menu.visible')" path="visible">
             <template #label>
               <div class="flex-center">
-                <FormTip content="选择隐藏则路由将不会出现在侧边栏，但仍然可以访问" />
-                <span>显示状态</span>
+                <FormTip :content="$t('page.system.menu.visibleTip')" />
+                <span>{{ $t('page.system.menu.visible') }}</span>
               </div>
             </template>
             <DictRadio v-model:value="model.visible" dict-code="sys_show_hide" />
@@ -387,14 +413,14 @@ function onCreate() {
           <NFormItemGi :span="12" path="status">
             <template #label>
               <div class="flex-center">
-                <FormTip content="选择停用则路由将不会出现在侧边栏，也不能被访问" />
-                <span>菜单状态</span>
+                <FormTip :content="$t('page.system.menu.statusTip')" />
+                <span>{{ $t('page.system.menu.status') }}</span>
               </div>
             </template>
             <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
           </NFormItemGi>
-          <NFormItemGi :span="12" label="显示排序" path="orderNum">
-            <NInputNumber v-model:value="model.orderNum" placeholder="请输入排序" />
+          <NFormItemGi :span="12" :label="$t('page.system.menu.orderNum')" path="orderNum">
+            <NInputNumber v-model:value="model.orderNum" :placeholder="$t('page.system.menu.form.orderNum.required')" />
           </NFormItemGi>
         </NGrid>
       </NForm>
