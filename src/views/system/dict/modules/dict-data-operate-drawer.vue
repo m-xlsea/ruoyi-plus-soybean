@@ -34,8 +34,8 @@ const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增字典数据',
-    edit: '编辑字典数据'
+    add: $t('page.system.dict.addDictData'),
+    edit: $t('page.system.dict.editDictData')
   };
   return titles[props.operateType];
 });
@@ -68,9 +68,9 @@ function createDefaultModel(): Model {
 type RuleKey = Extract<keyof Model, 'dictCode' | 'dictLabel' | 'dictValue'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  dictCode: createRequiredRule('字典编码不能为空'),
-  dictLabel: createRequiredRule('字典标签不能为空'),
-  dictValue: createRequiredRule('字典键值不能为空')
+  dictCode: createRequiredRule($t('page.system.dict.form.dictCode.invalid')),
+  dictLabel: createRequiredRule($t('page.system.dict.form.dictLabel.invalid')),
+  dictValue: createRequiredRule($t('page.system.dict.form.dictValue.invalid'))
 };
 
 function handleUpdateModelWhenEdit() {
@@ -146,32 +146,41 @@ function renderTagLabel(option: { label: string; value: string }) {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="字典类型" path="dictType">
-          <NInput v-model:value="model.dictType" disabled placeholder="请输入字典类型" />
+        <NFormItem :label="$t('page.system.dict.dictType')" path="dictType">
+          <NInput
+            v-model:value="model.dictType"
+            disabled
+            :placeholder="$t('page.system.dict.form.dictType.required')"
+          />
         </NFormItem>
-        <NFormItem label="标签样式" path="listClass">
+        <NFormItem :label="$t('page.system.dict.data.listClass')" path="listClass">
           <NSelect
             v-model:value="model.listClass"
             clearable
             :options="listClassOptions"
-            placeholder="请选择标签样式"
+            :placeholder="$t('page.system.dict.form.listClass.required')"
             :render-label="renderTagLabel"
           />
         </NFormItem>
-        <NFormItem label="数据标签" path="dictLabel">
-          <NInput v-model:value="model.dictLabel" placeholder="请输入字典标签" />
+        <NFormItem :label="$t('page.system.dict.data.label')" path="dictLabel">
+          <NInput v-model:value="model.dictLabel" :placeholder="$t('page.system.dict.form.dictLabel.required')" />
         </NFormItem>
-        <NFormItem label="数据键值" path="dictValue">
-          <NInput v-model:value="model.dictValue" placeholder="请输入字典键值" />
+        <NFormItem :label="$t('page.system.dict.data.value')" path="dictValue">
+          <NInput v-model:value="model.dictValue" :placeholder="$t('page.system.dict.form.dictValue.required')" />
         </NFormItem>
-        <NFormItem label="css类名" path="cssClass">
-          <NInput v-model:value="model.cssClass" placeholder="请输入样式属性（其他样式扩展）" />
+        <NFormItem :label="$t('page.system.dict.data.cssClass')" path="cssClass">
+          <NInput v-model:value="model.cssClass" :placeholder="$t('page.system.dict.form.cssClass.required')" />
         </NFormItem>
-        <NFormItem label="显示排序" path="dictSort">
-          <NInputNumber v-model:value="model.dictSort" placeholder="请输入字典排序" />
+        <NFormItem :label="$t('page.system.dict.data.dictSort')" path="dictSort">
+          <NInputNumber v-model:value="model.dictSort" :placeholder="$t('page.system.dict.form.dictSort.required')" />
         </NFormItem>
-        <NFormItem label="备注" path="remark">
-          <NInput v-model:value="model.remark" :rows="3" type="textarea" placeholder="请输入备注" />
+        <NFormItem :label="$t('page.system.dict.data.remark')" path="remark">
+          <NInput
+            v-model:value="model.remark"
+            :rows="3"
+            type="textarea"
+            :placeholder="$t('page.system.dict.form.remark.required')"
+          />
         </NFormItem>
       </NForm>
       <template #footer>

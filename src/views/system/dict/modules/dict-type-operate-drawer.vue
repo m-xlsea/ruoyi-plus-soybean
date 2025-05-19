@@ -32,8 +32,8 @@ const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增字典类型',
-    edit: '编辑字典类型'
+    add: $t('page.system.dict.addDictType'),
+    edit: $t('page.system.dict.editDictType')
   };
   return titles[props.operateType];
 });
@@ -53,9 +53,9 @@ function createDefaultModel(): Model {
 type RuleKey = Extract<keyof Model, 'dictId' | 'dictName' | 'dictType'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  dictId: createRequiredRule('字典主键不能为空'),
-  dictName: createRequiredRule('字典名称不能为空'),
-  dictType: createRequiredRule('字典类型不能为空')
+  dictId: createRequiredRule($t('page.system.dict.form.dictValue.invalid')),
+  dictName: createRequiredRule($t('page.system.dict.form.dictName.invalid')),
+  dictType: createRequiredRule($t('page.system.dict.form.dictType.invalid'))
 };
 
 function handleUpdateModelWhenEdit() {
@@ -106,14 +106,19 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="字典名称" path="dictName">
-          <NInput v-model:value="model.dictName" placeholder="请输入字典名称" />
+        <NFormItem :label="$t('page.system.dict.dictName')" path="dictName">
+          <NInput v-model:value="model.dictName" :placeholder="$t('page.system.dict.form.dictName.required')" />
         </NFormItem>
-        <NFormItem label="字典类型" path="dictType">
-          <NInput v-model:value="model.dictType" placeholder="请输入字典类型" />
+        <NFormItem :label="$t('page.system.dict.dictType')" path="dictType">
+          <NInput v-model:value="model.dictType" :placeholder="$t('page.system.dict.form.dictValue.required')" />
         </NFormItem>
-        <NFormItem label="备注" path="remark">
-          <NInput v-model:value="model.remark" :rows="3" type="textarea" placeholder="请输入备注" />
+        <NFormItem :label="$t('page.system.dict.remark')" path="remark">
+          <NInput
+            v-model:value="model.remark"
+            :rows="3"
+            type="textarea"
+            :placeholder="$t('page.system.dict.form.remark.required')"
+          />
         </NFormItem>
       </NForm>
       <template #footer>
