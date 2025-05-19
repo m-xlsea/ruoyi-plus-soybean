@@ -1,25 +1,23 @@
 <script setup lang="tsx">
-import { NButton, NDivider } from 'naive-ui';
+import { NDivider } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
 import { type TableDataWithIndex } from '@sa/hooks';
-import { fetchBatchDeleteDept, fetchGetDeptList } from '@/service/api/system/dept';
+import { fetchDeleteCategory, fetchGetCategoryList } from '@/service/api/workflow';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useTreeTable, useTreeTableOperate } from '@/hooks/common/tree-table';
-import { useDict } from '@/hooks/business/dict';
-import DictTag from '@/components/custom/dict-tag.vue';
+import { useDownload } from '@/hooks/business/download';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import DeptOperateDrawer from './modules/dept-operate-drawer.vue';
-import DeptSearch from './modules/dept-search.vue';
+import WorkflowCategoryOperateDrawer from './modules/category-operate-drawer.vue';
+import WorkflowCategorySearch from './modules/category-search.vue';
 
 defineOptions({
-  name: 'DeptList'
+  name: 'WorkflowCategoryList'
 });
 
-useDict('sys_normal_disable');
-
 const appStore = useAppStore();
+const { download } = useDownload();
 const { hasAuth } = useAuth();
 
 const {
@@ -35,43 +33,31 @@ const {
   expandAll,
   collapseAll
 } = useTreeTable({
-  apiFn: fetchGetDeptList,
+  apiFn: fetchGetCategoryList,
   apiParams: {
-    deptName: null,
-    status: null
+    pageNum: 1,
+    pageSize: 10,
+    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
+    // the value can not be undefined, otherwise the property in Form will not be reactive
+    categoryName: null
   },
-  idField: 'deptId',
+  idField: 'categoryId',
   columns: () => [
     {
-      key: 'deptName',
-      title: $t('page.system.dept.deptName'),
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'deptCategory',
-      title: $t('page.system.dept.deptCategory'),
+      key: 'categoryName',
+      title: '分类名称',
       align: 'center',
       minWidth: 120
     },
     {
       key: 'orderNum',
-      title: $t('page.system.dept.sort'),
+      title: '显示顺序',
       align: 'center',
-      minWidth: 60
-    },
-    {
-      key: 'status',
-      title: $t('page.system.dept.status'),
-      align: 'center',
-      minWidth: 120,
-      render(row) {
-        return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
-      }
+      minWidth: 120
     },
     {
       key: 'createTime',
-      title: $t('page.system.dept.createTime'),
+      title: '创建时间',
       align: 'center',
       minWidth: 120
     },
@@ -79,7 +65,7 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 150,
+      width: 130,
       render: row => {
         const addBtn = () => {
           return (
@@ -113,15 +99,15 @@ const {
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.deptId!)}
+              onPositiveClick={() => handleDelete(row.categoryId!)}
             />
           );
         };
 
         const buttons = [];
-        if (hasAuth('system:dept:add')) buttons.push(addBtn());
-        if (hasAuth('system:dept:edit')) buttons.push(editBtn());
-        if (hasAuth('system:dept:remove')) buttons.push(deleteBtn());
+        if (hasAuth('workflow:category:add')) buttons.push(addBtn());
+        if (hasAuth('workflow:category:edit')) buttons.push(editBtn());
+        if (hasAuth('workflow:category:remove')) buttons.push(deleteBtn());
 
         return (
           <div class="flex-center gap-8px">
@@ -138,39 +124,43 @@ const {
   ]
 });
 
-const { drawerVisible, operateType, editingData, handleAdd, handleEdit, onDeleted } = useTreeTableOperate(
-  data,
-  getData
-);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onDeleted } =
+  useTreeTableOperate(data, getData);
 
-async function handleDelete(deptId: CommonType.IdType) {
+async function handleDelete(id: CommonType.IdType) {
   // request
-  const { error } = await fetchBatchDeleteDept([deptId]);
+  const { error } = await fetchDeleteCategory(id);
   if (error) return;
   onDeleted();
 }
 
-async function edit(row: TableDataWithIndex<Api.System.Dept>) {
+async function edit(row: TableDataWithIndex<Api.Workflow.WorkflowCategory>) {
   handleEdit(row);
 }
 
-async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
-  handleAdd();
+function addInRow(row: TableDataWithIndex<Api.Workflow.WorkflowCategory>) {
   editingData.value = jsonClone(row);
+  handleAdd();
+}
+
+function handleExport() {
+  download('/workflow/category/export', searchParams, `流程分类_#[[${new Date().getTime()}]]#.xlsx`);
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <DeptSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
-    <NCard :title="$t('page.system.dept.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <WorkflowCategorySearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
+    <NCard title="流程分类列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
           :loading="loading"
-          :show-add="hasAuth('system:dept:add')"
+          :show-add="hasAuth('workflow:category:add')"
           :show-delete="false"
+          :show-export="false"
           @add="handleAdd"
+          @export="handleExport"
           @refresh="getData"
         >
           <template #prefix>
@@ -178,18 +168,19 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
               <template #icon>
                 <icon-quill:expand />
               </template>
-              {{ $t('page.system.dept.expandAll') }}
+              全部展开
             </NButton>
             <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
                 <icon-quill:collapse />
               </template>
-              {{ $t('page.system.dept.collapseAll') }}
+              全部收起
             </NButton>
           </template>
         </TableHeaderOperation>
       </template>
       <NDataTable
+        v-model:checked-row-keys="checkedRowKeys"
         v-model:expanded-row-keys="expandedRowKeys"
         :columns="columns"
         :data="data"
@@ -198,13 +189,15 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
         :flex-height="!appStore.isMobile"
         :scroll-x="962"
         :loading="loading"
-        :row-key="row => row.deptId"
+        remote
+        :row-key="row => row.categoryId"
         class="sm:h-full"
       />
-      <DeptOperateDrawer
+      <WorkflowCategoryOperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
+        :category-tree-list="data"
         @submitted="getData"
       />
     </NCard>

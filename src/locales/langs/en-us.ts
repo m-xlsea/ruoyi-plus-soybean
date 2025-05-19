@@ -212,6 +212,8 @@ const local: App.I18n.Schema = {
     demo: 'Demo',
     demo_demo: 'Demo Table',
     demo_tree: 'Demo Tree',
+    workflow: 'Workflow',
+    workflow_category: 'Workflow Category',
     exception: 'Exception',
     exception_403: '403',
     exception_404: '404',

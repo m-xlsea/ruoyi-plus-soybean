@@ -53,6 +53,8 @@ declare module "@elegant-router/types" {
     "tool": "/tool";
     "tool_gen": "/tool/gen";
     "user-center": "/user-center";
+    "workflow": "/workflow";
+    "workflow_category": "/workflow/category";
   };
 
   /**
@@ -100,6 +102,7 @@ declare module "@elegant-router/types" {
     | "system"
     | "tool"
     | "user-center"
+    | "workflow"
   >;
 
   /**
@@ -145,6 +148,7 @@ declare module "@elegant-router/types" {
     | "system_tenant"
     | "system_user"
     | "tool_gen"
+    | "workflow_category"
   >;
 
   /**

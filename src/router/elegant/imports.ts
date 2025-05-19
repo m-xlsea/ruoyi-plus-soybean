@@ -43,4 +43,5 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   system_tenant: () => import("@/views/system/tenant/index.vue"),
   system_user: () => import("@/views/system/user/index.vue"),
   tool_gen: () => import("@/views/tool/gen/index.vue"),
+  workflow_category: () => import("@/views/workflow/category/index.vue"),
 };

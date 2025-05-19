@@ -331,5 +331,25 @@ export const generatedRoutes: GeneratedRoute[] = [
       icon: 'material-symbols:account-circle-full',
       hideInMenu: true
     }
+  },
+  {
+    name: 'workflow',
+    path: '/workflow',
+    component: 'layout.base',
+    meta: {
+      title: 'workflow',
+      i18nKey: 'route.workflow'
+    },
+    children: [
+      {
+        name: 'workflow_category',
+        path: '/workflow/category',
+        component: 'view.workflow_category',
+        meta: {
+          title: 'workflow_category',
+          i18nKey: 'route.workflow_category'
+        }
+      }
+    ]
   }
 ];
