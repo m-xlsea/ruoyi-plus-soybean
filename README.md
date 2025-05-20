@@ -400,3 +400,8 @@ console.log(t('common.confirm'));
     <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747742188121789563/646dff1c_5601833.jpeg" width="24px" >
     <span>依依 20元</span>
 </div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747742593880284419/5b56043d_5601833.jpeg" width="24px" >
+    <span>沙海 20元</span>
+</div>
