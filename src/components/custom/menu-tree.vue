@@ -34,7 +34,7 @@ async function getMenuList() {
   options.value = [
     {
       id: 0,
-      label: '根节点',
+      label: '根目录',
       icon: 'material-symbols:home-outline-rounded',
       children: data
     }
