@@ -352,7 +352,7 @@ console.log(t('common.confirm'));
 
 ## 💬 交流群
 
-<img src="https://foruda.gitee.com/images/1747014836531779417/f3b29a34_5601833.png" width="300px" />
+<img src="https://foruda.gitee.com/images/1747707357650535622/a9fcf43e_5601833.png" width="300px" />
 
 ## 🧧 捐献作者
 
@@ -389,4 +389,19 @@ console.log(t('common.confirm'));
 <div style="display: flex; gap: 8px;">
     <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747280244120267391/6d719481_5601833.jpeg" width="24px" >
     <span>DAS 20元</span>
+</div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747739790990961771/57f4b208_5601833.jpeg" width="24px" >
+    <span>大山 100元</span>
+</div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747742188121789563/646dff1c_5601833.jpeg" width="24px" >
+    <span>依依 20元</span>
+</div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747742593880284419/5b56043d_5601833.jpeg" width="24px" >
+    <span>沙海 20元</span>
 </div>

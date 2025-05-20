@@ -553,19 +553,38 @@ const local: App.I18n.Schema = {
       },
       menu: {
         title: '菜单列表',
+        parentId: '上级菜单',
+        iconType: '图标类型',
         menuName: '菜单名称',
         icon: '菜单图标',
-        sort: '排序',
-        permission: '权限标识',
+        orderNum: '排序',
+        perms: '权限字符',
         component: '组件路径',
         path: '路由地址',
+        externalPath: '外链地址',
         query: '路由参数',
+        iframeQuery: 'iframe 地址',
         isFrame: '是否外链',
         isCache: '是否缓存',
         menuType: '菜单类型',
         visible: '显示状态',
         status: '菜单状态',
         createTime: '创建时间',
+        cache: '缓存',
+        noCache: '不缓存',
+        rootName: '根目录',
+        buttonPermissionList: '按钮权限列表',
+        emptyMenu: '暂无菜单',
+        menuDetail: '菜单详情',
+        iconifyTip: 'iconify 地址：https://icones.js.org',
+        isFrameTip: '选择是外链则路由地址需要以`http(s)://`开头',
+        isCacheTip: '选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致',
+        visibleTip: '选择隐藏则路由将不会出现在侧边栏，但仍然可以访问',
+        statusTip: '选择停用则路由将不会出现在侧边栏，也不能被访问',
+        permsTip: "控制器中定义的权限字符，如：`@SaCheckPermission('system:user:list')`",
+        componentTip: '访问的组件路径，如：`system/user/index`，默认在`views`目录下',
+        pathTip:
+          'Router path，Example：`user`，If the external network address needs to be accessed in the internal link,then  `http(s)://` beginning',
         form: {
           parentId: {
             required: '请选择上级菜单',
@@ -583,9 +602,13 @@ const local: App.I18n.Schema = {
             required: '请输入菜单名称',
             invalid: '菜单名称不能为空'
           },
-          sort: {
+          orderNum: {
             required: '请输入排序',
             invalid: '排序不能为空'
+          },
+          perms: {
+            required: '请输入权限字符',
+            invalid: '权限字符不能为空'
           },
           isFrame: {
             required: '请选择是否外链',
@@ -620,10 +643,18 @@ const local: App.I18n.Schema = {
             invalid: '权限标识不能为空'
           }
         },
+        placeholder: {
+          iconifyIconPlaceholder: '请输入图标',
+          localIconPlaceholder: '请选择本地图标',
+          queryKey: '请输入 Key',
+          queryValue: '请输入 Value',
+          queryIframe: '请输入 iframe 地址'
+        },
         directory: '目录',
         menu: '菜单',
         button: '按钮',
         addMenu: '新增菜单',
+        addChildMenu: '新增子菜单',
         editMenu: '编辑菜单'
       },
       notice: {

@@ -102,9 +102,8 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
-
-  const { roleId, roleName, roleKey, roleSort, menuCheckStrictly, status, remark, menuIds } = model;
-
+  const { roleId, roleName, roleKey, roleSort, menuCheckStrictly, status, remark } = model;
+  const menuIds = menuTreeRef.value?.getCheckedMenuIds();
   // request
   if (props.operateType === 'add') {
     const { error } = await fetchCreateRole({
@@ -174,7 +173,7 @@ watch(visible, () => {
           <MenuTree
             v-if="visible"
             ref="menuTreeRef"
-            v-model:value="model.menuIds"
+            v-model:checked-keys="model.menuIds"
             v-model:options="menuOptions"
             v-model:cascade="model.menuCheckStrictly"
             v-model:loading="menuLoading"

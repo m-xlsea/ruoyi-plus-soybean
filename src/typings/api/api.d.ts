@@ -132,6 +132,8 @@ declare namespace Api {
       password?: string;
       /** 确认密码 */
       confirmPassword?: string;
+      /** 用户类型 */
+      userType?: string;
     }
 
     /** login token data */

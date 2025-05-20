@@ -95,7 +95,8 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
-  const { packageId, packageName, menuIds, remark, menuCheckStrictly } = model;
+  const { packageId, packageName, remark, menuCheckStrictly } = model;
+  const menuIds = menuTreeRef.value?.getCheckedMenuIds();
   // request
   if (props.operateType === 'add') {
     const { error } = await fetchCreateTenantPackage({ packageName, menuIds, remark, menuCheckStrictly });
@@ -140,7 +141,7 @@ watch(visible, () => {
           <MenuTree
             v-if="visible"
             ref="menuTreeRef"
-            v-model:value="model.menuIds"
+            v-model:checked-keys="model.menuIds"
             v-model:options="menuOptions"
             v-model:cascade="model.menuCheckStrictly"
             v-model:loading="menuLoading"
