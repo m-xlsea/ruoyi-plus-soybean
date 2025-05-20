@@ -390,3 +390,8 @@ console.log(t('common.confirm'));
     <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747280244120267391/6d719481_5601833.jpeg" width="24px" >
     <span>DAS 20元</span>
 </div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747739790990961771/57f4b208_5601833.jpeg" width="24px" >
+    <span>大山 100元</span>
+</div>
