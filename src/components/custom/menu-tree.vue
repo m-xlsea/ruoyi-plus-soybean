@@ -21,11 +21,10 @@ const { bool: checkAll } = useBoolean();
 const expandedKeys = ref<CommonType.IdType[]>([0]);
 
 const menuTreeRef = ref<TreeSelectInst | null>(null);
-const value = defineModel<CommonType.IdType[]>('value', { required: false, default: [] });
+const checkedKeys = defineModel<CommonType.IdType[]>('checkedKeys', { required: false, default: [] });
 const options = defineModel<Api.System.MenuList>('options', { required: false, default: [] });
 const cascade = defineModel<boolean>('cascade', { required: false, default: true });
 const loading = defineModel<boolean>('loading', { required: false, default: false });
-
 const attrs: TreeSelectProps = useAttrs();
 
 async function getMenuList() {
@@ -35,7 +34,7 @@ async function getMenuList() {
   options.value = [
     {
       id: 0,
-      label: '根目录',
+      label: '根节点',
       icon: 'material-symbols:home-outline-rounded',
       children: data
     }
@@ -83,14 +82,14 @@ function getAllMenuIds(menu: Api.System.MenuList) {
 
 function handleCheckedTreeNodeAll(checked: boolean) {
   if (checked) {
-    value.value = getAllMenuIds(options.value);
+    checkedKeys.value = getAllMenuIds(options.value);
     return;
   }
-  value.value = [];
+  checkedKeys.value = [];
 }
 
-function handleSubmit() {
-  const menuIds = [...value.value];
+function getCheckedMenuIds() {
+  const menuIds = menuTreeRef.value?.getCheckedData()?.keys as string[];
   const indeterminateData = menuTreeRef.value?.getIndeterminateData();
   if (cascade.value) {
     const parentIds: string[] = indeterminateData?.keys.filter(item => !menuIds?.includes(String(item))) as string[];
@@ -100,7 +99,7 @@ function handleSubmit() {
 }
 
 defineExpose({
-  submit: handleSubmit,
+  getCheckedMenuIds,
   refresh: getMenuList
 });
 </script>
@@ -122,7 +121,7 @@ defineExpose({
     <NSpin class="resource h-full w-full py-6px pl-3px" content-class="h-full" :show="loading">
       <NTree
         ref="menuTreeRef"
-        v-model:checked-keys="value"
+        v-model:checked-keys="checkedKeys"
         v-model:expanded-keys="expandedKeys"
         multiple
         checkable
