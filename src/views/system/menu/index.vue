@@ -46,7 +46,7 @@ const getMeunTree = async () => {
   treeData.value = [
     {
       menuId: 0,
-      menuName: '根目录',
+      menuName: $t('page.system.menu.rootName'),
       icon: 'material-symbols:home-outline-rounded',
       children: handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' })
     }
@@ -112,7 +112,7 @@ function renderSuffix({ option }: { option: TreeOption }) {
         text
         class="h-18px"
         icon="ic-round-plus"
-        tooltip-content="新增子菜单"
+        tooltip-content={$t('page.system.menu.addChildMenu')}
         onClick={(event: Event) => {
           event.stopPropagation();
           handleAddMenu(option.menuId as CommonType.IdType);
@@ -203,18 +203,18 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
     }
   },
   {
-    title: '权限名称',
+    title: $t('page.system.menu.menuName'),
     key: 'menuName',
     minWidth: 120
   },
   {
-    title: '权限标识',
+    title: $t('page.system.menu.perms'),
     key: 'perms',
     align: 'center',
     minWidth: 120
   },
   {
-    title: '状态',
+    title: $t('page.system.menu.status'),
     key: 'status',
     minWidth: 80,
     align: 'center',
@@ -223,13 +223,13 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
     }
   },
   {
-    title: '创建时间',
+    title: $t('page.system.menu.createTime'),
     key: 'createTime',
     align: 'center',
     minWidth: 150
   },
   {
-    title: '操作',
+    title: $t('common.action'),
     key: 'actions',
     width: 80,
     align: 'center',
@@ -286,27 +286,27 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
 
 <template>
   <TableSiderLayout default-expanded>
-    <template #header>菜单列表</template>
+    <template #header>{{ $t('page.system.menu.title') }}</template>
     <template #header-extra>
       <ButtonIcon
         v-if="hasAuth('system:menu:add')"
         size="small"
         icon="material-symbols:add-rounded"
         class="h-28px text-icon"
-        tooltip-content="新增菜单"
+        :tooltip-content="$t('page.system.menu.addMenu')"
         @click.stop="handleAddMenu(0)"
       />
       <ButtonIcon
         size="small"
         icon="material-symbols:refresh-rounded"
         class="h-28px text-icon"
-        tooltip-content="刷新"
+        :tooltip-content="$t('common.refresh')"
         @click.stop="reset"
       />
     </template>
     <template #sider>
       <div class="flex gap-6px">
-        <NInput v-model:value="name" size="small" placeholder="请输入菜单名称" />
+        <NInput v-model:value="name" size="small" :placeholder="$t('page.system.menu.form.menuName.required')" />
       </div>
       <NSpin :show="loading" class="infinite-scroll">
         <NTree
@@ -330,7 +330,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
           @update:selected-keys="(_: Array<string & number>, option: Array<TreeOption | null>) => handleClickTree(option)"
         >
           <template #empty>
-            <NEmpty description="暂无菜单" class="h-full min-h-200px justify-center" />
+            <NEmpty :description="$t('page.system.menu.emptyMenu')" class="h-full min-h-200px justify-center" />
           </template>
         </NTree>
       </NSpin>
@@ -338,7 +338,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
     <div class="h-full flex-col-stretch gap-16px">
       <template v-if="currentMenu">
         <NCard
-          title="菜单详情"
+          :title="$t('page.system.menu.menuDetail')"
           :bordered="false"
           size="small"
           class="max-h-50% card-wrapper"
@@ -356,13 +356,13 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
                 <template #icon>
                   <icon-material-symbols-add-rounded />
                 </template>
-                新增子菜单
+                {{ $t('page.system.menu.addChildMenu') }}
               </NButton>
               <NButton v-if="hasAuth('system:menu:edit')" size="small" ghost type="primary" @click="handleUpdateMenu">
                 <template #icon>
                   <icon-material-symbols-drive-file-rename-outline-outline />
                 </template>
-                编辑
+                {{ $t('common.edit') }}
               </NButton>
               <NPopconfirm @positive-click="() => handleDeleteMenu()">
                 <template #trigger>
@@ -391,46 +391,50 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
             label-class="w-20% min-w-88px"
             content-class="w-100px"
           >
-            <NDescriptionsItem label="菜单类型">
+            <NDescriptionsItem :label="$t('page.system.menu.menuName')">
               <NTag class="m-1" size="small" type="primary">{{ menuTypeRecord[currentMenu.menuType!] }}</NTag>
             </NDescriptionsItem>
-            <NDescriptionsItem label="菜单状态">
+            <NDescriptionsItem :label="$t('page.system.menu.status')">
               <DictTag size="small" :value="currentMenu.status" dict-code="sys_normal_disable" />
             </NDescriptionsItem>
-            <NDescriptionsItem label="菜单名称">{{ currentMenu.menuName }}</NDescriptionsItem>
-            <NDescriptionsItem v-if="currentMenu.menuType === 'C'" label="组件路径">
+            <NDescriptionsItem :label="$t('page.system.menu.addChildMenu')">
+              {{ currentMenu.menuName }}
+            </NDescriptionsItem>
+            <NDescriptionsItem v-if="currentMenu.menuType === 'C'" :label="$t('page.system.menu.component')">
               {{ currentMenu.component }}
             </NDescriptionsItem>
-            <NDescriptionsItem :label="currentMenu.isFrame !== '0' ? '路由地址' : '外链地址'">
+            <NDescriptionsItem
+              :label="currentMenu.isFrame !== '0' ? $t('page.system.menu.path') : $t('page.system.menu.externalPath')"
+            >
               {{ currentMenu.path }}
             </NDescriptionsItem>
             <NDescriptionsItem
               v-if="currentMenu.menuType === 'C'"
-              :label="currentMenu.isFrame !== '2' ? '路由参数' : 'iframe 地址'"
+              :label="currentMenu.isFrame !== '2' ? $t('page.system.menu.query') : $t('page.system.menu.iframeQuery')"
             >
               {{ currentMenu.queryParam }}
             </NDescriptionsItem>
-            <NDescriptionsItem v-if="currentMenu.menuType !== 'M'" label="权限标识">
+            <NDescriptionsItem v-if="currentMenu.menuType !== 'M'" :label="$t('page.system.menu.perms')">
               {{ currentMenu.perms }}
             </NDescriptionsItem>
-            <NDescriptionsItem label="是否外链">
+            <NDescriptionsItem :label="$t('page.system.menu.isFrame')">
               <NTag v-if="currentMenu.isFrame" class="m-1" size="small" :type="tagMap[currentMenu.isFrame]">
                 {{ menuIsFrameRecord[currentMenu.isFrame] }}
               </NTag>
             </NDescriptionsItem>
-            <NDescriptionsItem label="显示状态">
+            <NDescriptionsItem :label="$t('page.system.menu.visible')">
               <DictTag size="small" :value="currentMenu.visible" dict-code="sys_show_hide" />
             </NDescriptionsItem>
-            <NDescriptionsItem v-if="currentMenu.menuType === 'C'" label="是否缓存">
+            <NDescriptionsItem v-if="currentMenu.menuType === 'C'" :label="$t('page.system.menu.isCache')">
               <NTag v-if="currentMenu.isCache" class="m-1" size="small" :type="tagMap[currentMenu.isCache]">
-                {{ currentMenu.isCache === '0' ? '缓存' : '不缓存' }}
+                {{ currentMenu.isCache === '0' ? $t('page.system.menu.cache') : $t('page.system.menu.noCache') }}
               </NTag>
             </NDescriptionsItem>
           </NDescriptions>
         </NCard>
 
         <NCard
-          title="按钮权限列表"
+          :title="$t('page.system.menu.buttonPermissionList')"
           :bordered="false"
           size="small"
           class="h-full overflow-auto card-wrapper"
@@ -441,7 +445,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
               size="small"
               icon="ic-round-refresh"
               class="h-28px text-icon"
-              tooltip-content="刷新"
+              :tooltip-content="$t('common.refresh')"
               @click.stop="getBtnMenuList"
             />
           </template>
