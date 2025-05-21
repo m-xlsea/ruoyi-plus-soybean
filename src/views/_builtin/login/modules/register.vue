@@ -14,6 +14,7 @@ defineOptions({
 const { toggleLoginModule } = useRouterPush();
 const { formRef, validate } = useNaiveForm();
 const { loading: codeLoading, startLoading: startCodeLoading, endLoading: endCodeLoading } = useLoading();
+const { loading: registerLoading, startLoading: startRegisterLoading, endLoading: endRegisterLoading } = useLoading();
 
 const codeUrl = ref<string>();
 const captchaEnabled = ref<boolean>(false);
@@ -25,7 +26,8 @@ const model: Api.Auth.RegisterForm = reactive({
   username: '',
   code: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  userType: 'sys_user'
 });
 
 type RuleKey = Extract<keyof Api.Auth.RegisterForm, 'username' | 'password' | 'confirmPassword' | 'code' | 'tenantId'>;
@@ -43,9 +45,9 @@ const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
 });
 
 async function handleSubmit() {
-  await validate();
   try {
-    // request to register
+    await validate();
+    startRegisterLoading();
     const { error } = await fetchRegister({
       tenantId: model.tenantId,
       username: model.username,
@@ -53,12 +55,20 @@ async function handleSubmit() {
       code: model.code,
       uuid: model.uuid,
       grantType: 'password',
+      userType: model.userType,
       clientId: import.meta.env.VITE_APP_CLIENT_ID
     });
-    if (error) return;
+    if (error) {
+      handleFetchCaptchaCode();
+      return;
+    }
     window.$message?.success('注册成功');
+    // 注册成功后跳转到登录页
+    toggleLoginModule('pwd-login');
   } catch {
     handleFetchCaptchaCode();
+  } finally {
+    endRegisterLoading();
   }
 }
 
@@ -93,9 +103,16 @@ handleFetchCaptchaCode();
 </script>
 
 <template>
-  <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
+  <NForm
+    ref="formRef"
+    :model="model"
+    :rules="rules"
+    size="large"
+    :show-label="false"
+    @keyup.enter="() => !registerLoading && handleSubmit()"
+  >
     <NFormItem v-if="tenantEnabled" path="tenantId">
-      <TenantSelect v-model:value="model.tenantId" :enabled="tenantEnabled" />
+      <NSelect v-model:value="model.tenantId" :options="tenantOption" :enabled="tenantEnabled" />
     </NFormItem>
     <NFormItem path="username">
       <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
@@ -128,7 +145,7 @@ handleFetchCaptchaCode();
       </div>
     </NFormItem>
     <NSpace vertical :size="18" class="w-full">
-      <NButton type="primary" size="large" block @click="handleSubmit">
+      <NButton type="primary" size="large" block :loading="registerLoading" @click="handleSubmit">
         {{ $t('page.login.common.register') }}
       </NButton>
       <NButton size="large" block @click="toggleLoginModule('pwd-login')">

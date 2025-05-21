@@ -6,7 +6,7 @@ import { fetchTenantList } from '@/service/api';
 import { fetchChangeTenant, fetchClearTenant } from '@/service/api/system/tenant';
 import { useAppStore } from '@/store/modules/app';
 import { useTabStore } from '@/store/modules/tab';
-import { useAuth } from '@/hooks/business/auth';
+import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 
 defineOptions({ name: 'TenantSelect' });
@@ -20,7 +20,7 @@ withDefaults(defineProps<Props>(), {
 });
 
 const appStore = useAppStore();
-const { hasRole } = useAuth();
+const { userInfo } = useAuthStore();
 const { clearTabs } = useTabStore();
 const { toHome } = useRouterPush();
 
@@ -33,7 +33,7 @@ const tenantOption = ref<SelectOption[]>([]);
 const { loading, startLoading, endLoading } = useLoading();
 
 const showTenantSelect = computed<boolean>(() => {
-  return hasRole('superadmin') && enabled.value;
+  return userInfo.user?.userId === 1 && enabled.value;
 });
 
 /**
@@ -45,7 +45,7 @@ const showTenantSelect = computed<boolean>(() => {
 async function closeAndRefresh(msg: string, val: CommonType.IdType = '') {
   lastSelected.value = val;
   window.$message?.success(msg);
-  clearTabs();
+  clearTabs([], true);
   toHome();
   appStore.reloadPage(500);
 }
@@ -82,7 +82,7 @@ async function handleFetchTenantList() {
   endLoading();
 }
 onMounted(async () => {
-  if (!hasRole('superadmin')) {
+  if (userInfo.user?.userId !== 1) {
     return;
   }
   await handleFetchTenantList();

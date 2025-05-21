@@ -53,7 +53,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     },
     {
       key: 'dictLabel',
-      title: '字典标签',
+      title: $t('page.system.dict.data.label'),
       align: 'center',
       minWidth: 80,
       resizable: true,
@@ -66,7 +66,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     },
     {
       key: 'dictValue',
-      title: '字典键值',
+      title: $t('page.system.dict.data.value'),
       align: 'center',
       minWidth: 80,
       resizable: true,
@@ -76,7 +76,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     },
     {
       key: 'dictSort',
-      title: '字典排序',
+      title: $t('page.system.dict.data.dictSort'),
       align: 'center',
       minWidth: 80,
       resizable: true,
@@ -86,7 +86,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     },
     {
       key: 'remark',
-      title: '备注',
+      title: $t('page.system.dict.data.remark'),
       align: 'center',
       minWidth: 80,
       resizable: true,
@@ -96,7 +96,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
     },
     {
       key: 'createTime',
-      title: '创建时间',
+      title: $t('page.system.dict.data.createTime'),
       align: 'center',
       minWidth: 80,
       resizable: true,
@@ -193,7 +193,7 @@ async function handleReset() {
 async function handleRefreshCache() {
   const { error } = await fetchRefreshCache();
   if (error) return;
-  window.$message?.success('刷新缓存成功');
+  window.$message?.success($t('page.system.dict.refreshCacheSuccess'));
   await getData();
 }
 
@@ -260,7 +260,7 @@ function renderSuffix({ option }: { option: TreeOption }) {
         text
         type="primary"
         icon="material-symbols:drive-file-rename-outline-outline"
-        tooltip-content="修改"
+        tooltip-content={$t('common.edit')}
         onClick={(event: Event) => {
           event.stopPropagation();
           handleEditType(option as Api.System.DictType);
@@ -270,8 +270,8 @@ function renderSuffix({ option }: { option: TreeOption }) {
         text
         type="error"
         icon="material-symbols:delete-outline"
-        tooltip-content="删除"
-        popconfirm-content={`确定删除字典类型 ${option.dictType} 吗？`}
+        tooltip-content={$t('common.delete')}
+        popconfirm-content={`${$t('page.system.dict.confirmDeleteDictType')} ${option.dictType} ？`}
         onClick={(event: Event) => event.stopPropagation()}
         onPositiveClick={() => handleDeleteType(option as Api.System.DictType)}
       />
@@ -294,12 +294,12 @@ function handleEditType(dictType: Api.System.DictType) {
 async function handleDeleteType(dictType: Api.System.DictType) {
   const { error } = await fetchBatchDeleteDictType([dictType.dictId]);
   if (error) return;
-  window.$message?.success('删除成功');
+  window.$message?.success($t('common.deleteSuccess'));
   getTreeData();
 }
 
 async function handleExportType() {
-  download('/system/dict/type/export', searchParams, `字典类型_${new Date().getTime()}.xlsx`);
+  download('/system/dict/type/export', searchParams, `${$t('page.system.dict.dictType')}_${new Date().getTime()}.xlsx`);
 }
 
 const selectable = computed(() => {
@@ -308,14 +308,14 @@ const selectable = computed(() => {
 </script>
 
 <template>
-  <TableSiderLayout sider-title="字典类型列表">
+  <TableSiderLayout :sider-title="$t('page.system.dict.dictTypeTitle')">
     <template #header-extra>
       <ButtonIcon
         v-if="hasAuth('system:dict:add')"
         size="small"
         icon="material-symbols:add-rounded"
         class="h-18px text-icon"
-        tooltip-content="新增字典类型"
+        :tooltip-content="$t('page.system.dict.addDictType')"
         @click.stop="() => handleAddType()"
       />
       <ButtonIcon
@@ -323,14 +323,14 @@ const selectable = computed(() => {
         size="small"
         icon="material-symbols:download-rounded"
         class="h-18px text-icon"
-        tooltip-content="导出字典类型"
+        :tooltip-content="$t('page.system.dict.exportDictType')"
         @click.stop="() => handleExportType()"
       />
       <ButtonIcon
         size="small"
         icon="material-symbols:refresh-rounded"
         class="h-18px text-icon"
-        tooltip-content="刷新列表"
+        :tooltip-content="$t('page.system.dict.refreshDictType')"
         @click.stop="() => handleResetTreeData()"
       />
     </template>
@@ -354,7 +354,7 @@ const selectable = computed(() => {
           @update:selected-keys="handleClickTree"
         >
           <template #empty>
-            <NEmpty description="暂无字典类型" class="h-full min-h-200px justify-center" />
+            <NEmpty :description="$t('page.system.dict.dictTypeIsEmpty')" class="h-full min-h-200px justify-center" />
           </template>
         </NTree>
       </NSpin>
@@ -362,7 +362,7 @@ const selectable = computed(() => {
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <DictDataSearch v-model:model="searchParams" @reset="handleReset" @search="getDataByPage" />
       <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
-      <NCard title="字典数据列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+      <NCard :title="$t('page.system.dict.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
         <template #header-extra>
           <TableHeaderOperation
             v-model:columns="columnChecks"
@@ -382,7 +382,7 @@ const selectable = computed(() => {
                 <template #icon>
                   <icon-material-symbols:refresh-rounded class="text-icon" />
                 </template>
-                刷新缓存
+                {{ $t('page.system.dict.refreshCache') }}
               </NButton>
             </template>
           </TableHeaderOperation>

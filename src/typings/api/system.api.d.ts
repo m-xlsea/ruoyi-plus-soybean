@@ -558,6 +558,9 @@ declare namespace Api {
       }
     >;
 
+    /** tenant package sync params */
+    type TenantPackageSyncParams = CommonType.RecordNullable<Pick<Api.System.Tenant, 'tenantId' | 'packageId'>>;
+
     /** tenant list */
     type TenantList = Api.Common.PaginatingQueryRecord<Tenant>;
 

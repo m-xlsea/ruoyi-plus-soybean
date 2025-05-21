@@ -129,12 +129,22 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
    *
    * @param excludes Exclude tab ids
    */
-  async function clearTabs(excludes: string[] = []) {
+  async function clearTabs(excludes: string[] = [], clearCache: boolean = false) {
     const remainTabIds = [...getFixedTabIds(tabs.value), ...excludes];
     const removedTabsIds = tabs.value.map(tab => tab.id).filter(id => !remainTabIds.includes(id));
 
     const isRemoveActiveTab = removedTabsIds.includes(activeTabId.value);
     const updatedTabs = filterTabsByIds(removedTabsIds, tabs.value);
+
+    if (clearCache) {
+      // 清除缓存
+      removedTabsIds.forEach(tabId => {
+        const tab = tabs.value.find(t => t.id === tabId);
+        if (tab) {
+          routeStore.resetRouteCache(tab.routeKey);
+        }
+      });
+    }
 
     function update() {
       tabs.value = updatedTabs;

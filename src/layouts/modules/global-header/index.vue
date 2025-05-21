@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useFullscreen } from '@vueuse/core';
 import { GLOBAL_HEADER_MENU_ID } from '@/constants/app';
-import { fetchChangeTenant } from '@/service/api/system/tenant';
 import { useAppStore } from '@/store/modules/app';
 import { useAuthStore } from '@/store/modules/auth';
 import { useThemeStore } from '@/store/modules/theme';
@@ -33,10 +32,6 @@ const themeStore = useThemeStore();
 const { isFullscreen, toggle } = useFullscreen();
 
 const tenantId = ref<CommonType.IdType>(authStore.userInfo?.user?.tenantId || '000000');
-
-watch(tenantId, async () => {
-  await fetchChangeTenant(tenantId.value);
-});
 </script>
 
 <template>

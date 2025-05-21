@@ -66,7 +66,11 @@ const local: App.I18n.Schema = {
       yes: 'Yes',
       no: 'No'
     },
-    second: 'Second'
+    second: 'Second',
+    selected: 'selected',
+    anyRecords: 'records',
+    clear: 'Clear',
+    noSelectRecord: 'No Records Selected'
   },
   request: {
     logout: 'Logout user after request failed',
@@ -457,18 +461,22 @@ const local: App.I18n.Schema = {
         placeholder: {
           defaultLeaderPlaceHolder: 'Please select leader',
           addDataLeaderPlaceHolder: 'Department leader can be selected only when updating',
-          deptUserIsEmptyLeaderPlaceHolder: 'Current dept no leader'
+          deptUserIsEmptyLeaderPlaceHolder: 'Current dept has no leader'
         },
         addDept: 'Add Department',
         editDept: 'Edit Department'
       },
       dict: {
         title: 'Dictionary List',
+        dictTypeTitle: 'Dictionary Type List',
         dictName: 'Dictionary Name',
         dictType: 'Dictionary Type',
         status: 'Status',
         remark: 'Remark',
         createTime: 'Create Time',
+        refreshCacheSuccess: 'Refresh cache successfully',
+        refreshCache: 'Refresh Cache',
+        confirmDeleteDictType: 'Are you sure you want to delete dic type',
         data: {
           title: 'Dictionary Data List',
           label: 'Dictionary Label',
@@ -482,6 +490,14 @@ const local: App.I18n.Schema = {
           createTime: 'Create Time'
         },
         form: {
+          dictId: {
+            required: 'Please enter Dictionary Id',
+            invalid: 'Dictionary Id cannot be empty'
+          },
+          dictCode: {
+            required: 'Please enter Dictionary Code',
+            invalid: 'Dictionary Code cannot be empty'
+          },
           dictName: {
             required: 'Please enter Dictionary Name',
             invalid: 'Dictionary Name cannot be empty'
@@ -526,23 +542,49 @@ const local: App.I18n.Schema = {
         addDict: 'Add Dictionary',
         editDict: 'Edit Dictionary',
         addDictData: 'Add Dictionary Data',
-        editDictData: 'Edit Dictionary Data'
+        editDictData: 'Edit Dictionary Data',
+        addDictType: 'Add Dictionary Type',
+        editDictType: 'Edit Dictionary Type',
+        exportDictType: 'Export Dictionary Type',
+        refreshDictType: 'Refresh Dictionary Type',
+        dictTypeIsEmpty: 'Dictionary type is empty'
       },
       menu: {
         title: 'Menu List',
+        parentId: 'Parent Menu',
+        iconType: 'Icon Type',
         menuName: 'Menu Name',
         icon: 'Menu Icon',
-        sort: 'Sort',
-        permission: 'Permission',
+        orderNum: 'Sort',
+        perms: 'Permission Code',
         component: 'Component Path',
         path: 'Route Path',
+        externalPath: 'External Path',
         query: 'Route Parameters',
+        iframeQuery: 'Iframe Address',
         isFrame: 'External Link',
         isCache: 'Cache',
         menuType: 'Menu Type',
         visible: 'Visible',
         status: 'Status',
         createTime: 'Create Time',
+        cache: 'cache',
+        noCache: 'No Cache',
+        rootName: 'Root',
+        buttonPermissionList: 'Button Permission List',
+        emptyMenu: 'Empty Menu',
+        menuDetail: 'Menu Detail',
+        iconifyTip: 'iconify address：`https://icones.js.org`',
+        isFrameTip: 'If you choose External Link, the routing address needs to start with `http(s)://`',
+        isCacheTip:
+          'If you select yes, it will be cached by `keep-alive`, and the `name` and address of the matching component must be consistent',
+        visibleTip: 'If you choose Hide, the route will not appear in the sidebar, but it can still be accessed.',
+        statusTip: 'If you choose to disable, the route will not appear in the sidebar and cannot be accessed.',
+        permsTip: "Permission string defined in the controller, such as: @SaCheckPermission('system:user:list')",
+        componentTip:
+          'The component path to access, such as: `system/user/index`, which is in the `views` directory by default',
+        pathTip:
+          'Router path，Example：`user`，If the external network address needs to be accessed in the internal link,then  `http(s)://` beginning',
         form: {
           parentId: {
             required: 'Please select Parent Menu',
@@ -560,9 +602,13 @@ const local: App.I18n.Schema = {
             required: 'Please enter Menu Name',
             invalid: 'Menu Name cannot be empty'
           },
-          sort: {
-            required: 'Please enter Sort',
-            invalid: 'Sort cannot be empty'
+          perms: {
+            required: 'Please enter permission code',
+            invalid: 'Permission code cannot be empty'
+          },
+          orderNum: {
+            required: 'Please enter order num',
+            invalid: 'Order num cannot be empty'
           },
           isFrame: {
             required: 'Please select External Link',
@@ -597,10 +643,18 @@ const local: App.I18n.Schema = {
             invalid: 'Permission cannot be empty'
           }
         },
+        placeholder: {
+          iconifyIconPlaceholder: 'Please enter an icon',
+          localIconPlaceholder: 'Please select the local icon',
+          queryKey: 'Please enter a key',
+          queryValue: 'Please enter a value',
+          queryIframe: 'Please enter a iframe address'
+        },
         directory: 'Directory',
         menu: 'Menu',
         button: 'Button',
         addMenu: 'Add Menu',
+        addChildMenu: 'Add Child Menu',
         editMenu: 'Edit Menu'
       },
       notice: {

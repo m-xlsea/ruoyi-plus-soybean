@@ -362,6 +362,10 @@ declare namespace App {
           no: string;
         };
         second: string;
+        selected: string;
+        anyRecords: string;
+        clear: string;
+        noSelectRecord: string;
       };
       request: {
         logout: string;
@@ -606,11 +610,15 @@ declare namespace App {
           };
           dict: {
             title: string;
+            dictTypeTitle: string;
             dictName: string;
             dictType: string;
             status: string;
             remark: string;
             createTime: string;
+            refreshCacheSuccess: string;
+            refreshCache: string;
+            confirmDeleteDictType: string;
             data: {
               title: string;
               label: string;
@@ -624,6 +632,8 @@ declare namespace App {
               createTime: string;
             };
             form: {
+              dictId: FormMsg;
+              dictCode: FormMsg;
               dictName: FormMsg;
               dictType: FormMsg;
               status: FormMsg;
@@ -639,28 +649,52 @@ declare namespace App {
             editDict: string;
             addDictData: string;
             editDictData: string;
+            addDictType: string;
+            editDictType: string;
+            exportDictType: string;
+            refreshDictType: string;
+            dictTypeIsEmpty: string;
           };
           menu: {
             title: string;
+            parentId: string;
+            iconType: string;
             menuName: string;
             icon: string;
-            sort: string;
-            permission: string;
+            orderNum: string;
+            perms: string;
             component: string;
             path: string;
+            externalPath: string;
             query: string;
+            iframeQuery: string;
             isFrame: string;
             isCache: string;
             menuType: string;
             visible: string;
             status: string;
             createTime: string;
+            cache: string;
+            noCache: string;
+            rootName: string;
+            buttonPermissionList: string;
+            emptyMenu: string;
+            menuDetail: string;
+            iconifyTip: string;
+            isFrameTip: string;
+            isCacheTip: string;
+            visibleTip: string;
+            statusTip: string;
+            permsTip: string;
+            componentTip: string;
+            pathTip: string;
             form: {
               parentId: FormMsg;
               menuType: FormMsg;
               icon: FormMsg;
               menuName: FormMsg;
-              sort: FormMsg;
+              orderNum: FormMsg;
+              perms: FormMsg;
               isFrame: FormMsg;
               path: FormMsg;
               component: FormMsg;
@@ -670,10 +704,18 @@ declare namespace App {
               status: FormMsg;
               permission: FormMsg;
             };
+            placeholder: {
+              iconifyIconPlaceholder: string;
+              localIconPlaceholder: string;
+              queryKey: string;
+              queryValue: string;
+              queryIframe: string;
+            };
             directory: string;
             menu: string;
             button: string;
             addMenu: string;
+            addChildMenu: string;
             editMenu: string;
           };
           notice: {

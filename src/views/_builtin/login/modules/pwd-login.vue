@@ -121,7 +121,14 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
 </script>
 
 <template>
-  <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
+  <NForm
+    ref="formRef"
+    :model="model"
+    :rules="rules"
+    size="large"
+    :show-label="false"
+    @keyup.enter="() => !authStore.loginLoading && handleSubmit()"
+  >
     <NFormItem v-if="tenantEnabled" path="tenantId">
       <NSelect
         v-model:value="model.tenantId"

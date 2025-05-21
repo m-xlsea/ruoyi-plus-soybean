@@ -194,10 +194,10 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
         :columns="columns"
         :data="data"
         size="small"
+        :indent="32"
         :flex-height="!appStore.isMobile"
         :scroll-x="962"
         :loading="loading"
-        :indent="28"
         :row-key="row => row.deptId"
         class="sm:h-full"
       />
