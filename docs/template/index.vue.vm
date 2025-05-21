@@ -1,3 +1,4 @@
+#set($scrollX = $columns.size() * 120 + 242)
 <script setup lang="tsx">
 import { NDivider } from 'naive-ui';
 import { fetchBatchDelete${BusinessName}, fetchGet${BusinessName}List } from '@/service/api/${moduleName}/${businessName}';
@@ -170,7 +171,7 @@ function handleExport() {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="$scrollX"
         :loading="loading"
         remote
         :row-key="row => row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end"
