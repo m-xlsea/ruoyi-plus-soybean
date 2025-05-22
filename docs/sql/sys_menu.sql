@@ -26,9 +26,13 @@ UPDATE `sys_menu` SET `icon` = 'carbon:operations-record' WHERE `menu_id` = 500;
 UPDATE `sys_menu` SET `icon` = 'tabler:login-2' WHERE `menu_id` = 501;
 UPDATE `sys_menu` SET `icon` = 'gg:debug' WHERE `menu_id` = 1500;
 UPDATE `sys_menu` SET `icon` = 'gg:debug' WHERE `menu_id` = 1506;
+UPDATE `sys_menu` SET `path` = 'oss/config', `component` = 'system/oss-config/index', `icon` = 'hugeicons:configuration-01' WHERE `menu_id` = 133;
 
 -- IFrame 类型
 UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = 'https://ruoyi.xlsea.cn/admin/', `is_frame` = 2, `icon` = 'bx:bxl-spring-boot' WHERE `menu_id` = 117;
 UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = 'https://preview.snailjob.opensnail.com/', `is_frame` = 2, `icon` = 'gridicons:scheduled' WHERE `menu_id` = 120;
 -- 外链类型
 UPDATE `sys_menu` SET `path` = 'https://gitee.com/xlsea/ruoyi-plus-soybean', `component` = 'FrameView', `icon` = 'local-icon-gitee' WHERE `menu_id` = 4;
+
+-- plus-ui 需要禁用的页面
+UPDATE `sys_menu` SET `status` = '1' WHERE `menu_id` IN ( '116', '130', '131', '132', '11700', '11701' );

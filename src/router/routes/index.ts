@@ -123,32 +123,6 @@ const dynamicConstantRoutes: ElegantRoute[] = [
       icon: 'material-symbols:account-circle-full',
       hideInMenu: true
     }
-  },
-  {
-    name: 'system',
-    path: '/system',
-    component: 'layout.base',
-    meta: {
-      title: 'system',
-      i18nKey: 'route.system',
-      localIcon: 'menu-system',
-      order: 1,
-      hideInMenu: true
-    },
-    children: [
-      {
-        name: 'system_oss-config',
-        path: '/system/oss-config',
-        component: 'view.system_oss-config',
-        meta: {
-          title: 'system_oss-config',
-          i18nKey: 'route.system_oss-config',
-          constant: true,
-          hideInMenu: true,
-          icon: 'hugeicons:configuration-01'
-        }
-      }
-    ]
   }
 ];
 
