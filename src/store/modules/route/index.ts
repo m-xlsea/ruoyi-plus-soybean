@@ -100,6 +100,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     authRoutes.value = Array.from(authRoutesMap.values());
   }
 
+  // eslint-disable-next-line complexity
   function parseRouter(route: ElegantConstRoute, parent?: ElegantConstRoute) {
     route.meta = route.meta ? route.meta : { title: route.name };
     const isLayout = route.component === 'Layout';
@@ -129,6 +130,10 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
     // @ts-expect-error no hidden field
     route.meta.hideInMenu = route.hidden;
+    if (route.meta.hideInMenu && parent) {
+      // @ts-expect-error parent.name is activeMenu type
+      route.meta.activeMenu = parent.name;
+    }
     // 是否需要keepAlive
     route.meta.keepAlive = !route.meta.noCache;
 

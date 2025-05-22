@@ -405,3 +405,13 @@ console.log(t('common.confirm'));
     <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747742593880284419/5b56043d_5601833.jpeg" width="24px" >
     <span>沙海 20元</span>
 </div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747789196227712891/00c37bdf_5601833.jpeg" width="24px" >
+    <span>xxl 50元</span>
+</div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747796468040874363/1faa75ce_5601833.jpeg" width="24px" >
+    <span>莫离支🤴 10元</span>
+</div>
