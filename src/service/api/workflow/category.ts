@@ -43,3 +43,11 @@ export function fetchExportCategory(params?: Api.Workflow.WorkflowCategorySearch
     params
   });
 }
+
+/** 获取分类树 */
+export function fetchGetCategoryTree() {
+  return request<Api.Common.CommonTreeRecord>({
+    url: '/workflow/category/categoryTree',
+    method: 'get'
+  });
+}

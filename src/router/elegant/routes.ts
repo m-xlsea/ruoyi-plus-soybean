@@ -349,6 +349,15 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'workflow_category',
           i18nKey: 'route.workflow_category'
         }
+      },
+      {
+        name: 'workflow_process-definition',
+        path: '/workflow/process-definition',
+        component: 'view.workflow_process-definition',
+        meta: {
+          title: 'workflow_process-definition',
+          i18nKey: 'route.workflow_process-definition'
+        }
       }
     ]
   }

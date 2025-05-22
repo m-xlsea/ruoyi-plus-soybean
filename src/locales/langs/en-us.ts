@@ -217,7 +217,8 @@ const local: App.I18n.Schema = {
     exception: 'Exception',
     exception_403: '403',
     exception_404: '404',
-    exception_500: '500'
+    exception_500: '500',
+    'workflow_process-definition': 'Process Definition'
   },
   page: {
     login: {

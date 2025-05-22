@@ -12,6 +12,7 @@ declare module 'vue' {
     BetterScroll: typeof import('./../components/custom/better-scroll.vue')['default']
     BooleanTag: typeof import('./../components/custom/boolean-tag.vue')['default']
     ButtonIcon: typeof import('./../components/custom/button-icon.vue')['default']
+    copy: typeof import('./../components/custom/dept-tree-select copy.vue')['default']
     CountTo: typeof import('./../components/custom/count-to.vue')['default']
     DarkModeContainer: typeof import('./../components/common/dark-mode-container.vue')['default']
     DeptTree: typeof import('./../components/custom/dept-tree.vue')['default']
@@ -144,5 +145,6 @@ declare module 'vue' {
     ThemeSchemaSwitch: typeof import('./../components/common/theme-schema-switch.vue')['default']
     UserSelect: typeof import('./../components/custom/user-select.vue')['default']
     WaveBg: typeof import('./../components/custom/wave-bg.vue')['default']
+    WorkflowCategorySelect: typeof import('./../components/custom/workflow-category-select.vue')['default']
   }
 }

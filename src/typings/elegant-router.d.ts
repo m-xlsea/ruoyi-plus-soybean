@@ -55,6 +55,7 @@ declare module "@elegant-router/types" {
     "user-center": "/user-center";
     "workflow": "/workflow";
     "workflow_category": "/workflow/category";
+    "workflow_process-definition": "/workflow/process-definition";
   };
 
   /**
@@ -149,6 +150,7 @@ declare module "@elegant-router/types" {
     | "system_user"
     | "tool_gen"
     | "workflow_category"
+    | "workflow_process-definition"
   >;
 
   /**

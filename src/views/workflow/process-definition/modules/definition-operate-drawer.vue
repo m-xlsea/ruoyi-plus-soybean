@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import { computed, reactive, watch } from 'vue';
-import { fetchCreateCategory, fetchUpdateCategory } from '@/service/api/workflow';
+import { fetchCreateDefinition, fetchUpdateDefinition } from '@/service/api/workflow/definition';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
+
 defineOptions({
-  name: 'WorkflowCategoryOperateDrawer'
+  name: 'DefinitionOperateDrawer'
 });
 
 interface Props {
   /** the type of operation */
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
-  rowData?: Api.Workflow.WorkflowCategory | null;
+  rowData?: Api.Workflow.Definition | null;
 }
 
 const props = defineProps<Props>();
@@ -31,36 +32,36 @@ const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增测试树',
-    edit: '编辑测试树'
+    add: '新增流程定义',
+    edit: '编辑流程定义'
   };
   return titles[props.operateType];
 });
 
-type Model = Api.Workflow.WorkflowCategoryOperateParams;
+type Model = Api.Workflow.DefinitionOperateParams;
 
 const model: Model = reactive(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
-    parentId: null,
-    categoryName: '',
-    orderNum: 0
+    flowCode: '',
+    flowName: '',
+    category: '',
+    formPath: ''
   };
 }
 
-type RuleKey = Extract<keyof Model, 'categoryId' | 'parentId' | 'categoryName'>;
+type RuleKey = Extract<keyof Model, 'flowCode' | 'flowName' | 'category'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
-  categoryId: createRequiredRule('主键不能为空'),
-  parentId: createRequiredRule('上级分类不能为空'),
-  categoryName: createRequiredRule('分类名称不能为空')
+  flowCode: createRequiredRule('流程编码不能为空'),
+  flowName: createRequiredRule('流程名称不能为空'),
+  category: createRequiredRule('流程类别不能为空')
 };
 
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
     Object.assign(model, createDefaultModel());
-    model.parentId = props.rowData?.categoryId || 0;
     return;
   }
 
@@ -78,18 +79,18 @@ async function handleSubmit() {
 
   // request
   if (props.operateType === 'add') {
-    const { parentId, categoryName, orderNum } = model;
-    const { error } = await fetchCreateCategory({ parentId, categoryName, orderNum });
+    const { flowCode, flowName, category, formPath } = model;
+    const { error } = await fetchCreateDefinition({ flowCode, flowName, category, formPath });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { categoryId, parentId, categoryName, orderNum } = model;
-    const { error } = await fetchUpdateCategory({ categoryId, parentId, categoryName, orderNum });
+    const { id, flowCode, flowName, category, formPath } = model;
+    const { error } = await fetchUpdateDefinition({ id, flowCode, flowName, category, formPath });
     if (error) return;
   }
 
-  window.$message?.success($t('common.updateSuccess'));
+  window.$message?.success($t('common.saveSuccess'));
   closeDrawer();
   emit('submitted');
 }
@@ -106,14 +107,17 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="上级分类" path="parentId">
-          <WorkflowCategorySelect v-model:value="model.parentId" />
+        <NFormItem label="流程类别" path="category">
+          <WorkflowCategorySelect v-model:value="model.category" placeholder="请选择流程类别" />
         </NFormItem>
-        <NFormItem label="分类名称" path="categoryName">
-          <NInput v-model:value="model.categoryName" placeholder="请输入分类名称" />
+        <NFormItem label="流程编码" path="flowCode">
+          <NInput v-model:value="model.flowCode" placeholder="请输入流程编码" />
         </NFormItem>
-        <NFormItem label="排序" path="orderNum">
-          <NInputNumber v-model:value="model.orderNum" placeholder="请输入排序" />
+        <NFormItem label="流程名称" path="flowName">
+          <NInput v-model:value="model.flowName" placeholder="请输入流程名称" />
+        </NFormItem>
+        <NFormItem label="审批表单路径" path="formPath">
+          <NInput v-model:value="model.formPath" placeholder="请输入审批表单路径" />
         </NFormItem>
       </NForm>
       <template #footer>

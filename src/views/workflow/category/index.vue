@@ -197,7 +197,6 @@ function handleExport() {
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
-        :category-tree-list="data"
         @submitted="getData"
       />
     </NCard>
