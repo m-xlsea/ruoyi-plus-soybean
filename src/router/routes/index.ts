@@ -132,7 +132,8 @@ const dynamicConstantRoutes: ElegantRoute[] = [
       title: 'system',
       i18nKey: 'route.system',
       localIcon: 'menu-system',
-      order: 1
+      order: 1,
+      hideInMenu: true
     },
     children: [
       {
