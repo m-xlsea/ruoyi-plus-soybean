@@ -56,6 +56,7 @@ declare module "@elegant-router/types" {
     "workflow": "/workflow";
     "workflow_category": "/workflow/category";
     "workflow_process-definition": "/workflow/process-definition";
+    "workflow_process-instance": "/workflow/process-instance";
   };
 
   /**
@@ -151,6 +152,7 @@ declare module "@elegant-router/types" {
     | "tool_gen"
     | "workflow_category"
     | "workflow_process-definition"
+    | "workflow_process-instance"
   >;
 
   /**

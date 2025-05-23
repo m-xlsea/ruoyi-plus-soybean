@@ -86,5 +86,75 @@ declare namespace Api {
 
     /** definition list */
     type DefinitionList = Api.Common.PaginatingQueryRecord<Definition>;
+
+    /** 节点类型 */
+    type WorkflowNodeType = 0 | 1 | 2 | 3 | 4;
+
+    /** 流程激活状态 */
+    type WorkflowActivityStatus = 0 | 1;
+
+    /** 流程实例 */
+    type ProcessInstance = Common.CommonRecord<{
+      /** 主键 */
+      id: CommonType.IdType;
+      /** 租户编号 */
+      tenantId: CommonType.IdType;
+      /** 分类ID */
+      category: CommonType.IdType;
+      /** 分类名称 */
+      categoryName: string;
+      /** 流程定义ID */
+      definitionId: CommonType.IdType;
+      /** 流程定义名称 */
+      flowName: string;
+      /** 流程定义编码 */
+      flowCode: string;
+      /** 业务ID */
+      businessId: CommonType.IdType;
+      /** 节点类型 */
+      nodeType: WorkflowNodeType;
+      /** 节点编码 */
+      nodeCode: string;
+      /** 节点名称 */
+      nodeName: string;
+      /** 变量 */
+      variable: string;
+      /** 流程状态 */
+      flowStatus: string;
+      /** 流程状态名称 */
+      flowStatusName: string;
+      /** 流程激活状态 */
+      activityStatus: WorkflowActivityStatus;
+      /** 审批表单是否自定义 */
+      formCustom: Api.Common.YesOrNoStatus;
+      /** 审批表单路径 */
+      formPath: string;
+      /** 扩展字段 */
+      ext: string;
+      /** 流程定义版本 */
+      version: string;
+      /** 创建者 */
+      createBy: string;
+      /** 创建者名称 */
+      createByName: string;
+      /** 创建时间 */
+      createTime: string;
+
+      /** 更新时间 */
+      updateTime: string;
+      /** 删除标志 */
+      delFlag: number;
+    }>;
+
+    /** 流程实例搜索参数 */
+    type ProcessInstanceSearchParams = CommonType.RecordNullable<
+      Pick<ProcessInstance, 'flowName' | 'flowCode' | 'businessId' | 'category' | 'nodeName'> &
+        Api.Common.CommonSearchParams & {
+          startUserId: CommonType.IdType;
+          createByIds: CommonType.IdType[];
+        }
+    >;
+    /** 流程实例列表 */
+    type ProcessInstanceList = Common.PaginatingQueryRecord<ProcessInstance>;
   }
 }

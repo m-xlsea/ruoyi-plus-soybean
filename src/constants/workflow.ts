@@ -8,3 +8,22 @@ export const workflowPublishStatusRecord: Record<Api.Workflow.WorkflowPublishSta
 };
 
 export const workflowPublishStatusOptions = transformRecordToOption(workflowPublishStatusRecord);
+
+/** node type */
+export const workflowNodeTypeRecord: Record<Api.Workflow.WorkflowNodeType, string> = {
+  0: '开始节点',
+  1: '中间节点',
+  2: '结束节点',
+  3: '互斥网关',
+  4: '并行网关'
+};
+
+export const workflowNodeTypeOptions = transformRecordToOption(workflowNodeTypeRecord);
+
+/** activity status */
+export const workflowActivityStatusRecord: Record<Api.Workflow.WorkflowActivityStatus, string> = {
+  0: '挂起',
+  1: '激活'
+};
+
+export const workflowActivityStatusOptions = transformRecordToOption(workflowActivityStatusRecord);

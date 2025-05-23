@@ -32,7 +32,8 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     getData,
     searchParams,
     updateSearchParams,
-    resetSearchParams
+    resetSearchParams,
+    updateApiFn
   } = useHookTable<A, GetTableData<A>, TableColumn<NaiveUI.TableDataWithIndex<GetTableData<A>>>>({
     apiFn,
     apiParams,
@@ -212,7 +213,8 @@ export function useTable<A extends NaiveUI.TableApiFn>(config: NaiveUI.NaiveTabl
     getDataByPage,
     searchParams,
     updateSearchParams,
-    resetSearchParams
+    resetSearchParams,
+    updateApiFn
   };
 }
 

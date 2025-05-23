@@ -201,7 +201,8 @@ const routeMap: RouteMap = {
   "user-center": "/user-center",
   "workflow": "/workflow",
   "workflow_category": "/workflow/category",
-  "workflow_process-definition": "/workflow/process-definition"
+  "workflow_process-definition": "/workflow/process-definition",
+  "workflow_process-instance": "/workflow/process-instance"
 };
 
 /**

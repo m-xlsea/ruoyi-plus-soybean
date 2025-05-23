@@ -64,7 +64,10 @@ export default function useHookTable<A extends ApiFn, T, C>(config: TableConfig<
   const { loading, startLoading, endLoading } = useLoading();
   const { bool: empty, setBool: setEmpty } = useBoolean();
 
-  const { apiFn, apiParams, transformer, immediate = true, getColumnChecks, getColumns } = config;
+  const { transformer, immediate = true, getColumnChecks, getColumns } = config;
+
+  let currentApiFn = config.apiFn;
+  const apiParams = config.apiParams;
 
   const searchParams: NonNullable<Parameters<A>[0]> = reactive(jsonClone({ ...apiParams }));
 
@@ -94,7 +97,7 @@ export default function useHookTable<A extends ApiFn, T, C>(config: TableConfig<
 
     const formattedParams = formatSearchParams(searchParams);
 
-    const response = await apiFn(formattedParams);
+    const response = await currentApiFn(formattedParams);
 
     const transformed = transformer(response as Awaited<ReturnType<A>>);
 
@@ -117,6 +120,10 @@ export default function useHookTable<A extends ApiFn, T, C>(config: TableConfig<
     });
 
     return formattedParams;
+  }
+
+  function updateApiFn(newApiFn: A) {
+    currentApiFn = newApiFn;
   }
 
   /**
@@ -148,6 +155,7 @@ export default function useHookTable<A extends ApiFn, T, C>(config: TableConfig<
     getData,
     searchParams,
     updateSearchParams,
-    resetSearchParams
+    resetSearchParams,
+    updateApiFn
   };
 }

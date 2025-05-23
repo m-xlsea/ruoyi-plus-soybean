@@ -45,4 +45,5 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   tool_gen: () => import("@/views/tool/gen/index.vue"),
   workflow_category: () => import("@/views/workflow/category/index.vue"),
   "workflow_process-definition": () => import("@/views/workflow/process-definition/index.vue"),
+  "workflow_process-instance": () => import("@/views/workflow/process-instance/index.vue"),
 };

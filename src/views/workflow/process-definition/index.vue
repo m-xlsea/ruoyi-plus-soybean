@@ -258,7 +258,7 @@ function handleResetTreeData() {
   getTreeData();
 }
 
-const expandedKeys = ref<CommonType.IdType[]>([100]);
+const expandedKeys = ref<CommonType.IdType[]>(['100']);
 
 const selectable = computed(() => {
   return !loading.value;
