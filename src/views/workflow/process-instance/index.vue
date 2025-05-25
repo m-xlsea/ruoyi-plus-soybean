@@ -220,8 +220,8 @@ const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getD
 watch(runningStatus, async () => {
   const newApiFn = runningStatus.value ? fetchGetRunningProcessInstanceList : fetchGetFinishedProcessInstanceList;
   updateApiFn(newApiFn);
-  reloadColumns();
   await getDataByPage();
+  reloadColumns();
 });
 
 const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
