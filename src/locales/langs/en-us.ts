@@ -584,7 +584,7 @@ const local: App.I18n.Schema = {
           'If you select yes, it will be cached by `keep-alive`, and the `name` and address of the matching component must be consistent',
         visibleTip: 'If you choose Hide, the route will not appear in the sidebar, but it can still be accessed.',
         statusTip: 'If you choose to disable, the route will not appear in the sidebar and cannot be accessed.',
-        permsTip: "Permission string defined in the controller, such as: @SaCheckPermission('system:user:list')",
+        permsTip: "Permission string defined in the controller, such as: {'@'}SaCheckPermission('system:user:list')",
         componentTip:
           'The component path to access, such as: `system/user/index`, which is in the `views` directory by default',
         pathTip:
