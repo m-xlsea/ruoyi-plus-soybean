@@ -1,11 +1,12 @@
 <script setup lang="tsx">
-import { computed, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { NButton, NDivider, NEmpty, NInput, NRadioButton, NRadioGroup, NSpin, NTag } from 'naive-ui';
 import { workflowActivityStatusRecord } from '@/constants/workflow';
 import { fetchGetCategoryTree } from '@/service/api/workflow/category';
 import {
   fetchBatchDeleteProcessInstance,
-  fetchGetFinishProcessInstanceList,
+  fetchFlowInvalidOperate,
+  fetchGetFinishedProcessInstanceList,
   fetchGetRunningProcessInstanceList
 } from '@/service/api/workflow/instance';
 import { useAppStore } from '@/store/modules/app';
@@ -41,6 +42,17 @@ const runningStatusOptions = ref<RunningStatusOption[]>([
   }
 ]);
 
+type CancelModel = Api.Workflow.FlowInvalidOperateParams;
+
+const cancelModel: CancelModel = reactive(createDefaultModel());
+
+function createDefaultModel(): CancelModel {
+  return {
+    id: null,
+    comment: ''
+  };
+}
+
 // 基础列
 const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
   {
@@ -50,7 +62,7 @@ const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
   },
   {
     key: 'flowName',
-    title: '流程定义名称',
+    title: '流程名称',
     align: 'center',
     width: 120
   },
@@ -62,7 +74,7 @@ const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
   },
   {
     key: 'flowCode',
-    title: '流程定义编码',
+    title: '流程编码',
     align: 'center',
     minWidth: 120
   },
@@ -70,7 +82,10 @@ const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
     key: 'categoryName',
     title: '流程分类',
     align: 'center',
-    minWidth: 120
+    minWidth: 120,
+    render(row) {
+      return <NTag type="default">{row.categoryName}</NTag>;
+    }
   },
   {
     key: 'createByName',
@@ -134,30 +149,34 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
     width: 150,
     render: row => {
       const showAll = runningStatus.value;
-
+      const id = row.id;
       return (
         <div class="flex-center gap-1px">
-          {showAll && (
-            <>
-              <ButtonIcon
-                text
-                type="error"
-                icon="material-symbols:cancel-outline-rounded"
-                tooltipContent="作废流程"
-                onClick={() => edit(row.id!)}
-              />
-              <NDivider vertical />
-              <ButtonIcon
-                text
-                type="error"
-                icon="material-symbols:delete-outline"
-                tooltipContent={$t('common.delete')}
-                popconfirmContent={$t('common.confirmDelete')}
-                onPositiveClick={() => handleDelete(row.id!)}
-              />
-              <NDivider vertical />
-            </>
-          )}
+          {showAll && [
+            <ButtonIcon
+              key="cancel"
+              text
+              type="error"
+              showPopconfirmIcon={false}
+              icon="material-symbols:cancel-outline-rounded"
+              tooltipContent="作废流程"
+              popconfirmContent={
+                <NInput v-model:value={cancelModel.comment} size="large" type="textarea" placeholder="请输入作废原因" />
+              }
+              onPositiveClick={() => handleCancel(id)}
+            />,
+            <NDivider key="div1" vertical />,
+            <ButtonIcon
+              key="delete"
+              text
+              type="error"
+              icon="material-symbols:delete-outline"
+              tooltipContent={$t('common.delete')}
+              popconfirmContent={$t('common.confirmDelete')}
+              onPositiveClick={() => handleDelete(id)}
+            />,
+            <NDivider key="div2" vertical />
+          ]}
           <ButtonIcon text type="info" icon="material-symbols:visibility-outline" tooltipContent="流程预览" />
           <NDivider vertical />
           <ButtonIcon text type="info" icon="material-symbols:variable-insert" tooltipContent="流程变量" />
@@ -196,10 +215,10 @@ const {
       : [...baseColumns.value, ...finishColumns.value, ...operateColumns.value]
 });
 
-const { handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
+const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
 // 监听运行状态变化
 watch(runningStatus, async () => {
-  const newApiFn = runningStatus.value ? fetchGetRunningProcessInstanceList : fetchGetFinishProcessInstanceList;
+  const newApiFn = runningStatus.value ? fetchGetRunningProcessInstanceList : fetchGetFinishedProcessInstanceList;
   updateApiFn(newApiFn);
   reloadColumns();
   await getDataByPage();
@@ -256,8 +275,12 @@ async function handleDelete(instanceId: CommonType.IdType) {
   onDeleted();
 }
 
-async function edit(instanceId: CommonType.IdType) {
-  handleEdit('id', instanceId);
+async function handleCancel(instanceId: CommonType.IdType) {
+  cancelModel.id = instanceId;
+  // request
+  const { error } = await fetchFlowInvalidOperate(cancelModel);
+  if (error) return;
+  getDataByPage();
 }
 </script>
 
@@ -329,7 +352,7 @@ async function edit(instanceId: CommonType.IdType) {
           :data="data"
           size="small"
           :flex-height="!appStore.isMobile"
-          :scroll-x="1078"
+          :scroll-x="1400"
           :loading="loading"
           remote
           :row-key="row => row.id"
@@ -340,68 +363,3 @@ async function edit(instanceId: CommonType.IdType) {
     </div>
   </TableSiderLayout>
 </template>
-
-<style scoped lang="scss">
-.category-tree {
-  .n-button {
-    --n-padding: 8px !important;
-  }
-
-  :deep(.n-tree__empty) {
-    height: 100%;
-    justify-content: center;
-  }
-
-  :deep(.n-spin-content) {
-    height: 100%;
-  }
-
-  :deep(.infinite-scroll) {
-    height: calc(100vh - 228px - var(--calc-footer-height, 0px)) !important;
-    max-height: calc(100vh - 228px - var(--calc-footer-height, 0px)) !important;
-  }
-
-  @media screen and (max-width: 1024px) {
-    :deep(.infinite-scroll) {
-      height: calc(100vh - 227px - var(--calc-footer-height, 0px)) !important;
-      max-height: calc(100vh - 227px - var(--calc-footer-height, 0px)) !important;
-    }
-  }
-
-  :deep(.n-tree-node) {
-    height: 25px;
-  }
-
-  :deep(.n-tree-node-switcher) {
-    height: 25px;
-  }
-
-  :deep(.n-tree-node-switcher__icon) {
-    font-size: 16px !important;
-    height: 16px !important;
-    width: 16px !important;
-  }
-}
-
-:deep(.n-data-table-wrapper),
-:deep(.n-data-table-base-table),
-:deep(.n-data-table-base-table-body) {
-  height: 100%;
-}
-
-@media screen and (max-width: 800px) {
-  :deep(.n-data-table-base-table-body) {
-    max-height: calc(100vh - 400px - var(--calc-footer-height, 0px));
-  }
-}
-
-@media screen and (max-width: 802px) {
-  :deep(.n-data-table-base-table-body) {
-    max-height: calc(100vh - 473px - var(--calc-footer-height, 0px));
-  }
-}
-
-:deep(.n-card-header__main) {
-  min-width: 69px !important;
-}
-</style>

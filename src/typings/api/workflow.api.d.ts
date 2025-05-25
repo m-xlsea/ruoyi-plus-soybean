@@ -156,5 +156,13 @@ declare namespace Api {
     >;
     /** 流程实例列表 */
     type ProcessInstanceList = Common.PaginatingQueryRecord<ProcessInstance>;
+
+    /** 流程作废操作参数 */
+    type FlowInvalidOperateParams = CommonType.RecordNullable<{
+      /** 主键 */
+      id: CommonType.IdType;
+      /** 作废原因 */
+      comment: string;
+    }>;
   }
 }
