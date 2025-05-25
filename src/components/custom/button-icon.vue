@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, useAttrs } from 'vue';
+import { type VNode, computed, useAttrs } from 'vue';
 import type { ButtonProps, PopoverPlacement } from 'naive-ui';
 import { twMerge } from 'tailwind-merge';
 
@@ -11,6 +11,8 @@ defineOptions({
 interface Props {
   /** Button class */
   class?: string;
+  /** Show popconfirm icon */
+  showPopconfirmIcon?: boolean;
   /** Iconify icon name */
   icon?: string;
   /** Local icon name */
@@ -19,8 +21,8 @@ interface Props {
   tooltipContent?: string;
   /** Tooltip placement */
   tooltipPlacement?: PopoverPlacement;
-  /** Popconfirm content */
-  popconfirmContent?: string;
+  /** Popconfirm content - can be string or VNode */
+  popconfirmContent?: string | VNode;
   zIndex?: number;
   quaternary?: boolean;
   [key: string]: any;
@@ -28,6 +30,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   class: '',
+  showPopconfirmIcon: true,
   icon: '',
   localIcon: '',
   tooltipContent: '',
@@ -59,8 +62,11 @@ const handlePositiveClick = () => {
 <template>
   <NTooltip :placement="tooltipPlacement" :z-index="zIndex" :disabled="!tooltipContent">
     <template #trigger>
-      <NPopconfirm :disabled="!popconfirmContent" @positive-click="handlePositiveClick">
-        {{ popconfirmContent }}
+      <NPopconfirm :show-icon="showPopconfirmIcon" :disabled="!popconfirmContent" @positive-click="handlePositiveClick">
+        <template #default>
+          <component :is="popconfirmContent" v-if="typeof popconfirmContent !== 'string'" />
+          <template v-else>{{ popconfirmContent }}</template>
+        </template>
         <template #trigger>
           <NButton
             :quaternary="quaternary"
