@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { computed, reactive, ref, watch } from 'vue';
 import { NButton, NDivider, NEmpty, NInput, NRadioButton, NRadioGroup, NSpin, NTag } from 'naive-ui';
+import { useBoolean, useLoading } from '@sa/hooks';
 import { workflowActivityStatusRecord } from '@/constants/workflow';
 import { fetchGetCategoryTree } from '@/service/api/workflow/category';
 import {
@@ -12,11 +13,11 @@ import {
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
-import useLoading from '@/hooks/common/loading';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import ProcessInstanceSearch from './modules/process-instance-search.vue';
+import ProcessInstanceVariableDrawer from './modules/process-instance-variable-drawer.vue';
 
 interface RunningStatusOption {
   label: string;
@@ -29,6 +30,8 @@ defineOptions({
 
 useDict('wf_business_status');
 const appStore = useAppStore();
+
+const { bool: variableVisible, setTrue: showVariableDrawer } = useBoolean(false);
 
 const runningStatus = ref<boolean>(true);
 const runningStatusOptions = ref<RunningStatusOption[]>([
@@ -146,7 +149,7 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
     title: $t('common.operate'),
     align: 'center',
     fixed: 'right',
-    width: 150,
+    width: 155,
     render: row => {
       const showAll = runningStatus.value;
       const id = row.id;
@@ -179,7 +182,14 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
           ]}
           <ButtonIcon text type="info" icon="material-symbols:visibility-outline" tooltipContent="流程预览" />
           <NDivider vertical />
-          <ButtonIcon text type="info" icon="material-symbols:variable-insert" tooltipContent="流程变量" />
+          <ButtonIcon
+            key=""
+            text
+            type="info"
+            icon="material-symbols:variable-insert"
+            tooltipContent="流程变量"
+            onClick={() => handleShowVariable(id)}
+          />
         </div>
       );
     }
@@ -215,7 +225,7 @@ const {
       : [...baseColumns.value, ...finishColumns.value, ...operateColumns.value]
 });
 
-const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
+const { checkedRowKeys, editingData, handleEdit, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
 // 监听运行状态变化
 watch(runningStatus, async () => {
   const newApiFn = runningStatus.value ? fetchGetRunningProcessInstanceList : fetchGetFinishedProcessInstanceList;
@@ -280,7 +290,13 @@ async function handleCancel(instanceId: CommonType.IdType) {
   // request
   const { error } = await fetchFlowInvalidOperate(cancelModel);
   if (error) return;
+  window.$message?.success('作废成功');
   getDataByPage();
+}
+
+async function handleShowVariable(id: CommonType.IdType) {
+  handleEdit('id', id);
+  showVariableDrawer();
 }
 </script>
 
@@ -352,13 +368,14 @@ async function handleCancel(instanceId: CommonType.IdType) {
           :data="data"
           size="small"
           :flex-height="!appStore.isMobile"
-          :scroll-x="1400"
+          :scroll-x="1405"
           :loading="loading"
           remote
           :row-key="row => row.id"
           :pagination="mobilePagination"
           class="sm:h-full"
         />
+        <ProcessInstanceVariableDrawer v-model:visible="variableVisible" :row-data="editingData" />
       </NCard>
     </div>
   </TableSiderLayout>

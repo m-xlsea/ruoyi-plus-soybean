@@ -138,7 +138,7 @@ async function edit(row: TableDataWithIndex<Api.Workflow.WorkflowCategory>) {
   handleEdit(row);
 }
 
-function addInRow(row: TableDataWithIndex<Api.Workflow.WorkflowCategory>) {
+async function addInRow(row: TableDataWithIndex<Api.Workflow.WorkflowCategory>) {
   editingData.value = jsonClone(row);
   handleAdd();
 }
