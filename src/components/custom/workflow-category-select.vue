@@ -1,8 +1,9 @@
 <script setup lang="tsx">
-import { useAttrs } from 'vue';
+import { computed, useAttrs } from 'vue';
 import type { TreeSelectProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchGetCategoryTree } from '@/service/api/workflow';
+import { isNull } from '@/utils/common';
 
 defineOptions({ name: 'WorkflowCategorySelect' });
 
@@ -12,11 +13,16 @@ interface Props {
 
 defineProps<Props>();
 
-const value = defineModel<CommonType.IdType | null>('value', { required: false });
+const rawValue = defineModel<CommonType.IdType | null>('value', { required: false });
 const options = defineModel<Api.Common.CommonTreeRecord>('options', { required: false, default: [] });
 
 const attrs: TreeSelectProps = useAttrs();
 const { loading, startLoading, endLoading } = useLoading();
+
+/** 转换为str，id可能是number类型或者String类型，导致回显失败 */
+const strValue = computed(() => {
+  return isNull(rawValue.value) ? null : rawValue.value?.toString();
+});
 
 async function getCategoryList() {
   startLoading();
@@ -31,7 +37,7 @@ getCategoryList();
 
 <template>
   <NTreeSelect
-    v-model:value="value"
+    v-model:value="strValue"
     filterable
     class="h-full"
     :loading="loading"

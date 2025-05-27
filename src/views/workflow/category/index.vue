@@ -143,6 +143,10 @@ async function addInRow(row: TableDataWithIndex<Api.Workflow.WorkflowCategory>) 
   handleAdd();
 }
 
+async function handleAddDataOperate() {
+  editingData.value = null;
+  handleAdd();
+}
 function handleExport() {
   download('/workflow/category/export', searchParams, `流程分类_#[[${new Date().getTime()}]]#.xlsx`);
 }
@@ -159,7 +163,7 @@ function handleExport() {
           :show-add="hasAuth('workflow:category:add')"
           :show-delete="false"
           :show-export="false"
-          @add="handleAdd"
+          @add="handleAddDataOperate"
           @export="handleExport"
           @refresh="getData"
         >
