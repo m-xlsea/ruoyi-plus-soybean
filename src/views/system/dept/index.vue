@@ -155,8 +155,8 @@ async function edit(row: TableDataWithIndex<Api.System.Dept>) {
 }
 
 async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
-  handleAdd();
   editingData.value = jsonClone(row);
+  handleAdd();
 }
 </script>
 
