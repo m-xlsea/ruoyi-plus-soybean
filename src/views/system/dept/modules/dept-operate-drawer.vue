@@ -55,7 +55,7 @@ const model: Model = reactive(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
-    parentId: props.rowData?.deptId,
+    parentId: '',
     deptName: '',
     deptCategory: '',
     orderNum: null,
@@ -80,6 +80,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
     Object.assign(model, createDefaultModel());
+    model.parentId = props.rowData?.deptId || 0;
   }
 
   if (props.operateType === 'edit' && props.rowData) {
@@ -185,7 +186,7 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem :label="$t('page.system.dept.parentId')" path="parentId">
+        <NFormItem v-if="model.parentId != 0" :label="$t('page.system.dept.parentId')" path="parentId">
           <NTreeSelect
             v-model:value="model.parentId"
             :loading="deptLoading"

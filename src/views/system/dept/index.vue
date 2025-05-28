@@ -158,6 +158,11 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
   editingData.value = jsonClone(row);
   handleAdd();
 }
+
+async function handleAddOperate() {
+  editingData.value = null;
+  handleAdd();
+}
 </script>
 
 <template>
@@ -170,7 +175,7 @@ async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
           :loading="loading"
           :show-add="hasAuth('system:dept:add')"
           :show-delete="false"
-          @add="handleAdd"
+          @add="handleAddOperate"
           @refresh="getData"
         >
           <template #prefix>
