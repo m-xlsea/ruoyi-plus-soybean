@@ -43,7 +43,7 @@ const model: Model = reactive(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
-    parentId: props.rowData?.categoryId,
+    parentId: '',
     categoryName: '',
     orderNum: 0
   };
@@ -60,7 +60,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
     Object.assign(model, createDefaultModel());
-    return;
+    model.parentId = props.rowData?.categoryId || 0;
   }
 
   if (props.operateType === 'edit' && props.rowData) {

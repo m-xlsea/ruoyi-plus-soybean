@@ -143,7 +143,7 @@ async function addInRow(row: TableDataWithIndex<Api.Workflow.WorkflowCategory>) 
   handleAdd();
 }
 
-async function handleAddDataOperate() {
+async function handleAddOperate() {
   editingData.value = null;
   handleAdd();
 }
@@ -163,7 +163,7 @@ function handleExport() {
           :show-add="hasAuth('workflow:category:add')"
           :show-delete="false"
           :show-export="false"
-          @add="handleAddDataOperate"
+          @add="handleAddOperate"
           @export="handleExport"
           @refresh="getData"
         >
