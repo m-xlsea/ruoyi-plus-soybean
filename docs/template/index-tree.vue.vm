@@ -51,6 +51,11 @@ const {
   parentIdField: '${treeParentCode}',
 #end
   columns: () => [
+    {
+      type: 'selection',
+      align: 'center',
+      width: 48
+    },
 #foreach ($column in $columns)
   #if($column.list)
     {
