@@ -10,6 +10,40 @@ declare namespace Api {
    * backend api module: "Workflow"
    */
   namespace Workflow {
+    /** 请假状态 */
+    type LeaveType = '1' | '2' | '3' | '4';
+    /** leave */
+    type Leave = Common.CommonRecord<{
+      /** id */
+      id: CommonType.IdType;
+      /** 租户编号 */
+      tenantId: CommonType.IdType;
+      /** 请假类型 */
+      leaveType: LeaveType;
+      /** 开始时间 */
+      startDate: string;
+      /** 结束时间 */
+      endDate: string;
+      /** 请假天数 */
+      leaveDays: number;
+      /** 请假原因 */
+      remark: string;
+      /** 状态 */
+      status: string;
+    }>;
+
+    /** leave search params */
+    type LeaveSearchParams = CommonType.RecordNullable<
+      Pick<Api.Workflow.Leave, 'leaveDays'> & Api.Common.CommonSearchParams
+    >;
+
+    /** leave operate params */
+    type LeaveOperateParams = CommonType.RecordNullable<
+      Pick<Api.Workflow.Leave, 'id' | 'leaveType' | 'startDate' | 'endDate' | 'leaveDays' | 'remark'>
+    >;
+
+    /** leave list */
+    type LeaveList = Api.Common.PaginatingQueryRecord<Leave>;
     /** 工作流分类 */
     type WorkflowCategory = Common.CommonRecord<{
       /** 主键 */

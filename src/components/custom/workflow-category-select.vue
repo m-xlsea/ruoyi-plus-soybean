@@ -20,8 +20,13 @@ const attrs: TreeSelectProps = useAttrs();
 const { loading, startLoading, endLoading } = useLoading();
 
 /** 转换为str，id可能是number类型或者String类型，导致回显失败 */
-const strValue = computed(() => {
-  return isNull(rawValue.value) ? null : rawValue.value?.toString();
+const strValue = computed({
+  get() {
+    return isNull(rawValue.value) ? null : rawValue.value?.toString();
+  },
+  set(val) {
+    rawValue.value = val;
+  }
 });
 
 async function getCategoryList() {

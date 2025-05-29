@@ -1,5 +1,15 @@
 import { transformRecordToOption } from '@/utils/common';
 
+/** leave type */
+export const leaveTypeRecord: Record<Api.Workflow.LeaveType, string> = {
+  '1': '事假',
+  '2': '调休',
+  '3': '病假',
+  '4': '婚假'
+};
+
+export const leaveTypeOptions = transformRecordToOption(leaveTypeRecord);
+
 /** workflow publish status */
 export const workflowPublishStatusRecord: Record<Api.Workflow.WorkflowPublishStatus, string> = {
   '0': '未发布',

@@ -351,6 +351,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'workflow_leave',
+        path: '/workflow/leave',
+        component: 'view.workflow_leave',
+        meta: {
+          title: 'workflow_leave',
+          i18nKey: 'route.workflow_leave'
+        }
+      },
+      {
         name: 'workflow_process-definition',
         path: '/workflow/process-definition',
         component: 'view.workflow_process-definition',
