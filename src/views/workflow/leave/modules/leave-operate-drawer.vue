@@ -136,10 +136,16 @@ watch(visible, () => {
           <NSelect v-model:value="model.leaveType" placeholder="请输入请假类型" :options="leaveTypeOptions" />
         </NFormItem>
         <NFormItem label="请假时间" path="startDate">
-          <NDatePicker v-model:formatted-value="dateRange" type="daterange" value-format="yyyy-MM-dd" clearable />
+          <NDatePicker
+            v-model:formatted-value="dateRange"
+            class="w-full"
+            type="daterange"
+            value-format="yyyy-MM-dd"
+            clearable
+          />
         </NFormItem>
         <NFormItem label="请假天数" path="leaveDays">
-          <NInputNumber v-model:value="model.leaveDays" disabled placeholder="请输入请假天数" />
+          <NInputNumber v-model:value="model.leaveDays" class="w-full" disabled placeholder="请输入请假天数" />
         </NFormItem>
         <NFormItem label="请假原因" path="remark">
           <NInput v-model:value="model.remark" placeholder="请输入请假原因" />
