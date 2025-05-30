@@ -135,7 +135,7 @@ const {
               text
               type="primary"
               icon="material-symbols:database"
-              tooltipContent="数据范权限"
+              tooltipContent="数据范围权限"
               onClick={() => handleDataScope(row)}
             />
           );
