@@ -149,7 +149,6 @@ declare module 'vue' {
     UserSelect: typeof import('./../components/custom/user-select.vue')['default']
     WaveBg: typeof import('./../components/custom/wave-bg.vue')['default']
     WorkflowCategorySelect: typeof import('./../components/custom/workflow-category-select.vue')['default']
-    WorkflowLeaveForm: typeof import('./../components/custom/workflow-leave-form.vue')['default']
     WorkflowTaskApplyModal: typeof import('./../components/custom/workflow-task-apply-modal.vue')['default']
   }
 }
