@@ -173,6 +173,7 @@ watch(visible, () => {
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
+      <div></div>
       <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem label="流程类型" path="flowCode">
           <NSelect v-model:value="model.flowCode" placeholder="请输入流程类型" :options="flowCodeTypeOptions" />
@@ -203,13 +204,13 @@ watch(visible, () => {
           <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
         </NSpace>
       </template>
-      <WorkflowTaskApplyModal
-        v-model:visible="taskApplyVisible"
-        :task-id="startWorkflowResult?.taskId || ''"
-        :task-variables="taskVariables"
-        @finished="handleTaskFinished"
-      />
     </NDrawerContent>
+    <WorkflowTaskApplyModal
+      v-model:visible="taskApplyVisible"
+      :task-id="startWorkflowResult?.taskId || ''"
+      :task-variables="taskVariables"
+      @finished="handleTaskFinished"
+    />
   </NDrawer>
 </template>
 

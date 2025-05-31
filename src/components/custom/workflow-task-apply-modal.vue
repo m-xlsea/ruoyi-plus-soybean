@@ -82,12 +82,18 @@ watch(visible, () => {
 </script>
 
 <template>
-  <NModal v-model:show="visible" :title="title" :native-scrollbar="false" closable>
+  <NModal v-model:show="visible" preset="card" class="w-800px" :title="title" :native-scrollbar="false" closable>
     <NForm :model="model">
       <NFormItem label="通知方式" path="messageType">
         <NCheckboxGroup v-model:value="model.messageType">
           <NSpace item-style="display: flex;">
-            <NCheckbox v-for="item in messageTypeOptions" :key="item.value" :value="item.value" :label="item.label" />
+            <NCheckbox
+              v-for="item in messageTypeOptions"
+              :key="item.value"
+              :disabled="item.value === '1'"
+              :value="item.value"
+              :label="item.label"
+            />
           </NSpace>
         </NCheckboxGroup>
       </NFormItem>
@@ -95,9 +101,9 @@ watch(visible, () => {
         <FileUpload ref="fileUploadRef" :file-size="20" :max="20" upload-type="file" :accept="accept" />
       </NFormItem>
     </NForm>
-    <template #footer>
+    <div class="flex justify-end gap-12px">
       <NButton @click="visible = false">取消</NButton>
       <NButton type="primary" @click="handleSubmit">提交</NButton>
-    </template>
+    </div>
   </NModal>
 </template>
