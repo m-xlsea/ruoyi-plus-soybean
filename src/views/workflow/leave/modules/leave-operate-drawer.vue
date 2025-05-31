@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import dayjs from 'dayjs';
-import { leaveTypeOptions } from '@/constants/workflow';
-import { fetchCreateLeave, fetchUpdateLeave } from '@/service/api/workflow';
+import { useBoolean } from '@sa/hooks';
+import { flowCodeTypeOptions, leaveTypeOptions } from '@/constants/workflow';
+import { fetchCreateLeave, fetchStartWorkflow, fetchUpdateLeave } from '@/service/api/workflow';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -28,7 +29,7 @@ const emit = defineEmits<Emits>();
 const visible = defineModel<boolean>('visible', {
   default: false
 });
-
+const { bool: taskApplyVisible, setTrue: setTaskApplyVisible } = useBoolean();
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
 
@@ -40,12 +41,21 @@ const title = computed(() => {
   return titles[props.operateType];
 });
 
-type Model = Api.Workflow.LeaveOperateParams;
+const respLeave = ref<Api.Workflow.Leave>();
+const startWorkflowResult = ref<Api.Workflow.StartWorkflowResult>();
+
+type Model = Api.Workflow.LeaveOperateParams & {
+  flowCode: Api.Workflow.FlowCodeType;
+};
+type StartWorkflowModel = Api.Workflow.StartWorkflowOperateParams;
 
 const model: Model = reactive(createDefaultModel());
 
+const startWorkflowModel: StartWorkflowModel = reactive(createDefaultStartWorkflowModel());
+
 function createDefaultModel(): Model {
   return {
+    flowCode: 'leave1',
     leaveType: null,
     startDate: null,
     endDate: null,
@@ -53,6 +63,15 @@ function createDefaultModel(): Model {
     remark: ''
   };
 }
+
+function createDefaultStartWorkflowModel(): StartWorkflowModel {
+  return {
+    flowCode: null,
+    businessId: null,
+    variables: {}
+  };
+}
+
 const dateRange = computed<[string, string] | null>({
   get: () => {
     if (!model.startDate || !model.endDate) return null;
@@ -74,10 +93,11 @@ const dateRange = computed<[string, string] | null>({
   }
 });
 
-type RuleKey = Extract<keyof Model, 'id' | 'leaveType' | 'leaveDays' | 'startDate' | 'endDate'>;
+type RuleKey = Extract<keyof Model, 'id' | 'leaveType' | 'leaveDays' | 'startDate' | 'endDate'> | 'flowCode';
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   id: createRequiredRule('id不能为空'),
+  flowCode: createRequiredRule('流程类型不能为空'),
   leaveType: createRequiredRule('请假类型不能为空'),
   startDate: createRequiredRule('请假时间不能为空'),
   endDate: createRequiredRule('结束时间不能为空'),
@@ -99,23 +119,45 @@ function closeDrawer() {
   visible.value = false;
 }
 
-async function handleSubmit() {
+async function handleSaveDraft() {
   await validate();
 
   // request
   if (props.operateType === 'add') {
     const { leaveType, startDate, endDate, leaveDays, remark } = model;
-    const { error } = await fetchCreateLeave({ leaveType, startDate, endDate, leaveDays, remark });
+    const { error, data } = await fetchCreateLeave({ leaveType, startDate, endDate, leaveDays, remark });
     if (error) return;
+    respLeave.value = data;
   }
 
   if (props.operateType === 'edit') {
     const { id, leaveType, startDate, endDate, leaveDays, remark } = model;
-    const { error } = await fetchUpdateLeave({ id, leaveType, startDate, endDate, leaveDays, remark });
+    const { error, data } = await fetchUpdateLeave({ id, leaveType, startDate, endDate, leaveDays, remark });
     if (error) return;
+    respLeave.value = data;
   }
+}
 
+const taskVariables = ref<{ [key: string]: any }>({});
+
+async function handleSubmit() {
+  await handleSaveDraft();
+  // 提交流程
+  startWorkflowModel.businessId = respLeave.value?.id;
+  startWorkflowModel.flowCode = model.flowCode;
+  taskVariables.value = {
+    leaveDays: respLeave.value?.leaveDays,
+    userList: ['1', '3', '4']
+  };
+  startWorkflowModel.variables = taskVariables.value;
+  const { error, data } = await fetchStartWorkflow(startWorkflowModel);
+  if (error) return;
+  startWorkflowResult.value = data;
   window.$message?.success($t('common.updateSuccess'));
+  setTaskApplyVisible();
+}
+
+function handleTaskFinished() {
   closeDrawer();
   emit('submitted');
 }
@@ -132,6 +174,9 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
+        <NFormItem label="流程类型" path="flowCode">
+          <NSelect v-model:value="model.flowCode" placeholder="请输入流程类型" :options="flowCodeTypeOptions" />
+        </NFormItem>
         <NFormItem label="请假类型" path="leaveType">
           <NSelect v-model:value="model.leaveType" placeholder="请输入请假类型" :options="leaveTypeOptions" />
         </NFormItem>
@@ -154,9 +199,16 @@ watch(visible, () => {
       <template #footer>
         <NSpace :size="16">
           <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>
+          <NButton @click="handleSaveDraft">暂存</NButton>
           <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
         </NSpace>
       </template>
+      <WorkflowTaskApplyModal
+        v-model:visible="taskApplyVisible"
+        :task-id="startWorkflowResult?.taskId || ''"
+        :task-variables="taskVariables"
+        @finished="handleTaskFinished"
+      />
     </NDrawerContent>
   </NDrawer>
 </template>

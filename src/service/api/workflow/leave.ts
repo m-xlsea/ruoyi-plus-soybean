@@ -18,7 +18,7 @@ export function fetchGetLeaveDetail(id: CommonType.IdType) {
 
 /** 新增请假申请 */
 export function fetchCreateLeave(data: Api.Workflow.LeaveOperateParams) {
-  return request<boolean>({
+  return request<Api.Workflow.Leave>({
     url: '/workflow/leave',
     method: 'post',
     data
@@ -27,7 +27,7 @@ export function fetchCreateLeave(data: Api.Workflow.LeaveOperateParams) {
 
 /** 修改请假申请 */
 export function fetchUpdateLeave(data: Api.Workflow.LeaveOperateParams) {
-  return request<boolean>({
+  return request<Api.Workflow.Leave>({
     url: '/workflow/leave',
     method: 'put',
     data

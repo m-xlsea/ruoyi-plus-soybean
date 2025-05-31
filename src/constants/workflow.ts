@@ -1,5 +1,24 @@
 import { transformRecordToOption } from '@/utils/common';
 
+export const messageTypeRecord: Record<Api.Workflow.MessageType, string> = {
+  '1': '站内信',
+  '2': '邮件',
+  '3': '短信'
+};
+
+export const messageTypeOptions = transformRecordToOption(messageTypeRecord);
+
+export const flowCodeTypeRecord: Record<Api.Workflow.FlowCodeType, string> = {
+  leave1: '请假申请-普通',
+  leave2: '请假申请-排他网关',
+  leave3: '请假申请-并行网关',
+  leave4: '请假申请-会签',
+  leave5: '请假申请-并行会签网关',
+  leave6: '请假申请-排他并行会签'
+};
+
+export const flowCodeTypeOptions = transformRecordToOption(flowCodeTypeRecord);
+
 /** leave type */
 export const leaveTypeRecord: Record<Api.Workflow.LeaveType, string> = {
   '1': '事假',

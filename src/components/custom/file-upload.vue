@@ -37,11 +37,11 @@ const value = defineModel<CommonType.IdType[]>('value', { required: false, defau
 
 let fileNum = 0;
 const fileList = ref<UploadFileInfo[]>([]);
-const needRelaodData = defineModel<boolean>('needRelaodData', {
-  default: false
-});
+
+const needRelaodData = ref<boolean>(false);
 defineExpose({
-  refreshList: needRelaodData
+  refreshList: needRelaodData,
+  fileList
 });
 watch(
   () => fileList.value,

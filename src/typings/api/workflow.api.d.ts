@@ -10,6 +10,8 @@ declare namespace Api {
    * backend api module: "Workflow"
    */
   namespace Workflow {
+    /** 流程类型 */
+    type FlowCodeType = 'leave1' | 'leave2' | 'leave3' | 'leave4' | 'leave5' | 'leave6';
     /** 请假状态 */
     type LeaveType = '1' | '2' | '3' | '4';
     /** leave */
@@ -197,6 +199,128 @@ declare namespace Api {
       id: CommonType.IdType;
       /** 作废原因 */
       comment: string;
+    }>;
+
+    /** 启动流程操作参数 */
+    type StartWorkflowOperateParams = CommonType.RecordNullable<{
+      /** 流程定义ID */
+      flowCode: string;
+      /** 业务ID */
+      businessId: CommonType.IdType;
+      /** 变量 */
+      variables: { [key: string]: any };
+    }>;
+
+    /** 启动流程结果 */
+    type StartWorkflowResult = CommonType.RecordNullable<{
+      /** 流程实例ID */
+      processInstanceId: CommonType.IdType;
+      /** 任务ID */
+      taskId: CommonType.IdType;
+    }>;
+
+    /** 抄送人 */
+    type FlowCopy = CommonType.RecordNullable<{
+      /** 用户ID */
+      userId: CommonType.IdType;
+      /** 用户名称 */
+      userName: string;
+    }>;
+    /** 按钮权限 */
+    type ButtonPermission = CommonType.RecordNullable<{
+      /** 唯一编码 */
+      code: CommonType.IdType;
+      /** 选项值 */
+      value: string;
+      /** 是否显示 */
+      show: boolean;
+    }>;
+    /** 任务详情 */
+    type Task = Common.CommonRecord<{
+      /** 任务ID */
+      id: CommonType.IdType;
+      /** 租户编号 */
+      tenantId: CommonType.IdType;
+      /** 删除标志 */
+      delFlag: number;
+      /** 流程定义ID */
+      definitionId: CommonType.IdType;
+      /** 流程实例ID */
+      instanceId: CommonType.IdType;
+      /** 业务ID */
+      businessId: CommonType.IdType;
+      /** 节点编码 */
+      nodeCode: string;
+      /** 节点类型 */
+      nodeType: WorkflowNodeType;
+      /** 权限列表 */
+      permissionList: string[];
+      /** 用户列表 */
+      userList: any[];
+      /** 审批表单是否自定义 */
+      formCustom: Api.Common.YesOrNoStatus;
+      /** 审批表单路径 */
+      formPath: string;
+      /** 流程状态 */
+      flowStatus: string;
+      /** 流程状态名称 */
+      flowStatusName: string;
+      /** 分类ID */
+      category: CommonType.IdType;
+      /** 分类名称 */
+      categoryName: string;
+      /** 类型 */
+      type: string;
+      /** 审批人 */
+      assigneeIds: string;
+      /** 审批人名称 */
+      assigneeNames: string;
+      /** 审批人 */
+      processedBy: string;
+      /** 审批人名称 */
+      processedByName: string;
+      /** 流程签署比例值 大于0为票签，会签 */
+      nodeRatio: string;
+      /** 创建人名称 */
+      createByName: string;
+      /** 是否为申请人节点 */
+      applyNode: string;
+      /** 按钮列表 */
+      buttonList: ButtonPermission[];
+      /** 节点名称 */
+      nodeName: string;
+      /** 流程定义名称 */
+      flowName: string;
+      /** 流程定义编码 */
+      flowCode: string;
+      /** 流程版本号 */
+      version: string;
+    }>;
+    /** 消息类型 */
+    type MessageType = '1' | '2' | '3';
+
+    /** 完成任务操作参数 */
+    type CompleteTaskOperateParams = CommonType.RecordNullable<{
+      /** 任务ID */
+      taskId: CommonType.IdType;
+      /** 文件ID */
+      fileId: CommonType.IdType;
+      /** 抄送人 */
+      flowCopyList: FlowCopy[];
+      /** 消息类型 */
+      messageType: string[];
+      /** 消息 */
+      message: string;
+      /** 通知 */
+      notice: string;
+      /** 任务变量 */
+      taskVariables: { [key: string]: any };
+      /** 变量 */
+      variables: { [key: string]: any };
+      /** 审批人 */
+      assigneeMap: { [key: string]: string };
+      /** 扩展字段 */
+      ext: string;
     }>;
   }
 }

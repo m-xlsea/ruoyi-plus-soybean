@@ -55,6 +55,7 @@ declare module 'vue' {
     IconUilSearch: typeof import('~icons/uil/search')['default']
     JsonPreview: typeof import('./../components/custom/json-preview.vue')['default']
     LangSwitch: typeof import('./../components/common/lang-switch.vue')['default']
+    LeaveForm: typeof import('../components/custom/workflow-leave-form.vue')['default']
     LookForward: typeof import('./../components/custom/look-forward.vue')['default']
     MenuToggler: typeof import('./../components/common/menu-toggler.vue')['default']
     MenuTree: typeof import('./../components/custom/menu-tree.vue')['default']
@@ -68,6 +69,7 @@ declare module 'vue' {
     NButton: typeof import('naive-ui')['NButton']
     NCard: typeof import('naive-ui')['NCard']
     NCheckbox: typeof import('naive-ui')['NCheckbox']
+    NCheckboxGroup: typeof import('naive-ui')['NCheckboxGroup']
     NCode: typeof import('naive-ui')['NCode']
     NCollapse: typeof import('naive-ui')['NCollapse']
     NCollapseItem: typeof import('naive-ui')['NCollapseItem']
@@ -147,5 +149,7 @@ declare module 'vue' {
     UserSelect: typeof import('./../components/custom/user-select.vue')['default']
     WaveBg: typeof import('./../components/custom/wave-bg.vue')['default']
     WorkflowCategorySelect: typeof import('./../components/custom/workflow-category-select.vue')['default']
+    WorkflowLeaveForm: typeof import('./../components/custom/workflow-leave-form.vue')['default']
+    WorkflowTaskApplyModal: typeof import('./../components/custom/workflow-task-apply-modal.vue')['default']
   }
 }
