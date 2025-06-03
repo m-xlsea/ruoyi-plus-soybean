@@ -119,9 +119,8 @@ function closeDrawer() {
   visible.value = false;
 }
 
-async function handleSaveDraft() {
+async function handleOperate() {
   await validate();
-
   // request
   if (props.operateType === 'add') {
     const { leaveType, startDate, endDate, leaveDays, remark } = model;
@@ -138,10 +137,16 @@ async function handleSaveDraft() {
   }
 }
 
+async function handleSaveDraft() {
+  await handleOperate();
+  window.$message?.success($t('common.updateSuccess'));
+  closeDrawer();
+}
+
 const taskVariables = ref<{ [key: string]: any }>({});
 
 async function handleSubmit() {
-  await handleSaveDraft();
+  await handleOperate();
   // 提交流程
   startWorkflowModel.businessId = respLeave.value?.id;
   startWorkflowModel.flowCode = model.flowCode;
@@ -200,7 +205,7 @@ watch(visible, () => {
       <template #footer>
         <NSpace :size="16">
           <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>
-          <NButton @click="handleSaveDraft">暂存</NButton>
+          <NButton type="warning" @click="handleSaveDraft">暂存</NButton>
           <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
         </NSpace>
       </template>
