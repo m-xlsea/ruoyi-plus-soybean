@@ -39,3 +39,5 @@ jobs:
         port: ${{ secrets.SSH_PORT }}
         source: "dist/*"
         target: ${{ secrets.TARGET_PATH }}
+        rm: true
+        overwrite: true
