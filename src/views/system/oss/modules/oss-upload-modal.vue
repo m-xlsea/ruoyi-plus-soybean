@@ -34,7 +34,7 @@ function closeDrawer() {
 
 function handleClose() {
   closeDrawer();
-  if (fileUploadRef.value?.refreshList) {
+  if (fileUploadRef.value?.needRelaodData) {
     emit('close');
   }
 }

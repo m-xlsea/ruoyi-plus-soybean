@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { getBrowserIcon, getOsIcon } from '@/utils/format';
+import { getBrowserIcon, getOsIcon } from '@/utils/icon-tag-format';
 import { $t } from '@/locales';
 
 defineOptions({

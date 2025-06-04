@@ -33,21 +33,18 @@ const props = withDefaults(defineProps<Props>(), {
 
 const attrs: UploadProps = useAttrs();
 
-const value = defineModel<CommonType.IdType[]>('value', { required: false, default: [] });
-
 let fileNum = 0;
 const fileList = ref<UploadFileInfo[]>([]);
-const needRelaodData = defineModel<boolean>('needRelaodData', {
-  default: false
-});
+
+const needRelaodData = ref(false);
+
 defineExpose({
-  refreshList: needRelaodData
+  needRelaodData
 });
 watch(
   () => fileList.value,
   newValue => {
     needRelaodData.value = newValue.length > 0;
-    value.value = newValue.map(item => item.id);
   }
 );
 

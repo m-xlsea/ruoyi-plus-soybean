@@ -11,7 +11,7 @@ import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
-import { getBrowserIcon, getOsIcon } from '@/utils/format';
+import { getBrowserIcon, getOsIcon } from '@/utils/icon-tag-format';
 import DictTag from '@/components/custom/dict-tag.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { $t } from '@/locales';

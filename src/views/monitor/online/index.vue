@@ -5,7 +5,7 @@ import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useTable } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
-import { getBrowserIcon, getOsIcon } from '@/utils/format';
+import { getBrowserIcon, getOsIcon } from '@/utils/icon-tag-format';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import DictTag from '@/components/custom/dict-tag.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
