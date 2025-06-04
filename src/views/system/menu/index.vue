@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import type { DataTableColumns, TreeInst, TreeOption } from 'naive-ui';
 import { NButton, NDivider, NIcon, NInput, NPopconfirm } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
@@ -35,6 +35,18 @@ const currentMenu = ref<Api.System.Menu>();
 const treeData = ref<Api.System.Menu[]>([]);
 const checkedKeys = ref<CommonType.IdType[]>([0]);
 const expandedKeys = ref<CommonType.IdType[]>([0]);
+
+// 是否为目录类型
+const isCatalog = computed(() => currentMenu.value?.menuType === 'M');
+
+// 是否为菜单类型
+const isMenu = computed(() => currentMenu.value?.menuType === 'C');
+
+// 外链类型
+const isExternalType = computed(() => currentMenu.value?.isFrame === '0');
+
+// iframe类型
+const isIframeType = computed(() => currentMenu.value?.isFrame === '2');
 
 const menuTreeRef = ref<TreeInst>();
 const btnData = ref<Api.System.MenuList>([]);
@@ -347,7 +359,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
           <template #header-extra>
             <NSpace>
               <NButton
-                v-if="currentMenu.menuType === 'M' && hasAuth('system:menu:add')"
+                v-if="isCatalog && hasAuth('system:menu:add')"
                 size="small"
                 ghost
                 type="primary"
@@ -391,30 +403,30 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
             label-class="w-20% min-w-88px"
             content-class="w-100px"
           >
-            <NDescriptionsItem :label="$t('page.system.menu.menuName')">
+            <NDescriptionsItem :label="$t('page.system.menu.menuType')">
               <NTag class="m-1" size="small" type="primary">{{ menuTypeRecord[currentMenu.menuType!] }}</NTag>
             </NDescriptionsItem>
             <NDescriptionsItem :label="$t('page.system.menu.status')">
               <DictTag size="small" :value="currentMenu.status" dict-code="sys_normal_disable" />
             </NDescriptionsItem>
-            <NDescriptionsItem :label="$t('page.system.menu.addChildMenu')">
+            <NDescriptionsItem :label="$t('page.system.menu.menuName')">
               {{ currentMenu.menuName }}
             </NDescriptionsItem>
-            <NDescriptionsItem v-if="currentMenu.menuType === 'C'" :label="$t('page.system.menu.component')">
+            <NDescriptionsItem v-if="isMenu" :label="$t('page.system.menu.component')">
               {{ currentMenu.component }}
             </NDescriptionsItem>
             <NDescriptionsItem
-              :label="currentMenu.isFrame !== '0' ? $t('page.system.menu.path') : $t('page.system.menu.externalPath')"
+              :label="!isExternalType ? $t('page.system.menu.path') : $t('page.system.menu.externalPath')"
             >
               {{ currentMenu.path }}
             </NDescriptionsItem>
             <NDescriptionsItem
-              v-if="currentMenu.menuType === 'C'"
-              :label="currentMenu.isFrame !== '2' ? $t('page.system.menu.query') : $t('page.system.menu.iframeQuery')"
+              v-if="isMenu && !isExternalType"
+              :label="!isIframeType ? $t('page.system.menu.query') : $t('page.system.menu.iframeQuery')"
             >
               {{ currentMenu.queryParam }}
             </NDescriptionsItem>
-            <NDescriptionsItem v-if="currentMenu.menuType !== 'M'" :label="$t('page.system.menu.perms')">
+            <NDescriptionsItem v-if="!isCatalog" :label="$t('page.system.menu.perms')">
               {{ currentMenu.perms }}
             </NDescriptionsItem>
             <NDescriptionsItem :label="$t('page.system.menu.isFrame')">
@@ -425,7 +437,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
             <NDescriptionsItem :label="$t('page.system.menu.visible')">
               <DictTag size="small" :value="currentMenu.visible" dict-code="sys_show_hide" />
             </NDescriptionsItem>
-            <NDescriptionsItem v-if="currentMenu.menuType === 'C'" :label="$t('page.system.menu.isCache')">
+            <NDescriptionsItem v-if="isMenu" :label="$t('page.system.menu.isCache')">
               <NTag v-if="currentMenu.isCache" class="m-1" size="small" :type="tagMap[currentMenu.isCache]">
                 {{ currentMenu.isCache === '0' ? $t('page.system.menu.cache') : $t('page.system.menu.noCache') }}
               </NTag>
