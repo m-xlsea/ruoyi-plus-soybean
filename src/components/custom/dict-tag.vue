@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useAttrs } from 'vue';
+import type { TagProps } from 'naive-ui';
 import { useDict } from '@/hooks/business/dict';
 import { isNotNull } from '@/utils/common';
 
@@ -19,6 +20,8 @@ const props = withDefaults(defineProps<Props>(), {
   dictCode: '',
   value: () => []
 });
+
+const attrs = useAttrs() as TagProps;
 
 const dictTagData = computed<Api.System.DictData[]>(() => {
   if (props.dictData) {
@@ -41,6 +44,7 @@ const dictTagData = computed<Api.System.DictData[]>(() => {
       :key="item.dictValue"
       class="m-1"
       :class="[item.cssClass]"
+      v-bind="attrs"
       :type="item.listClass || 'default'"
     >
       {{ item.dictLabel }}
