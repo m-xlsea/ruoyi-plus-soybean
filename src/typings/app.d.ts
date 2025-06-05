@@ -710,6 +710,7 @@ declare namespace App {
             buttonPermissionList: string;
             emptyMenu: string;
             menuDetail: string;
+            cascadeDeleteContent: string;
             iconifyTip: string;
             isFrameTip: string;
             isCacheTip: string;

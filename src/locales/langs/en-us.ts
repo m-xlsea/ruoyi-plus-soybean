@@ -591,6 +591,7 @@ const local: App.I18n.Schema = {
         buttonPermissionList: 'Button Permission List',
         emptyMenu: 'Empty Menu',
         menuDetail: 'Menu Detail',
+        cascadeDeleteContent: 'Cascade delete menu will delete the selected menu and all its sub-menus, are you sure?',
         iconifyTip: 'iconify address：`https://icones.js.org`',
         isFrameTip: 'If you choose External Link, the routing address needs to start with `http(s)://`',
         isCacheTip:

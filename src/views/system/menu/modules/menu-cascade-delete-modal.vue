@@ -56,11 +56,22 @@ function closeDrawer() {
 
 async function handleSubmit() {
   await validate();
-  const { error } = await fetchCascadeDeleteMenu(model.menuIds);
-  if (error) return;
-  window.$message?.success($t('common.deleteSuccess'));
-  closeDrawer();
-  emit('submitted');
+  window.$dialog?.warning({
+    title: $t('page.system.menu.cascadeDelete'),
+    content: $t('page.system.menu.cascadeDeleteContent'),
+    positiveText: $t('common.delete'),
+    positiveButtonProps: {
+      type: 'error'
+    },
+    negativeText: $t('common.cancel'),
+    onPositiveClick: async () => {
+      const { error } = await fetchCascadeDeleteMenu(model.menuIds);
+      if (error) return;
+      window.$message?.success($t('common.deleteSuccess'));
+      closeDrawer();
+      emit('submitted');
+    }
+  });
 }
 
 watch(visible, () => {

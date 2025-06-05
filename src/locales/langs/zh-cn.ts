@@ -591,6 +591,7 @@ const local: App.I18n.Schema = {
         buttonPermissionList: '按钮权限列表',
         emptyMenu: '暂无菜单',
         menuDetail: '菜单详情',
+        cascadeDeleteContent: '级联删除菜单将删除所选中的菜单，是否继续？',
         iconifyTip: 'iconify 地址：https://icones.js.org',
         isFrameTip: '选择是外链则路由地址需要以`http(s)://`开头',
         isCacheTip: '选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致',
