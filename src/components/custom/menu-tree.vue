@@ -9,11 +9,13 @@ defineOptions({ name: 'MenuTree' });
 
 interface Props {
   immediate?: boolean;
+  showHeader?: boolean;
   [key: string]: any;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  immediate: true
+  immediate: true,
+  showHeader: true
 });
 
 const { bool: expandAll } = useBoolean();
@@ -106,7 +108,7 @@ defineExpose({
 
 <template>
   <div class="w-full flex-col gap-12px">
-    <div class="w-full flex-center">
+    <div v-if="showHeader" class="w-full flex-center">
       <NCheckbox v-model:checked="expandAll" :checked-value="true" :unchecked-value="false">展开/折叠</NCheckbox>
       <NCheckbox
         v-model:checked="checkAll"

@@ -14,6 +14,7 @@ import SvgIcon from '@/components/custom/svg-icon.vue';
 import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import MenuOperateDrawer from './modules/menu-operate-drawer.vue';
+import MenuCascadeDeleteModal from './modules/menu-cascade-delete-modal.vue';
 
 useDict('sys_show_hide');
 useDict('sys_normal_disable');
@@ -26,6 +27,7 @@ const editingData = ref<Api.System.Menu>();
 const operateType = ref<NaiveUI.TableOperateType>('add');
 const { loading, startLoading, endLoading } = useLoading();
 const { bool: drawerVisible, setTrue: openDrawer } = useBoolean();
+const { bool: cascadeDeleteVisible, setTrue: openCascadeDeleteDrawer } = useBoolean();
 const { loading: btnLoading, startLoading: startBtnLoading, endLoading: endBtnLoading } = useLoading();
 /** tree pattern name , use tree search */
 const name = ref<string>();
@@ -304,9 +306,17 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
         v-if="hasAuth('system:menu:add')"
         size="small"
         icon="material-symbols:add-rounded"
-        class="h-28px text-icon"
+        class="h-28px text-icon color-primary"
         :tooltip-content="$t('page.system.menu.addMenu')"
         @click.stop="handleAddMenu(0)"
+      />
+      <ButtonIcon
+        v-if="hasAuth('system:menu:add')"
+        size="small"
+        icon="material-symbols:delete-outline"
+        class="h-28px text-icon color-error"
+        :tooltip-content="$t('page.system.menu.cascadeDelete')"
+        @click.stop="openCascadeDeleteDrawer"
       />
       <ButtonIcon
         size="small"
@@ -477,6 +487,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
       :menu-type="createType"
       @submitted="handleSubmitted"
     />
+    <MenuCascadeDeleteModal v-model:visible="cascadeDeleteVisible" @submitted="handleSubmitted" />
   </TableSiderLayout>
 </template>
 

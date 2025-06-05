@@ -606,6 +606,10 @@ const local: App.I18n.Schema = {
             required: '请选择菜单类型',
             invalid: '菜单类型不能为空'
           },
+          menuIds: {
+            required: '请选择菜单',
+            invalid: '菜单不能为空'
+          },
           icon: {
             required: '请选择菜单图标',
             invalid: '菜单图标不能为空'
@@ -667,7 +671,8 @@ const local: App.I18n.Schema = {
         button: '按钮',
         addMenu: '新增菜单',
         addChildMenu: '新增子菜单',
-        editMenu: '编辑菜单'
+        editMenu: '编辑菜单',
+        cascadeDelete: '级联删除菜单'
       },
       notice: {
         title: '通知公告列表',

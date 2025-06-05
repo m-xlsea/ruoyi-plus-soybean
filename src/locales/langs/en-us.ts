@@ -612,6 +612,10 @@ const local: App.I18n.Schema = {
             required: 'Please select Menu Icon',
             invalid: 'Menu Icon cannot be empty'
           },
+          menuIds: {
+            required: 'Please select Menu',
+            invalid: 'Menu cannot be empty'
+          },
           menuName: {
             required: 'Please enter Menu Name',
             invalid: 'Menu Name cannot be empty'
@@ -669,7 +673,8 @@ const local: App.I18n.Schema = {
         button: 'Button',
         addMenu: 'Add Menu',
         addChildMenu: 'Add Child Menu',
-        editMenu: 'Edit Menu'
+        editMenu: 'Edit Menu',
+        cascadeDelete: 'Cascade Delete Menu'
       },
       notice: {
         title: 'Notice List',

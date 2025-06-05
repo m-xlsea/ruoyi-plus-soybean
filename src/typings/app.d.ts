@@ -714,6 +714,7 @@ declare namespace App {
             form: {
               parentId: FormMsg;
               menuType: FormMsg;
+              menuIds: FormMsg;
               icon: FormMsg;
               menuName: FormMsg;
               orderNum: FormMsg;
@@ -740,6 +741,7 @@ declare namespace App {
             addMenu: string;
             addChildMenu: string;
             editMenu: string;
+            cascadeDelete: string;
           };
           notice: {
             title: string;
