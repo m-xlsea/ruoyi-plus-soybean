@@ -14,6 +14,7 @@ declare module 'vue' {
     ButtonIcon: typeof import('./../components/custom/button-icon.vue')['default']
     CountTo: typeof import('./../components/custom/count-to.vue')['default']
     DarkModeContainer: typeof import('./../components/common/dark-mode-container.vue')['default']
+    DataTable: typeof import('./../components/common/data-table.vue')['default']
     DeptTree: typeof import('./../components/custom/dept-tree.vue')['default']
     DeptTreeSelect: typeof import('./../components/custom/dept-tree-select.vue')['default']
     DictRadio: typeof import('./../components/custom/dict-radio.vue')['default']

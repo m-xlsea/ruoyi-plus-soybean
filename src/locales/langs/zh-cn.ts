@@ -165,6 +165,20 @@ const local: App.I18n.Schema = {
       visible: '显示全屏水印',
       text: '水印文本'
     },
+    tablePropsTitle: '表格配置',
+    table: {
+      size: {
+        title: '表格大小',
+        small: '小',
+        medium: '中',
+        large: '大'
+      },
+      bordered: '边框',
+      bottomBordered: '底部边框',
+      singleColumn: '设定行的分割线',
+      singleLine: '设定列的分割线',
+      striped: '斑马线条纹'
+    },
     themeDrawerTitle: '主题配置',
     pageFunTitle: '页面功能',
     resetCacheStrategy: {

@@ -165,6 +165,20 @@ const local: App.I18n.Schema = {
       visible: 'Watermark Full Screen Visible',
       text: 'Watermark Text'
     },
+    tablePropsTitle: 'Table Props',
+    table: {
+      size: {
+        title: 'Table Size',
+        small: 'Small',
+        medium: 'Medium',
+        large: 'Large'
+      },
+      bordered: 'Bordered',
+      bottomBordered: 'Bottom Bordered',
+      singleColumn: 'Single Column',
+      singleLine: 'Single Line',
+      striped: 'Striped'
+    },
     themeDrawerTitle: 'Theme Configuration',
     pageFunTitle: 'Page Function',
     resetCacheStrategy: {

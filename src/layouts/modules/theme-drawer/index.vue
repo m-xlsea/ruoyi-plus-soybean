@@ -6,6 +6,7 @@ import LayoutMode from './modules/layout-mode.vue';
 import ThemeColor from './modules/theme-color.vue';
 import PageFun from './modules/page-fun.vue';
 import ConfigOperation from './modules/config-operation.vue';
+import TableProps from './modules/table-props.vue';
 
 defineOptions({
   name: 'ThemeDrawer'
@@ -21,6 +22,7 @@ const appStore = useAppStore();
       <LayoutMode />
       <ThemeColor />
       <PageFun />
+      <TableProps />
       <template #footer>
         <ConfigOperation />
       </template>

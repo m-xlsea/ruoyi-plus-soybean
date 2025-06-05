@@ -57,6 +57,14 @@ export const themeSettings: App.Theme.ThemeSetting = {
     visible: import.meta.env.VITE_WATERMARK === 'Y',
     text: 'RuoYi-Vue-Plus'
   },
+  table: {
+    bordered: true,
+    bottomBordered: true,
+    singleColumn: false,
+    singleLine: true,
+    size: 'small',
+    striped: false
+  },
   tokens: {
     light: {
       colors: {
