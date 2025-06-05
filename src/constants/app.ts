@@ -63,3 +63,11 @@ export const resetCacheStrategyRecord: Record<UnionKey.ResetCacheStrategy, App.I
 export const resetCacheStrategyOptions = transformRecordToOption(resetCacheStrategyRecord);
 
 export const DARK_CLASS = 'dark';
+
+export const themeTableSizeRecord: Record<UnionKey.ThemeTableSize, App.I18n.I18nKey> = {
+  small: 'theme.table.size.small',
+  medium: 'theme.table.size.medium',
+  large: 'theme.table.size.large'
+};
+
+export const themeTableSizeOptions = transformRecordToOption(themeTableSizeRecord);

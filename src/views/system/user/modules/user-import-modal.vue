@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { h, ref, watch } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
 import { getToken } from '@/store/modules/auth/shared';
 import { useDownload } from '@/hooks/business/download';
@@ -77,7 +77,7 @@ function handleError(options: { file: UploadFileInfo; event?: ProgressEvent }) {
   const responseText = event?.target?.responseText;
   const msg = JSON.parse(responseText).msg;
   message.value = msg;
-  window.$message?.error(msg || $t('common.importFail'));
+  window.$message?.error(() => h('div', { innerHTML: msg || $t('common.importFail') }));
   success.value = false;
 }
 

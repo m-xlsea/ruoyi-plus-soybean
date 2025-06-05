@@ -80,6 +80,9 @@ export function fetchResetUserPassword(userId: CommonType.IdType, password: stri
   return request<boolean>({
     url: '/system/user/resetPwd',
     method: 'put',
+    headers: {
+      isEncrypt: true
+    },
     data: { userId, password }
   });
 }

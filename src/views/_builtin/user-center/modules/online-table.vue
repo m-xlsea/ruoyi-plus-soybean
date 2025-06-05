@@ -4,7 +4,7 @@ import { useLoading } from '@sa/hooks';
 import { fetchForceLogout, fetchGetOnlineDeviceList } from '@/service/api/monitor';
 import { useAppStore } from '@/store/modules/app';
 import { useTable } from '@/hooks/common/table';
-import { getBrowserIcon, getOsIcon } from '@/utils/format';
+import { getBrowserIcon, getOsIcon } from '@/utils/icon-tag-format';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';

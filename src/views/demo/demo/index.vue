@@ -184,11 +184,10 @@ async function handleExport() {
           @refresh="getData"
         />
       </template>
-      <NDataTable
+      <DataTable
         v-model:checked-row-keys="checkedRowKeys"
         :columns="columns"
         :data="data"
-        size="small"
         :flex-height="!appStore.isMobile"
         :scroll-x="962"
         :loading="loading"

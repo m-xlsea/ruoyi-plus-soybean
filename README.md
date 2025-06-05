@@ -7,7 +7,8 @@
 <div align="center">
   <p>一个基于 <a href="https://gitee.com/dromara/RuoYi-Vue-Plus" target="_blank">RuoYi-Vue-Plus</a> 的后端能力和 <a href="https://github.com/soybeanjs/soybean-admin" target="_blank">Soybean Admin</a> 前端特性的现代化多租户管理系统</p>
   <p>
-    <img src="https://gitee.com/xlsea/ruoyi-plus-soybean/badge/star.svg?theme=blue" alt="Gitee">
+    <img src="https://gitee.com/xlsea/ruoyi-plus-soybean/badge/star.svg" alt="Gitee">
+    <img src="https://img.shields.io/github/stars/m-xlsea/ruoyi-plus-soybean" alt="Github">
     <img src="https://img.shields.io/badge/Vue-3.5-brightgreen" alt="vue">
     <img src="https://img.shields.io/badge/TypeScript-5.8-blue" alt="typescript">
     <img src="https://img.shields.io/badge/Vite-6.2-orange" alt="vite">
@@ -346,13 +347,14 @@ console.log(t('common.confirm'));
 - **邮箱**: xlsea@linux.do
 - **作者主页**: https://gitee.com/xlsea
 
+
 - **作者**: Elio
 - **邮箱**: 1983933789@qq.com
 - **作者主页**: https://gitee.com/ahcode
 
 ## 💬 交流群
 
-<img src="https://foruda.gitee.com/images/1747707357650535622/a9fcf43e_5601833.png" width="300px" />
+<img src="https://foruda.gitee.com/images/1748404753216665472/3d8b1a0b_5601833.png" width="300px" />
 
 ## 🧧 捐献作者
 

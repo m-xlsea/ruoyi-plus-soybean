@@ -56,12 +56,6 @@ const {
       align: 'center',
       width: 48
     },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64
-    },
 #foreach ($column in $columns)
   #if($column.list)
     {

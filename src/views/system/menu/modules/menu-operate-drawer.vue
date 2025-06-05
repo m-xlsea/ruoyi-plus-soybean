@@ -83,8 +83,28 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   component: createRequiredRule($t('page.system.menu.form.component.invalid'))
 };
 
-const isBtn = computed(() => model.menuType === 'F');
+// 是否为目录类型
+const isCatalog = computed(() => model.menuType === 'M');
+
+// 是否为菜单类型
 const isMenu = computed(() => model.menuType === 'C');
+
+// 是否为按钮类型
+const isBtn = computed(() => model.menuType === 'F');
+
+// 外链类型
+const isExternalType = computed(() => model.isFrame === '0');
+
+// 内部类型
+const isInternalType = computed(() => model.isFrame === '1');
+
+// iframe类型
+const isIframeType = computed(() => model.isFrame === '2');
+
+// 本地图标类型
+const isLocalIcon = computed(() => iconType.value === '2');
+
+// 本地图标
 const localIcons = getLocalMenuIcons();
 const localIconOptions = localIcons.map<SelectOption>(item => ({
   label: () => (
@@ -102,7 +122,7 @@ function handleInitModel() {
 
   if (props.operateType === 'edit' && props.rowData) {
     Object.assign(model, props.rowData);
-    if (isMenu.value && model.isFrame === '1') {
+    if (isMenu.value && isInternalType.value) {
       model.component = model.component?.slice(0, -6);
     }
     iconType.value = model.icon?.startsWith('local-icon-') ? '2' : '1';
@@ -116,6 +136,44 @@ function handleInitModel() {
 
 function closeDrawer() {
   visible.value = false;
+}
+
+// 处理路径
+function processPath(path: string | null | undefined): string {
+  return path?.startsWith('/') ? path.substring(1) : path || '';
+}
+
+// 处理组件
+function processComponent(component: string | null | undefined): string {
+  if (isCatalog.value && isInternalType.value) {
+    return 'Layout';
+  }
+  if (isIframeType.value || isExternalType.value) {
+    return 'FrameView';
+  }
+  if (isMenu.value && isInternalType.value) {
+    return component?.endsWith('/index') ? component : `${component || ''}/index`;
+  }
+  return component || '';
+}
+
+function processQueryParam(queryParam: string | null | undefined): string {
+  // 外链类型不需要查询参数
+  if (isExternalType.value) {
+    return '';
+  }
+
+  // 内部链接类型，处理动态参数
+  if (isInternalType.value && queryList.value.length) {
+    return JSON.stringify(Object.fromEntries(queryList.value.map(({ key, value }) => [key, value])));
+  }
+
+  // iframe类型，直接使用原始参数
+  if (isIframeType.value) {
+    return queryParam || '';
+  }
+
+  return '';
 }
 
 async function handleSubmit() {
@@ -133,77 +191,36 @@ async function handleSubmit() {
     visible: menuVisible,
     status,
     perms,
-    remark
+    remark,
+    component,
+    queryParam
   } = model;
 
-  let queryParam = model.queryParam;
-  if (isFrame === '0') {
-    queryParam = '';
-  } else if (isFrame === '1' && queryList.value.length) {
-    const queryObj: { [key: string]: string } = {};
-    queryList.value.forEach(item => (queryObj[item.key] = item.value));
-    queryParam = JSON.stringify(queryObj);
+  const payload = {
+    menuName,
+    path: processPath(model.path),
+    parentId,
+    orderNum,
+    queryParam: processQueryParam(queryParam),
+    isFrame,
+    isCache,
+    menuType,
+    visible: menuVisible,
+    status,
+    perms,
+    icon,
+    component: processComponent(component),
+    remark
+  };
+
+  const { error } =
+    props.operateType === 'add' ? await fetchCreateMenu(payload) : await fetchUpdateMenu({ ...payload, menuId });
+
+  if (error) {
+    return;
   }
 
-  const path = model.path?.startsWith('/') ? model.path?.substring(1) : model.path;
-
-  let component = model.component;
-  if (isFrame === '1' && menuType === 'M') {
-    component = 'Layout';
-  } else if (isFrame === '2') {
-    component = 'FrameView';
-  } else if (isMenu.value && model.isFrame === '1') {
-    component = component?.endsWith('/index') ? component : `${component}/index`;
-  }
-
-  // request
-  if (props.operateType === 'add') {
-    const { error } = await fetchCreateMenu({
-      menuName,
-      path,
-      parentId,
-      orderNum,
-      queryParam,
-      isFrame,
-      isCache,
-      menuType,
-      visible: menuVisible,
-      status,
-      perms,
-      icon,
-      component,
-      remark
-    });
-    if (error) {
-      return;
-    }
-    window.$message?.success($t('common.addSuccess'));
-  }
-
-  if (props.operateType === 'edit') {
-    const { error } = await fetchUpdateMenu({
-      menuId,
-      menuName,
-      path,
-      parentId,
-      orderNum,
-      queryParam,
-      isFrame,
-      isCache,
-      menuType,
-      visible: menuVisible,
-      status,
-      perms,
-      icon,
-      component,
-      remark
-    });
-    if (error) {
-      return;
-    }
-    window.$message?.success($t('common.updateSuccess'));
-  }
-
+  window.$message?.success($t(props.operateType === 'add' ? 'common.addSuccess' : 'common.updateSuccess'));
   closeDrawer();
   emit('submitted', menuType!);
 }
@@ -224,7 +241,7 @@ function onCreate() {
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" display-directive="show" :width="800" class="max-w-90%">
+  <NDrawer v-model:show="visible" display-directive="show" :width="600" class="max-w-90%">
     <NDrawerContent :title="drawerTitle" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
         <NGrid responsive="screen" item-responsive>
@@ -238,12 +255,7 @@ function onCreate() {
               :placeholder="$t('page.system.menu.form.parentId.required')"
             />
           </NFormItemGi>
-          <NFormItemGi
-            v-if="model.menuType !== 'F'"
-            :span="24"
-            :label="$t('page.system.menu.menuType')"
-            path="menuType"
-          >
+          <NFormItemGi v-if="!isBtn" :span="24" :label="$t('page.system.menu.menuType')" path="menuType">
             <NRadioGroup v-model:value="model.menuType">
               <NRadioButton
                 v-for="item in menuTypeOptions.filter(item => item.value !== 'F')"
@@ -253,22 +265,30 @@ function onCreate() {
               />
             </NRadioGroup>
           </NFormItemGi>
-          <NFormItemGi :span="24" :label="$t('page.system.menu.menuName')" path="menuName">
+          <NFormItemGi span="24" :label="$t('page.system.menu.menuName')" path="menuName">
             <NInput v-model:value="model.menuName" :placeholder="$t('page.system.menu.form.menuName.required')" />
           </NFormItemGi>
-          <NFormItemGi v-if="!isBtn" span="24" :label="$t('page.system.menu.iconType')">
+          <NFormItemGi v-if="!isBtn" span="12" :label="$t('page.system.menu.iconType')">
             <NRadioGroup v-model:value="iconType">
               <NRadio v-for="item in menuIconTypeOptions" :key="item.value" :value="item.value" :label="item.label" />
             </NRadioGroup>
           </NFormItemGi>
-          <NFormItemGi v-if="!isBtn" span="24" path="icon">
+          <NFormItemGi v-if="!isBtn" span="12" path="icon">
             <template #label>
               <div class="flex-center">
                 <FormTip :content="$t('page.system.menu.iconifyTip')" />
                 <span class="pl-3px">{{ $t('page.system.menu.icon') }}</span>
               </div>
             </template>
-            <template v-if="iconType === '1'">
+            <template v-if="isLocalIcon">
+              <NSelect
+                v-model:value="model.icon"
+                :placeholder="$t('page.system.menu.placeholder.localIconPlaceholder')"
+                filterable
+                :options="localIconOptions"
+              />
+            </template>
+            <template v-else>
               <NInput
                 v-model:value="model.icon"
                 :placeholder="$t('page.system.menu.placeholder.iconifyIconPlaceholder')"
@@ -279,27 +299,51 @@ function onCreate() {
                 </template>
               </NInput>
             </template>
-            <template v-if="iconType === '2'">
-              <NSelect
-                v-model:value="model.icon"
-                :placeholder="$t('page.system.menu.placeholder.localIconPlaceholder')"
-                filterable
-                :options="localIconOptions"
-              />
+          </NFormItemGi>
+          <NFormItemGi v-if="!isBtn" :span="12" path="isFrame">
+            <template #label>
+              <div class="flex-center">
+                <FormTip :content="$t('page.system.menu.isFrameTip')" />
+                <span>{{ $t('page.system.menu.isFrame') }}</span>
+              </div>
             </template>
+            <NRadioGroup v-model:value="model.isFrame">
+              <NSpace>
+                <NRadio
+                  v-for="option in menuIsFrameOptions"
+                  :key="option.value"
+                  :value="option.value"
+                  :label="option.label"
+                />
+              </NSpace>
+            </NRadioGroup>
+          </NFormItemGi>
+          <NFormItemGi v-if="isMenu" :span="12" path="isCache">
+            <template #label>
+              <div class="flex-center">
+                <FormTip :content="$t('page.system.menu.isCacheTip')" />
+                <span>{{ $t('page.system.menu.isCache') }}</span>
+              </div>
+            </template>
+            <NRadioGroup v-model:value="model.isCache">
+              <NSpace>
+                <NRadio value="0" label="是" />
+                <NRadio value="1" label="否" />
+              </NSpace>
+            </NRadioGroup>
           </NFormItemGi>
           <NFormItemGi v-if="!isBtn" :span="24" path="path">
             <template #label>
               <div class="flex-center">
                 <FormTip :content="$t('page.system.menu.pathTip')" />
                 <span>
-                  {{ model.isFrame !== '0' ? $t('page.system.menu.path') : $t('page.system.menu.externalPath') }}
+                  {{ !isExternalType ? $t('page.system.menu.path') : $t('page.system.menu.externalPath') }}
                 </span>
               </div>
             </template>
             <NInput v-model:value="model.path" :placeholder="$t('page.system.menu.form.path.required')" />
           </NFormItemGi>
-          <NFormItemGi v-if="isMenu && model.isFrame === '1'" :span="24" path="component">
+          <NFormItemGi v-if="isMenu && isInternalType" :span="24" path="component">
             <template #label>
               <div class="flex-center">
                 <FormTip :content="$t('page.system.menu.componentTip')" />
@@ -313,13 +357,13 @@ function onCreate() {
             </NInputGroup>
           </NFormItemGi>
           <NFormItemGi
-            v-if="isMenu && model.isFrame !== '0'"
+            v-if="isMenu && !isExternalType"
             span="24"
             :show-feedback="!queryList.length"
-            :label="model.isFrame !== '2' ? $t('page.system.menu.query') : $t('page.system.menu.iframeQuery')"
+            :label="isInternalType ? $t('page.system.menu.query') : $t('page.system.menu.iframeQuery')"
           >
             <NDynamicInput
-              v-if="model.isFrame !== '2'"
+              v-if="isInternalType"
               v-model:value="queryList"
               item-style="margin-bottom: 0"
               :on-create="onCreate"
@@ -369,38 +413,7 @@ function onCreate() {
             </template>
             <NInput v-model:value="model.perms" :placeholder="$t('page.system.menu.form.perms.required')" />
           </NFormItemGi>
-          <NFormItemGi v-if="!isBtn" :span="12" path="isFrame">
-            <template #label>
-              <div class="flex-center">
-                <FormTip :content="$t('page.system.menu.isFrameTip')" />
-                <span>{{ $t('page.system.menu.isFrame') }}</span>
-              </div>
-            </template>
-            <NRadioGroup v-model:value="model.isFrame">
-              <NSpace>
-                <NRadio
-                  v-for="option in menuIsFrameOptions"
-                  :key="option.value"
-                  :value="option.value"
-                  :label="option.label"
-                />
-              </NSpace>
-            </NRadioGroup>
-          </NFormItemGi>
-          <NFormItemGi v-if="isMenu" :span="12" path="isCache">
-            <template #label>
-              <div class="flex-center">
-                <FormTip :content="$t('page.system.menu.isCacheTip')" />
-                <span>{{ $t('page.system.menu.isCache') }}</span>
-              </div>
-            </template>
-            <NRadioGroup v-model:value="model.isCache">
-              <NSpace>
-                <NRadio value="0" label="是" />
-                <NRadio value="1" label="否" />
-              </NSpace>
-            </NRadioGroup>
-          </NFormItemGi>
+
           <NFormItemGi v-if="!isBtn" :span="12" :label="$t('page.system.menu.visible')" path="visible">
             <template #label>
               <div class="flex-center">

@@ -135,6 +135,9 @@ const local: App.I18n.Schema = {
       },
       multilingual: {
         visible: 'Display multilingual button'
+      },
+      globalSearch: {
+        visible: 'Display GlobalSearch button'
       }
     },
     tab: {
@@ -164,6 +167,20 @@ const local: App.I18n.Schema = {
     watermark: {
       visible: 'Watermark Full Screen Visible',
       text: 'Watermark Text'
+    },
+    tablePropsTitle: 'Table Props',
+    table: {
+      size: {
+        title: 'Table Size',
+        small: 'Small',
+        medium: 'Medium',
+        large: 'Large'
+      },
+      bordered: 'Bordered',
+      bottomBordered: 'Bottom Bordered',
+      singleColumn: 'Single Column',
+      singleLine: 'Single Line',
+      striped: 'Striped'
     },
     themeDrawerTitle: 'Theme Configuration',
     pageFunTitle: 'Page Function',
@@ -574,13 +591,14 @@ const local: App.I18n.Schema = {
         buttonPermissionList: 'Button Permission List',
         emptyMenu: 'Empty Menu',
         menuDetail: 'Menu Detail',
+        cascadeDeleteContent: 'Cascade delete menu will delete the selected menu and all its sub-menus, are you sure?',
         iconifyTip: 'iconify address：`https://icones.js.org`',
         isFrameTip: 'If you choose External Link, the routing address needs to start with `http(s)://`',
         isCacheTip:
           'If you select yes, it will be cached by `keep-alive`, and the `name` and address of the matching component must be consistent',
         visibleTip: 'If you choose Hide, the route will not appear in the sidebar, but it can still be accessed.',
         statusTip: 'If you choose to disable, the route will not appear in the sidebar and cannot be accessed.',
-        permsTip: "Permission string defined in the controller, such as: @SaCheckPermission('system:user:list')",
+        permsTip: "Permission string defined in the controller, such as: {'@'}SaCheckPermission('system:user:list')",
         componentTip:
           'The component path to access, such as: `system/user/index`, which is in the `views` directory by default',
         pathTip:
@@ -597,6 +615,10 @@ const local: App.I18n.Schema = {
           icon: {
             required: 'Please select Menu Icon',
             invalid: 'Menu Icon cannot be empty'
+          },
+          menuIds: {
+            required: 'Please select Menu',
+            invalid: 'Menu cannot be empty'
           },
           menuName: {
             required: 'Please enter Menu Name',
@@ -655,7 +677,8 @@ const local: App.I18n.Schema = {
         button: 'Button',
         addMenu: 'Add Menu',
         addChildMenu: 'Add Child Menu',
-        editMenu: 'Edit Menu'
+        editMenu: 'Edit Menu',
+        cascadeDelete: 'Cascade Delete Menu'
       },
       notice: {
         title: 'Notice List',

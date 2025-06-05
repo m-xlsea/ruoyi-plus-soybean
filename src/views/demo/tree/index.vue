@@ -209,12 +209,11 @@ function handleExport() {
           </template>
         </TableHeaderOperation>
       </template>
-      <NDataTable
+      <DataTable
         v-model:checked-row-keys="checkedRowKeys"
         v-model:expanded-row-keys="expandedRowKeys"
         :columns="columns"
         :data="data"
-        size="small"
         :flex-height="!appStore.isMobile"
         :scroll-x="962"
         :loading="loading"

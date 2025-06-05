@@ -10,6 +10,9 @@ declare namespace Api {
    * backend api module: "monitor"
    */
   namespace Monitor {
+    /** 业务操作类型 */
+    type BusinessType = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+
     /** oper log */
     type OperLog = Common.CommonRecord<{
       /** 日志主键 */
@@ -19,13 +22,13 @@ declare namespace Api {
       /** 系统模块 */
       title: string;
       /** 操作类型 */
-      businessType: number;
+      businessType: Monitor.BusinessType;
       /** 方法名称 */
       method: string;
       /** 请求方式 */
       requestMethod: string;
       /** 操作类别 */
-      operatorType: number;
+      operatorType: string;
       /** 操作人员 */
       operName: string;
       /** 部门名称 */
@@ -41,7 +44,7 @@ declare namespace Api {
       /** 返回参数 */
       jsonResult: string;
       /** 操作状态 */
-      status: number;
+      status: Common.EnableStatus;
       /** 错误消息 */
       errorMsg: string;
       /** 操作时间 */
@@ -70,7 +73,7 @@ declare namespace Api {
       /** 客户端 */
       clientKey: string;
       /** 设备类型 */
-      deviceType: string;
+      deviceType: System.DeviceType;
       /** 登录IP地址 */
       ipaddr: string;
       /** 登录地点 */
@@ -80,7 +83,7 @@ declare namespace Api {
       /** 操作系统 */
       os: string;
       /** 登录状态（0成功 1失败） */
-      status: string;
+      status: Common.EnableStatus;
       /** 提示消息 */
       msg: string;
       /** 访问时间 */
@@ -149,7 +152,7 @@ declare namespace Api {
       /** 所在部门 */
       deptName: string;
       /** 设备类型 */
-      deviceType: string;
+      deviceType: System.DeviceType;
       /** 登录时间 */
       loginTime: number;
       /** 令牌ID */

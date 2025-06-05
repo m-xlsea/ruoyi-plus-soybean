@@ -44,8 +44,8 @@ const dictTagData = computed<Api.System.DictData[]>(() => {
       :key="item.dictValue"
       class="m-1"
       :class="[item.cssClass]"
-      :type="item.listClass"
       v-bind="attrs"
+      :type="item.listClass || 'default'"
     >
       {{ item.dictLabel }}
     </NTag>

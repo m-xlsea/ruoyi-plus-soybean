@@ -10,6 +10,7 @@ import GlobalBreadcrumb from '../global-breadcrumb/index.vue';
 import GlobalSearch from '../global-search/index.vue';
 import ThemeButton from './components/theme-button.vue';
 import UserAvatar from './components/user-avatar.vue';
+import MessageButton from './components/message-button.vue';
 
 defineOptions({
   name: 'GlobalHeader'
@@ -44,7 +45,8 @@ const tenantId = ref<CommonType.IdType>(authStore.userInfo?.user?.tenantId || '0
     </div>
     <div class="h-full flex-y-center justify-end">
       <TenantSelect v-if="!appStore.isMobile" v-model:value="tenantId" class="mr-12px w-150px" />
-      <GlobalSearch />
+      <GlobalSearch v-if="themeStore.header.globalSearch.visible" />
+      <MessageButton />
       <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />
       <LangSwitch
         v-if="themeStore.header.multilingual.visible"
