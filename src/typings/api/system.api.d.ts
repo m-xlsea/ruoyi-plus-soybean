@@ -34,7 +34,7 @@ declare namespace Api {
       /** 显示顺序 */
       roleSort: number;
       /** 角色状态（0正常 1停用） */
-      status: string;
+      status: Common.EnableStatus;
       /** 是否管理员 */
       superAdmin: boolean;
     }>;
@@ -115,7 +115,7 @@ declare namespace Api {
       /** 密码 */
       password: string;
       /** 帐号状态（0正常 1停用） */
-      status: string;
+      status: Common.EnableStatus;
       /** 最后登录IP */
       loginIp: string;
       /** 最后登录时间 */
@@ -356,7 +356,7 @@ declare namespace Api {
       /** 字典键值 */
       dictValue: string;
       /** 是否默认（Y是 N否） */
-      isDefault: string;
+      isDefault: Common.YesOrNoStatus;
       /** 表格回显样式 */
       listClass: NaiveUI.ThemeColor;
       /** 备注 */
@@ -402,7 +402,7 @@ declare namespace Api {
       /** 邮箱 */
       email: string;
       /** 部门状态（0正常 1停用） */
-      status: string;
+      status: Common.EnableStatus;
       /** 子部门 */
       children: Dept[];
     }>;
@@ -440,7 +440,7 @@ declare namespace Api {
       /** 显示顺序 */
       postSort: number;
       /** 状态（0正常 1停用） */
-      status: string;
+      status: Common.EnableStatus;
       /** 备注 */
       remark: string;
     }>;
@@ -476,7 +476,7 @@ declare namespace Api {
       /** 参数键值 */
       configValue: string;
       /** 是否内置 */
-      configType: string;
+      configType: Common.YesOrNoStatus;
       /** 备注 */
       remark: string;
     }>;
@@ -523,7 +523,7 @@ declare namespace Api {
       /** 用户数量（-1不限制） */
       accountCount: number;
       /** 租户状态（0正常 1停用） */
-      status: string;
+      status: Common.EnableStatus;
       /** 删除标志（0代表存在 1代表删除） */
       delFlag: string;
     }>;
@@ -577,7 +577,7 @@ declare namespace Api {
       /** 菜单树选择项是否关联显示 */
       menuCheckStrictly: boolean;
       /** 状态（0正常 1停用） */
-      status: string;
+      status: Common.EnableStatus;
       /** 删除标志（0代表存在 1代表删除） */
       delFlag: string;
     }>;
@@ -602,6 +602,9 @@ declare namespace Api {
     /** tenant package select list */
     type TenantPackageSelectList = Common.CommonRecord<Pick<TenantPackage, 'packageId' | 'packageName'>>;
 
+    /** 通知公告类型 */
+    type NoticeType = '1' | '2';
+
     /** notice */
     type Notice = Common.CommonRecord<{
       /** 公告ID */
@@ -611,11 +614,11 @@ declare namespace Api {
       /** 公告标题 */
       noticeTitle: string;
       /** 公告类型 */
-      noticeType: string;
+      noticeType: System.NoticeType;
       /** 公告内容 */
       noticeContent: string;
       /** 公告状态 */
-      status: string;
+      status: Common.EnableStatus;
       /** 创建者 */
       createByName: string;
       /** 备注 */
@@ -635,6 +638,12 @@ declare namespace Api {
     /** notice list */
     type NoticeList = Api.Common.PaginatingQueryRecord<Notice>;
 
+    /** 授权类型 */
+    type GrantType = 'password' | 'sms' | 'password' | 'email' | 'xcx' | 'social';
+
+    /** 设备类型 */
+    type DeviceType = 'pc' | 'android' | 'ios' | 'xcx';
+
     /** client */
     type Client = Common.CommonRecord<{
       /** id */
@@ -646,17 +655,17 @@ declare namespace Api {
       /** 客户端秘钥 */
       clientSecret: string;
       /** 授权类型 */
-      grantType: string;
+      grantType: System.GrantType;
       /** 授权类型列表 */
-      grantTypeList: string[];
+      grantTypeList: System.GrantType[];
       /** 设备类型 */
-      deviceType: string;
+      deviceType: System.DeviceType;
       /** token活跃超时时间 */
       activeTimeout: number;
       /** token固定超时 */
       timeout: number;
       /** 状态 */
-      status: string;
+      status: Common.EnableStatus;
       /** 删除标志（0代表存在 1代表删除） */
       delFlag: string;
     }>;
@@ -758,13 +767,13 @@ declare namespace Api {
       /** 自定义域名 */
       domain: string;
       /** 是否https（Y=是,N=否） */
-      isHttps: Api.Common.YesOrNoStatus;
+      isHttps: Common.YesOrNoStatus;
       /** 域 */
       region: string;
       /** 桶权限类型 */
-      accessPolicy: Api.System.OssAccessPolicy;
+      accessPolicy: System.OssAccessPolicy;
       /** 是否默认（0=是,1=否） */
-      status: Api.Common.EnableStatus;
+      status: Common.EnableStatus;
       /** 扩展字段 */
       ext1: string;
       /** 备注 */
