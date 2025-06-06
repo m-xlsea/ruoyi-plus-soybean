@@ -362,7 +362,9 @@ console.log(t('common.confirm'));
 
 ## 💬 交流群
 
-<img src="https://foruda.gitee.com/images/1748404753216665472/3d8b1a0b_5601833.png" width="300px" />
+<img src="https://foruda.gitee.com/images/1749174520085305975/ad1b54fe_5601833.png" width="300px" />
+
+添加作者微信备注：加群
 
 ## 🧧 捐献作者
 
