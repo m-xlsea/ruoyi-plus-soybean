@@ -39,7 +39,7 @@ const toGitee = () => {
     <NCard
       size="small"
       :bordered="false"
-      class="w-340px"
+      class="w-345px"
       header-class="p-0"
       :segmented="{ content: true, footer: 'soft' }"
     >
@@ -63,7 +63,7 @@ const toGitee = () => {
           一键已读
         </NTooltip>
       </template>
-      <div>
+      <NScrollbar class="h-260px">
         <template v-if="state?.notices?.length">
           <template v-for="(message, index) in state?.notices" :key="index">
             <NDivider v-show="index !== 0" />
@@ -81,7 +81,7 @@ const toGitee = () => {
           </template>
         </template>
         <NEmpty v-else class="h-180px flex-center" />
-      </div>
+      </NScrollbar>
       <template #footer>
         <div class="flex items-center justify-end">
           <NButton type="primary" size="small" @click="toGitee">前往 Gitee</NButton>

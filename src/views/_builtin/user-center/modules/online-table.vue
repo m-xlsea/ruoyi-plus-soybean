@@ -16,12 +16,8 @@ defineOptions({
 const appStore = useAppStore();
 const { loading: btnLoading, startLoading: startBtnLoading, endLoading: endBtnLoading } = useLoading(false);
 
-const { columns, data, loading, mobilePagination, getData } = useTable({
+const { columns, data, loading, getData } = useTable({
   apiFn: fetchGetOnlineDeviceList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 15
-  },
   columns: () => [
     { title: '用户名', key: 'userName', align: 'center', minWidth: 120 },
     { title: 'IP地址', key: 'ipaddr', align: 'center', minWidth: 120 },
@@ -109,7 +105,6 @@ async function forceLogout(tokenId: string) {
     :loading="loading"
     remote
     :row-key="row => row.noticeId"
-    :pagination="mobilePagination"
     class="h-full"
   />
 </template>
