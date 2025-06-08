@@ -61,8 +61,9 @@ async function handleSubmit() {
   fileList.value.forEach(item => {
     item.status = 'pending';
   });
-  uploadRef.value?.submit();
+  await uploadRef.value?.submit();
   visible.value = false;
+  emit('submitted');
 }
 
 function isErrorState(xhr: XMLHttpRequest) {
@@ -125,10 +126,10 @@ watch(visible, () => {
       :action="`${baseURL}/workflow/definition/importDef`"
       :headers="headers"
       :data="data"
-      :max="1"
+      :max="10"
       :file-size="50"
       accept=".json"
-      :multiple="false"
+      :multiple="true"
       directory-dnd
       :default-upload="false"
       list-type="text"
