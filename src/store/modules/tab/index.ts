@@ -102,10 +102,7 @@ export const useTabStore = defineStore(SetupStoreId.Tab, () => {
     const isRemoveActiveTab = activeTabId.value === tabId;
 
     // if remove the last tab, then switch to the second last tab
-    const isLastTab = removeTabIndex === tabs.value.length - 1;
-    const nextTab = isLastTab
-      ? tabs.value[removeTabIndex - 1] || homeTab.value
-      : tabs.value[removeTabIndex + 1] || homeTab.value;
+    const nextTab = tabs.value[removeTabIndex + 1] || tabs.value[removeTabIndex - 1] || homeTab.value;
 
     // remove tab
     tabs.value.splice(removeTabIndex, 1);
