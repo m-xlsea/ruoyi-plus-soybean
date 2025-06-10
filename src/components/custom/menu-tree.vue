@@ -149,7 +149,6 @@ defineExpose({
       <NCheckbox v-model:checked="cascade" :checked-value="true" :unchecked-value="false">父子联动</NCheckbox>
     </div>
     <NSpin class="resource h-full w-full py-6px pl-3px" content-class="h-full" :show="loading">
-      {{ checkedKeys }}
       <NTree
         ref="menuTreeRef"
         v-model:checked-keys="checkedKeys"
