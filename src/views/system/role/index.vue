@@ -82,7 +82,7 @@ const {
       key: 'dataScope',
       title: '数据范围',
       align: 'center',
-      minWidth: 120,
+      minWidth: 180,
       render: row => {
         return <NTag type="info">{dataScopeRecord[row.dataScope]}</NTag>;
       }
@@ -113,7 +113,7 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 220,
+      width: 230,
       render: row => {
         if (row.roleId === 1) return null;
 

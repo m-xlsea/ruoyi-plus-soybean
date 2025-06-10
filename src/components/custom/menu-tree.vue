@@ -90,15 +90,22 @@ function handleCheckedTreeNodeAll(checked: boolean) {
   checkedKeys.value = [];
 }
 
-function getCheckedMenuIds() {
+function getCheckedMenuIds(isCascade: boolean = false) {
   const menuIds = menuTreeRef.value?.getCheckedData()?.keys as string[];
   const indeterminateData = menuTreeRef.value?.getIndeterminateData();
-  if (cascade.value) {
+  if (cascade.value || isCascade) {
     const parentIds: string[] = indeterminateData?.keys.filter(item => !menuIds?.includes(String(item))) as string[];
     menuIds?.push(...parentIds);
   }
   return menuIds;
 }
+
+watch(cascade, () => {
+  if (cascade.value) {
+    return;
+  }
+  checkedKeys.value = getCheckedMenuIds(true);
+});
 
 defineExpose({
   getCheckedMenuIds,
@@ -121,6 +128,7 @@ defineExpose({
       <NCheckbox v-model:checked="cascade" :checked-value="true" :unchecked-value="false">父子联动</NCheckbox>
     </div>
     <NSpin class="resource h-full w-full py-6px pl-3px" content-class="h-full" :show="loading">
+      {{ checkedKeys }}
       <NTree
         ref="menuTreeRef"
         v-model:checked-keys="checkedKeys"
