@@ -1,4 +1,3 @@
-import type { AxiosRequestConfig, GenericAbortSignal } from 'axios';
 import { request } from '@/service/request';
 
 /** 获取文件管理列表 */
@@ -18,36 +17,10 @@ export function fetchBatchDeleteOss(ossIds: CommonType.IdType[]) {
   });
 }
 
-/** Axios上传进度事件 */
-export type AxiosProgressEvent = AxiosRequestConfig['onUploadProgress'];
-
-/** 默认上传结果 */
-export interface UploadResult {
-  url: string;
-  fileName: string;
-  ossId: string;
-}
-
-export interface UploadApiOptions {
-  onUploadProgress?: AxiosProgressEvent;
-  signal?: GenericAbortSignal;
-}
-
-/** 上传文件接口 */
-export function uploadApi(file: File | Blob, options?: UploadApiOptions) {
-  const { onUploadProgress, signal } = options ?? {};
-
-  const formData = new FormData();
-  formData.append('file', file);
-
-  return request<UploadResult>({
-    url: '/resource/oss/upload',
-    method: 'post',
-    data: formData,
-    onUploadProgress,
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    },
-    signal
+// 查询OSS对象基于id串
+export function fetchGetOssListByIds(ossIds: CommonType.IdType[]) {
+  return request<Api.System.Oss[]>({
+    url: `/resource/oss/listByIds/${ossIds.join(',')}`,
+    method: 'get'
   });
 }

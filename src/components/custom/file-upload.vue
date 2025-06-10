@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useAttrs, watch } from 'vue';
+import { useAttrs } from 'vue';
 import type { UploadFileInfo, UploadProps } from 'naive-ui';
 import { fetchBatchDeleteOss } from '@/service/api/system/oss';
 import { getToken } from '@/store/modules/auth/shared';
@@ -34,19 +34,9 @@ const props = withDefaults(defineProps<Props>(), {
 const attrs: UploadProps = useAttrs();
 
 let fileNum = 0;
-const fileList = ref<UploadFileInfo[]>([]);
-
-const needRelaodData = ref(false);
-
-defineExpose({
-  needRelaodData
+const fileList = defineModel<UploadFileInfo[]>('fileList', {
+  default: () => []
 });
-watch(
-  () => fileList.value,
-  newValue => {
-    needRelaodData.value = newValue.length > 0;
-  }
-);
 
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
@@ -119,11 +109,12 @@ function handleError(options: { file: UploadFileInfo; event?: ProgressEvent }) {
 
 async function handleRemove(file: UploadFileInfo) {
   if (file.status !== 'finished') {
-    return;
+    return false;
   }
   const { error } = await fetchBatchDeleteOss([file.id]);
-  if (error) return;
+  if (error) return false;
   window.$message?.success('删除成功');
+  return true;
 }
 </script>
 

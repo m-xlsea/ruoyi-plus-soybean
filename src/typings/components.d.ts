@@ -129,6 +129,7 @@ declare module 'vue' {
     NUpload: typeof import('naive-ui')['NUpload']
     NUploadDragger: typeof import('naive-ui')['NUploadDragger']
     NWatermark: typeof import('naive-ui')['NWatermark']
+    OssUpload: typeof import('./../components/custom/oss-upload.vue')['default']
     PinToggler: typeof import('./../components/common/pin-toggler.vue')['default']
     PostSelect: typeof import('./../components/custom/post-select.vue')['default']
     ReloadButton: typeof import('./../components/common/reload-button.vue')['default']
