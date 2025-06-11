@@ -30,6 +30,9 @@ export const themeSettings: App.Theme.ThemeSetting = {
     },
     multilingual: {
       visible: true
+    },
+    globalSearch: {
+      visible: true
     }
   },
   tab: {
@@ -56,6 +59,14 @@ export const themeSettings: App.Theme.ThemeSetting = {
   watermark: {
     visible: import.meta.env.VITE_WATERMARK === 'Y',
     text: 'RuoYi-Vue-Plus'
+  },
+  table: {
+    bordered: true,
+    bottomBordered: true,
+    singleColumn: false,
+    singleLine: true,
+    size: 'small',
+    striped: false
   },
   tokens: {
     light: {

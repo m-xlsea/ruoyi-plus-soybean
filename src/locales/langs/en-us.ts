@@ -135,6 +135,9 @@ const local: App.I18n.Schema = {
       },
       multilingual: {
         visible: 'Display multilingual button'
+      },
+      globalSearch: {
+        visible: 'Display GlobalSearch button'
       }
     },
     tab: {
@@ -164,6 +167,20 @@ const local: App.I18n.Schema = {
     watermark: {
       visible: 'Watermark Full Screen Visible',
       text: 'Watermark Text'
+    },
+    tablePropsTitle: 'Table Props',
+    table: {
+      size: {
+        title: 'Table Size',
+        small: 'Small',
+        medium: 'Medium',
+        large: 'Large'
+      },
+      bordered: 'Bordered',
+      bottomBordered: 'Bottom Bordered',
+      singleColumn: 'Single Column',
+      singleLine: 'Single Line',
+      striped: 'Striped'
     },
     themeDrawerTitle: 'Theme Configuration',
     pageFunTitle: 'Page Function',
@@ -221,6 +238,13 @@ const local: App.I18n.Schema = {
     'workflow_process-definition': 'Process Definition',
     'workflow_process-instance': 'Process Instance',
     workflow_leave: 'Leave Apply'
+  },
+  dict: {
+    sys_user_sex: {
+      male: 'Male',
+      female: 'Female',
+      unknown: 'Unknown'
+    }
   },
   page: {
     login: {
@@ -579,6 +603,7 @@ const local: App.I18n.Schema = {
         buttonPermissionList: 'Button Permission List',
         emptyMenu: 'Empty Menu',
         menuDetail: 'Menu Detail',
+        cascadeDeleteContent: 'Cascade delete menu will delete the selected menu and all its sub-menus, are you sure?',
         iconifyTip: 'iconify address：`https://icones.js.org`',
         isFrameTip: 'If you choose External Link, the routing address needs to start with `http(s)://`',
         isCacheTip:
@@ -602,6 +627,10 @@ const local: App.I18n.Schema = {
           icon: {
             required: 'Please select Menu Icon',
             invalid: 'Menu Icon cannot be empty'
+          },
+          menuIds: {
+            required: 'Please select Menu',
+            invalid: 'Menu cannot be empty'
           },
           menuName: {
             required: 'Please enter Menu Name',
@@ -660,7 +689,8 @@ const local: App.I18n.Schema = {
         button: 'Button',
         addMenu: 'Add Menu',
         addChildMenu: 'Add Child Menu',
-        editMenu: 'Edit Menu'
+        editMenu: 'Edit Menu',
+        cascadeDelete: 'Cascade Delete Menu'
       },
       notice: {
         title: 'Notice List',

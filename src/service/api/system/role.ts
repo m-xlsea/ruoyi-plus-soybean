@@ -36,6 +36,15 @@ export function fetchUpdateRoleStatus(data: Api.System.RoleOperateParams) {
   });
 }
 
+/** 修改角色数据权限 */
+export function fetchUpdateRoleDataScope(data: Api.System.RoleOperateParams) {
+  return request<boolean>({
+    url: '/system/role/dataScope',
+    method: 'put',
+    data
+  });
+}
+
 /** 批量删除角色信息 */
 export function fetchBatchDeleteRole(roleIds: CommonType.IdType[]) {
   return request<boolean>({

@@ -1,0 +1,73 @@
+kind: pipeline
+type: docker
+name: Build and Deploy
+
+clone:
+  depth: 10
+
+volumes:
+  - name: go_cache
+    host:
+      path: /data/drone_cache/go_cache
+
+steps:
+  - name: restore-cache
+    image: drillster/drone-volume-cache
+    volumes:
+      - name: go_cache
+        path: /cache
+    settings:
+      restore: true
+      mount:
+        - ./.npm-cache
+        - ./node_modules
+
+  - name: build
+    image: node:alpine
+    pull: if-not-exists
+    commands:
+      - export NODE_OPTIONS=--max_old_space_size=6144
+      - echo ${DRONE_BRANCH}
+      - echo ${DRONE_TAG}
+      - echo ${DRONE_COMMIT}
+      - echo ${DRONE_COMMIT:0-7}
+      - npm config set registry https://registry.npmmirror.com
+      - npm install -g pnpm
+      - pnpm config set registry https://registry.npmmirror.com
+      - pnpm i
+      - pnpm build
+
+  - name: rebuild-cache
+    image: drillster/drone-volume-cache
+    volumes:
+      - name: go_cache
+        path: /cache
+    settings:
+      rebuild: true
+      mount:
+        - ./.npm-cache
+        - ./node_modules
+
+  - name: scp files
+    image: appleboy/drone-scp
+    pull: if-not-exists
+    settings:
+      host:
+        from_secret: HOST
+      username:
+        from_secret: USERNAME
+      password:
+        from_secret: PASSWORD
+      port:
+        from_secret: PORT
+      target:
+        from_secret: TARGET_PATH
+      source: dist/*
+      overwrite: true
+      rm: true
+
+trigger:
+  branch:
+    - master
+  event:
+    - push

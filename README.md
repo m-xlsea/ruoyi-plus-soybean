@@ -7,7 +7,8 @@
 <div align="center">
   <p>一个基于 <a href="https://gitee.com/dromara/RuoYi-Vue-Plus" target="_blank">RuoYi-Vue-Plus</a> 的后端能力和 <a href="https://github.com/soybeanjs/soybean-admin" target="_blank">Soybean Admin</a> 前端特性的现代化多租户管理系统</p>
   <p>
-    <img src="https://gitee.com/xlsea/ruoyi-plus-soybean/badge/star.svg?theme=blue" alt="Gitee">
+    <img src="https://gitee.com/xlsea/ruoyi-plus-soybean/badge/star.svg" alt="Gitee">
+    <img src="https://img.shields.io/github/stars/m-xlsea/ruoyi-plus-soybean" alt="Github">
     <img src="https://img.shields.io/badge/Vue-3.5-brightgreen" alt="vue">
     <img src="https://img.shields.io/badge/TypeScript-5.8-blue" alt="typescript">
     <img src="https://img.shields.io/badge/Vite-6.2-orange" alt="vite">
@@ -18,9 +19,17 @@
 
 # 📢 重要通知
 
-<p style="color: red; font-weight: bold; font-size: 24px;">该项目未首发公测版本，请谨慎在生产环境使用！！！</p>
-<p style="color: red; font-weight: bold; font-size: 24px;">该项目未首发公测版本，请谨慎在生产环境使用！！！</p>
-<p style="color: red; font-weight: bold; font-size: 24px;">该项目未首发公测版本，请谨慎在生产环境使用！！！</p>
+虽然 1.0.0 版本已经包含了完整的核心功能，但我们仍然建议：
+- 在生产环境使用前进行充分测试
+- 关注项目更新，及时获取最新版本
+- 积极反馈问题，帮助我们快速迭代
+
+**后续规划**
+- 工作流引擎集成
+- 多语言国际化完善
+- 更多企业级功能模块
+- 性能优化和稳定性提升
+
 
 > 如果对该项目感兴趣，可以给一个 Star 支持一下，谢谢！
 > 请大家踊跃提交 PR 和 Issue，一起完善这个项目
@@ -353,7 +362,9 @@ console.log(t('common.confirm'));
 
 ## 💬 交流群
 
-<img src="https://foruda.gitee.com/images/1748404753216665472/3d8b1a0b_5601833.png" width="300px" />
+<img src="https://foruda.gitee.com/images/1749174520085305975/ad1b54fe_5601833.png" width="300px" />
+
+添加作者微信备注：加群
 
 ## 🧧 捐献作者
 
@@ -415,4 +426,9 @@ console.log(t('common.confirm'));
 <div style="display: flex; gap: 8px;">
     <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747796468040874363/1faa75ce_5601833.jpeg" width="24px" >
     <span>莫离支🤴 10元</span>
+</div>
+
+<div style="display: flex; gap: 8px;">
+    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1749191537723692930/0b810403_5601833.jpeg" width="24px" >
+    <span>Ivan 100元</span>
 </div>

@@ -58,6 +58,10 @@ declare namespace App {
           /** Whether to show the multilingual */
           visible: boolean;
         };
+        globalSearch: {
+          /** Whether to show the GlobalSearch */
+          visible: boolean;
+        };
       };
       /** Tab */
       tab: {
@@ -108,6 +112,20 @@ declare namespace App {
         visible: boolean;
         /** Watermark text */
         text: string;
+      };
+      table: {
+        /** Whether to show the table border */
+        bordered: boolean;
+        /** Whether to show the table bottom border */
+        bottomBordered: boolean;
+        /** Whether to show the table single column */
+        singleColumn: boolean;
+        /** Whether to show the table single line */
+        singleLine: boolean;
+        /** Whether to show the table size */
+        size: UnionKey.ThemeTableSize;
+        /** Whether to show the table striped */
+        striped: boolean;
       };
       /** define some theme settings tokens, will transform to css variables */
       tokens: {
@@ -401,6 +419,9 @@ declare namespace App {
           multilingual: {
             visible: string;
           };
+          globalSearch: {
+            visible: string;
+          };
         };
         tab: {
           visible: string;
@@ -426,6 +447,15 @@ declare namespace App {
           visible: string;
           text: string;
         };
+        tablePropsTitle: string;
+        table: {
+          size: { title: string } & Record<UnionKey.ThemeTableSize, string>;
+          bordered: string;
+          bottomBordered: string;
+          singleColumn: string;
+          singleLine: string;
+          striped: string;
+        };
         themeDrawerTitle: string;
         pageFunTitle: string;
         resetCacheStrategy: { title: string } & Record<UnionKey.ResetCacheStrategy, string>;
@@ -437,6 +467,7 @@ declare namespace App {
         };
       };
       route: Record<I18nRouteKey, string>;
+      dict: Record<string, Record<string, string>>;
       page: {
         common: {
           id: string;
@@ -680,6 +711,7 @@ declare namespace App {
             buttonPermissionList: string;
             emptyMenu: string;
             menuDetail: string;
+            cascadeDeleteContent: string;
             iconifyTip: string;
             isFrameTip: string;
             isCacheTip: string;
@@ -691,6 +723,7 @@ declare namespace App {
             form: {
               parentId: FormMsg;
               menuType: FormMsg;
+              menuIds: FormMsg;
               icon: FormMsg;
               menuName: FormMsg;
               orderNum: FormMsg;
@@ -717,6 +750,7 @@ declare namespace App {
             addMenu: string;
             addChildMenu: string;
             editMenu: string;
+            cascadeDelete: string;
           };
           notice: {
             title: string;

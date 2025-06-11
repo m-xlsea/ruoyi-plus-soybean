@@ -9,11 +9,13 @@ defineOptions({ name: 'MenuTree' });
 
 interface Props {
   immediate?: boolean;
+  showHeader?: boolean;
   [key: string]: any;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  immediate: true
+  immediate: true,
+  showHeader: true
 });
 
 const { bool: expandAll } = useBoolean();
@@ -49,7 +51,6 @@ onMounted(() => {
   }
 });
 
-// 添加 watch 监听 expandAll 的变化,options有值后，计算expandedKeys
 watch([expandAll, options], ([newVal]) => {
   if (newVal) {
     // 展开所有节点
@@ -80,6 +81,21 @@ function getAllMenuIds(menu: Api.System.MenuList) {
   return menuIds;
 }
 
+/** 获取所有叶子节点的 ID（没有子节点的节点） */
+function getLeafMenuIds(menu: Api.System.MenuList): CommonType.IdType[] {
+  const leafIds: CommonType.IdType[] = [];
+  menu.forEach(item => {
+    if (!item.children || item.children.length === 0) {
+      // 是叶子节点
+      leafIds.push(item.id!);
+    } else {
+      // 有子节点，递归获取子节点中的叶子节点
+      leafIds.push(...getLeafMenuIds(item.children));
+    }
+  });
+  return leafIds;
+}
+
 function handleCheckedTreeNodeAll(checked: boolean) {
   if (checked) {
     checkedKeys.value = getAllMenuIds(options.value);
@@ -88,15 +104,29 @@ function handleCheckedTreeNodeAll(checked: boolean) {
   checkedKeys.value = [];
 }
 
-function getCheckedMenuIds() {
+function getCheckedMenuIds(isCascade: boolean = false) {
   const menuIds = menuTreeRef.value?.getCheckedData()?.keys as string[];
   const indeterminateData = menuTreeRef.value?.getIndeterminateData();
-  if (cascade.value) {
+  if (cascade.value || isCascade) {
     const parentIds: string[] = indeterminateData?.keys.filter(item => !menuIds?.includes(String(item))) as string[];
     menuIds?.push(...parentIds);
   }
   return menuIds;
 }
+
+watch(cascade, () => {
+  if (cascade.value) {
+    // 获取当前菜单树中的所有叶子节点ID
+    const allLeafIds = getLeafMenuIds(options.value);
+    // 筛选出当前选中项中的叶子节点
+    const selectedLeafIds = checkedKeys.value.filter(id => allLeafIds.includes(id));
+    // 重新设置选中状态为只包含叶子节点，让组件基于父子联动规则重新计算父节点状态
+    checkedKeys.value = selectedLeafIds;
+    return;
+  }
+  // 禁用父子联动时，将半选中的父节点也加入到选中列表
+  checkedKeys.value = getCheckedMenuIds(true);
+});
 
 defineExpose({
   getCheckedMenuIds,
@@ -106,7 +136,7 @@ defineExpose({
 
 <template>
   <div class="w-full flex-col gap-12px">
-    <div class="w-full flex-center">
+    <div v-if="showHeader" class="w-full flex-center">
       <NCheckbox v-model:checked="expandAll" :checked-value="true" :unchecked-value="false">展开/折叠</NCheckbox>
       <NCheckbox
         v-model:checked="checkAll"

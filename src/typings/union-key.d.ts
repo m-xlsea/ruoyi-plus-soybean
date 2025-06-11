@@ -51,6 +51,15 @@ declare namespace UnionKey {
    */
   type ThemeTabMode = import('@sa/materials').PageTabMode;
 
+  /**
+   * The table size
+   *
+   * - small: small size
+   * - medium: medium size
+   * - large: large size
+   */
+  type ThemeTableSize = 'small' | 'medium' | 'large';
+
   /** Unocss animate key */
   type UnoCssAnimateKey =
     | 'pulse'

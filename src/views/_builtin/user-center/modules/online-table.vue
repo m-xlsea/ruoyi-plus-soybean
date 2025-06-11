@@ -4,7 +4,7 @@ import { useLoading } from '@sa/hooks';
 import { fetchForceLogout, fetchGetOnlineDeviceList } from '@/service/api/monitor';
 import { useAppStore } from '@/store/modules/app';
 import { useTable } from '@/hooks/common/table';
-import { getBrowserIcon, getOsIcon } from '@/utils/format';
+import { getBrowserIcon, getOsIcon } from '@/utils/icon-tag-format';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
@@ -16,12 +16,8 @@ defineOptions({
 const appStore = useAppStore();
 const { loading: btnLoading, startLoading: startBtnLoading, endLoading: endBtnLoading } = useLoading(false);
 
-const { columns, data, loading, mobilePagination, getData } = useTable({
+const { columns, data, loading, getData } = useTable({
   apiFn: fetchGetOnlineDeviceList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 15
-  },
   columns: () => [
     { title: '用户名', key: 'userName', align: 'center', minWidth: 120 },
     { title: 'IP地址', key: 'ipaddr', align: 'center', minWidth: 120 },
@@ -109,7 +105,6 @@ async function forceLogout(tokenId: string) {
     :loading="loading"
     remote
     :row-key="row => row.noticeId"
-    :pagination="mobilePagination"
     class="h-full"
   />
 </template>

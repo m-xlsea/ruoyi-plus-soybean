@@ -47,7 +47,7 @@ function createDefaultModel(): Model {
     configName: '',
     configKey: '',
     configValue: '',
-    configType: '',
+    configType: 'Y',
     remark: ''
   };
 }

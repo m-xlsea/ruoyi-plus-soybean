@@ -135,6 +135,9 @@ const local: App.I18n.Schema = {
       },
       multilingual: {
         visible: '显示多语言按钮'
+      },
+      globalSearch: {
+        visible: '显示全局搜索按钮'
       }
     },
     tab: {
@@ -164,6 +167,20 @@ const local: App.I18n.Schema = {
     watermark: {
       visible: '显示全屏水印',
       text: '水印文本'
+    },
+    tablePropsTitle: '表格配置',
+    table: {
+      size: {
+        title: '表格大小',
+        small: '小',
+        medium: '中',
+        large: '大'
+      },
+      bordered: '边框',
+      bottomBordered: '底部边框',
+      singleColumn: '设定行的分割线',
+      singleLine: '设定列的分割线',
+      striped: '斑马线条纹'
     },
     themeDrawerTitle: '主题配置',
     pageFunTitle: '页面功能',
@@ -221,6 +238,13 @@ const local: App.I18n.Schema = {
     'workflow_process-definition': '流程定义',
     'workflow_process-instance': '流程实例',
     workflow_leave: '请假申请'
+  },
+  dict: {
+    sys_user_sex: {
+      male: '男',
+      female: '女',
+      unknown: '未知'
+    }
   },
   page: {
     login: {
@@ -579,6 +603,7 @@ const local: App.I18n.Schema = {
         buttonPermissionList: '按钮权限列表',
         emptyMenu: '暂无菜单',
         menuDetail: '菜单详情',
+        cascadeDeleteContent: '级联删除菜单将删除所选中的菜单，是否继续？',
         iconifyTip: 'iconify 地址：https://icones.js.org',
         isFrameTip: '选择是外链则路由地址需要以`http(s)://`开头',
         isCacheTip: '选择是则会被`keep-alive`缓存，需要匹配组件的`name`和地址保持一致',
@@ -596,6 +621,10 @@ const local: App.I18n.Schema = {
           menuType: {
             required: '请选择菜单类型',
             invalid: '菜单类型不能为空'
+          },
+          menuIds: {
+            required: '请选择菜单',
+            invalid: '菜单不能为空'
           },
           icon: {
             required: '请选择菜单图标',
@@ -658,7 +687,8 @@ const local: App.I18n.Schema = {
         button: '按钮',
         addMenu: '新增菜单',
         addChildMenu: '新增子菜单',
-        editMenu: '编辑菜单'
+        editMenu: '编辑菜单',
+        cascadeDelete: '级联删除菜单'
       },
       notice: {
         title: '通知公告列表',

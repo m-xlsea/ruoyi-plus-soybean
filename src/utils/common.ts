@@ -1,3 +1,4 @@
+import { AcceptType } from '@/enum/business';
 import { $t } from '@/locales';
 /**
  * Transform record to option
@@ -87,8 +88,7 @@ export function isNull(value: any) {
 
 /** 判断是否为图片类型 */
 export function isImage(suffix: string) {
-  const imgSuffixList = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-  return imgSuffixList.includes(suffix.toLowerCase());
+  return AcceptType.Image.split(',').includes(suffix.toLowerCase());
 }
 
 /**
