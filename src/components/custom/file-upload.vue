@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { useAttrs } from 'vue';
+import { computed, useAttrs } from 'vue';
 import type { UploadFileInfo, UploadProps } from 'naive-ui';
 import { fetchBatchDeleteOss } from '@/service/api/system/oss';
 import { getToken } from '@/store/modules/auth/shared';
 import { getServiceBaseURL } from '@/utils/service';
+import { AcceptType } from '@/enum/business';
 
 defineOptions({
   name: 'FileUpload'
@@ -26,9 +27,16 @@ const props = withDefaults(defineProps<Props>(), {
   defaultUpload: true,
   showTip: true,
   max: 5,
-  accept: '.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.pdf',
+  accept: undefined,
   fileSize: 5,
   uploadType: 'file'
+});
+
+const accept = computed(() => {
+  if (props.accept) {
+    return props.accept;
+  }
+  return props.uploadType === 'file' ? AcceptType.File : AcceptType.Image;
 });
 
 const attrs: UploadProps = useAttrs();
@@ -51,12 +59,12 @@ function beforeUpload(options: { file: UploadFileInfo; fileList: UploadFileInfo[
   const { file } = options;
 
   // 校检文件类型
-  if (props.accept) {
+  if (accept.value) {
     const fileName = file.name.split('.');
     const fileExt = `.${fileName[fileName.length - 1]}`;
-    const isTypeOk = props.accept.split(',')?.includes(fileExt);
+    const isTypeOk = accept.value.split(',')?.includes(fileExt);
     if (!isTypeOk) {
-      window.$message?.error(`文件格式不正确, 请上传 ${props.accept} 格式文件!`);
+      window.$message?.error(`文件格式不正确, 请上传 ${accept.value} 格式文件!`);
       return false;
     }
   }

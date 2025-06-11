@@ -53,12 +53,13 @@ function createDefaultModel(): Model {
   };
 }
 
-type RuleKey = Extract<keyof Model, 'id' | 'deptId' | 'userId' | 'testKey' | 'value'>;
+type RuleKey = Extract<keyof Model, 'id' | 'deptId' | 'userId' | 'orderNum' | 'testKey' | 'value'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   id: createRequiredRule('主键不能为空'),
   deptId: createRequiredRule('部门不能为空'),
   userId: createRequiredRule('用户不能为空'),
+  orderNum: createRequiredRule('排序号不能为空'),
   testKey: createRequiredRule('key 键不能为空'),
   value: createRequiredRule('值不能为空')
 };
@@ -124,7 +125,7 @@ watch(visible, () => {
           <NInput v-model:value="model.testKey" placeholder="请输入 key 键" />
         </NFormItem>
         <NFormItem label="值" path="value">
-          <NInput v-model:value="model.value" placeholder="请输入值" />
+          <OssUpload v-model:value="model.value as string" upload-type="image" placeholder="请输入值" />
         </NFormItem>
         <NFormItem label="备注" path="remark">
           <NInput v-model:value="model.remark" type="textarea" placeholder="请输入备注" />
