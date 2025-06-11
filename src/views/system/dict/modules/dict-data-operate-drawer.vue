@@ -44,13 +44,15 @@ type Model = Api.System.DictDataOperateParams;
 
 const model: Model = reactive(createDefaultModel());
 
-const listClassOptions = [
-  { label: 'primary', value: 'primary' },
-  { label: 'success', value: 'success' },
-  { label: 'info', value: 'info' },
-  { label: 'warning', value: 'warning' },
-  { label: 'error', value: 'error' },
-  { label: 'default', value: 'default' }
+const listClassOptions: Record<string, string>[] = [
+  { label: 'Text', value: 'text' },
+  { label: 'Default', value: 'default' },
+  { label: 'Tertiary', value: 'tertiary' },
+  { label: 'Primary', value: 'primary' },
+  { label: 'Info', value: 'info' },
+  { label: 'Success', value: 'success' },
+  { label: 'Warning', value: 'warning' },
+  { label: 'Error', value: 'error' }
 ];
 
 function createDefaultModel(): Model {
@@ -134,6 +136,9 @@ watch(visible, () => {
 });
 
 function renderTagLabel(option: { label: string; value: string }) {
+  if (option.value === 'text') {
+    return option.label;
+  }
   return (
     <NTag size="small" type={option.value as any}>
       {option.label}

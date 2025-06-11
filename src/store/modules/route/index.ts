@@ -103,6 +103,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   // eslint-disable-next-line complexity
   function parseRouter(route: ElegantConstRoute, parent?: ElegantConstRoute) {
     route.meta = route.meta ? route.meta : { title: route.name };
+    if (route.meta.title.startsWith('route.')) {
+      route.meta.i18nKey = route.meta.title as App.I18n.I18nKey;
+    }
     const isLayout = route.component === 'Layout';
     const isFramePage = route.component === 'FrameView';
     const isParentLayout = route.component === 'ParentView';

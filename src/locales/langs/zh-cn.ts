@@ -234,6 +234,13 @@ const local: App.I18n.Schema = {
     exception_404: '404',
     exception_500: '500'
   },
+  dict: {
+    sys_user_sex: {
+      male: '男',
+      female: '女',
+      unknown: '未知'
+    }
+  },
   page: {
     login: {
       common: {

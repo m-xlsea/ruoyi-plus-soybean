@@ -3,6 +3,8 @@ import { storeToRefs } from 'pinia';
 import { fetchGetDictDataByType } from '@/service/api/system';
 import { useDictStore } from '@/store/modules/dict';
 import { isNull } from '@/utils/common';
+import { $t } from '@/locales';
+
 export function useDict(dictType: string, immediate: boolean = true) {
   const dictStore = useDictStore();
   const { dictData: dictList } = storeToRefs(dictStore);
@@ -19,6 +21,11 @@ export function useDict(dictType: string, immediate: boolean = true) {
     }
     const { data: dictData, error } = await fetchGetDictDataByType(dictType);
     if (error) return;
+    dictData.forEach(dict => {
+      if (dict.dictLabel?.startsWith(`dict.${dictType}.`)) {
+        dict.dictLabel = $t(dict.dictLabel as App.I18n.I18nKey);
+      }
+    });
     dictStore.setDict(dictType, dictData);
     data.value = dictData;
   }
