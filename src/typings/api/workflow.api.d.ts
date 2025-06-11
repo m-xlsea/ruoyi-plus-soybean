@@ -90,6 +90,8 @@ declare namespace Api {
       flowName: string;
       /** 流程类别 */
       category: string;
+      /** 流程分类名称 */
+      categoryName: string;
       /** 流程版本 */
       version: string;
       /** 是否发布（0未发布 1已发布 9失效） */

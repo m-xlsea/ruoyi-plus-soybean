@@ -151,45 +151,58 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
     fixed: 'right',
     width: 155,
     render: row => {
-      const showAll = runningStatus.value;
       const id = row.id;
+      const showAll = runningStatus.value;
+      const Divider = <NDivider vertical />;
+
+      const cancelBtn = (
+        <ButtonIcon
+          text
+          type="error"
+          showPopconfirmIcon={false}
+          icon="material-symbols:cancel-outline-rounded"
+          tooltipContent="作废流程"
+          popconfirmContent={
+            <NInput v-model:value={cancelModel.comment} size="large" type="textarea" placeholder="请输入作废原因" />
+          }
+          onPositiveClick={() => handleCancel(id)}
+        />
+      );
+
+      const deleteBtn = (
+        <ButtonIcon
+          text
+          type="error"
+          icon="material-symbols:delete-outline"
+          tooltipContent={$t('common.delete')}
+          popconfirmContent={$t('common.confirmDelete')}
+          onPositiveClick={() => handleDelete(id)}
+        />
+      );
+
+      const previewBtn = (
+        <ButtonIcon text type="info" icon="material-symbols:visibility-outline" tooltipContent="流程预览" />
+      );
+
+      const variableBtn = (
+        <ButtonIcon
+          text
+          type="info"
+          icon="material-symbols:variable-insert"
+          tooltipContent="流程变量"
+          onClick={() => handleShowVariable(id)}
+        />
+      );
+
       return (
         <div class="flex-center gap-1px">
-          {showAll && [
-            <ButtonIcon
-              key="cancel"
-              text
-              type="error"
-              showPopconfirmIcon={false}
-              icon="material-symbols:cancel-outline-rounded"
-              tooltipContent="作废流程"
-              popconfirmContent={
-                <NInput v-model:value={cancelModel.comment} size="large" type="textarea" placeholder="请输入作废原因" />
-              }
-              onPositiveClick={() => handleCancel(id)}
-            />,
-            <NDivider key="div1" vertical />,
-            <ButtonIcon
-              key="delete"
-              text
-              type="error"
-              icon="material-symbols:delete-outline"
-              tooltipContent={$t('common.delete')}
-              popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(id)}
-            />,
-            <NDivider key="div2" vertical />
-          ]}
-          <ButtonIcon text type="info" icon="material-symbols:visibility-outline" tooltipContent="流程预览" />
-          <NDivider vertical />
-          <ButtonIcon
-            key=""
-            text
-            type="info"
-            icon="material-symbols:variable-insert"
-            tooltipContent="流程变量"
-            onClick={() => handleShowVariable(id)}
-          />
+          {showAll && cancelBtn}
+          {showAll && Divider}
+          {showAll && deleteBtn}
+          {showAll && Divider}
+          {previewBtn}
+          {Divider}
+          {variableBtn}
         </div>
       );
     }

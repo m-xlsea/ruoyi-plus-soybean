@@ -1,13 +1,16 @@
 <script setup lang="tsx">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { NDivider, NSwitch, NTag } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
+import { type TableDataWithIndex } from '@sa/hooks';
 import { workflowPublishStatusRecord } from '@/constants/workflow';
 import {
   fetchActiveDefinition,
   fetchBatchDeleteDefinition,
   fetchGetCategoryTree,
-  fetchGetUnPublishDefinitionList
+  fetchGetDefinitionList,
+  fetchGetUnPublishDefinitionList,
+  fetchPublishDefinition
 } from '@/service/api/workflow';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
@@ -23,12 +26,28 @@ defineOptions({
   name: 'DefinitionList'
 });
 
+interface IsPublishOption {
+  label: string;
+  value: boolean;
+}
+
 const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
 
 const { bool: importVisible, setTrue: showImportModal } = useBoolean();
 
+const isPublish = ref<boolean>(true);
+const isPublishOptions = ref<IsPublishOption[]>([
+  {
+    label: '已发布',
+    value: true
+  },
+  {
+    label: '未发布',
+    value: false
+  }
+]);
 const {
   columns,
   columnChecks,
@@ -38,9 +57,10 @@ const {
   loading,
   mobilePagination,
   searchParams,
-  resetSearchParams
+  resetSearchParams,
+  updateApiFn
 } = useTable({
-  apiFn: fetchGetUnPublishDefinitionList,
+  apiFn: fetchGetDefinitionList,
   apiParams: {
     pageNum: 1,
     pageSize: 10,
@@ -70,7 +90,7 @@ const {
       minWidth: 120
     },
     {
-      key: 'category',
+      key: 'categoryName',
       title: '流程分类',
       align: 'center',
       minWidth: 120
@@ -79,7 +99,10 @@ const {
       key: 'version',
       title: '版本号',
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
+      render(row) {
+        return <NTag type="info">v{row.version}.0</NTag>;
+      }
     },
     {
       key: 'activityStatus',
@@ -136,13 +159,11 @@ const {
         if (row.isPublish === null) {
           return null;
         }
-
         const tagMap: Record<Api.Workflow.WorkflowPublishStatus, NaiveUI.ThemeColor> = {
           0: 'warning',
           1: 'success',
           9: 'error'
         };
-
         return <NTag type={tagMap[row.isPublish]}>{workflowPublishStatusRecord[row.isPublish]}</NTag>;
       }
     },
@@ -150,56 +171,88 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 130,
+      width: 150,
+      fixed: 'right',
       render: row => {
-        const divider = () => {
-          if (!hasAuth('workflow:definition:edit') || !hasAuth('workflow:definition:remove')) {
-            return null;
-          }
-          return <NDivider vertical />;
-        };
+        const Divider = <NDivider vertical />;
 
-        const editBtn = () => {
-          if (!hasAuth('workflow:definition:edit')) {
-            return null;
-          }
-          return (
+        const buttons = {
+          edit: (
             <ButtonIcon
               text
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
               tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.id!)}
+              onClick={() => edit(row.id)}
             />
-          );
-        };
-
-        const deleteBtn = () => {
-          if (!hasAuth('workflow:definition:remove')) {
-            return null;
-          }
-          return (
+          ),
+          delete: (
             <ButtonIcon
               text
               type="error"
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.id!)}
+              onPositiveClick={() => handleDelete(row.id)}
             />
-          );
+          ),
+          design: <ButtonIcon text type="primary" icon="material-symbols:design-services" tooltipContent="流程设计" />,
+          preview: (
+            <ButtonIcon text type="primary" icon="material-symbols:visibility-outline" tooltipContent="查看流程" />
+          ),
+          publish: (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:publish"
+              tooltipContent="发布流程"
+              onClick={() => handlePublish(row.id)}
+            />
+          ),
+          copy: <ButtonIcon text type="primary" icon="material-symbols:content-copy" tooltipContent="复制流程" />,
+          export: (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:file-export"
+              tooltipContent="导出流程"
+              onClick={() => handleExport(row)}
+            />
+          )
         };
 
         return (
-          <div class="flex-center gap-8px">
-            {editBtn()}
-            {divider()}
-            {deleteBtn()}
+          <div class="flex-col">
+            <div class="h-[24px] flex-center gap-4px">
+              {buttons.edit}
+              {Divider}
+              {buttons.delete}
+              {Divider}
+              {buttons.copy}
+            </div>
+            <div class="h-[24px] flex-center gap-4px">
+              {buttons.export}
+              {Divider}
+              {isPublish.value ? buttons.preview : buttons.design}
+              {!isPublish.value && (
+                <>
+                  {Divider}
+                  {buttons.publish}
+                </>
+              )}
+            </div>
           </div>
         );
       }
     }
   ]
+});
+
+// 监听运行状态变化
+watch(isPublish, async () => {
+  const newApiFn = isPublish.value ? fetchGetDefinitionList : fetchGetUnPublishDefinitionList;
+  updateApiFn(newApiFn);
+  await getDataByPage();
 });
 
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
@@ -223,14 +276,20 @@ function edit(id: CommonType.IdType) {
   handleEdit('id', id);
 }
 
-function handleExport() {
-  download('/workflow/definition/export', searchParams, `流程定义_${new Date().getTime()}.xlsx`);
-}
-
 function handleDeploy() {
   showImportModal();
 }
 
+async function handlePublish(id: CommonType.IdType) {
+  const { error } = await fetchPublishDefinition(id);
+  if (error) return;
+  window.$message?.success('发布成功');
+  getDataByPage();
+}
+
+function handleExport(row: TableDataWithIndex<Api.Workflow.Definition>) {
+  download(`/workflow/definition/exportDef/${row.id}`, {}, `${row.flowCode}.json`);
+}
 const { loading: categoryLoading, startLoading: startCategoryLoading, endLoading: endCategoryLoading } = useLoading();
 const categoryPattern = ref<string>();
 const categoryData = ref<Api.Common.CommonTreeRecord>([]);
@@ -300,18 +359,27 @@ const selectable = computed(() => {
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <DefinitionSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-      <NCard title="流程定义列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+      <NCard :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+        <template #header>
+          <NSpace>
+            <NRadioGroup v-model:value="isPublish" on-up size="small">
+              <NRadioButton
+                v-for="(status, index) in isPublishOptions"
+                :key="index"
+                :value="status.value"
+                :label="status.label"
+              />
+            </NRadioGroup>
+          </NSpace>
+        </template>
         <template #header-extra>
           <TableHeaderOperation
             v-model:columns="columnChecks"
             :disabled-delete="checkedRowKeys.length === 0"
             :loading="loading"
-            :show-add="hasAuth('workflow:definition:add')"
             :show-delete="hasAuth('workflow:definition:remove')"
-            :show-export="hasAuth('workflow:definition:export')"
             @add="handleAdd"
             @delete="handleBatchDelete"
-            @export="handleExport"
             @refresh="getData"
           >
             <template #prefix>

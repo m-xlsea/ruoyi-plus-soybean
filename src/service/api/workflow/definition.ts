@@ -54,3 +54,11 @@ export function fetchActiveDefinition(id: CommonType.IdType, active: boolean) {
     }
   });
 }
+
+/** 发布流程定义 */
+export function fetchPublishDefinition(id: CommonType.IdType) {
+  return request<boolean>({
+    url: `/workflow/definition/publish/${id}`,
+    method: 'put'
+  });
+}
