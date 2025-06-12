@@ -36,3 +36,6 @@ UPDATE `sys_menu` SET `path` = 'https://gitee.com/xlsea/ruoyi-plus-soybean', `co
 
 -- plus-ui 需要禁用的页面
 UPDATE `sys_menu` SET `status` = '1' WHERE `menu_id` IN ( '116', '130', '131', '132', '11700', '11701' );
+
+-- 工作流菜单
+UPDATE `sys_menu` SET  `component` = 'workflow/processDefinition/index', WHERE `menu_id` = 11620;

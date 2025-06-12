@@ -7,6 +7,7 @@ import { workflowPublishStatusRecord } from '@/constants/workflow';
 import {
   fetchActiveDefinition,
   fetchBatchDeleteDefinition,
+  fetchCopyDefinition,
   fetchGetCategoryTree,
   fetchGetDefinitionList,
   fetchGetUnPublishDefinitionList,
@@ -16,11 +17,12 @@ import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import { useRouterPush } from '@/hooks/common/router';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import DefinitionOperateDrawer from './modules/definition-operate-drawer.vue';
-import DefinitionSearch from './modules/definition-search.vue';
-import DefinitionImportModal from './modules/definition-import-modal.vue';
+import DefinitionOperateDrawer from '../modules/definition-operate-drawer.vue';
+import DefinitionSearch from '../modules/definition-search.vue';
+import DefinitionImportModal from '../modules/definition-import-modal.vue';
 
 defineOptions({
   name: 'DefinitionList'
@@ -34,9 +36,9 @@ interface IsPublishOption {
 const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
+const { routerPushByKey } = useRouterPush();
 
 const { bool: importVisible, setTrue: showImportModal } = useBoolean();
-
 const isPublish = ref<boolean>(true);
 const isPublishOptions = ref<IsPublishOption[]>([
   {
@@ -196,9 +198,23 @@ const {
               onPositiveClick={() => handleDelete(row.id)}
             />
           ),
-          design: <ButtonIcon text type="primary" icon="material-symbols:design-services" tooltipContent="流程设计" />,
+          design: (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:design-services"
+              tooltipContent="流程设计"
+              onClick={() => handleDesign(row.id)}
+            />
+          ),
           preview: (
-            <ButtonIcon text type="primary" icon="material-symbols:visibility-outline" tooltipContent="查看流程" />
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:visibility-outline"
+              tooltipContent="查看流程"
+              onClick={() => handlePreview(row.id)}
+            />
           ),
           publish: (
             <ButtonIcon
@@ -206,10 +222,20 @@ const {
               type="primary"
               icon="material-symbols:publish"
               tooltipContent="发布流程"
-              onClick={() => handlePublish(row.id)}
+              popconfirmContent={`确定要发布 ${row.flowName} 吗？`}
+              onPositiveClick={() => handlePublish(row.id)}
             />
           ),
-          copy: <ButtonIcon text type="primary" icon="material-symbols:content-copy" tooltipContent="复制流程" />,
+          copy: (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:content-copy"
+              tooltipContent="复制流程"
+              popconfirmContent={`确定要复制 ${row.flowName} 吗？`}
+              onPositiveClick={() => handleCopy(row.id)}
+            />
+          ),
           export: (
             <ButtonIcon
               text
@@ -287,6 +313,36 @@ async function handlePublish(id: CommonType.IdType) {
   getDataByPage();
 }
 
+async function handleCopy(id: CommonType.IdType) {
+  const { error } = await fetchCopyDefinition(id);
+  if (error) return;
+  window.$message?.success('复制成功');
+  // 如果当前是已发布状态，则切换到未发布状态
+  if (isPublish.value) {
+    isPublish.value = false;
+  } else {
+    getDataByPage();
+  }
+}
+
+function handleDesign(id: CommonType.IdType) {
+  routerPushByKey('workflow_process-definition_design', {
+    query: {
+      definitionId: id.toString(),
+      disabled: 'false'
+    }
+  });
+}
+
+function handlePreview(id: CommonType.IdType) {
+  routerPushByKey('workflow_process-definition_design', {
+    query: {
+      definitionId: id.toString(),
+      disabled: 'true'
+    }
+  });
+}
+
 function handleExport(row: TableDataWithIndex<Api.Workflow.Definition>) {
   download(`/workflow/definition/exportDef/${row.id}`, {}, `${row.flowCode}.json`);
 }
@@ -325,7 +381,7 @@ const selectable = computed(() => {
 </script>
 
 <template>
-  <TableSiderLayout :sider-title="$t('page.system.dept.title')">
+  <TableSiderLayout sider-title="流程分类">
     <template #header-extra>
       <NButton size="small" text class="h-18px" @click.stop="() => handleResetTreeData()">
         <template #icon>
@@ -352,7 +408,7 @@ const selectable = computed(() => {
           @update:selected-keys="handleClickTree"
         >
           <template #empty>
-            <NEmpty :description="$t('page.system.dept.empty')" class="h-full min-h-200px justify-center" />
+            <NEmpty description="暂无流程分类" class="h-full min-h-200px justify-center" />
           </template>
         </NTree>
       </NSpin>

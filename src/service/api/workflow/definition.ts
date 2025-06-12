@@ -62,3 +62,11 @@ export function fetchPublishDefinition(id: CommonType.IdType) {
     method: 'put'
   });
 }
+
+/** 复制流程定义 */
+export function fetchCopyDefinition(id: CommonType.IdType) {
+  return request<boolean>({
+    url: `/workflow/definition/copy/${id}`,
+    method: 'post'
+  });
+}

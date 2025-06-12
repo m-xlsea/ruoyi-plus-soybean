@@ -56,7 +56,8 @@ declare module "@elegant-router/types" {
     "workflow": "/workflow";
     "workflow_category": "/workflow/category";
     "workflow_leave": "/workflow/leave";
-    "workflow_process-definition": "/workflow/process-definition";
+    "workflow_process-definition": "/workflow/process-definition/definition";
+    "workflow_process-definition_design": "/workflow/process-definition/design";
     "workflow_process-instance": "/workflow/process-instance";
   };
 
@@ -154,6 +155,7 @@ declare module "@elegant-router/types" {
     | "workflow_category"
     | "workflow_leave"
     | "workflow_process-definition"
+    | "workflow_process-definition_design"
     | "workflow_process-instance"
   >;
 
@@ -229,7 +231,7 @@ declare module "@elegant-router/types" {
         component: `view.${K}`;
       }
     : never;
-  
+
   /**
    * the center level route
    */
@@ -252,7 +254,7 @@ declare module "@elegant-router/types" {
         children: (CenterLevelRoute<GetChildRouteKey<K>> | LastLevelRoute<GetChildRouteKey<K>>)[];
       }
     : never;
-  
+
   /**
    * the custom first level route
    */
