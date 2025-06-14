@@ -50,7 +50,7 @@ async function search() {
         #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
   if (dateRange${AttrName}.value?.length) {
     model.value.params!.begin${AttrName} = dateRange${AttrName}.value[0];
-    model.value.params!.end${AttrName} = dateRange${AttrName}.value[0];
+    model.value.params!.end${AttrName} = dateRange${AttrName}.value[1];
   }
     #end
 #end
