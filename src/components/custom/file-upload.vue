@@ -127,55 +127,57 @@ async function handleRemove(file: UploadFileInfo) {
 </script>
 
 <template>
-  <NUpload
-    v-bind="attrs"
-    v-model:file-list="fileList"
-    :action="`${baseURL}${action}`"
-    :data="data"
-    :headers="headers"
-    :max="max"
-    :accept="accept"
-    :multiple="max > 1"
-    directory-dnd
-    :default-upload="defaultUpload"
-    :list-type="uploadType === 'image' ? 'image-card' : 'text'"
-    :is-error-state="isErrorState"
-    @finish="handleFinish"
-    @error="handleError"
-    @before-upload="beforeUpload"
-    @remove="({ file }) => handleRemove(file)"
-  >
-    <NUploadDragger v-if="uploadType === 'file'">
-      <div class="mb-12px flex-center">
-        <SvgIcon icon="material-symbols:unarchive-outline" class="text-58px color-#d8d8db dark:color-#a1a1a2" />
-      </div>
-      <NText class="text-16px">点击或者拖动文件到该区域来上传</NText>
-      <NP v-if="showTip" depth="3" class="mt-8px text-center">
-        请上传
-        <template v-if="fileSize">
-          大小不超过
-          <b class="text-red-500">{{ fileSize }}MB</b>
-        </template>
-        <template v-if="accept">
-          ，且格式为
-          <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
-        </template>
-        的文件
-      </NP>
-    </NUploadDragger>
-  </NUpload>
-  <NP v-if="showTip && uploadType === 'image'" depth="3" class="mt-12px">
-    请上传
-    <template v-if="fileSize">
-      大小不超过
-      <b class="text-red-500">{{ fileSize }}MB</b>
-    </template>
-    <template v-if="accept">
-      ，且格式为
-      <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
-    </template>
-    的文件
-  </NP>
+  <div class="w-full flex-col">
+    <NUpload
+      v-bind="attrs"
+      v-model:file-list="fileList"
+      :action="`${baseURL}${action}`"
+      :data="data"
+      :headers="headers"
+      :max="max"
+      :accept="accept"
+      :multiple="max > 1"
+      directory-dnd
+      :default-upload="defaultUpload"
+      :list-type="uploadType === 'image' ? 'image-card' : 'text'"
+      :is-error-state="isErrorState"
+      @finish="handleFinish"
+      @error="handleError"
+      @before-upload="beforeUpload"
+      @remove="({ file }) => handleRemove(file)"
+    >
+      <NUploadDragger v-if="uploadType === 'file'">
+        <div class="mb-12px flex-center">
+          <SvgIcon icon="material-symbols:unarchive-outline" class="text-58px color-#d8d8db dark:color-#a1a1a2" />
+        </div>
+        <NText class="text-16px">点击或者拖动文件到该区域来上传</NText>
+        <NP v-if="showTip" depth="3" class="mt-8px text-center">
+          请上传
+          <template v-if="fileSize">
+            大小不超过
+            <b class="text-red-500">{{ fileSize }}MB</b>
+          </template>
+          <template v-if="accept">
+            ，且格式为
+            <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
+          </template>
+          的文件
+        </NP>
+      </NUploadDragger>
+    </NUpload>
+    <NP v-if="showTip && uploadType === 'image'" depth="3" class="mt-12px">
+      请上传
+      <template v-if="fileSize">
+        大小不超过
+        <b class="text-red-500">{{ fileSize }}MB</b>
+      </template>
+      <template v-if="accept">
+        ，且格式为
+        <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
+      </template>
+      的文件
+    </NP>
+  </div>
 </template>
 
 <style scoped></style>

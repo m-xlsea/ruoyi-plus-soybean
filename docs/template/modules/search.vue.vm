@@ -75,35 +75,28 @@ async function search() {
 #set($comment=$column.columnComment)
 #end
             <NFormItemGi span="24 s:12 m:6" label="$column.columnComment" path="$column.javaField" class="pr-24px">
-            #if(($column.htmlType == "select" || $column.htmlType == "radio") && "" != $dictType)
+            #if(($tool.in($column.htmlType, "select", "radio", "checkbox")) && $dictType && "" != $dictType)
               <NSelect
                 v-model:value="model.$column.javaField"
                 placeholder="请选择$column.columnComment"
                 :options="${column.dictType}Options"
                 clearable
               />
-            #elseif(($column.htmlType == "select" || $column.htmlType == "radio") && $dictType)
+            #elseif($tool.in($column.htmlType, "select", "radio", "checkbox"))
               <NSelect
                 v-model:value="model.$column.javaField"
                 placeholder="请选择$column.columnComment"
                 :options="[]"
                 clearable
               />
-            #elseif($column.htmlType.equals('select') || $column.htmlType.equals('radio'))
-              <NSelect
-                v-model:value="model.$column.javaField"
-                placeholder="请选择$column.columnComment"
-                :options="[]"
-                clearable
-              />
-            #elseif($column.htmlType == "datetime" && $column.queryType != "BETWEEN")
+            #elseif($column.htmlType == 'datetime' && $column.queryType != "BETWEEN")
               <NDatePicker
                 v-model:formatted-value="model.$column.javaField"
-                type="date"
-                value-format="yyyy-MM-dd"
+                type="datetime"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
               />
-            #elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+            #elseif($column.htmlType == 'datetime' && $column.queryType == "BETWEEN")
               <NDatePicker
                 v-model:formatted-value="dateRange${AttrName}"
                 type="datetimerange"
