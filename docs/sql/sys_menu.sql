@@ -38,5 +38,6 @@ UPDATE `sys_menu` SET `path` = 'https://gitee.com/xlsea/ruoyi-plus-soybean', `co
 UPDATE `sys_menu` SET `status` = '1' WHERE `menu_id` IN ( '116', '130', '131', '132', '11700', '11701' );
 
 -- 工作流菜单
-UPDATE `sys_menu` SET `component` = 'workflow/processDefinition/design/index' WHERE `menu_id` = 11700;
+UPDATE `ry-soy`.`sys_menu` SET `component` = 'workflow/design/index' WHERE `menu_id` = 11700;
+
 

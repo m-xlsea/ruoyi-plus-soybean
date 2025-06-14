@@ -56,6 +56,7 @@ declare module 'vue' {
     IconUilSearch: typeof import('~icons/uil/search')['default']
     JsonPreview: typeof import('./../components/custom/json-preview.vue')['default']
     LangSwitch: typeof import('./../components/common/lang-switch.vue')['default']
+    LeaveEdit: typeof import('./../components/custom/leave-edit/index.vue')['default']
     LeaveForm: typeof import('../components/custom/workflow-leave-form.vue')['default']
     LookForward: typeof import('./../components/custom/look-forward.vue')['default']
     MenuToggler: typeof import('./../components/common/menu-toggler.vue')['default']

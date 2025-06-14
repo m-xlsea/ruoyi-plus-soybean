@@ -235,8 +235,8 @@ const local: App.I18n.Schema = {
     exception_403: '403',
     exception_404: '404',
     exception_500: '500',
+    workflow_design: '流程设计',
     'workflow_process-definition': '流程定义',
-    'workflow_process-definition_design': '流程设计',
     'workflow_process-instance': '流程实例',
     workflow_leave: '请假申请'
   },

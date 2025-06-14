@@ -20,9 +20,9 @@ import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useRouterPush } from '@/hooks/common/router';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import DefinitionOperateDrawer from '../modules/definition-operate-drawer.vue';
-import DefinitionSearch from '../modules/definition-search.vue';
-import DefinitionImportModal from '../modules/definition-import-modal.vue';
+import DefinitionOperateDrawer from './modules/definition-operate-drawer.vue';
+import DefinitionSearch from './modules/definition-search.vue';
+import DefinitionImportModal from './modules/definition-import-modal.vue';
 
 defineOptions({
   name: 'DefinitionList'
@@ -326,7 +326,7 @@ async function handleCopy(id: CommonType.IdType) {
 }
 
 function handleDesign(id: CommonType.IdType) {
-  routerPushByKey('workflow_process-definition_design', {
+  routerPushByKey('workflow_design', {
     query: {
       definitionId: id.toString(),
       disabled: 'false'
@@ -335,7 +335,7 @@ function handleDesign(id: CommonType.IdType) {
 }
 
 function handlePreview(id: CommonType.IdType) {
-  routerPushByKey('workflow_process-definition_design', {
+  routerPushByKey('workflow_design', {
     query: {
       definitionId: id.toString(),
       disabled: 'true'

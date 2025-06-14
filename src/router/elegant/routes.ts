@@ -351,6 +351,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'workflow_design',
+        path: '/workflow/design',
+        component: 'view.workflow_design',
+        meta: {
+          title: 'workflow_design',
+          i18nKey: 'route.workflow_design'
+        }
+      },
+      {
         name: 'workflow_leave',
         path: '/workflow/leave',
         component: 'view.workflow_leave',
@@ -361,14 +370,13 @@ export const generatedRoutes: GeneratedRoute[] = [
       },
       {
         name: 'workflow_process-definition',
-        path: '/workflow/process-definition/definition',
+        path: '/workflow/process-definition',
         component: 'view.workflow_process-definition',
         meta: {
           title: 'workflow_process-definition',
           i18nKey: 'route.workflow_process-definition'
         }
       },
-
       {
         name: 'workflow_process-instance',
         path: '/workflow/process-instance',
