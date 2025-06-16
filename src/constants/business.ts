@@ -76,7 +76,7 @@ export const genHtmlTypeRecord: Record<Api.Tool.HtmlType, string> = {
   select: '下拉框',
   radio: '单选框',
   checkbox: '复选框',
-  datetime: '日期控件',
+  datetime: '日期时间控件',
   imageUpload: '图片上传',
   fileUpload: '文件上传',
   editor: '富文本控件'

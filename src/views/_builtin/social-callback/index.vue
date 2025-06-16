@@ -31,7 +31,7 @@ const processResponse = async () => {
     msg.value = '登录成功，1s 后即将跳转至首页';
   }, 1000);
   setTimeout(() => {
-    routerPushByKey('home');
+    routerPushByKey(import.meta.env.VITE_ROUTE_HOME || 'home');
   }, 1000);
 };
 

@@ -34,7 +34,7 @@ async function handleFetchOssList(ossIds: string[]) {
 watch(
   value,
   async val => {
-    const ossIds = val.split(',')?.filter(item => isNotNull(item));
+    const ossIds = val?.split(',')?.filter(item => isNotNull(item)) || [];
     const fileIds = new Set(fileList.value.filter(item => item.status === 'finished').map(item => item.id));
     if (ossIds.every(item => fileIds.has(item))) {
       return;

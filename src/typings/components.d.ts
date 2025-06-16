@@ -151,6 +151,7 @@ declare module 'vue' {
     TableSiderLayout: typeof import('./../components/advanced/table-sider-layout.vue')['default']
     TenantSelect: typeof import('./../components/custom/tenant-select.vue')['default']
     ThemeSchemaSwitch: typeof import('./../components/common/theme-schema-switch.vue')['default']
+    TinymceEditor: typeof import('./../components/custom/tinymce-editor.vue')['default']
     UserSelect: typeof import('./../components/custom/user-select.vue')['default']
     WaveBg: typeof import('./../components/custom/wave-bg.vue')['default']
     WorkflowCategorySelect: typeof import('./../components/custom/workflow-category-select.vue')['default']
