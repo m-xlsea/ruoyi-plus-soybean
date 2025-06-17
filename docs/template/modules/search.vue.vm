@@ -66,7 +66,7 @@ async function search() {
           <NGrid responsive="screen" item-responsive>
 #foreach($column in $columns)
 #if($column.query)
-#set($dictType=$column.dictType)
+#set($dictType=$!StrUtil.toCamelCase($column.dictType))
 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
 #if($parentheseIndex != -1)
@@ -75,14 +75,14 @@ async function search() {
 #set($comment=$column.columnComment)
 #end
             <NFormItemGi span="24 s:12 m:6" label="$column.columnComment" path="$column.javaField" class="pr-24px">
-            #if(($tool.in($column.htmlType, "select", "radio", "checkbox")) && $dictType && "" != $dictType)
+            #if($!StrUtil.contains("select, radio, checkbox", $column.htmlType) && $dictType && "" != $dictType)
               <NSelect
                 v-model:value="model.$column.javaField"
                 placeholder="请选择$column.columnComment"
-                :options="${column.dictType}Options"
+                :options="${dictType}Options"
                 clearable
               />
-            #elseif($tool.in($column.htmlType, "select", "radio", "checkbox"))
+            #elseif($!StrUtil.contains("select, radio, checkbox", $column.htmlType))
               <NSelect
                 v-model:value="model.$column.javaField"
                 placeholder="请选择$column.columnComment"
