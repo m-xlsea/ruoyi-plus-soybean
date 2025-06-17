@@ -136,7 +136,7 @@ watch(visible, () => {
 #else
 #set($comment=$column.columnComment)
 #end
-#set($dictType=$column.dictType)
+#set($dictType=$!StrUtil.toCamelCase($column.dictType))
         <NFormItem label="$column.columnComment" path="$column.javaField">
         #if($column.htmlType == "textarea" || $column.htmlType == "editor")
           <NInput
@@ -149,7 +149,7 @@ watch(visible, () => {
           <NSelect
             v-model:value="model.$column.javaField"
             placeholder="请选择$column.columnComment"
-            :options="${column.dictType}Options"
+            :options="${dictType}Options"
             clearable
           />
         #elseif($column.htmlType == "select" && $dictType)
@@ -163,7 +163,7 @@ watch(visible, () => {
           <NRadioGroup v-model:value="model.$column.javaField">
             <NSpace>
               <NRadio
-                v-for="option in ${column.dictType}Options"
+                v-for="option in ${dictType}Options"
                 :key="option.value"
                 :value="option.value"
                 :label="option.label"
@@ -180,7 +180,7 @@ watch(visible, () => {
           <NCheckboxGroup v-model:value="model.$column.javaField">
             <NSpace>
               <NCheckbox
-                v-for="option in ${column.dictType}Options"
+                v-for="option in ${dictType}Options"
                 :key="option.value"
                 :value="option.value"
                 :label="option.label"
