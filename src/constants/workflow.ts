@@ -1,5 +1,17 @@
 import { transformRecordToOption } from '@/utils/common';
 
+export const businessStatusRecord: Record<Api.Workflow.BusinessStatus, string> = {
+  cancel: '已撤销',
+  draft: '草稿',
+  waiting: '待审批',
+  finish: '已完成',
+  invalid: '已作废',
+  back: '已退回',
+  termination: '已终止'
+};
+
+export const businessStatusOptions = transformRecordToOption(businessStatusRecord);
+
 export const messageTypeRecord: Record<Api.Workflow.MessageType, string> = {
   '1': '站内信',
   '2': '邮件',

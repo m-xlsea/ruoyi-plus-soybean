@@ -10,10 +10,14 @@ declare namespace Api {
    * backend api module: "Workflow"
    */
   namespace Workflow {
+    /** 业务流程状态 */
+    type BusinessStatus = 'cancel' | 'draft' | 'waiting' | 'finish' | 'invalid' | 'back' | 'termination';
+
     /** 流程类型 */
     type FlowCodeType = 'leave1' | 'leave2' | 'leave3' | 'leave4' | 'leave5' | 'leave6';
     /** 请假状态 */
     type LeaveType = '1' | '2' | '3' | '4';
+
     /** leave */
     type Leave = Common.CommonRecord<{
       /** id */
@@ -31,7 +35,7 @@ declare namespace Api {
       /** 请假原因 */
       remark: string;
       /** 状态 */
-      status: string;
+      status: BusinessStatus;
     }>;
 
     /** leave search params */
@@ -42,6 +46,11 @@ declare namespace Api {
     /** leave operate params */
     type LeaveOperateParams = CommonType.RecordNullable<
       Pick<Api.Workflow.Leave, 'id' | 'leaveType' | 'startDate' | 'endDate' | 'leaveDays' | 'remark'>
+    >;
+
+    /** leave detail */
+    type LeaveDetail = CommonType.RecordNullable<
+      Pick<Api.Workflow.Leave, 'id' | 'leaveType' | 'startDate' | 'endDate' | 'leaveDays' | 'remark' | 'status'>
     >;
 
     /** leave list */

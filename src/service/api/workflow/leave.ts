@@ -10,7 +10,7 @@ export function fetchGetLeaveList(params?: Api.Workflow.LeaveSearchParams) {
 }
 /** 获取请假申请详情 */
 export function fetchGetLeaveDetail(id: CommonType.IdType) {
-  return request<Api.Workflow.LeaveOperateParams>({
+  return request<Api.Workflow.LeaveDetail>({
     url: `/workflow/leave/${id}`,
     method: 'get'
   });
@@ -39,5 +39,13 @@ export function fetchBatchDeleteLeave(ids: CommonType.IdType[]) {
   return request<boolean>({
     url: `/workflow/leave/${ids.join(',')}`,
     method: 'delete'
+  });
+}
+
+/** 撤销请假申请 */
+export function fetchCancelLeave(id: CommonType.IdType) {
+  return request<boolean>({
+    url: `/workflow/leave/cancel/${id}`,
+    method: 'put'
   });
 }

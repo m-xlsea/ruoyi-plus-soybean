@@ -1,5 +1,7 @@
 <script setup lang="tsx">
+import { ref } from 'vue';
 import { NDivider, NTag } from 'naive-ui';
+import { jsonClone } from '@sa/utils';
 import { leaveTypeRecord } from '@/constants/workflow';
 import { fetchBatchDeleteLeave, fetchGetLeaveList } from '@/service/api/workflow';
 import { useAppStore } from '@/store/modules/app';
@@ -10,7 +12,7 @@ import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import LeaveOperateDrawer from './modules/leave-operate-drawer.vue';
+import LeaveEdit from '@/components/custom/work-flow/leave-edit/index.vue';
 import LeaveSearch from './modules/leave-search.vue';
 
 defineOptions({
@@ -23,6 +25,7 @@ const { hasAuth } = useAuth();
 
 useDict('wf_business_status');
 
+const workflowTableOperateType = ref<CommonType.WorkflowTableOperateType>('add');
 const {
   columns,
   columnChecks,
@@ -78,7 +81,10 @@ const {
       key: 'leaveDays',
       title: '请假天数',
       align: 'center',
-      minWidth: 100
+      minWidth: 100,
+      render: row => {
+        return `${row.leaveDays} 天`;
+      }
     },
     {
       key: 'remark',
@@ -101,18 +107,31 @@ const {
       align: 'center',
       width: 130,
       render: row => {
-        const divider = () => {
-          if (!hasAuth('workflow:leave:edit') || !hasAuth('workflow:leave:remove')) {
-            return null;
-          }
-          return <NDivider vertical />;
-        };
+        const buttons = [];
 
-        const editBtn = () => {
-          if (!hasAuth('workflow:leave:edit')) {
-            return null;
-          }
-          return (
+        const showEdit =
+          hasAuth('workflow:leave:edit') &&
+          (row.status === 'draft' || row.status === 'cancel' || row.status === 'back');
+
+        const showDelete =
+          hasAuth('workflow:leave:remove') &&
+          (row.status === 'draft' || row.status === 'cancel' || row.status === 'back');
+
+        const showCancel = row.status === 'waiting';
+        if (hasAuth('workflow:leave:query')) {
+          buttons.push(
+            <ButtonIcon
+              text
+              type="info"
+              icon="material-symbols:visibility-outline"
+              tooltipContent="查看"
+              onClick={() => view(row.id!)}
+            />
+          );
+        }
+
+        if (showEdit) {
+          buttons.push(
             <ButtonIcon
               text
               type="primary"
@@ -121,13 +140,23 @@ const {
               onClick={() => edit(row.id!)}
             />
           );
-        };
+        }
 
-        const deleteBtn = () => {
-          if (!hasAuth('workflow:leave:remove')) {
-            return null;
-          }
-          return (
+        if (showCancel) {
+          buttons.push(
+            <ButtonIcon
+              text
+              type="warning"
+              icon="material-symbols:cancel-outline"
+              tooltipContent="撤销"
+              popconfirmContent="确定要撤销该申请吗？"
+              onPositiveClick={() => {}}
+            />
+          );
+        }
+
+        if (showDelete) {
+          buttons.push(
             <ButtonIcon
               text
               type="error"
@@ -137,22 +166,24 @@ const {
               onPositiveClick={() => handleDelete(row.id!)}
             />
           );
-        };
+        }
 
-        return (
-          <div class="flex-center gap-8px">
-            {editBtn()}
-            {divider()}
-            {deleteBtn()}
-          </div>
-        );
+        // 插入分隔符（仅在前后两个按钮之间插入 Divider）
+        const buttonWithDividers = buttons.flatMap((btn, index) => {
+          if (index === 0) return [btn];
+          return [<NDivider vertical />, btn];
+        });
+
+        return <div class="flex-center gap-4px">{buttonWithDividers}</div>;
       }
     }
   ]
 });
 
-const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
-  useTableOperate(data, getData);
+const { drawerVisible, openDrawer, editingData, checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(
+  data,
+  getData
+);
 
 async function handleBatchDelete() {
   // request
@@ -168,8 +199,25 @@ async function handleDelete(id: CommonType.IdType) {
   onDeleted();
 }
 
+function handleAdd() {
+  workflowTableOperateType.value = 'add';
+  openDrawer();
+}
+
+function cloneAndOpenDrawer(id: CommonType.IdType) {
+  const findItem = data.value.find(item => item.id === id) || null;
+  editingData.value = jsonClone(findItem);
+  openDrawer();
+}
+
 function edit(id: CommonType.IdType) {
-  handleEdit('id', id);
+  workflowTableOperateType.value = 'edit';
+  cloneAndOpenDrawer(id);
+}
+
+function view(id: CommonType.IdType) {
+  workflowTableOperateType.value = 'detail';
+  cloneAndOpenDrawer(id);
 }
 
 function handleExport() {
@@ -208,9 +256,9 @@ function handleExport() {
         :pagination="mobilePagination"
         class="sm:h-full"
       />
-      <LeaveOperateDrawer
+      <LeaveEdit
         v-model:visible="drawerVisible"
-        :operate-type="operateType"
+        :operate-type="workflowTableOperateType"
         :row-data="editingData"
         @submitted="getDataByPage"
       />
