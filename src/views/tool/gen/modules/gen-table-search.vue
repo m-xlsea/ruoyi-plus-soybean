@@ -26,6 +26,13 @@ const model = defineModel<Api.Tool.GenTableSearchParams>('model', { required: tr
 
 const dateRange = ref<[string, string]>();
 
+function onDateRangeUpdate(value: [string, string] | null) {
+  if (value?.length) {
+    model.value.params!.beginTime = value[0];
+    model.value.params!.endTime = value[1];
+  }
+}
+
 async function reset() {
   await restoreValidation();
   emit('reset');
@@ -33,10 +40,6 @@ async function reset() {
 
 async function search() {
   await validate();
-  if (dateRange.value?.length) {
-    model.value.params!.beginTime = dateRange.value[0];
-    model.value.params!.endTime = dateRange.value[0];
-  }
   emit('search');
 }
 </script>
@@ -62,6 +65,7 @@ async function search() {
                 value-format="yyyy-MM-dd HH:mm:ss"
                 type="daterange"
                 clearable
+                @update:formatted-value="onDateRangeUpdate"
               />
             </NFormItemGi>
             <NFormItemGi :show-feedback="false" span="24" class="pb-6px pr-24px">

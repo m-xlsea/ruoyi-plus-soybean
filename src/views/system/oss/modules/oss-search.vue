@@ -20,6 +20,13 @@ const dateRangeCreateTime = ref<[string, string] | null>(null);
 
 const model = defineModel<Api.System.OssSearchParams>('model', { required: true });
 
+function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
+  if (value?.length) {
+    model.value.params!.beginCreateTime = value[0];
+    model.value.params!.endCreateTime = value[1];
+  }
+}
+
 async function reset() {
   dateRangeCreateTime.value = null;
   await restoreValidation();
@@ -28,10 +35,6 @@ async function reset() {
 
 async function search() {
   await validate();
-  if (dateRangeCreateTime.value?.length) {
-    model.value.params!.beginCreateTime = dateRangeCreateTime.value[0];
-    model.value.params!.endCreateTime = dateRangeCreateTime.value[1];
-  }
   emit('search');
 }
 </script>
@@ -60,6 +63,7 @@ async function search() {
                 type="datetimerange"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
+                @update:formatted-value="onDateRangeCreateTimeUpdate"
               />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:12" class="pr-24px">
