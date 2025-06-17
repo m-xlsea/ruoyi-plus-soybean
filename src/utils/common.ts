@@ -163,3 +163,31 @@ export const handleTree = <T extends Record<string, any>>(data: T[], config: Com
 
   return tree;
 };
+
+/**
+ * 将对象转换为 URLSearchParams
+ *
+ * @param obj
+ */
+export function transformToURLSearchParams(obj: Record<string, any>, excludeKeys: string[] = []) {
+  const searchParams = new URLSearchParams();
+  if (!isNotNull(obj)) {
+    return searchParams;
+  }
+  Object.entries(obj).forEach(([key, value]) => {
+    if (excludeKeys.includes(key)) {
+      return;
+    }
+    if (typeof value === 'object') {
+      transformToURLSearchParams(value).forEach((v, k) => {
+        searchParams.append(`${key}[${k}]`, v);
+      });
+      return;
+    }
+    if (!isNotNull(value)) {
+      return;
+    }
+    searchParams.append(key, value);
+  });
+  return searchParams;
+}

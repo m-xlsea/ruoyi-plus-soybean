@@ -21,7 +21,6 @@ const model = defineModel<Api.System.TenantPackageSearchParams>('model', { requi
 const { options: sysNormalDisableOptions } = useDict('sys_normal_disable');
 
 async function reset() {
-  Object.assign(model.value.params!, {});
   await restoreValidation();
   emit('reset');
 }

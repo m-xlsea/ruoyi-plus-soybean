@@ -25,7 +25,6 @@ const { formRef, validate, restoreValidation } = useNaiveForm();
 const model = defineModel<Api.Demo.TreeSearchParams>('model', { required: true });
 
 async function reset() {
-  Object.assign(model.value.params!, {});
   await restoreValidation();
   emit('reset');
 }

@@ -1,6 +1,7 @@
 import { errorCodeRecord } from '@/constants/common';
 import { localStg } from '@/utils/storage';
 import { getServiceBaseURL } from '@/utils/service';
+import { transformToURLSearchParams } from '@/utils/common';
 
 export function useDownload() {
   const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
@@ -24,26 +25,20 @@ export function useDownload() {
     window.URL.revokeObjectURL(blobURL);
   }
 
-  function download(url: string, params: any, fileName: string) {
+  function download(url: string, params: Record<string, any>, fileName: string) {
     window.$loading?.startLoading('正在下载数据，请稍候...');
     const token = localStg.get('token');
     const clientId = import.meta.env.VITE_APP_CLIENT_ID;
     const now = Date.now();
-    const searchParams = new FormData();
-    if (params) {
-      Object.keys(params).forEach(key => {
-        if (params[key] !== null && params[key] !== undefined) {
-          searchParams.append(key, params[key]);
-        }
-      });
-    }
+    const searchParams = transformToURLSearchParams(params);
+
     fetch(`${baseURL}${url}?t=${now}`, {
       method: 'post',
       body: searchParams,
       headers: {
         Authorization: `Bearer ${token}`,
         Clientid: clientId!,
-        'Content-Type': 'application/octet-stream'
+        'Content-Type': 'application/x-www-form-urlencoded'
       }
     })
       .then(async response => {
