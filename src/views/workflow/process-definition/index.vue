@@ -176,38 +176,56 @@ const {
       width: 150,
       fixed: 'right',
       render: row => {
-        const Divider = <NDivider vertical />;
+        const buttons = [];
+        buttons.push(
+          <ButtonIcon
+            text
+            type="primary"
+            icon="material-symbols:drive-file-rename-outline-outline"
+            tooltipContent={$t('common.edit')}
+            onClick={() => edit(row.id)}
+          />
+        );
+        buttons.push(
+          <ButtonIcon
+            text
+            type="error"
+            icon="material-symbols:delete-outline"
+            tooltipContent={$t('common.delete')}
+            popconfirmContent={$t('common.confirmDelete')}
+            onPositiveClick={() => handleDelete(row.id)}
+          />
+        );
+        buttons.push(
+          <ButtonIcon
+            text
+            type="primary"
+            icon="material-symbols:content-copy"
+            tooltipContent="复制流程"
+            popconfirmContent={`确定要复制 ${row.flowName} 吗？`}
+            onPositiveClick={() => handleCopy(row.id)}
+          />
+        );
 
-        const buttons = {
-          edit: (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:drive-file-rename-outline-outline"
-              tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.id)}
-            />
-          ),
-          delete: (
-            <ButtonIcon
-              text
-              type="error"
-              icon="material-symbols:delete-outline"
-              tooltipContent={$t('common.delete')}
-              popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.id)}
-            />
-          ),
-          design: (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:design-services"
-              tooltipContent="流程设计"
-              onClick={() => handleDesign(row.id)}
-            />
-          ),
-          preview: (
+        const firstRowButtons = buttons.flatMap((btn, index) => {
+          if (index === 0) return [btn];
+          return [<NDivider vertical />, btn];
+        });
+
+        const secondRowButtons = [];
+
+        secondRowButtons.push(
+          <ButtonIcon
+            text
+            type="primary"
+            icon="material-symbols:file-export"
+            tooltipContent="导出流程"
+            onClick={() => handleExport(row)}
+          />
+        );
+
+        secondRowButtons.push(
+          isPublish.value ? (
             <ButtonIcon
               text
               type="primary"
@@ -215,8 +233,19 @@ const {
               tooltipContent="查看流程"
               onClick={() => handlePreview(row.id)}
             />
-          ),
-          publish: (
+          ) : (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:design-services"
+              tooltipContent="流程设计"
+              onClick={() => handleDesign(row.id)}
+            />
+          )
+        );
+
+        if (!isPublish.value) {
+          secondRowButtons.push(
             <ButtonIcon
               text
               type="primary"
@@ -225,48 +254,18 @@ const {
               popconfirmContent={`确定要发布 ${row.flowName} 吗？`}
               onPositiveClick={() => handlePublish(row.id)}
             />
-          ),
-          copy: (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:content-copy"
-              tooltipContent="复制流程"
-              popconfirmContent={`确定要复制 ${row.flowName} 吗？`}
-              onPositiveClick={() => handleCopy(row.id)}
-            />
-          ),
-          export: (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:file-export"
-              tooltipContent="导出流程"
-              onClick={() => handleExport(row)}
-            />
-          )
-        };
+          );
+        }
+
+        const secondRowWithDividers = secondRowButtons.flatMap((btn, index) => {
+          if (index === 0) return [btn];
+          return [<NDivider vertical />, btn];
+        });
 
         return (
           <div class="flex-col">
-            <div class="h-[24px] flex-center gap-4px">
-              {buttons.edit}
-              {Divider}
-              {buttons.delete}
-              {Divider}
-              {buttons.copy}
-            </div>
-            <div class="h-[24px] flex-center gap-4px">
-              {buttons.export}
-              {Divider}
-              {isPublish.value ? buttons.preview : buttons.design}
-              {!isPublish.value && (
-                <>
-                  {Divider}
-                  {buttons.publish}
-                </>
-              )}
-            </div>
+            <div class="h-[24px] flex-center gap-4px">{firstRowButtons}</div>
+            <div class="h-[24px] flex-center gap-4px">{secondRowWithDividers}</div>
           </div>
         );
       }

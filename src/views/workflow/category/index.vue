@@ -110,7 +110,7 @@ const {
         if (hasAuth('workflow:category:remove')) buttons.push(deleteBtn());
 
         return (
-          <div class="flex-center gap-8px">
+          <div class="flex-center gap-4px">
             {buttons.map((btn, index) => (
               <>
                 {index !== 0 && <NDivider vertical />}

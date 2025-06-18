@@ -153,38 +153,42 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
     render: row => {
       const id = row.id;
       const showAll = runningStatus.value;
-      const Divider = <NDivider vertical />;
+      const buttons = [];
 
-      const cancelBtn = (
-        <ButtonIcon
-          text
-          type="error"
-          showPopconfirmIcon={false}
-          icon="material-symbols:cancel-outline-rounded"
-          tooltipContent="作废流程"
-          popconfirmContent={
-            <NInput v-model:value={cancelModel.comment} size="large" type="textarea" placeholder="请输入作废原因" />
-          }
-          onPositiveClick={() => handleCancel(id)}
-        />
-      );
+      if (showAll) {
+        buttons.push(
+          <ButtonIcon
+            text
+            type="error"
+            showPopconfirmIcon={false}
+            icon="material-symbols:cancel-outline-rounded"
+            tooltipContent="作废流程"
+            popconfirmContent={
+              <NInput v-model:value={cancelModel.comment} size="large" type="textarea" placeholder="请输入作废原因" />
+            }
+            onPositiveClick={() => handleCancel(id)}
+          />
+        );
+      }
 
-      const deleteBtn = (
-        <ButtonIcon
-          text
-          type="error"
-          icon="material-symbols:delete-outline"
-          tooltipContent={$t('common.delete')}
-          popconfirmContent={$t('common.confirmDelete')}
-          onPositiveClick={() => handleDelete(id)}
-        />
-      );
+      if (showAll) {
+        buttons.push(
+          <ButtonIcon
+            text
+            type="error"
+            icon="material-symbols:delete-outline"
+            tooltipContent={$t('common.delete')}
+            popconfirmContent={$t('common.confirmDelete')}
+            onPositiveClick={() => handleDelete(id)}
+          />
+        );
+      }
 
-      const previewBtn = (
+      buttons.push(
         <ButtonIcon text type="info" icon="material-symbols:visibility-outline" tooltipContent="流程预览" />
       );
 
-      const variableBtn = (
+      buttons.push(
         <ButtonIcon
           text
           type="info"
@@ -194,17 +198,12 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
         />
       );
 
-      return (
-        <div class="flex-center gap-1px">
-          {showAll && cancelBtn}
-          {showAll && Divider}
-          {showAll && deleteBtn}
-          {showAll && Divider}
-          {previewBtn}
-          {Divider}
-          {variableBtn}
-        </div>
-      );
+      const buttonWithDividers = buttons.flatMap((btn, index) => {
+        if (index === 0) return [btn];
+        return [<NDivider vertical />, btn];
+      });
+
+      return <div class="flex-center gap-1px">{buttonWithDividers}</div>;
     }
   }
 ]);
