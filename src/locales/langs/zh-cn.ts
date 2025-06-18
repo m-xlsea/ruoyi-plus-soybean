@@ -251,6 +251,82 @@ const local: App.I18n.Schema = {
       male: '男',
       female: '女',
       unknown: '未知'
+    },
+    sys_show_hide: {
+      show: '显示',
+      hide: '隐藏'
+    },
+    sys_normal_disable: {
+      normal: '正常',
+      disable: '停用'
+    },
+    sys_yes_no: {
+      yes: '是',
+      no: '否'
+    },
+    sys_notice_type: {
+      notice: '通知',
+      announcement: '公告'
+    },
+    sys_notice_status: {
+      normal: '正常',
+      close: '关闭'
+    },
+    sys_oper_type: {
+      insert: '新增',
+      update: '修改',
+      delete: '删除',
+      grant: '授权',
+      export: '导出',
+      import: '导入',
+      force: '强退',
+      gencode: '生成代码',
+      clean: '清空数据',
+      other: '其他'
+    },
+    sys_common_status: {
+      success: '成功',
+      fail: '失败'
+    },
+    sys_grant_type: {
+      password: '密码认证',
+      sms: '短信认证',
+      email: '邮件认证',
+      miniapp: '小程序认证',
+      social: '三方登录认证'
+    },
+    sys_device_type: {
+      pc: 'PC',
+      android: '安卓',
+      ios: 'iOS',
+      miniapp: '小程序'
+    },
+    wf_business_status: {
+      revoked: '已撤销',
+      draft: '草稿',
+      pending: '待审核',
+      completed: '已完成',
+      cancelled: '已作废',
+      returned: '已退回',
+      terminated: '已终止'
+    },
+    wf_form_type: {
+      custom_form: '自定义表单',
+      dynamic_form: '动态表单'
+    },
+    wf_task_status: {
+      revoke: '撤销',
+      pass: '通过',
+      pending_review: '待审核',
+      cancel: '作废',
+      return: '退回',
+      terminate: '终止',
+      transfer: '转办',
+      delegate: '委托',
+      copy: '抄送',
+      add_sign: '加签',
+      minus_sign: '减签',
+      timeout: '超时'
     }
   },
   page: {
