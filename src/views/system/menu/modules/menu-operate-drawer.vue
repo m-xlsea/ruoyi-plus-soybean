@@ -225,6 +225,15 @@ async function handleSubmit() {
   emit('submitted', menuType!);
 }
 
+watch(
+  () => model.menuType,
+  newType => {
+    if (newType === 'M') {
+      model.isFrame = '1';
+    }
+  }
+);
+
 watch(visible, () => {
   if (visible.value) {
     handleInitModel();
@@ -314,6 +323,7 @@ function onCreate() {
                   :key="option.value"
                   :value="option.value"
                   :label="option.label"
+                  :disabled="option.value === '2' && isCatalog"
                 />
               </NSpace>
             </NRadioGroup>
