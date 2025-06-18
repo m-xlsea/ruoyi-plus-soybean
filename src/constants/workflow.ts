@@ -1,5 +1,17 @@
 import { transformRecordToOption } from '@/utils/common';
 
+export const cooperateTypeRecord: Record<Api.Workflow.CooperateType, string> = {
+  1: '审批',
+  2: '转办',
+  3: '委派',
+  4: '会签',
+  5: '票签',
+  6: '加签',
+  7: '减签'
+};
+
+export const cooperateTypeOptions = transformRecordToOption(cooperateTypeRecord);
+
 export const businessStatusRecord: Record<Api.Workflow.BusinessStatus, string> = {
   cancel: '已撤销',
   draft: '草稿',

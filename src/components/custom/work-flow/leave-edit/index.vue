@@ -144,6 +144,7 @@ async function handleUpdateModelWhenEdit() {
 
   if (props.operateType === 'edit' || props.operateType === 'detail') {
     Object.assign(model, props.rowData);
+    Object.assign(modelDetail, props.rowData);
   } else {
     const { error, data } = await fetchGetLeaveDetail(props.businessId!);
     if (error) {
@@ -215,7 +216,7 @@ watch(visible, () => {
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
+  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="1000" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <div v-if="!readonly">
         <NForm ref="formRef" :model="model" :rules="rules">
@@ -243,33 +244,24 @@ watch(visible, () => {
         </NForm>
       </div>
       <div v-else>
-        <NDescriptions bordered :column="1" label-placement="left">
+        <NDescriptions bordered :column="2" label-placement="left">
           <NDescriptionsItem label="流程类型">
-            {{ flowCodeTypeRecord[model.flowCode] || '-' }}
+            {{ flowCodeTypeRecord[model.flowCode] }}
           </NDescriptionsItem>
           <NDescriptionsItem label="请假类型">
-            <NTag type="info">{{ leaveTypeRecord[model.leaveType!] || '-' }}</NTag>
+            <NTag type="info">{{ leaveTypeRecord[model.leaveType!] }}</NTag>
           </NDescriptionsItem>
           <NDescriptionsItem label="请假时间">
-            {{ model.startDate ? `${model.startDate} 至 ${model.endDate}` : '-' }}
+            {{ `${model.startDate} 至 ${model.endDate}` }}
           </NDescriptionsItem>
-          <NDescriptionsItem label="请假天数">{{ model.leaveDays || '-' }} 天</NDescriptionsItem>
+          <NDescriptionsItem label="请假天数">{{ model.leaveDays }} 天</NDescriptionsItem>
           <NDescriptionsItem label="请假原因">
             {{ model.remark || '-' }}
           </NDescriptionsItem>
         </NDescriptions>
-        <div v-if="modelDetail.status !== 'draft'" class="mt-4">
-          <NTimeline horizontal>
-            <NTimelineItem content="啊" />
-            <NTimelineItem type="success" title="成功" content="哪里成功" time="2018-04-03 20:46" />
-            <NTimelineItem type="error" content="哪里错误" time="2018-04-03 20:46" />
-            <NTimelineItem type="warning" title="警告" content="哪里警告" time="2018-04-03 20:46" />
-            <NTimelineItem type="info" title="信息" content="是的" time="2018-04-03 20:46" line-type="dashed" />
-            <NTimelineItem content="啊" />
-          </NTimeline>
-        </div>
+        <!--  -->
+        <ApprovalInfoPanel v-if="modelDetail.status !== 'draft'" :business-id="modelDetail.id!" />
       </div>
-
       <template #footer>
         <div v-if="!readonly">
           <NSpace :size="16">

@@ -247,11 +247,9 @@ declare namespace Api {
       show: boolean;
     }>;
     /** 任务详情 */
-    type Task = Common.CommonRecord<{
+    type Task = Common.CommonTenantRecord<{
       /** 任务ID */
       id: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 删除标志 */
       delFlag: number;
       /** 流程定义ID */
@@ -280,7 +278,7 @@ declare namespace Api {
       category: CommonType.IdType;
       /** 分类名称 */
       categoryName: string;
-      /** 类型 */
+      /** 办理人类型 */
       type: string;
       /** 审批人 */
       assigneeIds: string;
@@ -307,6 +305,82 @@ declare namespace Api {
       /** 流程版本号 */
       version: string;
     }>;
+    /** 协作方式 */
+    type CooperateType = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+    /** 历史任务 */
+    type HisTask = Common.CommonTenantRecord<{
+      /** 任务ID */
+      id: CommonType.IdType;
+      /** 删除标志 */
+      delFlag: number;
+      /** 流程定义ID */
+      definitionId: CommonType.IdType;
+      /** 流程定义名称 */
+      flowName: string;
+      /** 流程实例ID */
+      instanceId: CommonType.IdType;
+      /** 任务表ID */
+      taskId: CommonType.IdType;
+      /** 协作方式（1审批 2转办 3委派 4会签 5票签 6加签 7减签） */
+      cooperateType: CooperateType;
+      /** 协作方式名称 */
+      cooperateTypeName: string;
+      /** 业务ID */
+      businessId: string;
+      /** 节点编码 */
+      nodeCode: string;
+      /** 节点名称 */
+      nodeName: string;
+      /** 节点类型（0开始节点 1中间节点 2结束节点 3互斥网关 4并行网关） */
+      nodeType: WorkflowNodeType;
+      /** 目标节点编码 */
+      targetNodeCode: string;
+      /** 目标节点名称 */
+      targetNodeName: string;
+      /** 审批者 */
+      approver: string;
+      /** 审批者名称 */
+      approveName: string;
+      /** 协作人 */
+      collaborator: string;
+      /** 权限标识 */
+      permissionList: string[];
+      /** 跳转类型（PASS通过 REJECT退回 NONE无动作） */
+      skipType: string;
+      /** 流程状态 */
+      flowStatus: string;
+      /** 任务状态 */
+      flowTaskStatus: string;
+      /** 流程状态名称 */
+      flowStatusName: string;
+      /** 审批意见 */
+      message: string;
+      /** 业务扩展信息（JSON字符串） */
+      ext: string;
+      /** 创建者姓名（申请人名称） */
+      createByName: string;
+      /** 流程分类ID */
+      category: string;
+      /** 流程分类名称 */
+      categoryName: string;
+      /** 审批表单是否自定义（Y是 N否） */
+      formCustom: Api.Common.YesOrNoStatus;
+      /** 表单路径 */
+      formPath: string;
+      /** 流程定义编码 */
+      flowCode: string;
+      /** 流程版本号 */
+      version: string;
+      /** 运行时长 */
+      runDuration: string;
+    }>;
+
+    type InstanceIdWithHisTask = CommonType.RecordNullable<{
+      instanceId: CommonType.IdType;
+      list: HisTask[];
+    }>;
+
     /** 消息类型 */
     type MessageType = '1' | '2' | '3';
 

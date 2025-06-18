@@ -34,3 +34,11 @@ export function fetchFlowInvalidOperate(data: Api.Workflow.FlowInvalidOperatePar
     data
   });
 }
+
+/** 获取流程记录 */
+export function fetchGetFlowHisTaskList(businessId: CommonType.IdType) {
+  return request<Api.Workflow.InstanceIdWithHisTask>({
+    url: `/workflow/instance/flowHisTaskList/${businessId}`,
+    method: 'get'
+  });
+}
