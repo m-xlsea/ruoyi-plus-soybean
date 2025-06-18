@@ -221,7 +221,7 @@ const local: App.I18n.Schema = {
     system_notice: '通知公告',
     'social-callback': '单点登录回调',
     system_oss: '文件管理',
-    'system_oss-config': 'OSS配置',
+    'system_oss-config': 'OSS 配置',
     monitor_cache: '缓存监控',
     monitor_online: '在线用户',
     'user-center': '个人中心',
@@ -239,6 +239,12 @@ const local: App.I18n.Schema = {
     'workflow_process-definition': '流程定义',
     'workflow_process-instance': '流程实例',
     workflow_leave: '请假申请'
+  },
+  menu: {
+    system_tenant: '租户管理',
+    system_log: '日志管理',
+    'monitor_snail-job': '任务调度中心',
+    monitor_admin: 'Admin 监控'
   },
   dict: {
     sys_user_sex: {

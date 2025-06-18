@@ -467,6 +467,7 @@ declare namespace App {
         };
       };
       route: Record<I18nRouteKey, string>;
+      menu: Record<string, string>;
       dict: Record<string, Record<string, string>>;
       page: {
         common: {
