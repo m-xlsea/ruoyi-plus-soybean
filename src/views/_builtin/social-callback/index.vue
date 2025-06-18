@@ -61,6 +61,7 @@ const callbackByCode = async (data: Api.Auth.SocialLoginForm) => {
 
 const loginByCode = async (data: Api.Auth.SocialLoginForm) => {
   try {
+    await authStore.logout();
     await authStore.login(data);
     await processResponse();
   } catch {

@@ -1,3 +1,4 @@
+import { useRoute } from 'vue-router';
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { BACKEND_ERROR_CODE, REQUEST_CANCELED_CODE, createFlatRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
@@ -51,6 +52,7 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       return String(response.data.code) === import.meta.env.VITE_SERVICE_SUCCESS_CODE;
     },
     async onBackendFail(response, instance) {
+      const route = useRoute();
       const authStore = useAuthStore();
       const responseCode = String(response.data.code);
 
@@ -66,6 +68,10 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       }
 
       // when the backend response code is in `logoutCodes`, it means the user will be logged out and redirected to login page
+      if (route.name === 'login') {
+        handleLogout();
+        return null;
+      }
       // const logoutCodes = import.meta.env.VITE_SERVICE_LOGOUT_CODES?.split(',') || [];
       // if (logoutCodes.includes(responseCode)) {
       //   handleLogout();
