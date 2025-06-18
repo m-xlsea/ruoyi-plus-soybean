@@ -404,7 +404,7 @@ function onCreate() {
               :placeholder="$t('page.system.menu.placeholder.queryIframe')"
             />
           </NFormItemGi>
-          <NFormItemGi :span="24" path="perms">
+          <NFormItemGi v-if="!isCatalog" :span="24" path="perms">
             <template #label>
               <div class="flex-center">
                 <FormTip :content="$t('page.system.menu.permsTip')" />
