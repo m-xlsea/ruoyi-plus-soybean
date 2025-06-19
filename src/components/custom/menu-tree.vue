@@ -4,6 +4,7 @@ import type { TreeOption, TreeSelectInst, TreeSelectProps } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import { fetchGetMenuTreeSelect } from '@/service/api/system';
 import SvgIcon from '@/components/custom/svg-icon.vue';
+import { $t } from '@/locales';
 
 defineOptions({ name: 'MenuTree' });
 
@@ -59,6 +60,14 @@ watch([expandAll, options], ([newVal]) => {
     expandedKeys.value = [0];
   }
 });
+
+function renderLabel({ option }: { option: TreeOption }) {
+  let label = option.label;
+  if (label?.startsWith('route.') || label?.startsWith('menu.')) {
+    label = $t(label as App.I18n.I18nKey);
+  }
+  return <div>{label}</div>;
+}
 
 function renderPrefix({ option }: { option: TreeOption }) {
   const renderLocalIcon = String(option.icon).startsWith('local-icon-');
@@ -163,6 +172,7 @@ defineExpose({
         :loading="loading"
         virtual-scroll
         check-strategy="all"
+        :render-label="renderLabel"
         :render-prefix="renderPrefix"
         v-bind="attrs"
       />

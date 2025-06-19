@@ -1,0 +1,105 @@
+@use 'sass:math';
+
+$base-size: 100px;
+$em-to-px: math.div($base-size, 2.5);
+$loader-color-1: rgb(var(--error-color) / 75%);
+$loader-color-2: rgb(var(--primary-color) / 75%);
+$loader-color-3: rgb(var(--success-color) / 75%);
+$loader-color-4: rgb(var(--warning-color) / 75%);
+
+@function loader-size($em-value) {
+  @return $em-to-px * $em-value;
+}
+
+/* From Uiverse.io by SchawnnahJ */
+.loader {
+  position: relative;
+  width: loader-size(2.5);
+  height: loader-size(2.5);
+  transform: rotate(165deg);
+}
+
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: loader-size(0.5);
+  height: loader-size(0.5);
+  border-radius: loader-size(0.25);
+  transform: translate(-50%, -50%);
+}
+
+.loader:before {
+  animation: before8 2s infinite;
+}
+
+.loader:after {
+  animation: after6 2s infinite;
+}
+
+@keyframes before8 {
+  0% {
+    width: loader-size(0.5);
+    box-shadow:
+      loader-size(1) loader-size(-0.5) $loader-color-1,
+      loader-size(-1) loader-size(0.5) $loader-color-2;
+  }
+
+  35% {
+    width: loader-size(2.5);
+    box-shadow:
+      0 loader-size(-0.5) $loader-color-1,
+      0 loader-size(0.5) $loader-color-2;
+  }
+
+  70% {
+    width: loader-size(0.5);
+    box-shadow:
+      loader-size(-1) loader-size(-0.5) $loader-color-1,
+      loader-size(1) loader-size(0.5) $loader-color-2;
+  }
+
+  100% {
+    box-shadow:
+      loader-size(1) loader-size(-0.5) $loader-color-1,
+      loader-size(-1) loader-size(0.5) $loader-color-2;
+  }
+}
+
+@keyframes after6 {
+  0% {
+    height: loader-size(0.5);
+    box-shadow:
+      loader-size(0.5) loader-size(1) $loader-color-3,
+      loader-size(-0.5) loader-size(-1) $loader-color-4;
+  }
+
+  35% {
+    height: loader-size(2.5);
+    box-shadow:
+      loader-size(0.5) 0 $loader-color-3,
+      loader-size(-0.5) 0 $loader-color-4;
+  }
+
+  70% {
+    height: loader-size(0.5);
+    box-shadow:
+      loader-size(0.5) loader-size(-1) $loader-color-3,
+      loader-size(-0.5) loader-size(1) $loader-color-4;
+  }
+
+  100% {
+    box-shadow:
+      loader-size(0.5) loader-size(1) $loader-color-3,
+      loader-size(-0.5) loader-size(-1) $loader-color-4;
+  }
+}
+
+.loader {
+  position: absolute;
+  top: calc(50% - #{math.div(loader-size(2.5), 2)});
+  left: calc(50% - #{math.div(loader-size(2.5), 2)});
+}

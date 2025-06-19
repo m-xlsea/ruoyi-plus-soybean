@@ -255,12 +255,10 @@ function onCreate() {
       <NForm ref="formRef" :model="model" :rules="rules">
         <NGrid responsive="screen" item-responsive>
           <NFormItemGi :span="24" :label="$t('page.system.menu.parentId')" path="pid">
-            <NTreeSelect
+            <MenuTreeSelect
               v-model:value="model.parentId"
+              :immediate="false"
               :options="treeData as []"
-              label-field="menuName"
-              key-field="menuId"
-              :default-expanded-keys="[0]"
               :placeholder="$t('page.system.menu.form.parentId.required')"
             />
           </NFormItemGi>
