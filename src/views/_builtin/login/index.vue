@@ -39,8 +39,8 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
 </script>
 
 <template>
-  <div class="relative size-full flex flex-wrap overflow-hidden">
-    <div class="hidden h-full w-50% bg-primary-100 lg:block dark:bg-primary-800">
+  <div class="relative min-h-screen w-full flex flex-wrap">
+    <div class="hidden h-screen w-50% bg-primary-100 lg:block dark:bg-primary-800">
       <div class="size-full flex-center">
         <img class="w-60% sm:w-80%" :src="loginBackground" />
       </div>
