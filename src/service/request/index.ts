@@ -1,4 +1,3 @@
-import { useRoute } from 'vue-router';
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { BACKEND_ERROR_CODE, REQUEST_CANCELED_CODE, createFlatRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
@@ -52,7 +51,6 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       return String(response.data.code) === import.meta.env.VITE_SERVICE_SUCCESS_CODE;
     },
     async onBackendFail(response, instance) {
-      const route = useRoute();
       const authStore = useAuthStore();
       const responseCode = String(response.data.code);
 
@@ -68,10 +66,6 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       }
 
       // when the backend response code is in `logoutCodes`, it means the user will be logged out and redirected to login page
-      if (route.name === 'login') {
-        handleLogout();
-        return null;
-      }
       // const logoutCodes = import.meta.env.VITE_SERVICE_LOGOUT_CODES?.split(',') || [];
       // if (logoutCodes.includes(responseCode)) {
       //   handleLogout();
@@ -86,19 +80,21 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
         // prevent the user from refreshing the page
         window.addEventListener('beforeunload', handleLogout);
 
-        window.$dialog?.warning({
-          title: '系统提示',
-          content: '登录状态已过期，您可以继续留在该页面，或者重新登录',
-          positiveText: '重新登录',
-          negativeText: '取消',
-          maskClosable: false,
-          closeOnEsc: false,
-          onPositiveClick() {
-            logoutAndCleanup();
-          }
-        });
+        if (!window.location.pathname?.startsWith('/login')) {
+          window.$dialog?.warning({
+            title: '系统提示',
+            content: '登录状态已过期，您可以继续留在该页面，或者重新登录',
+            positiveText: '重新登录',
+            negativeText: '取消',
+            maskClosable: false,
+            closeOnEsc: false,
+            onPositiveClick() {
+              logoutAndCleanup();
+            }
+          });
 
-        request.cancelAllRequest();
+          request.cancelAllRequest();
+        }
       }
 
       // when the backend response code is in `expiredTokenCodes`, it means the token is expired, and refresh token
