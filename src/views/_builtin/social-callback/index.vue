@@ -43,7 +43,7 @@ const handleError = () => {
     msg.value = '登录失败，1s 后即将跳转至登录页';
   }, 1000);
   setTimeout(() => {
-    // routerPushByKey('login');
+    routerPushByKey('login');
   }, 1000);
 };
 
