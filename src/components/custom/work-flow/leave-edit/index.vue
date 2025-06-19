@@ -147,7 +147,7 @@ async function handleUpdateModelWhenEdit() {
     return;
   }
 
-  if (props.operateType === 'edit' || props.operateType === 'detail') {
+  if (props.operateType === 'edit' || (props.operateType === 'detail' && props.rowData)) {
     Object.assign(model, props.rowData);
     Object.assign(modelDetail, props.rowData);
   } else {
@@ -255,17 +255,17 @@ watch(visible, async () => {
       <div v-else>
         <NDescriptions bordered :column="2" label-placement="left">
           <NDescriptionsItem label="流程类型">
-            {{ flowCodeTypeRecord[model.flowCode] }}
+            {{ flowCodeTypeRecord[modelDetail.flowCode] }}
           </NDescriptionsItem>
           <NDescriptionsItem label="请假类型">
-            <NTag type="info">{{ leaveTypeRecord[model.leaveType!] }}</NTag>
+            <NTag type="info">{{ leaveTypeRecord[modelDetail.leaveType!] }}</NTag>
           </NDescriptionsItem>
           <NDescriptionsItem label="请假时间">
-            {{ `${model.startDate} 至 ${model.endDate}` }}
+            {{ `${modelDetail.startDate} 至 ${modelDetail.endDate}` }}
           </NDescriptionsItem>
-          <NDescriptionsItem label="请假天数">{{ model.leaveDays }} 天</NDescriptionsItem>
+          <NDescriptionsItem label="请假天数">{{ modelDetail.leaveDays }} 天</NDescriptionsItem>
           <NDescriptionsItem label="请假原因">
-            {{ model.remark || '-' }}
+            {{ modelDetail.remark || '-' }}
           </NDescriptionsItem>
         </NDescriptions>
         <!-- 审批信息 -->

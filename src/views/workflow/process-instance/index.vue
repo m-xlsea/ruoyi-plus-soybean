@@ -32,6 +32,7 @@ useDict('wf_business_status');
 const appStore = useAppStore();
 
 const { bool: variableVisible, setTrue: showVariableDrawer } = useBoolean(false);
+const { bool: leaveEditVisible, setTrue: showLeaveEditDrawer } = useBoolean(false);
 
 const runningStatus = ref<boolean>(true);
 const runningStatusOptions = ref<RunningStatusOption[]>([
@@ -185,7 +186,13 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
       }
 
       buttons.push(
-        <ButtonIcon text type="info" icon="material-symbols:visibility-outline" tooltipContent="流程预览" />
+        <ButtonIcon
+          text
+          type="info"
+          icon="material-symbols:visibility-outline"
+          tooltipContent="流程预览"
+          onClick={() => handleShowLeaveEdit(row.businessId)}
+        />
       );
 
       buttons.push(
@@ -310,6 +317,12 @@ async function handleShowVariable(id: CommonType.IdType) {
   handleEdit('id', id);
   showVariableDrawer();
 }
+
+const leaveEditBusinessId = ref<CommonType.IdType>();
+async function handleShowLeaveEdit(businessId: CommonType.IdType) {
+  leaveEditBusinessId.value = businessId;
+  showLeaveEditDrawer();
+}
 </script>
 
 <template>
@@ -387,6 +400,7 @@ async function handleShowVariable(id: CommonType.IdType) {
           :pagination="mobilePagination"
           class="sm:h-full"
         />
+        <LeaveEdit v-model:visible="leaveEditVisible" operate-type="detail" :business-id="leaveEditBusinessId" />
         <ProcessInstanceVariableDrawer v-model:visible="variableVisible" :row-data="editingData" />
       </NCard>
     </div>
