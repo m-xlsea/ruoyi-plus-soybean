@@ -251,6 +251,82 @@ const local: App.I18n.Schema = {
       male: 'Male',
       female: 'Female',
       unknown: 'Unknown'
+    },
+    sys_show_hide: {
+      show: 'Show',
+      hide: 'Hide'
+    },
+    sys_normal_disable: {
+      normal: 'Normal',
+      disable: 'Disable'
+    },
+    sys_yes_no: {
+      yes: 'Yes',
+      no: 'No'
+    },
+    sys_notice_type: {
+      notice: 'Notice',
+      announcement: 'Announcement'
+    },
+    sys_notice_status: {
+      normal: 'Normal',
+      close: 'Close'
+    },
+    sys_oper_type: {
+      insert: 'Insert',
+      update: 'Update',
+      delete: 'Delete',
+      grant: 'Grant',
+      export: 'Export',
+      import: 'Import',
+      force: 'Force',
+      gencode: 'Generate Code',
+      clean: 'Clean Data',
+      other: 'Other'
+    },
+    sys_common_status: {
+      success: 'Success',
+      fail: 'Fail'
+    },
+    sys_grant_type: {
+      password: 'Password Auth',
+      sms: 'SMS Auth',
+      email: 'Email Auth',
+      miniapp: 'Mini App Auth',
+      social: 'Social Auth'
+    },
+    sys_device_type: {
+      pc: 'PC',
+      android: 'Android',
+      ios: 'iOS',
+      miniapp: 'Mini App'
+    },
+    wf_business_status: {
+      revoked: 'Revoked',
+      draft: 'Draft',
+      pending: 'Pending',
+      completed: 'Completed',
+      cancelled: 'Cancelled',
+      returned: 'Returned',
+      terminated: 'Terminated'
+    },
+    wf_form_type: {
+      custom_form: 'Custom Form',
+      dynamic_form: 'Dynamic Form'
+    },
+    wf_task_status: {
+      revoke: 'Revoke',
+      pass: 'Pass',
+      pending_review: 'Pending Review',
+      cancel: 'Cancel',
+      return: 'Return',
+      terminate: 'Terminate',
+      transfer: 'Transfer',
+      delegate: 'Delegate',
+      copy: 'Copy',
+      add_sign: 'Add Sign',
+      minus_sign: 'Minus Sign',
+      timeout: 'Timeout'
     }
   },
   page: {
