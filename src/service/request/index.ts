@@ -95,6 +95,8 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
 
           request.cancelAllRequest();
         }
+
+        return null;
       }
 
       // when the backend response code is in `expiredTokenCodes`, it means the token is expired, and refresh token
