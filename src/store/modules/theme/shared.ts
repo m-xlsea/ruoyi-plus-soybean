@@ -252,6 +252,9 @@ export function getNaiveTheme(colors: App.Theme.ThemeColor, recommended = false)
     },
     Tag: {
       borderRadius: '6px'
+    },
+    Button: {
+      textColorPrimary: '#ffffff'
     }
   };
 
