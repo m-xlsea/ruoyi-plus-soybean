@@ -374,6 +374,8 @@ declare namespace Api {
       version: string;
       /** 运行时长 */
       runDuration: string;
+      /** 附件 */
+      attachmentList: Api.System.Oss[];
     }>;
 
     type InstanceIdWithHisTask = CommonType.RecordNullable<{

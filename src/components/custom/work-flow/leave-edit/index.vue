@@ -7,6 +7,7 @@ import { fetchCreateLeave, fetchGetLeaveDetail, fetchStartWorkflow, fetchUpdateL
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
+import ApprovalInfoPanel from '@/components/custom/work-flow/approval-info-panel.vue';
 
 defineOptions({
   name: 'LeaveEdit'
@@ -36,6 +37,8 @@ const emit = defineEmits<Emits>();
 const visible = defineModel<boolean>('visible', {
   default: false
 });
+const approvalInfoPanelRef = ref<InstanceType<typeof ApprovalInfoPanel>>();
+
 const { bool: taskApplyVisible, setTrue: setTaskApplyVisible } = useBoolean();
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
@@ -91,7 +94,9 @@ function createDefaultModelDetail(): ModelDetail {
     remark: ''
   };
 }
-
+const showApprovalInfoPanel = computed(() => {
+  return modelDetail.status !== 'draft';
+});
 type StartWorkflowModel = Api.Workflow.StartWorkflowOperateParams;
 
 const startWorkflowModel: StartWorkflowModel = reactive(createDefaultStartWorkflowModel());
@@ -207,16 +212,20 @@ function handleTaskFinished() {
   emit('submitted');
 }
 
-watch(visible, () => {
+watch(visible, async () => {
   if (visible.value) {
-    handleUpdateModelWhenEdit();
+    await handleUpdateModelWhenEdit();
     restoreValidation();
+
+    if (showApprovalInfoPanel.value) {
+      approvalInfoPanelRef.value?.initData();
+    }
   }
 });
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="1000" class="max-w-90%">
+  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="1100" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <div v-if="!readonly">
         <NForm ref="formRef" :model="model" :rules="rules">
@@ -259,8 +268,8 @@ watch(visible, () => {
             {{ model.remark || '-' }}
           </NDescriptionsItem>
         </NDescriptions>
-        <!--  -->
-        <ApprovalInfoPanel v-if="modelDetail.status !== 'draft'" :business-id="modelDetail.id!" />
+        <!-- 审批信息 -->
+        <ApprovalInfoPanel v-if="showApprovalInfoPanel" ref="approvalInfoPanelRef" :business-id="modelDetail.id!" />
       </div>
       <template #footer>
         <div v-if="!readonly">

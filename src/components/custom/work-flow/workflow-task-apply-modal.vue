@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
+import type { UploadFileInfo } from 'naive-ui';
 import { messageTypeOptions } from '@/constants/workflow';
 import { fetchCompleteTask, fetchGetTask } from '@/service/api/workflow';
 import FileUpload from '@/components/custom/file-upload.vue';
@@ -30,8 +31,6 @@ const title = defineModel<string>('title', {
   default: '流程发起'
 });
 
-const fileUploadRef = ref<InstanceType<typeof FileUpload> | null>(null);
-
 const accept = ref<string>('.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp');
 
 type Model = Api.Workflow.CompleteTaskOperateParams;
@@ -58,10 +57,11 @@ async function getTask() {
   task.value = data;
 }
 
+const fileList = ref<UploadFileInfo[]>([]);
+
 async function handleSubmit() {
-  const fileList = fileUploadRef.value?.fileList;
-  if (fileList?.length) {
-    const fileIds = fileList.map(item => item.id);
+  if (fileList.value?.length) {
+    const fileIds = fileList.value.map(item => item.id);
     model.fileId = fileIds.join(',');
   }
   model.taskId = props.taskId;
@@ -82,7 +82,7 @@ watch(visible, () => {
 </script>
 
 <template>
-  <NModal v-model:show="visible" preset="card" class="w-800px" :title="title" :native-scrollbar="false" closable>
+  <NModal v-model:show="visible" preset="card" class="w-700px" :title="title" :native-scrollbar="false" closable>
     <NForm :model="model">
       <NFormItem label="通知方式" path="messageType">
         <NCheckboxGroup v-model:value="model.messageType">
@@ -98,7 +98,7 @@ watch(visible, () => {
         </NCheckboxGroup>
       </NFormItem>
       <NFormItem label="附件" path="fileId">
-        <FileUpload ref="fileUploadRef" :file-size="20" :max="20" upload-type="file" :accept="accept" />
+        <FileUpload v-model:file-list="fileList" :file-size="20" :max="20" upload-type="file" :accept="accept" />
       </NFormItem>
     </NForm>
     <div class="flex justify-end gap-12px">
