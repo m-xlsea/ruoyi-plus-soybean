@@ -1,6 +1,5 @@
 <script setup lang="tsx">
-import type { AsyncComponentLoader } from 'vue';
-import { computed, defineAsyncComponent, markRaw, reactive, ref, shallowRef, watch } from 'vue';
+import { computed, reactive, ref, shallowRef, watch } from 'vue';
 import { NButton, NDivider, NEmpty, NInput, NRadioButton, NRadioGroup, NSpin, NTag } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { workflowActivityStatusRecord } from '@/constants/workflow';
@@ -14,7 +13,7 @@ import {
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
-import { humpToLine } from '@/utils/common';
+import { loadDynamicComponent } from '@/utils/common';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
@@ -322,26 +321,14 @@ async function handleShowVariable(id: CommonType.IdType) {
 const modules = import.meta.glob('@/components/custom/workflow/**/*.vue');
 const businessId = ref<CommonType.IdType>();
 
+/** 流程预览，动态加载组件 */
 async function handlePreview(row: Api.Workflow.ProcessInstance) {
   businessId.value = row.businessId;
   const formPath = row.formPath;
   if (formPath) {
-    const url = `/src/components/custom${humpToLine(formPath)}.vue`;
-    const loader = modules[url];
-    if (!loader) {
-      window.$message?.error('组件不存在');
-      return;
-    }
-
-    dynamicComponent.value = markRaw(
-      defineAsyncComponent({
-        loader: async () => (await modules[url]()) as AsyncComponentLoader<any>,
-        delay: 200,
-        timeout: 3000
-      })
-    );
+    dynamicComponent.value = await loadDynamicComponent(modules, formPath);
+    showPreviewDrawer();
   }
-  showPreviewDrawer();
 }
 </script>
 

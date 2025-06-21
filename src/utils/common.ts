@@ -1,5 +1,7 @@
+import { defineAsyncComponent, markRaw } from 'vue';
 import { AcceptType } from '@/enum/business';
 import { $t } from '@/locales';
+
 /**
  * Transform record to option
  *
@@ -74,6 +76,33 @@ export function humpToLine(str: string, line: string = '-') {
     temp = temp.slice(1);
   }
   return temp;
+}
+
+/** 动态加载组件 */
+export async function loadDynamicComponent<T extends object = any>(
+  modules: Record<string, () => Promise<any>>,
+  formPath: string,
+  options?: {
+    delay?: number;
+    timeout?: number;
+  }
+) {
+  const expectedPathSuffix = `${humpToLine(formPath)}.vue`;
+
+  const matchedKey = Object.keys(modules).find(path => path.endsWith(expectedPathSuffix));
+
+  if (!matchedKey) {
+    window.$message?.error('组件不存在');
+    throw new Error(`组件不存在: ${expectedPathSuffix}`);
+  }
+
+  return markRaw(
+    defineAsyncComponent({
+      loader: async () => (await modules[matchedKey]()) as T,
+      delay: options?.delay ?? 200,
+      timeout: options?.timeout ?? 3000
+    })
+  );
 }
 
 /** 判断是否为空 */
