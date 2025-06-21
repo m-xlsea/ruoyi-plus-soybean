@@ -1,5 +1,6 @@
 <script setup lang="tsx">
-import { computed, reactive, ref, watch } from 'vue';
+import type { AsyncComponentLoader } from 'vue';
+import { computed, defineAsyncComponent, markRaw, reactive, ref, shallowRef, watch } from 'vue';
 import { NButton, NDivider, NEmpty, NInput, NRadioButton, NRadioGroup, NSpin, NTag } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { workflowActivityStatusRecord } from '@/constants/workflow';
@@ -13,11 +14,14 @@ import {
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
+import { humpToLine } from '@/utils/common';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import ProcessInstanceSearch from './modules/process-instance-search.vue';
 import ProcessInstanceVariableDrawer from './modules/process-instance-variable-drawer.vue';
+
+const dynamicComponent = shallowRef();
 
 interface RunningStatusOption {
   label: string;
@@ -32,7 +36,7 @@ useDict('wf_business_status');
 const appStore = useAppStore();
 
 const { bool: variableVisible, setTrue: showVariableDrawer } = useBoolean(false);
-const { bool: leaveEditVisible, setTrue: showLeaveEditDrawer } = useBoolean(false);
+const { bool: previewVisible, setTrue: showPreviewDrawer } = useBoolean(false);
 
 const runningStatus = ref<boolean>(true);
 const runningStatusOptions = ref<RunningStatusOption[]>([
@@ -155,7 +159,25 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
       const id = row.id;
       const showAll = runningStatus.value;
       const buttons = [];
+      buttons.push(
+        <ButtonIcon
+          text
+          type="info"
+          icon="material-symbols:visibility-outline"
+          tooltipContent="流程预览"
+          onClick={() => handlePreview(row)}
+        />
+      );
 
+      buttons.push(
+        <ButtonIcon
+          text
+          type="info"
+          icon="material-symbols:variable-insert"
+          tooltipContent="流程变量"
+          onClick={() => handleShowVariable(id)}
+        />
+      );
       if (showAll) {
         buttons.push(
           <ButtonIcon
@@ -171,7 +193,6 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
           />
         );
       }
-
       if (showAll) {
         buttons.push(
           <ButtonIcon
@@ -184,26 +205,6 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
           />
         );
       }
-
-      buttons.push(
-        <ButtonIcon
-          text
-          type="info"
-          icon="material-symbols:visibility-outline"
-          tooltipContent="流程预览"
-          onClick={() => handleShowLeaveEdit(row.businessId)}
-        />
-      );
-
-      buttons.push(
-        <ButtonIcon
-          text
-          type="info"
-          icon="material-symbols:variable-insert"
-          tooltipContent="流程变量"
-          onClick={() => handleShowVariable(id)}
-        />
-      );
 
       const buttonWithDividers = buttons.flatMap((btn, index) => {
         if (index === 0) return [btn];
@@ -318,10 +319,29 @@ async function handleShowVariable(id: CommonType.IdType) {
   showVariableDrawer();
 }
 
-const leaveEditBusinessId = ref<CommonType.IdType>();
-async function handleShowLeaveEdit(businessId: CommonType.IdType) {
-  leaveEditBusinessId.value = businessId;
-  showLeaveEditDrawer();
+const modules = import.meta.glob('@/components/custom/workflow/**/*.vue');
+const businessId = ref<CommonType.IdType>();
+
+async function handlePreview(row: Api.Workflow.ProcessInstance) {
+  businessId.value = row.businessId;
+  const formPath = row.formPath;
+  if (formPath) {
+    const url = `/src/components/custom${humpToLine(formPath)}.vue`;
+    const loader = modules[url];
+    if (!loader) {
+      window.$message?.error('组件不存在');
+      return;
+    }
+
+    dynamicComponent.value = markRaw(
+      defineAsyncComponent({
+        loader: async () => (await modules[url]()) as AsyncComponentLoader<any>,
+        delay: 200,
+        timeout: 3000
+      })
+    );
+  }
+  showPreviewDrawer();
 }
 </script>
 
@@ -400,7 +420,7 @@ async function handleShowLeaveEdit(businessId: CommonType.IdType) {
           :pagination="mobilePagination"
           class="sm:h-full"
         />
-        <LeaveEdit v-model:visible="leaveEditVisible" operate-type="detail" :business-id="leaveEditBusinessId" />
+        <component :is="dynamicComponent" :visible="previewVisible" operate-type="detail" :business-id="businessId" />
         <ProcessInstanceVariableDrawer v-model:visible="variableVisible" :row-data="editingData" />
       </NCard>
     </div>

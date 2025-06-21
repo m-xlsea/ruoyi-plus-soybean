@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, onMounted, reactive, ref, watch } from 'vue';
 import dayjs from 'dayjs';
-import { useBoolean } from '@sa/hooks';
+import { useBoolean, useLoading } from '@sa/hooks';
 import { flowCodeTypeOptions, flowCodeTypeRecord, leaveTypeOptions, leaveTypeRecord } from '@/constants/workflow';
 import { fetchCreateLeave, fetchGetLeaveDetail, fetchStartWorkflow, fetchUpdateLeave } from '@/service/api/workflow';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
-import ApprovalInfoPanel from '@/components/custom/work-flow/approval-info-panel.vue';
+import ApprovalInfoPanel from '@/components/custom/workflow/approval-info-panel.vue';
+import WorkflowTaskApplyModal from '@/components/custom/workflow/workflow-task-apply-modal.vue';
 
 defineOptions({
   name: 'LeaveEdit'
@@ -40,9 +41,10 @@ const visible = defineModel<boolean>('visible', {
 const approvalInfoPanelRef = ref<InstanceType<typeof ApprovalInfoPanel>>();
 
 const { bool: taskApplyVisible, setTrue: setTaskApplyVisible } = useBoolean();
+const { loading, startLoading, endLoading } = useLoading();
+
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
-
 const title = computed(() => {
   const titles: Record<CommonType.WorkflowTableOperateType, string> = {
     add: '新增请假申请',
@@ -212,65 +214,75 @@ function handleTaskFinished() {
   emit('submitted');
 }
 
-watch(visible, async () => {
+async function initializeData() {
   if (visible.value) {
+    startLoading();
     await handleUpdateModelWhenEdit();
     restoreValidation();
 
     if (showApprovalInfoPanel.value) {
       approvalInfoPanelRef.value?.initData();
     }
+    endLoading();
   }
-});
+}
+
+watch(visible, initializeData);
+
+onMounted(initializeData);
 </script>
 
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="1100" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <div v-if="!readonly">
-        <NForm ref="formRef" :model="model" :rules="rules">
-          <NFormItem label="流程类型" path="flowCode">
-            <NSelect v-model:value="model.flowCode" placeholder="请输入流程类型" :options="flowCodeTypeOptions" />
-          </NFormItem>
-          <NFormItem label="请假类型" path="leaveType">
-            <NSelect v-model:value="model.leaveType" placeholder="请输入请假类型" :options="leaveTypeOptions" />
-          </NFormItem>
-          <NFormItem label="请假时间" path="startDate">
-            <NDatePicker
-              v-model:formatted-value="dateRange"
-              class="w-full"
-              type="daterange"
-              value-format="yyyy-MM-dd"
-              clearable
-            />
-          </NFormItem>
-          <NFormItem label="请假天数" path="leaveDays">
-            <NInputNumber v-model:value="model.leaveDays" class="w-full" disabled placeholder="请输入请假天数" />
-          </NFormItem>
-          <NFormItem label="请假原因" path="remark">
-            <NInput v-model:value="model.remark" placeholder="请输入请假原因" />
-          </NFormItem>
-        </NForm>
-      </div>
-      <div v-else>
-        <NDescriptions bordered :column="2" label-placement="left">
-          <NDescriptionsItem label="流程类型">
-            {{ flowCodeTypeRecord[modelDetail.flowCode] }}
-          </NDescriptionsItem>
-          <NDescriptionsItem label="请假类型">
-            <NTag type="info">{{ leaveTypeRecord[modelDetail.leaveType!] }}</NTag>
-          </NDescriptionsItem>
-          <NDescriptionsItem label="请假时间">
-            {{ `${modelDetail.startDate} 至 ${modelDetail.endDate}` }}
-          </NDescriptionsItem>
-          <NDescriptionsItem label="请假天数">{{ modelDetail.leaveDays }} 天</NDescriptionsItem>
-          <NDescriptionsItem label="请假原因">
-            {{ modelDetail.remark || '-' }}
-          </NDescriptionsItem>
-        </NDescriptions>
-        <!-- 审批信息 -->
-        <ApprovalInfoPanel v-if="showApprovalInfoPanel" ref="approvalInfoPanelRef" :business-id="modelDetail.id!" />
-      </div>
+      <NSpin :show="loading">
+        <div :class="loading ? 'hidden' : ''">
+          <div v-if="!readonly" class="h-full">
+            <NForm ref="formRef" :model="model" :rules="rules">
+              <NFormItem label="流程类型" path="flowCode">
+                <NSelect v-model:value="model.flowCode" placeholder="请输入流程类型" :options="flowCodeTypeOptions" />
+              </NFormItem>
+              <NFormItem label="请假类型" path="leaveType">
+                <NSelect v-model:value="model.leaveType" placeholder="请输入请假类型" :options="leaveTypeOptions" />
+              </NFormItem>
+              <NFormItem label="请假时间" path="startDate">
+                <NDatePicker
+                  v-model:formatted-value="dateRange"
+                  class="w-full"
+                  type="daterange"
+                  value-format="yyyy-MM-dd"
+                  clearable
+                />
+              </NFormItem>
+              <NFormItem label="请假天数" path="leaveDays">
+                <NInputNumber v-model:value="model.leaveDays" class="w-full" disabled placeholder="请输入请假天数" />
+              </NFormItem>
+              <NFormItem label="请假原因" path="remark">
+                <NInput v-model:value="model.remark" placeholder="请输入请假原因" />
+              </NFormItem>
+            </NForm>
+          </div>
+          <div v-else>
+            <NDescriptions bordered :column="2" label-placement="left">
+              <NDescriptionsItem label="流程类型">
+                {{ flowCodeTypeRecord[modelDetail.flowCode] }}
+              </NDescriptionsItem>
+              <NDescriptionsItem label="请假类型">
+                <NTag type="info">{{ leaveTypeRecord[modelDetail.leaveType!] }}</NTag>
+              </NDescriptionsItem>
+              <NDescriptionsItem label="请假时间">
+                {{ `${modelDetail.startDate} 至 ${modelDetail.endDate}` }}
+              </NDescriptionsItem>
+              <NDescriptionsItem label="请假天数">{{ modelDetail.leaveDays }} 天</NDescriptionsItem>
+              <NDescriptionsItem label="请假原因">
+                {{ modelDetail.remark || '-' }}
+              </NDescriptionsItem>
+            </NDescriptions>
+            <!-- 审批信息 -->
+            <ApprovalInfoPanel v-if="showApprovalInfoPanel" ref="approvalInfoPanelRef" :business-id="modelDetail.id!" />
+          </div>
+        </div>
+      </NSpin>
       <template #footer>
         <div v-if="!readonly">
           <NSpace :size="16">
