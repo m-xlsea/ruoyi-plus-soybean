@@ -233,7 +233,7 @@ onMounted(initializeData);
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="1100" class="max-w-90%">
+  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="1300" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NSpin :show="loading">
         <div :class="loading ? 'hidden' : ''">

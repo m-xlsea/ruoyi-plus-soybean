@@ -20,7 +20,7 @@ const props = defineProps<Props>();
 
 useDict('wf_task_status');
 
-const activeTab = ref('info');
+const activeTab = ref('image');
 
 const { loading, startLoading, endLoading } = useLoading();
 
@@ -155,8 +155,9 @@ const hisTask = ref<Api.Workflow.HisTask[]>([]);
 
 /** 初始化数据 */
 async function initData() {
+  activeTab.value = 'image';
+  instanceId.value = undefined;
   hisTask.value = [];
-  if (loading.value) return;
   startLoading();
   try {
     await getData();
@@ -166,16 +167,20 @@ async function initData() {
 }
 
 async function getData() {
+  startLoading();
   const { error, data } = await fetchGetFlowHisTaskList(props.businessId);
   if (error) {
     window.$message?.error(error.message);
     return;
   }
   instanceId.value = data?.instanceId || '';
-  hisTask.value = data?.list || [];
 
-  // 并行加载所有附件数据
-  const promises = hisTask.value.map(async item => {
+  const rawList = data?.list || [];
+  if (rawList.length === 0) {
+    hisTask.value = [];
+    return;
+  }
+  const promises = rawList.map(async item => {
     if (item.ext) {
       const { error: err, data: ossList } = await fetchGetOssListByIds(item.ext.split(','));
       if (!err) {
@@ -183,8 +188,9 @@ async function getData() {
       }
     }
   });
-
   await Promise.all(promises);
+  hisTask.value = rawList;
+  endLoading();
 }
 
 defineExpose({
@@ -196,23 +202,11 @@ defineExpose({
   <NDivider />
   <div>
     <NTabs v-model:value="activeTab" type="segment" animated>
-      <NTabPane bar-width="100px" name="info" tab="审批信息">
-        <NDataTable
-          size="small"
-          :scroll-x="760"
-          class="max-h-500px"
-          :columns="columns"
-          :data="hisTask"
-          :loading="loading"
-        />
+      <NTabPane display-directive="show" bar-width="100px" name="image" tab="流程图">
+        <FlowPreview v-if="instanceId" :instance-id="instanceId" />
       </NTabPane>
-      <NTabPane bar-width="100px" name="image" tab="流程图">
-        "威尔！着火了！快来帮忙！"我听到女朋友大喊。现在一个难题在我面前——是恢复一个重要的 Amazon 服务，还是救公寓的火。
-        <br />
-        <br />
-        我的脑海中忽然出现了 Amazon
-        著名的领导力准则"客户至上"，有很多的客户还依赖我们的服务，我不能让他们失望！所以着火也不管了，女朋友喊我也无所谓，我开始
-        debug 这个线上问题。
+      <NTabPane bar-width="100px" name="info" tab="审批信息">
+        <NDataTable size="small" :scroll-x="760" :columns="columns" :data="hisTask" :loading="loading" />
       </NTabPane>
     </NTabs>
   </div>
