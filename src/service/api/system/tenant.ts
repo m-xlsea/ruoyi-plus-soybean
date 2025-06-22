@@ -16,7 +16,7 @@ export function fetchCreateTenant(data: Api.System.TenantOperateParams) {
     method: 'post',
     headers: {
       isEncrypt: true,
-      repeatSubmit: true
+      repeatSubmit: false
     },
     data
   });
