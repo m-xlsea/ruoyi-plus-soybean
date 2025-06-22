@@ -122,7 +122,7 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
 
 <template>
   <div>
-    <div class="mb-12px text-30px text-black font-500 dark:text-white">登录到您的账户</div>
+    <div class="mb-12px text-24px text-black font-500 sm:text-30px dark:text-white">登录到您的账户</div>
     <div class="pb-24px text-18px text-#858585">欢迎回来！请输入您的账户信息</div>
     <NForm
       ref="formRef"

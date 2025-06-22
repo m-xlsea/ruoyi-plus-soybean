@@ -104,7 +104,7 @@ handleFetchCaptchaCode();
 
 <template>
   <div>
-    <div class="mb-12px text-30px text-black font-500 dark:text-white">注册新账户</div>
+    <div class="mb-12px text-24px text-black font-500 sm:text-30px dark:text-white">注册新账户</div>
     <div class="pb-24px text-18px text-#858585">欢迎注册！请输入您的账户信息</div>
     <NForm
       ref="formRef"

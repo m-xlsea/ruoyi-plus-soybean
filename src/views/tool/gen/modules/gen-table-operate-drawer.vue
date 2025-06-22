@@ -344,22 +344,58 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
                     placeholder="请选择生成模板"
                   />
                 </NFormItemGi>
-                <NFormItemGi span="24 s:12" label="生成包路径" path="packageName">
+                <NFormItemGi span="24 s:12" path="packageName">
+                  <template #label>
+                    <div class="flex-center">
+                      <FormTip content="生成在哪个java包下，例如 com.ruoyi.system" />
+                      <span class="pl-3px">生成包路径</span>
+                    </div>
+                  </template>
                   <NInput v-model:value="genTableInfo.info.packageName" />
                 </NFormItemGi>
-                <NFormItemGi span="24 s:12" label="生成模块名" path="moduleName">
+                <NFormItemGi span="24 s:12" path="moduleName">
+                  <template #label>
+                    <div class="flex-center">
+                      <FormTip content="可理解为子系统名，例如 system" />
+                      <span class="pl-3px">生成模块名</span>
+                    </div>
+                  </template>
                   <NInput v-model:value="genTableInfo.info.moduleName" />
                 </NFormItemGi>
                 <NFormItemGi span="24 s:12" label="生成业务名" path="businessName">
+                  <template #label>
+                    <div class="flex-center">
+                      <FormTip content="可理解为功能英文名，例如 user" />
+                      <span class="pl-3px">生成业务名</span>
+                    </div>
+                  </template>
                   <NInput v-model:value="genTableInfo.info.businessName" />
                 </NFormItemGi>
                 <NFormItemGi span="24 s:12" label="生成功能名" path="functionName">
+                  <template #label>
+                    <div class="flex-center">
+                      <FormTip content="用作类描述，例如 用户" />
+                      <span class="pl-3px">生成功能名</span>
+                    </div>
+                  </template>
                   <NInput v-model:value="genTableInfo.info.functionName" />
                 </NFormItemGi>
                 <NFormItemGi span="24 s:12" label="上级菜单" path="parentMenuId">
+                  <template #label>
+                    <div class="flex-center">
+                      <FormTip content="分配到指定菜单下，例如 系统管理" />
+                      <span class="pl-3px">上级菜单</span>
+                    </div>
+                  </template>
                   <MenuTreeSelect v-model:value="genTableInfo.info.parentMenuId" :data-name="rowData?.dataName" />
                 </NFormItemGi>
                 <NFormItemGi span="24 s:12" label="生成代码方式" path="genType">
+                  <template #label>
+                    <div class="flex-center">
+                      <FormTip content="默认为zip压缩包下载，也可以自定义生成路径" />
+                      <span class="pl-3px">生成代码方式</span>
+                    </div>
+                  </template>
                   <NRadioGroup v-model:value="genTableInfo.info.genType">
                     <NSpace :span="16">
                       <NRadio

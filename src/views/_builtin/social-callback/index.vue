@@ -116,7 +116,7 @@ const primaryColor = `--primary-color: ${r} ${g} ${b}`;
       <!-- From Uiverse.io by SchawnnahJ -->
       <div class="loader"></div>
     </div>
-    <h2 class="text-30px text-primary-400 font-500">{{ $t('system.title') }}</h2>
+    <h2 class="text-30px text-primary-400 font-500">{{ msg }}</h2>
   </div>
 </template>
 

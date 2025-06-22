@@ -46,7 +46,9 @@ async function handleSubmit() {
 
 <template>
   <div>
-    <div class="mb-12px text-30px text-black font-500 dark:text-white">{{ $t('page.login.resetPwd.title') }}</div>
+    <div class="mb-12px text-24px text-black font-500 sm:text-30px dark:text-white">
+      {{ $t('page.login.resetPwd.title') }}
+    </div>
     <div class="pb-24px text-18px text-#858585">请输入您的手机号，我们将发送验证码到您的手机</div>
     <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
       <NFormItem path="phone">

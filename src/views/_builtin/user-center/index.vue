@@ -46,14 +46,14 @@ function createDefaultProfileModel(): ProfileModel {
 
 function createDefaultPasswordModel(): PasswordModel {
   return {
-    password: '',
+    oldPassword: '',
     confirmPassword: '',
     newPassword: ''
   };
 }
 
 type ProfileRuleKey = Extract<keyof ProfileModel, 'nickName' | 'email' | 'phonenumber' | 'sex'>;
-type PasswordRuleKey = Extract<keyof PasswordModel, 'password' | 'confirmPassword' | 'newPassword'>;
+type PasswordRuleKey = Extract<keyof PasswordModel, 'oldPassword' | 'newPassword' | 'confirmPassword'>;
 
 const profileRules: Record<ProfileRuleKey, App.Global.FormRule> = {
   nickName: createRequiredRule('昵称不能为空'),
@@ -63,7 +63,7 @@ const profileRules: Record<ProfileRuleKey, App.Global.FormRule> = {
 };
 
 const passwordRules: Record<PasswordRuleKey, App.Global.FormRule> = {
-  password: createRequiredRule('密码不能为空'),
+  oldPassword: createRequiredRule('旧密码不能为空'),
   confirmPassword: createRequiredRule('确认密码不能为空'),
   newPassword: createRequiredRule('新密码不能为空')
 };
@@ -90,7 +90,8 @@ async function updatePassword() {
     return;
   }
   startBtnLoading();
-  const { error } = await fetchUpdateUserPassword(passwordModel);
+  const { oldPassword, newPassword } = passwordModel;
+  const { error } = await fetchUpdateUserPassword({ oldPassword, newPassword });
   if (!error) {
     window.$message?.success('密码修改成功');
     // 清空表单
@@ -183,9 +184,9 @@ async function updatePassword() {
             label-width="100px"
             class="mt-16px max-w-520px"
           >
-            <NFormItem label="旧密码" path="password">
+            <NFormItem label="旧密码" path="oldPassword">
               <NInput
-                v-model:value="passwordModel.password"
+                v-model:value="passwordModel.oldPassword"
                 type="password"
                 placeholder="请输入旧密码"
                 show-password-on="click"

@@ -39,8 +39,8 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
 </script>
 
 <template>
-  <div class="relative size-full flex flex-wrap overflow-hidden">
-    <div class="hidden h-full w-50% bg-primary-100 lg:block dark:bg-primary-800">
+  <div class="relative min-h-screen w-full flex flex-wrap">
+    <div class="hidden h-screen w-50% bg-primary-100 lg:block dark:bg-primary-800">
       <div class="size-full flex-center">
         <img class="w-60% sm:w-80%" :src="loginBackground" />
       </div>
@@ -49,8 +49,8 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
       <div class="mx-auto max-w-464px w-full">
         <header class="flex-y-center justify-between">
           <div class="flex-y-center gap-16px">
-            <SystemLogo class="text-42px text-primary" />
-            <h3 class="text-32px text-primary font-500">{{ $t('system.title') }}</h3>
+            <SystemLogo class="text-30px text-primary sm:text-42px" />
+            <h3 class="text-24px text-primary font-500 sm:text-32px">{{ $t('system.title') }}</h3>
           </div>
           <div class="flex-y-center">
             <ThemeSchemaSwitch
@@ -64,6 +64,7 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
               :lang="appStore.locale"
               :lang-options="appStore.localeOptions"
               :show-tooltip="false"
+              class="text-20px lt-sm:text-18px"
               @change-lang="appStore.changeLocale"
             />
           </div>

@@ -81,7 +81,8 @@ export function fetchResetUserPassword(userId: CommonType.IdType, password: stri
     url: '/system/user/resetPwd',
     method: 'put',
     headers: {
-      isEncrypt: true
+      isEncrypt: true,
+      repeatSubmit: false
     },
     data: { userId, password }
   });
@@ -118,6 +119,9 @@ export function fetchUpdateUserPassword(data: Api.System.UserPasswordOperatePara
   return request<boolean>({
     url: '/system/user/profile/updatePwd',
     method: 'put',
+    headers: {
+      isEncrypt: true
+    },
     data
   });
 }
