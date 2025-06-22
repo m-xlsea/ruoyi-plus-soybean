@@ -1,6 +1,5 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
-import type { DataTableColumns } from 'naive-ui';
 import { NPopover, NSpace, NTag } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchGetFlowHisTaskList } from '@/service/api/workflow/instance';
@@ -26,7 +25,7 @@ const { loading, startLoading, endLoading } = useLoading();
 
 const { oss } = useDownload();
 
-const columns = ref<DataTableColumns<Api.Workflow.HisTask>>([
+const columns = ref<NaiveUI.TableColumn<Api.Workflow.HisTask>[]>([
   {
     title: '任务名称',
     key: 'nodeName',
@@ -180,7 +179,7 @@ async function getData() {
     hisTask.value = [];
     return;
   }
-  const promises = rawList.map(async item => {
+  const promises = rawList.map(async (item: Api.Workflow.HisTask) => {
     if (item.ext) {
       const { error: err, data: ossList } = await fetchGetOssListByIds(item.ext.split(','));
       if (!err) {

@@ -305,6 +305,10 @@ declare namespace Api {
       /** 流程版本号 */
       version: string;
     }>;
+
+    /** 任务列表 */
+    type TaskList = Common.PaginatingQueryRecord<Task>;
+
     /** 协作方式 */
     type CooperateType = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
@@ -378,10 +382,24 @@ declare namespace Api {
       attachmentList: Api.System.Oss[];
     }>;
 
-    type InstanceIdWithHisTask = CommonType.RecordNullable<{
+    /** 历史任务列表 */
+    type HisTaskList = Common.PaginatingQueryRecord<HisTask>;
+
+    /** 流程实例ID与历史任务 */
+    type InstanceIdWithHisTask = Common.CommonRecord<{
+      /** 流程实例ID */
       instanceId: CommonType.IdType;
+      /** 历史任务 */
       list: HisTask[];
     }>;
+
+    /** 任务搜索参数 */
+    type TaskSearchParams = CommonType.RecordNullable<
+      Pick<Task, 'flowName' | 'flowCode' | 'businessId' | 'category' | 'nodeName'> &
+        Api.Common.CommonSearchParams & {
+          createByIds: CommonType.IdType[];
+        }
+    >;
 
     /** 消息类型 */
     type MessageType = '1' | '2' | '3';

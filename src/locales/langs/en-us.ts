@@ -238,6 +238,8 @@ const local: App.I18n.Schema = {
     workflow_design: 'Process Design',
     'workflow_process-definition': 'Process Definition',
     'workflow_process-instance': 'Process Instance',
+    workflow_task: 'Task',
+    'workflow_task_all-task-waiting': 'All Task Waiting',
     workflow_leave: 'Leave Apply'
   },
   menu: {

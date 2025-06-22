@@ -59,6 +59,8 @@ declare module "@elegant-router/types" {
     "workflow_leave": "/workflow/leave";
     "workflow_process-definition": "/workflow/process-definition";
     "workflow_process-instance": "/workflow/process-instance";
+    "workflow_task": "/workflow/task";
+    "workflow_task_all-task-waiting": "/workflow/task/all-task-waiting";
   };
 
   /**
@@ -157,6 +159,7 @@ declare module "@elegant-router/types" {
     | "workflow_leave"
     | "workflow_process-definition"
     | "workflow_process-instance"
+    | "workflow_task_all-task-waiting"
   >;
 
   /**

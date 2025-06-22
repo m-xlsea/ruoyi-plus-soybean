@@ -168,12 +168,11 @@ const {
           );
         }
 
-        const buttonWithDividers = buttons.flatMap((btn, index) => {
-          if (index === 0) return [btn];
-          return [<NDivider vertical />, btn];
-        });
-
-        return <div class="flex-center gap-4px">{buttonWithDividers}</div>;
+        return (
+          <div class="flex-center gap-1px">
+            {buttons.map((btn, index) => (index > 0 ? [<NDivider vertical />, btn] : btn))}
+          </div>
+        );
       }
     }
   ]

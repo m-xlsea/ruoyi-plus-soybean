@@ -385,6 +385,25 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'workflow_process-instance',
           i18nKey: 'route.workflow_process-instance'
         }
+      },
+      {
+        name: 'workflow_task',
+        path: '/workflow/task',
+        meta: {
+          title: 'workflow_task',
+          i18nKey: 'route.workflow_task'
+        },
+        children: [
+          {
+            name: 'workflow_task_all-task-waiting',
+            path: '/workflow/task/all-task-waiting',
+            component: 'view.workflow_task_all-task-waiting',
+            meta: {
+              title: 'workflow_task_all-task-waiting',
+              i18nKey: 'route.workflow_task_all-task-waiting'
+            }
+          }
+        ]
       }
     ]
   }

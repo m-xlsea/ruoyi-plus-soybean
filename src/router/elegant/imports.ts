@@ -48,4 +48,5 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   workflow_leave: () => import("@/views/workflow/leave/index.vue"),
   "workflow_process-definition": () => import("@/views/workflow/process-definition/index.vue"),
   "workflow_process-instance": () => import("@/views/workflow/process-instance/index.vue"),
+  "workflow_task_all-task-waiting": () => import("@/views/workflow/task/all-task-waiting/index.vue"),
 };

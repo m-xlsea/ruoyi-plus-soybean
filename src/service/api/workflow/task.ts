@@ -25,3 +25,21 @@ export function fetchCompleteTask(data: Api.Workflow.CompleteTaskOperateParams) 
     data
   });
 }
+
+/** 获取所有待办任务 */
+export function fetchGetAllWaitingTask(data: Api.Workflow.TaskSearchParams) {
+  return request<Api.Workflow.TaskList>({
+    url: '/workflow/task/pageByAllTaskWait',
+    method: 'get',
+    params: data
+  });
+}
+
+/** 获取所有已办任务 */
+export function fetchGetAllFinishedTask(data: Api.Workflow.TaskSearchParams) {
+  return request<Api.Workflow.HisTaskList>({
+    url: '/workflow/task/pageByAllTaskFinish',
+    method: 'get',
+    params: data
+  });
+}

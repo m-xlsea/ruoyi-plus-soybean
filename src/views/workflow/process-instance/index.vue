@@ -90,9 +90,7 @@ const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
     title: '流程分类',
     align: 'center',
     minWidth: 120,
-    render(row) {
-      return <NTag type="default">{row.categoryName}</NTag>;
-    }
+    render: row => <NTag type="default">{row.categoryName}</NTag>
   },
   {
     key: 'createByName',
@@ -104,7 +102,8 @@ const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
     key: 'version',
     title: '版本号',
     align: 'center',
-    width: 80
+    width: 80,
+    render: row => <NTag type="info">v{row.version}.0</NTag>
   },
   {
     key: 'activityStatus',
@@ -205,12 +204,11 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>(
         );
       }
 
-      const buttonWithDividers = buttons.flatMap((btn, index) => {
-        if (index === 0) return [btn];
-        return [<NDivider vertical />, btn];
-      });
-
-      return <div class="flex-center gap-1px">{buttonWithDividers}</div>;
+      return (
+        <div class="flex-center gap-1px">
+          {buttons.map((btn, index) => (index > 0 ? [<NDivider vertical />, btn] : btn))}
+        </div>
+      );
     }
   }
 ]);

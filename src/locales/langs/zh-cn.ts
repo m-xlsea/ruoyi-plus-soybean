@@ -238,6 +238,8 @@ const local: App.I18n.Schema = {
     workflow_design: '流程设计',
     'workflow_process-definition': '流程定义',
     'workflow_process-instance': '流程实例',
+    workflow_task: '任务',
+    'workflow_task_all-task-waiting': '待办任务',
     workflow_leave: '请假申请'
   },
   menu: {

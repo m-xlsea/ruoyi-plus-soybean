@@ -102,9 +102,7 @@ const {
       title: '版本号',
       align: 'center',
       minWidth: 120,
-      render(row) {
-        return <NTag type="info">v{row.version}.0</NTag>;
-      }
+      render: row => <NTag type="info">v{row.version}.0</NTag>
     },
     {
       key: 'activityStatus',
@@ -176,8 +174,8 @@ const {
       width: 150,
       fixed: 'right',
       render: row => {
-        const buttons = [];
-        buttons.push(
+        const firstRowButtons = [];
+        firstRowButtons.push(
           <ButtonIcon
             text
             type="primary"
@@ -186,7 +184,7 @@ const {
             onClick={() => edit(row.id)}
           />
         );
-        buttons.push(
+        firstRowButtons.push(
           <ButtonIcon
             text
             type="error"
@@ -196,7 +194,7 @@ const {
             onPositiveClick={() => handleDelete(row.id)}
           />
         );
-        buttons.push(
+        firstRowButtons.push(
           <ButtonIcon
             text
             type="primary"
@@ -207,10 +205,9 @@ const {
           />
         );
 
-        const firstRowButtons = buttons.flatMap((btn, index) => {
-          if (index === 0) return [btn];
-          return [<NDivider vertical />, btn];
-        });
+        const firstRowWithDividers = firstRowButtons.map((btn, index) =>
+          index > 0 ? [<NDivider vertical />, btn] : btn
+        );
 
         const secondRowButtons = [];
 
@@ -257,14 +254,13 @@ const {
           );
         }
 
-        const secondRowWithDividers = secondRowButtons.flatMap((btn, index) => {
-          if (index === 0) return [btn];
-          return [<NDivider vertical />, btn];
-        });
+        const secondRowWithDividers = secondRowButtons.map((btn, index) =>
+          index > 0 ? [<NDivider vertical />, btn] : btn
+        );
 
         return (
           <div class="flex-col">
-            <div class="h-[24px] flex-center gap-4px">{firstRowButtons}</div>
+            <div class="h-[24px] flex-center gap-4px">{firstRowWithDividers}</div>
             <div class="h-[24px] flex-center gap-4px">{secondRowWithDividers}</div>
           </div>
         );
