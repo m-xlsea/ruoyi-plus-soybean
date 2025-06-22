@@ -184,7 +184,7 @@ async function updatePassword() {
             label-width="100px"
             class="mt-16px max-w-520px"
           >
-            <NFormItem label="旧密码" path="password">
+            <NFormItem label="旧密码" path="oldPassword">
               <NInput
                 v-model:value="passwordModel.oldPassword"
                 type="password"
