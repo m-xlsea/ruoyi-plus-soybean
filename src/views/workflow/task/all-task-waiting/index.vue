@@ -1,12 +1,15 @@
 <script setup lang="tsx">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, shallowRef, watch } from 'vue';
 import { NButton, NDivider, NEmpty, NInput, NRadioButton, NRadioGroup, NTag } from 'naive-ui';
-import { useLoading } from '@sa/hooks';
+import { useBoolean, useLoading } from '@sa/hooks';
 import { fetchGetAllFinishedTask, fetchGetAllWaitingTask } from '@/service/api/workflow/task';
 import { fetchGetCategoryTree } from '@/service/api/workflow/category';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
+import { loadDynamicComponent } from '@/utils/common';
+import GroupTag from '@/components/custom/group-tag.vue';
+import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import { $t } from '@/locales';
 import AllTaskWaitingSearch from './modules/all-task-waiting-search.vue';
@@ -24,7 +27,11 @@ defineOptions({
 });
 
 useDict('wf_business_status');
+useDict('wf_task_status');
 const appStore = useAppStore();
+const { bool: viewVisible, setTrue: showViewDrawer } = useBoolean(false);
+
+const dynamicComponent = shallowRef();
 
 const waitingStatus = ref<boolean>(true);
 const waitingStatusOptions = ref<WaitingStatusOption[]>([
@@ -32,13 +39,17 @@ const waitingStatusOptions = ref<WaitingStatusOption[]>([
   { label: '已办任务', value: false }
 ]);
 
-// Common column definitions to reduce duplication
-// Explicitly type as TableColumn<TaskOrHisTask> to ensure compatibility with both types
 const commonColumns: NaiveUI.TableColumn<TaskOrHisTask>[] = [
   { type: 'selection', align: 'center', width: 50 },
   { key: 'flowName', title: '流程定义名称', align: 'center', width: 120 },
   { key: 'flowCode', title: '流程定义编码', align: 'center', width: 120 },
-  { key: 'categoryName', title: '流程分类', align: 'center', width: 120 },
+  {
+    key: 'categoryName',
+    title: '流程分类',
+    align: 'center',
+    width: 120,
+    render: row => <NTag>{row.categoryName}</NTag>
+  },
   {
     key: 'version',
     title: '版本号',
@@ -48,35 +59,56 @@ const commonColumns: NaiveUI.TableColumn<TaskOrHisTask>[] = [
   },
   { key: 'nodeName', title: '任务名称', align: 'center', width: 120 },
   { key: 'createByName', title: '申请人', align: 'center', width: 120 },
-  { key: 'flowStatus', title: '流程状态', align: 'center', width: 120 }
+  {
+    key: 'flowStatus',
+    title: '流程状态',
+    align: 'center',
+    width: 120,
+    render: row => <DictTag size="small" value={row.flowStatus} dict-code="wf_business_status" />
+  }
 ];
 
-// Waiting task specific columns
 const waitingColumns = ref<NaiveUI.TableColumn<Api.Workflow.Task>[]>([
   ...(commonColumns as NaiveUI.TableColumn<Api.Workflow.Task>[]),
-  { key: 'assigneeNames', title: '办理人', align: 'center', width: 120 },
+  {
+    key: 'assigneeNames',
+    title: '办理人',
+    align: 'center',
+    width: 120,
+    render: row => <GroupTag value={row.assigneeNames} />
+  },
   { key: 'createTime', title: '创建时间', align: 'center', width: 120 }
 ]);
 
-// Finished task specific columns
 const finishColumns = ref<NaiveUI.TableColumn<Api.Workflow.HisTask>[]>([
   ...(commonColumns as NaiveUI.TableColumn<Api.Workflow.HisTask>[]),
   { key: 'approveName', title: '办理人', align: 'center', width: 120 },
-  { key: 'flowTaskStatus', title: '任务状态', align: 'center', width: 120 },
+  {
+    key: 'flowTaskStatus',
+    title: '任务状态',
+    align: 'center',
+    width: 120,
+    render: row => <DictTag size="small" value={row.flowTaskStatus} dict-code="wf_task_status" />
+  },
   { key: 'createTime', title: '创建时间', align: 'center', width: 120 }
 ]);
 
-// Operation column with optimized render function
 const operateColumns = ref<NaiveUI.TableColumn<TaskOrHisTask>[]>([
   {
     key: 'operate',
     title: $t('common.operate'),
     align: 'center',
     fixed: 'right',
-    width: 120,
-    render: () => {
+    width: 100,
+    render: row => {
       const buttons = [
-        <ButtonIcon text type="info" icon="material-symbols:visibility-outline" tooltipContent="查看" />
+        <ButtonIcon
+          text
+          type="info"
+          icon="material-symbols:visibility-outline"
+          tooltipContent="查看"
+          onClick={() => handleView(row)}
+        />
       ];
 
       if (waitingStatus.value) {
@@ -131,7 +163,6 @@ watch(waitingStatus, async () => {
   reloadColumns();
 });
 
-// Category tree handling
 const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
 const categoryPattern = ref<string>();
 const categoryData = ref<Api.Common.CommonTreeRecord>([]);
@@ -149,6 +180,8 @@ async function getTreeData() {
   endTreeLoading();
 }
 
+getTreeData();
+
 function handleClickTree(keys: string[]) {
   searchParams.category = keys.length ? keys[0] : null;
   checkedRowKeys.value = [];
@@ -164,8 +197,17 @@ function handleResetSearch() {
   resetSearchParams();
   selectedKeys.value = [];
 }
+const modules = import.meta.glob('@/components/custom/workflow/**/*.vue');
+const businessId = ref<CommonType.IdType>();
 
-getTreeData();
+async function handleView(row: TaskOrHisTask) {
+  businessId.value = row.businessId;
+  const formPath = row.formPath;
+  if (formPath) {
+    dynamicComponent.value = await loadDynamicComponent(modules, formPath);
+    showViewDrawer();
+  }
+}
 </script>
 
 <template>
@@ -243,6 +285,7 @@ getTreeData();
           class="sm:h-full"
         />
       </NCard>
+      <component :is="dynamicComponent" :visible="viewVisible" operate-type="detail" :business-id="businessId" />
     </div>
   </TableSiderLayout>
 </template>

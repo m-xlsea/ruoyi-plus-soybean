@@ -7,6 +7,7 @@ import { fetchGetOssListByIds } from '@/service/api/system/oss';
 import { useDict } from '@/hooks/business/dict';
 import { useDownload } from '@/hooks/business/download';
 import DictTag from '@/components/custom/dict-tag.vue';
+import GroupTag from '@/components/custom/group-tag.vue';
 
 defineOptions({
   name: 'ApprovalInfoPanel'
@@ -38,37 +39,7 @@ const columns = ref<NaiveUI.TableColumn<Api.Workflow.HisTask>[]>([
     align: 'center',
     width: 100,
     render: row => {
-      if (!row.approveName) return null;
-
-      const approveNames = row.approveName.split(',');
-
-      if (approveNames.length <= 1) {
-        return (
-          <NTag size="small" type="info">
-            {row.approveName}
-          </NTag>
-        );
-      }
-      return (
-        <NPopover trigger="hover" placement="bottom">
-          {{
-            trigger: () => (
-              <NTag size="small" type="info" class="cursor-pointer">
-                {approveNames[0]}...({approveNames.length})
-              </NTag>
-            ),
-            default: () => (
-              <NSpace vertical size="small">
-                {approveNames.map(name => (
-                  <NTag key={name} size="small" type="info">
-                    {name}
-                  </NTag>
-                ))}
-              </NSpace>
-            )
-          }}
-        </NPopover>
-      );
+      return <GroupTag value={row.approveName} />;
     }
   },
   {
