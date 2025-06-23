@@ -6,7 +6,7 @@ import { fetchCompleteTask, fetchGetTask } from '@/service/api/workflow';
 import FileUpload from '@/components/custom/file-upload.vue';
 
 defineOptions({
-  name: 'WorkflowTaskApplyModal'
+  name: 'FlowTaskApprovalModal'
 });
 
 interface Props {

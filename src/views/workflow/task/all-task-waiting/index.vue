@@ -19,9 +19,6 @@ interface WaitingStatusOption {
   value: boolean;
 }
 
-// Create a union type to handle both Task and HisTask
-type TaskOrHisTask = Api.Workflow.Task | Api.Workflow.HisTask;
-
 defineOptions({
   name: 'ProcessInstanceList'
 });
@@ -30,7 +27,7 @@ useDict('wf_business_status');
 useDict('wf_task_status');
 const appStore = useAppStore();
 const { bool: viewVisible, setTrue: showViewDrawer } = useBoolean(false);
-
+const { bool: interveneVisible, setTrue: showInterveneDrawer } = useBoolean(false);
 const dynamicComponent = shallowRef();
 
 const waitingStatus = ref<boolean>(true);
@@ -39,7 +36,7 @@ const waitingStatusOptions = ref<WaitingStatusOption[]>([
   { label: '已办任务', value: false }
 ]);
 
-const commonColumns: NaiveUI.TableColumn<TaskOrHisTask>[] = [
+const commonColumns: NaiveUI.TableColumn<Api.Workflow.TaskOrHisTask>[] = [
   { type: 'selection', align: 'center', width: 50 },
   { key: 'flowName', title: '流程定义名称', align: 'center', width: 120 },
   { key: 'flowCode', title: '流程定义编码', align: 'center', width: 120 },
@@ -82,7 +79,13 @@ const waitingColumns = ref<NaiveUI.TableColumn<Api.Workflow.Task>[]>([
 
 const finishColumns = ref<NaiveUI.TableColumn<Api.Workflow.HisTask>[]>([
   ...(commonColumns as NaiveUI.TableColumn<Api.Workflow.HisTask>[]),
-  { key: 'approveName', title: '办理人', align: 'center', width: 120 },
+  {
+    key: 'approveName',
+    title: '办理人',
+    align: 'center',
+    width: 120,
+    render: row => <NTag type="info">{row.approveName}</NTag>
+  },
   {
     key: 'flowTaskStatus',
     title: '任务状态',
@@ -93,7 +96,7 @@ const finishColumns = ref<NaiveUI.TableColumn<Api.Workflow.HisTask>[]>([
   { key: 'createTime', title: '创建时间', align: 'center', width: 120 }
 ]);
 
-const operateColumns = ref<NaiveUI.TableColumn<TaskOrHisTask>[]>([
+const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.TaskOrHisTask>[]>([
   {
     key: 'operate',
     title: $t('common.operate'),
@@ -112,7 +115,15 @@ const operateColumns = ref<NaiveUI.TableColumn<TaskOrHisTask>[]>([
       ];
 
       if (waitingStatus.value) {
-        buttons.push(<ButtonIcon text type="info" icon="material-symbols:edit-document" tooltipContent="流程干预" />);
+        buttons.push(
+          <ButtonIcon
+            text
+            type="info"
+            icon="material-symbols:edit-document"
+            tooltipContent="流程干预"
+            onClick={() => handleIntervene(row)}
+          />
+        );
       }
 
       return (
@@ -149,7 +160,7 @@ const {
   },
   columns: () => {
     const baseColumns = waitingStatus.value ? waitingColumns.value : finishColumns.value;
-    return [...baseColumns, ...operateColumns.value] as NaiveUI.TableColumn<TaskOrHisTask>[];
+    return [...baseColumns, ...operateColumns.value] as NaiveUI.TableColumn<Api.Workflow.TaskOrHisTask>[];
   }
 });
 
@@ -200,13 +211,19 @@ function handleResetSearch() {
 const modules = import.meta.glob('@/components/custom/workflow/**/*.vue');
 const businessId = ref<CommonType.IdType>();
 
-async function handleView(row: TaskOrHisTask) {
+async function handleView(row: Api.Workflow.TaskOrHisTask) {
   businessId.value = row.businessId;
   const formPath = row.formPath;
   if (formPath) {
     dynamicComponent.value = await loadDynamicComponent(modules, formPath);
     showViewDrawer();
   }
+}
+
+const interveneRowData = ref<Api.Workflow.TaskOrHisTask>();
+function handleIntervene(row: Api.Workflow.TaskOrHisTask) {
+  interveneRowData.value = row;
+  showInterveneDrawer();
 }
 </script>
 
@@ -284,8 +301,9 @@ async function handleView(row: TaskOrHisTask) {
           :pagination="mobilePagination"
           class="sm:h-full"
         />
+        <component :is="dynamicComponent" :visible="viewVisible" operate-type="detail" :business-id="businessId" />
+        <FlowInterveneModal v-model:visible="interveneVisible" :row-data="interveneRowData!" />
       </NCard>
-      <component :is="dynamicComponent" :visible="viewVisible" operate-type="detail" :business-id="businessId" />
     </div>
   </TableSiderLayout>
 </template>

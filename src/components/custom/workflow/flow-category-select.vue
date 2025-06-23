@@ -5,7 +5,7 @@ import { useLoading } from '@sa/hooks';
 import { fetchGetCategoryTree } from '@/service/api/workflow';
 import { isNull } from '@/utils/common';
 
-defineOptions({ name: 'WorkflowCategorySelect' });
+defineOptions({ name: 'FlowCategorySelect' });
 
 interface Props {
   [key: string]: any;

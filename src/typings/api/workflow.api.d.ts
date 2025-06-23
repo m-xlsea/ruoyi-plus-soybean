@@ -246,6 +246,9 @@ declare namespace Api {
       /** 是否显示 */
       show: boolean;
     }>;
+
+    type TaskOrHisTask = Task | HisTask;
+
     /** 任务详情 */
     type Task = Common.CommonTenantRecord<{
       /** 任务ID */

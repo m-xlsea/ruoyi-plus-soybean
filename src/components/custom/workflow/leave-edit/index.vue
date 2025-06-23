@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import dayjs from 'dayjs';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { flowCodeTypeOptions, flowCodeTypeRecord, leaveTypeOptions, leaveTypeRecord } from '@/constants/workflow';
@@ -8,7 +8,8 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 import ApprovalInfoPanel from '@/components/custom/workflow/approval-info-panel.vue';
-import WorkflowTaskApplyModal from '@/components/custom/workflow/workflow-task-apply-modal.vue';
+import FlowTaskApprovalModal from '@/components/custom/workflow/flow-task-approval-modal.vue';
+import FlowDrawer from '@/components/custom/workflow/flow-drawer.vue';
 
 defineOptions({
   name: 'LeaveEdit'
@@ -188,12 +189,14 @@ async function handleSaveDraft() {
   await handleOperate();
   window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
+  emit('submitted');
 }
 
 const taskVariables = ref<{ [key: string]: any }>({});
 
 async function handleSubmit() {
   await handleOperate();
+  window.$message?.success($t('common.updateSuccess'));
   // 提交流程
   startWorkflowModel.businessId = respLeave.value?.id;
   startWorkflowModel.flowCode = model.flowCode;
@@ -205,7 +208,6 @@ async function handleSubmit() {
   const { error, data } = await fetchStartWorkflow(startWorkflowModel);
   if (error) return;
   startWorkflowResult.value = data;
-  window.$message?.success($t('common.updateSuccess'));
   setTaskApplyVisible();
 }
 
@@ -227,79 +229,72 @@ async function initializeData() {
   }
 }
 
-watch(visible, initializeData);
-
-onMounted(initializeData);
+watch(visible, initializeData, { immediate: true });
 </script>
 
 <template>
-  <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="1300" class="max-w-90%">
-    <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <NSpin :show="loading">
-        <div :class="loading ? 'hidden' : ''">
-          <div v-if="!readonly" class="h-full">
-            <NForm ref="formRef" :model="model" :rules="rules">
-              <NFormItem label="流程类型" path="flowCode">
-                <NSelect v-model:value="model.flowCode" placeholder="请输入流程类型" :options="flowCodeTypeOptions" />
-              </NFormItem>
-              <NFormItem label="请假类型" path="leaveType">
-                <NSelect v-model:value="model.leaveType" placeholder="请输入请假类型" :options="leaveTypeOptions" />
-              </NFormItem>
-              <NFormItem label="请假时间" path="startDate">
-                <NDatePicker
-                  v-model:formatted-value="dateRange"
-                  class="w-full"
-                  type="daterange"
-                  value-format="yyyy-MM-dd"
-                  clearable
-                />
-              </NFormItem>
-              <NFormItem label="请假天数" path="leaveDays">
-                <NInputNumber v-model:value="model.leaveDays" class="w-full" disabled placeholder="请输入请假天数" />
-              </NFormItem>
-              <NFormItem label="请假原因" path="remark">
-                <NInput v-model:value="model.remark" placeholder="请输入请假原因" />
-              </NFormItem>
-            </NForm>
-          </div>
-          <div v-else>
-            <NDescriptions bordered :column="2" label-placement="left">
-              <NDescriptionsItem label="流程类型">
-                {{ flowCodeTypeRecord[modelDetail.flowCode] }}
-              </NDescriptionsItem>
-              <NDescriptionsItem label="请假类型">
-                <NTag type="info">{{ leaveTypeRecord[modelDetail.leaveType!] }}</NTag>
-              </NDescriptionsItem>
-              <NDescriptionsItem label="请假时间">
-                {{ `${modelDetail.startDate} 至 ${modelDetail.endDate}` }}
-              </NDescriptionsItem>
-              <NDescriptionsItem label="请假天数">{{ modelDetail.leaveDays }} 天</NDescriptionsItem>
-              <NDescriptionsItem label="请假原因">
-                {{ modelDetail.remark || '-' }}
-              </NDescriptionsItem>
-            </NDescriptions>
-            <!-- 审批信息 -->
-            <ApprovalInfoPanel v-if="showApprovalInfoPanel" ref="approvalInfoPanelRef" :business-id="modelDetail.id!" />
-          </div>
-        </div>
-      </NSpin>
-      <template #footer>
-        <div v-if="!readonly">
-          <NSpace :size="16">
-            <NButton @click="closeDrawer">{{ $t('common.cancel') }}</NButton>
-            <NButton type="warning" @click="handleSaveDraft">暂存</NButton>
-            <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
-          </NSpace>
-        </div>
-      </template>
-    </NDrawerContent>
-    <WorkflowTaskApplyModal
-      v-model:visible="taskApplyVisible"
-      :task-id="startWorkflowResult?.taskId!"
-      :task-variables="taskVariables"
-      @finished="handleTaskFinished"
-    />
-  </NDrawer>
+  <FlowDrawer
+    v-model:visible="visible"
+    :title="title"
+    :loading="loading"
+    :readonly="readonly"
+    @close="closeDrawer"
+    @save-draft="handleSaveDraft"
+    @submit="handleSubmit"
+  >
+    <div :class="loading ? 'hidden' : ''">
+      <div v-if="!readonly" class="h-full">
+        <NForm ref="formRef" :model="model" :rules="rules">
+          <NFormItem label="流程类型" path="flowCode">
+            <NSelect v-model:value="model.flowCode" placeholder="请输入流程类型" :options="flowCodeTypeOptions" />
+          </NFormItem>
+          <NFormItem label="请假类型" path="leaveType">
+            <NSelect v-model:value="model.leaveType" placeholder="请输入请假类型" :options="leaveTypeOptions" />
+          </NFormItem>
+          <NFormItem label="请假时间" path="startDate">
+            <NDatePicker
+              v-model:formatted-value="dateRange"
+              class="w-full"
+              type="daterange"
+              value-format="yyyy-MM-dd"
+              clearable
+            />
+          </NFormItem>
+          <NFormItem label="请假天数" path="leaveDays">
+            <NInputNumber v-model:value="model.leaveDays" class="w-full" disabled placeholder="请输入请假天数" />
+          </NFormItem>
+          <NFormItem label="请假原因" path="remark">
+            <NInput v-model:value="model.remark" placeholder="请输入请假原因" />
+          </NFormItem>
+        </NForm>
+      </div>
+      <div v-else>
+        <NDescriptions bordered :column="2" label-placement="left">
+          <NDescriptionsItem label="流程类型">
+            {{ flowCodeTypeRecord[modelDetail.flowCode] }}
+          </NDescriptionsItem>
+          <NDescriptionsItem label="请假类型">
+            <NTag type="info">{{ leaveTypeRecord[modelDetail.leaveType!] }}</NTag>
+          </NDescriptionsItem>
+          <NDescriptionsItem label="请假时间">
+            {{ `${modelDetail.startDate} 至 ${modelDetail.endDate}` }}
+          </NDescriptionsItem>
+          <NDescriptionsItem label="请假天数">{{ modelDetail.leaveDays }} 天</NDescriptionsItem>
+          <NDescriptionsItem label="请假原因">
+            {{ modelDetail.remark || '-' }}
+          </NDescriptionsItem>
+        </NDescriptions>
+        <!-- 审批信息 -->
+        <ApprovalInfoPanel v-if="showApprovalInfoPanel" ref="approvalInfoPanelRef" :business-id="modelDetail.id!" />
+      </div>
+    </div>
+  </FlowDrawer>
+  <FlowTaskApprovalModal
+    v-model:visible="taskApplyVisible"
+    :task-id="startWorkflowResult?.taskId!"
+    :task-variables="taskVariables"
+    @finished="handleTaskFinished"
+  />
 </template>
 
 <style scoped></style>
