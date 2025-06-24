@@ -30,6 +30,8 @@ const { bool: viewVisible, setTrue: showViewDrawer } = useBoolean(false);
 const { bool: interveneVisible, setTrue: showInterveneDrawer } = useBoolean(false);
 const dynamicComponent = shallowRef();
 
+type Task = Api.Workflow.Task;
+
 const waitingStatus = ref<boolean>(true);
 const waitingStatusOptions = ref<WaitingStatusOption[]>([
   { label: '待办任务', value: true },
@@ -114,7 +116,7 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.TaskOrHisTask>[]>([
         />
       ];
 
-      if (waitingStatus.value) {
+      if (waitingStatus.value && row.flowStatus !== 'draft') {
         buttons.push(
           <ButtonIcon
             text
@@ -302,7 +304,7 @@ function handleIntervene(row: Api.Workflow.TaskOrHisTask) {
           class="sm:h-full"
         />
         <component :is="dynamicComponent" :visible="viewVisible" operate-type="detail" :business-id="businessId" />
-        <FlowInterveneModal v-model:visible="interveneVisible" :row-data="interveneRowData!" />
+        <FlowInterveneModal v-model:visible="interveneVisible" :row-data="interveneRowData as Task" />
       </NCard>
     </div>
   </TableSiderLayout>
