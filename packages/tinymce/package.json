@@ -10,9 +10,9 @@
     }
   },
   "dependencies": {
-    "tinymce": "7.8.0"
+    "tinymce": "7.9.1"
   },
   "devDependencies": {
-    "@tinymce/tinymce-vue": "6.1.0"
+    "@tinymce/tinymce-vue": "6.2.0"
   }
 }
