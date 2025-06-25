@@ -196,7 +196,7 @@ async function handleStatusChange(
       :title="$t('page.system.tenantPackage.title')"
       :bordered="false"
       size="small"
-      class="sm:flex-1-hidden card-wrapper"
+      class="card-wrapper sm:flex-1-hidden"
     >
       <template #header-extra>
         <TableHeaderOperation

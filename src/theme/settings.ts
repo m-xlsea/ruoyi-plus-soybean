@@ -58,7 +58,8 @@ export const themeSettings: App.Theme.ThemeSetting = {
   },
   watermark: {
     visible: import.meta.env.VITE_WATERMARK === 'Y',
-    text: 'RuoYi-Vue-Plus'
+    text: 'RuoYi-Vue-Plus',
+    enableUserName: false
   },
   table: {
     bordered: true,

@@ -177,7 +177,7 @@ watch(visible, () => {
           </NGrid>
         </NForm>
         <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
-        <NCard :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+        <NCard :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
           <NDataTable
             v-model:checked-row-keys="checkedRowKeys"
             :columns="columns"

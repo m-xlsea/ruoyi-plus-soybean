@@ -249,7 +249,7 @@ function handleAuthUser(row: Api.System.Role) {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <RoleSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="角色列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard title="角色列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

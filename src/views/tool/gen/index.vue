@@ -268,7 +268,7 @@ getDataNames();
       @search="getDataByPage"
     />
     <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
-    <NCard title="代码生成" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard title="代码生成" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

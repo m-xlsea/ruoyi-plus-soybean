@@ -166,7 +166,8 @@ const local: App.I18n.Schema = {
     },
     watermark: {
       visible: '显示全屏水印',
-      text: '水印文本'
+      text: '水印文本',
+      enableUserName: '启用用户名水印'
     },
     tablePropsTitle: '表格配置',
     table: {

@@ -166,7 +166,8 @@ const local: App.I18n.Schema = {
     },
     watermark: {
       visible: 'Watermark Full Screen Visible',
-      text: 'Watermark Text'
+      text: 'Watermark Text',
+      enableUserName: 'Enable User Name Watermark'
     },
     tablePropsTitle: 'Table Props',
     table: {

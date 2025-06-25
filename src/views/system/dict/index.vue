@@ -362,7 +362,7 @@ const selectable = computed(() => {
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <DictDataSearch v-model:model="searchParams" @reset="handleReset" @search="getDataByPage" />
       <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
-      <NCard :title="$t('page.system.dict.title')" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+      <NCard :title="$t('page.system.dict.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header-extra>
           <TableHeaderOperation
             v-model:columns="columnChecks"
