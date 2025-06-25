@@ -43,3 +43,21 @@ export function fetchGetAllFinishedTask(data: Api.Workflow.TaskSearchParams) {
     params: data
   });
 }
+
+/** 任务操作 */
+export function fetchTaskOperate(data: Api.Workflow.TaskOperateParams, operateType: Api.Workflow.TaskOperateType) {
+  return request<Api.Workflow.Task>({
+    url: `/workflow/task/taskOperation/${operateType}`,
+    method: 'post',
+    data
+  });
+}
+
+/** 终止任务 */
+export function fetchTerminateTask(data: Api.Workflow.TerminateTaskOperateParams) {
+  return request<boolean>({
+    url: '/workflow/task/terminationTask',
+    method: 'post',
+    data
+  });
+}

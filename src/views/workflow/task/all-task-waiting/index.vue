@@ -26,8 +26,8 @@ defineOptions({
 useDict('wf_business_status');
 useDict('wf_task_status');
 const appStore = useAppStore();
-const { bool: viewVisible, setTrue: showViewDrawer } = useBoolean(false);
-const { bool: interveneVisible, setTrue: showInterveneDrawer } = useBoolean(false);
+const { bool: viewVisible, setTrue: showViewDrawer } = useBoolean();
+const { bool: interveneVisible, setTrue: showInterveneDrawer } = useBoolean();
 const dynamicComponent = shallowRef();
 
 type Task = Api.Workflow.Task;
@@ -304,7 +304,11 @@ function handleIntervene(row: Api.Workflow.TaskOrHisTask) {
           class="sm:h-full"
         />
         <component :is="dynamicComponent" :visible="viewVisible" operate-type="detail" :business-id="businessId" />
-        <FlowInterveneModal v-model:visible="interveneVisible" :row-data="interveneRowData as Task" />
+        <FlowInterveneModal
+          v-model:visible="interveneVisible"
+          :row-data="interveneRowData as Task"
+          @refresh="getData"
+        />
       </NCard>
     </div>
   </TableSiderLayout>

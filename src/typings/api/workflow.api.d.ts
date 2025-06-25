@@ -312,6 +312,23 @@ declare namespace Api {
     /** 任务列表 */
     type TaskList = Common.PaginatingQueryRecord<Task>;
 
+    /** 任务操作类型 */
+    type TaskOperateType = 'delegateTask' | 'transferTask' | 'addSignature' | 'reductionSignature' | 'stopTask';
+
+    /** 任务操作参数 */
+    type TaskOperateParams = CommonType.RecordNullable<{
+      taskId: CommonType.IdType;
+      userId?: CommonType.IdType;
+      userIds?: CommonType.IdType[];
+      message?: string;
+    }>;
+
+    /** 终止任务 */
+    type TerminateTaskOperateParams = CommonType.RecordNullable<{
+      taskId: CommonType.IdType;
+      comment?: string;
+    }>;
+
     /** 协作方式 */
     type CooperateType = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 

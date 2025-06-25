@@ -27,6 +27,12 @@ const props = withDefaults(defineProps<Props>(), {
   disabledIds: () => []
 });
 
+interface Emits {
+  (e: 'confirm', value: CommonType.IdType[]): void;
+}
+
+const emit = defineEmits<Emits>();
+
 const visible = defineModel<boolean>('visible', {
   default: false
 });
@@ -162,6 +168,11 @@ function closeModal() {
   visible.value = false;
 }
 
+function handleConfirm() {
+  emit('confirm', checkedRowKeys.value);
+  closeModal();
+}
+
 function getRowProps(row: Api.System.User) {
   return {
     onClick: () => {
@@ -272,7 +283,7 @@ watch(visible, () => {
     <template #footer>
       <NSpace justify="end" :size="16">
         <NButton @click="closeModal">{{ $t('common.cancel') }}</NButton>
-        <NButton type="primary">{{ $t('common.confirm') }}</NButton>
+        <NButton type="primary" @click="handleConfirm">{{ $t('common.confirm') }}</NButton>
       </NSpace>
     </template>
   </NModal>

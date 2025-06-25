@@ -1,5 +1,7 @@
 <script lang="ts" setup>
-import { useBoolean, useLoading } from '~/packages/hooks/src';
+import { computed, reactive, watch } from 'vue';
+import { useBoolean } from '@sa/hooks';
+import { fetchTaskOperate, fetchTerminateTask } from '@/service/api/workflow/task';
 
 defineOptions({
   name: 'FlowInterveneModal'
@@ -10,11 +12,97 @@ const { bool: transferVisible, setTrue: openTransferModal } = useBoolean();
 interface Props {
   rowData: Api.Workflow.Task;
 }
-const { loading: btnLoading } = useLoading();
+
 const props = defineProps<Props>();
+
+interface Emits {
+  (e: 'refresh'): void;
+}
+
+const emit = defineEmits<Emits>();
+
+const isWaiting = computed(() => props.rowData.flowStatus === 'waiting');
+
+// 流程签署比例值 大于0为票签，会签
+const isTicketOrSignInstance = computed(() => Number(props.rowData.nodeRatio) > 0);
 
 const visible = defineModel<boolean>('visible', {
   default: false
+});
+
+type Model = Api.Workflow.TaskOperateParams;
+
+const model: Model = reactive(createDefaultModel());
+
+function createDefaultModel(): Model {
+  return {
+    taskId: null,
+    userId: null,
+    userIds: null,
+    message: ''
+  };
+}
+
+type TerminateModel = Api.Workflow.TerminateTaskOperateParams;
+const terminateModel: TerminateModel = reactive(createDefaultTerminateModel());
+
+function createDefaultTerminateModel(): TerminateModel {
+  return {
+    taskId: null,
+    comment: ''
+  };
+}
+
+function handleTransferConfirm(ids: CommonType.IdType[]) {
+  if (ids.length === 0) {
+    window.$message?.error('请选择转办用户');
+    return;
+  }
+  model.userId = ids[0];
+  window.$dialog?.warning({
+    title: '提示',
+    content: '是否确认转办?',
+    positiveText: '确认转办',
+    positiveButtonProps: {
+      type: 'primary'
+    },
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      const { error } = await fetchTaskOperate(model, 'transferTask');
+      if (error) return;
+      window.$message?.success('转办成功');
+      visible.value = false;
+      emit('refresh');
+    }
+  });
+}
+
+function handleTerminate() {
+  window.$dialog?.warning({
+    title: '提示',
+    content: '是否确认中止?',
+    positiveText: '确认',
+    positiveButtonProps: {
+      type: 'primary'
+    },
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      const { error } = await fetchTerminateTask(terminateModel);
+      if (error) return;
+      window.$message?.success('中止成功');
+      visible.value = false;
+      emit('refresh');
+    }
+  });
+}
+
+watch(visible, () => {
+  if (visible.value) {
+    Object.assign(model, createDefaultModel());
+    model.taskId = props.rowData.id;
+    Object.assign(terminateModel, createDefaultTerminateModel());
+    terminateModel.taskId = props.rowData.id;
+  }
 });
 </script>
 
@@ -37,7 +125,7 @@ const visible = defineModel<boolean>('visible', {
         <GroupTag :value="props.rowData.assigneeNames" />
       </NDescriptionsItem>
       <NDescriptionsItem label="版本号">
-        {{ props.rowData.version }}
+        <NTag type="info" size="small">v{{ props.rowData.version }}.0</NTag>
       </NDescriptionsItem>
       <NDescriptionsItem label="业务ID">
         {{ props.rowData.businessId }}
@@ -45,19 +133,25 @@ const visible = defineModel<boolean>('visible', {
     </NDescriptions>
     <template #footer>
       <NSpace justify="end" :size="16">
-        <NButton :disabled="btnLoading" type="primary" @click="openTransferModal">转办</NButton>
-        <NButton :disabled="btnLoading" type="primary" @click="openMultiInstanceModal">加签</NButton>
-        <NButton :disabled="btnLoading" type="primary">减签</NButton>
-        <NButton :disabled="btnLoading" type="error">中止</NButton>
+        <NButton v-if="isWaiting" type="primary" @click="openTransferModal">转办</NButton>
+        <NButton v-if="isWaiting && isTicketOrSignInstance" type="primary" @click="openMultiInstanceModal">
+          加签
+        </NButton>
+        <NButton v-if="isWaiting && isTicketOrSignInstance" type="primary">减签</NButton>
+        <NButton v-if="isWaiting" type="error" @click="handleTerminate">中止</NButton>
       </NSpace>
     </template>
+    <!-- 转办用户选择器 -->
+    <UserSelectModal
+      v-model:visible="transferVisible"
+      :disabled-ids="props.rowData.assigneeIds.split(',')"
+      @confirm="handleTransferConfirm"
+    />
     <!-- 加签用户选择器 -->
     <UserSelectModal
       v-model:visible="multiInstanceVisible"
       multiple
       :disabled-ids="props.rowData.assigneeIds.split(',')"
     />
-    <!-- 转办用户选择器 -->
-    <UserSelectModal v-model:visible="transferVisible" :disabled-ids="props.rowData.assigneeIds.split(',')" />
   </NModal>
 </template>
