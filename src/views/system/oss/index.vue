@@ -270,7 +270,7 @@ function handleToOssConfig() {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <OssSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="OSS 对象存储列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard title="OSS 对象存储列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

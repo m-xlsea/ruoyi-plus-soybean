@@ -4,8 +4,8 @@ import { NConfigProvider, darkTheme } from 'naive-ui';
 import type { WatermarkProps } from 'naive-ui';
 import { useAppStore } from './store/modules/app';
 import { useThemeStore } from './store/modules/theme';
-import { naiveDateLocales, naiveLocales } from './locales/naive';
 import { useAuthStore } from './store/modules/auth';
+import { naiveDateLocales, naiveLocales } from './locales/naive';
 
 defineOptions({
   name: 'App'
@@ -27,8 +27,12 @@ const naiveDateLocale = computed(() => {
 
 const watermarkProps = computed<WatermarkProps>(() => {
   const appTitle = import.meta.env.VITE_APP_TITLE || 'RuoYi-Vue-Plus';
+  const content =
+    themeStore.watermark.enableUserName && userInfo.user?.userName
+      ? `${userInfo.user?.nickName}@${appTitle} ${userInfo.user?.userName}`
+      : appTitle;
   return {
-    content: userInfo.user?.userName ? `${userInfo.user?.nickName}@${appTitle} ${userInfo.user?.userName}` : appTitle,
+    content,
     cross: true,
     fullscreen: true,
     fontSize: 14,

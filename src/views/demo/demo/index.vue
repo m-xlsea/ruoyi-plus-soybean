@@ -169,7 +169,7 @@ async function handleExport() {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <DemoSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="测试单表列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard title="测试单表列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

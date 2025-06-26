@@ -8,6 +8,7 @@ import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import StatusSwitch from '@/components/custom/status-switch.vue';
@@ -23,6 +24,8 @@ defineOptions({
 const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
+
+useDict('sys_normal_disable');
 
 const { bool: dataScopeDrawerVisible, setTrue: openDataScopeDrawer } = useBoolean(false);
 const { bool: authUserDrawerVisible, setTrue: openAuthUserDrawer } = useBoolean(false);
@@ -249,7 +252,7 @@ function handleAuthUser(row: Api.System.Role) {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <RoleSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-    <NCard title="角色列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard title="角色列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

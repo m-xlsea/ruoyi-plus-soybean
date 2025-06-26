@@ -33,7 +33,7 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const { options: sysNormalDisableOptions } = useDict('sys_normal_disable');
+const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
 
 const menuOptions = ref<Api.System.MenuList>([]);
 

@@ -10,12 +10,14 @@ import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import TableHeaderOperation from '@/components/advanced/table-header-operation.vue';
 import StatusSwitch from '@/components/custom/status-switch.vue';
 import TenantPackageSearch from './modules/tenant-package-search.vue';
 import TenantPackageOperateDrawer from './modules/tenant-package-operate-drawer.vue';
+
 defineOptions({
   name: 'TenantPackageList'
 });
@@ -23,6 +25,8 @@ defineOptions({
 const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
+
+useDict('sys_normal_disable', false);
 
 const {
   columns,
@@ -196,7 +200,7 @@ async function handleStatusChange(
       :title="$t('page.system.tenantPackage.title')"
       :bordered="false"
       size="small"
-      class="sm:flex-1-hidden card-wrapper"
+      class="card-wrapper sm:flex-1-hidden"
     >
       <template #header-extra>
         <TableHeaderOperation
