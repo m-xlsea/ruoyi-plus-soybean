@@ -32,7 +32,7 @@ const appStore = useAppStore();
 
 const title = computed(() => '分配用户权限');
 
-useDict('sys_normal_disable');
+useDict('sys_normal_disable', false);
 
 const { columns, data, getData, getDataByPage, loading, mobilePagination, searchParams, resetSearchParams } = useTable({
   immediate: false,

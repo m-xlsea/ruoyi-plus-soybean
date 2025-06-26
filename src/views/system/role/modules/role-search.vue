@@ -21,7 +21,7 @@ const dateRangeCreateTime = ref<[string, string] | null>(null);
 
 const model = defineModel<Api.System.RoleSearchParams>('model', { required: true });
 
-const { options: sysNormalDisableOptions } = useDict('sys_normal_disable');
+const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
 
 function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
   if (value?.length) {

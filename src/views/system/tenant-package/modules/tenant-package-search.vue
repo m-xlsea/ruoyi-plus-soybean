@@ -18,7 +18,7 @@ const { formRef, validate, restoreValidation } = useNaiveForm();
 
 const model = defineModel<Api.System.TenantPackageSearchParams>('model', { required: true });
 
-const { options: sysNormalDisableOptions } = useDict('sys_normal_disable');
+const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
 
 async function reset() {
   await restoreValidation();
