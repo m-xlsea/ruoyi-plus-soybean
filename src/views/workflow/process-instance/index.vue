@@ -365,7 +365,7 @@ async function handlePreview(row: Api.Workflow.ProcessInstance) {
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <ProcessInstanceSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
-      <NCard :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+      <NCard :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header>
           <NSpace>
             <NRadioGroup v-model:value="runningStatus" on-up size="small">

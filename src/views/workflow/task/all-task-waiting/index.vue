@@ -30,8 +30,6 @@ const { bool: viewVisible, setTrue: showViewDrawer } = useBoolean();
 const { bool: interveneVisible, setTrue: showInterveneDrawer } = useBoolean();
 const dynamicComponent = shallowRef();
 
-type Task = Api.Workflow.Task;
-
 const waitingStatus = ref<boolean>(true);
 const waitingStatusOptions = ref<WaitingStatusOption[]>([
   { label: '待办任务', value: true },
@@ -123,7 +121,7 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.TaskOrHisTask>[]>([
             type="info"
             icon="material-symbols:edit-document"
             tooltipContent="流程干预"
-            onClick={() => handleIntervene(row)}
+            onClick={() => handleIntervene(row as Api.Workflow.Task)}
           />
         );
       }
@@ -222,9 +220,13 @@ async function handleView(row: Api.Workflow.TaskOrHisTask) {
   }
 }
 
-const interveneRowData = ref<Api.Workflow.TaskOrHisTask>();
-function handleIntervene(row: Api.Workflow.TaskOrHisTask) {
-  interveneRowData.value = row;
+const taskId = ref<CommonType.IdType>('');
+const assigneeIds = ref<CommonType.IdType[]>([]);
+const assigneeNames = ref<string[]>([]);
+function handleIntervene(row: Api.Workflow.Task) {
+  taskId.value = row.id;
+  assigneeIds.value = row.assigneeIds?.split(',') || [];
+  assigneeNames.value = row.assigneeNames?.split(',') || [];
   showInterveneDrawer();
 }
 </script>
@@ -264,7 +266,7 @@ function handleIntervene(row: Api.Workflow.TaskOrHisTask) {
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <AllTaskWaitingSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
-      <NCard :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+      <NCard :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header>
           <NSpace>
             <NRadioGroup v-model:value="waitingStatus" on-up size="small">
@@ -306,7 +308,9 @@ function handleIntervene(row: Api.Workflow.TaskOrHisTask) {
         <component :is="dynamicComponent" :visible="viewVisible" operate-type="detail" :business-id="businessId" />
         <FlowInterveneModal
           v-model:visible="interveneVisible"
-          :row-data="interveneRowData as Task"
+          :task-id="taskId"
+          :assignee-ids="assigneeIds"
+          :assignee-names="assigneeNames"
           @refresh="getData"
         />
       </NCard>

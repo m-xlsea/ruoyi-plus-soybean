@@ -25,6 +25,6 @@ const iframeUrl = `${baseURL}/warm-flow-ui/index.html?${stringify(urlParams)}`;
 
 <template>
   <div>
-    <iframe :src="iframeUrl" class="h-[400px] w-full" />
+    <iframe :src="iframeUrl" class="h-[600px] w-full" />
   </div>
 </template>

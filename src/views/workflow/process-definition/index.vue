@@ -410,7 +410,7 @@ const selectable = computed(() => {
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <DefinitionSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
-      <NCard :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+      <NCard :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header>
           <NSpace>
             <NRadioGroup v-model:value="isPublish" on-up size="small">

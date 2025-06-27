@@ -251,7 +251,7 @@ watch(visible, () => {
           :title="$t('page.system.user.title')"
           :bordered="false"
           size="small"
-          class="sm:flex-1-hidden card-wrapper lt-sm:overflow-auto"
+          class="card-wrapper sm:flex-1-hidden lt-sm:overflow-auto"
         >
           <template #header-extra>
             <TableHeaderOperation

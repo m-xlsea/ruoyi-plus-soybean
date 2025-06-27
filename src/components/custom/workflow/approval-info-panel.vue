@@ -128,12 +128,7 @@ async function initData() {
   activeTab.value = 'image';
   instanceId.value = undefined;
   hisTask.value = [];
-  startLoading();
-  try {
-    await getData();
-  } finally {
-    endLoading();
-  }
+  await getData();
 }
 
 async function getData() {
