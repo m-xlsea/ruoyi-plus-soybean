@@ -373,7 +373,15 @@ declare namespace Api {
     type DictDataOperateParams = CommonType.RecordNullable<
       Pick<
         Api.System.DictData,
-        'dictCode' | 'dictSort' | 'dictLabel' | 'dictValue' | 'dictType' | 'cssClass' | 'listClass' | 'remark'
+        | 'dictCode'
+        | 'dictSort'
+        | 'dictLabel'
+        | 'dictValue'
+        | 'dictType'
+        | 'cssClass'
+        | 'listClass'
+        | 'isDefault'
+        | 'remark'
       >
     >;
 
