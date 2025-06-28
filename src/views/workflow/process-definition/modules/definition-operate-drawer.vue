@@ -108,7 +108,7 @@ watch(visible, () => {
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem label="流程类别" path="category">
-          <WorkflowCategorySelect v-model:value="model.category" placeholder="请选择流程类别" />
+          <FlowCategorySelect v-model:value="model.category" placeholder="请选择流程类别" />
         </NFormItem>
         <NFormItem label="流程编码" path="flowCode">
           <NInput v-model:value="model.flowCode" placeholder="请输入流程编码" />

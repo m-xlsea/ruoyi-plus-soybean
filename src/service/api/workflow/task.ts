@@ -61,3 +61,11 @@ export function fetchTerminateTask(data: Api.Workflow.TerminateTaskOperateParams
     data
   });
 }
+
+/** 获取当前任务所有人员 */
+export function fetchGetCurrentTaskAllUser(taskId: CommonType.IdType) {
+  return request<Api.System.User[]>({
+    url: `/workflow/task/currentTaskAllUser/${taskId}`,
+    method: 'get'
+  });
+}

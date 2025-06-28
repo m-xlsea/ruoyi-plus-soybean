@@ -10,6 +10,7 @@ defineOptions({
 const { loading, startLoading, endLoading } = useLoading();
 const { bool: addSignatureVisible, setTrue: openAddSignatureModal } = useBoolean();
 const { bool: transferVisible, setTrue: openTransferModal } = useBoolean();
+const { bool: reduceSignatureVisible, setTrue: openReduceSignatureModal } = useBoolean();
 interface Props {
   taskId: CommonType.IdType;
   assigneeIds: CommonType.IdType[];
@@ -124,6 +125,11 @@ function handleTerminate() {
   });
 }
 
+function handleReduceSubmit() {
+  visible.value = false;
+  emit('refresh');
+}
+
 async function getTaskInfo() {
   startLoading();
   const { error, data } = await fetchGetTask(props.taskId);
@@ -178,7 +184,9 @@ watch(visible, () => {
       <NSpace justify="end" :size="16">
         <NButton v-if="isWaiting" type="primary" @click="openTransferModal">转办</NButton>
         <NButton v-if="isWaiting && isTicketOrSignInstance" type="primary" @click="openAddSignatureModal">加签</NButton>
-        <NButton v-if="isWaiting && isTicketOrSignInstance" type="primary">减签</NButton>
+        <NButton v-if="isWaiting && isTicketOrSignInstance" type="primary" @click="openReduceSignatureModal">
+          减签
+        </NButton>
         <NButton v-if="isWaiting" type="error" @click="handleTerminate">中止</NButton>
       </NSpace>
     </template>
@@ -190,6 +198,12 @@ watch(visible, () => {
       multiple
       :disabled-ids="assigneeIds"
       @confirm="handleAddSignatureConfirm"
+    />
+    <!-- 减签用户 -->
+    <ReduceSignatureDrawer
+      v-model:visible="reduceSignatureVisible"
+      :task="taskInfo!"
+      @reduce-submit="handleReduceSubmit"
     />
   </NModal>
 </template>

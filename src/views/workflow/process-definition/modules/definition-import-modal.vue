@@ -115,7 +115,7 @@ watch(visible, () => {
   >
     <NForm ref="formRef" label-placement="left" :model="data" :rules="rules">
       <NFormItem label="流程分类" path="category">
-        <WorkflowCategorySelect v-model:value="data.category" />
+        <FlowCategorySelect v-model:value="data.category" />
       </NFormItem>
     </NForm>
 
