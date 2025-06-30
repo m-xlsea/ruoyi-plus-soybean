@@ -150,7 +150,7 @@ async function handleUpdateModelWhenEdit() {
     return;
   }
 
-  if (props.operateType === 'edit' || (props.operateType === 'detail' && props.rowData)) {
+  if (props.rowData) {
     Object.assign(model, props.rowData);
     Object.assign(modelDetail, props.rowData);
   } else {
@@ -159,6 +159,7 @@ async function handleUpdateModelWhenEdit() {
       window.$message?.error(error.message);
       return;
     }
+    Object.assign(model, data);
     Object.assign(modelDetail, data);
   }
 }

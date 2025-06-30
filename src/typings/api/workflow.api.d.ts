@@ -141,7 +141,7 @@ declare namespace Api {
     type WorkflowActivityStatus = 0 | 1;
 
     /** 流程实例 */
-    type ProcessInstance = Common.CommonRecord<{
+    type Instance = Common.CommonRecord<{
       /** 主键 */
       id: CommonType.IdType;
       /** 租户编号 */
@@ -194,15 +194,15 @@ declare namespace Api {
     }>;
 
     /** 流程实例搜索参数 */
-    type ProcessInstanceSearchParams = CommonType.RecordNullable<
-      Pick<ProcessInstance, 'flowName' | 'flowCode' | 'businessId' | 'category' | 'nodeName'> &
+    type InstanceSearchParams = CommonType.RecordNullable<
+      Pick<Instance, 'flowName' | 'flowCode' | 'businessId' | 'category' | 'nodeName'> &
         Api.Common.CommonSearchParams & {
           startUserId: CommonType.IdType;
           createByIds: CommonType.IdType[];
         }
     >;
     /** 流程实例列表 */
-    type ProcessInstanceList = Common.PaginatingQueryRecord<ProcessInstance>;
+    type InstanceList = Common.PaginatingQueryRecord<Instance>;
 
     /** 流程作废操作参数 */
     type FlowInvalidOperateParams = CommonType.RecordNullable<{
@@ -210,6 +210,14 @@ declare namespace Api {
       id: CommonType.IdType;
       /** 作废原因 */
       comment: string;
+    }>;
+
+    /** 流程撤销操作参数 */
+    type CancelProcessApplyParams = CommonType.RecordNullable<{
+      /** 主键 */
+      businessId: CommonType.IdType;
+      /** 撤销原因 */
+      message: string;
     }>;
 
     /** 启动流程操作参数 */
@@ -225,7 +233,7 @@ declare namespace Api {
     /** 启动流程结果 */
     type StartWorkflowResult = CommonType.RecordNullable<{
       /** 流程实例ID */
-      processInstanceId: CommonType.IdType;
+      instanceId: CommonType.IdType;
       /** 任务ID */
       taskId: CommonType.IdType;
     }>;

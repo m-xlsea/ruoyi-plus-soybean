@@ -5,10 +5,10 @@ import { useBoolean, useLoading } from '@sa/hooks';
 import { workflowActivityStatusRecord } from '@/constants/workflow';
 import { fetchGetCategoryTree } from '@/service/api/workflow/category';
 import {
-  fetchBatchDeleteProcessInstance,
+  fetchBatchDeleteInstance,
   fetchFlowInvalidOperate,
-  fetchGetFinishedProcessInstanceList,
-  fetchGetRunningProcessInstanceList
+  fetchGetFinishedInstanceList,
+  fetchGetRunningInstanceList
 } from '@/service/api/workflow/instance';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
@@ -17,8 +17,8 @@ import { loadDynamicComponent } from '@/utils/common';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import ProcessInstanceSearch from './modules/process-instance-search.vue';
-import ProcessInstanceVariableDrawer from './modules/process-instance-variable-drawer.vue';
+import InstanceSearch from './modules/process-instance-search.vue';
+import InstanceVariableDrawer from './modules/process-instance-variable-drawer.vue';
 
 const dynamicComponent = shallowRef();
 
@@ -28,7 +28,7 @@ interface RunningStatusOption {
 }
 
 defineOptions({
-  name: 'ProcessInstanceList'
+  name: 'InstanceList'
 });
 
 useDict('wf_business_status');
@@ -61,7 +61,7 @@ function createDefaultModel(): CancelModel {
 }
 
 // 基础列
-const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
+const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.Instance>[]>([
   {
     type: 'selection',
     align: 'center',
@@ -136,7 +136,7 @@ const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
 ]);
 
 // 完成列
-const finishColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
+const finishColumns = ref<NaiveUI.TableColumn<Api.Workflow.Instance>[]>([
   {
     key: 'updateTime',
     title: '结束时间',
@@ -146,7 +146,7 @@ const finishColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
 ]);
 
 // 操作列
-const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.ProcessInstance>[]>([
+const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.Instance>[]>([
   {
     key: 'operate',
     title: $t('common.operate'),
@@ -226,7 +226,7 @@ const {
   resetSearchParams,
   updateApiFn
 } = useTable({
-  apiFn: fetchGetRunningProcessInstanceList,
+  apiFn: fetchGetRunningInstanceList,
   apiParams: {
     pageNum: 1,
     pageSize: 10,
@@ -245,7 +245,7 @@ const {
 const { checkedRowKeys, editingData, handleEdit, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
 // 监听运行状态变化
 watch(runningStatus, async () => {
-  const newApiFn = runningStatus.value ? fetchGetRunningProcessInstanceList : fetchGetFinishedProcessInstanceList;
+  const newApiFn = runningStatus.value ? fetchGetRunningInstanceList : fetchGetFinishedInstanceList;
   updateApiFn(newApiFn);
   await getDataByPage();
   reloadColumns();
@@ -290,14 +290,14 @@ function handleResetSearch() {
 
 async function handleBatchDelete() {
   // request
-  const { error } = await fetchBatchDeleteProcessInstance(checkedRowKeys.value);
+  const { error } = await fetchBatchDeleteInstance(checkedRowKeys.value);
   if (error) return;
   onBatchDeleted();
 }
 
 async function handleDelete(instanceId: CommonType.IdType) {
   // request
-  const { error } = await fetchBatchDeleteProcessInstance([instanceId]);
+  const { error } = await fetchBatchDeleteInstance([instanceId]);
   if (error) return;
   onDeleted();
 }
@@ -320,7 +320,7 @@ const modules = import.meta.glob('@/components/custom/workflow/**/*.vue');
 const businessId = ref<CommonType.IdType>();
 
 /** 流程预览，动态加载组件 */
-async function handlePreview(row: Api.Workflow.ProcessInstance) {
+async function handlePreview(row: Api.Workflow.Instance) {
   businessId.value = row.businessId;
   const formPath = row.formPath;
   if (formPath) {
@@ -364,7 +364,7 @@ async function handlePreview(row: Api.Workflow.ProcessInstance) {
       </NSpin>
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
-      <ProcessInstanceSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
+      <InstanceSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
       <NCard :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header>
           <NSpace>
@@ -406,7 +406,7 @@ async function handlePreview(row: Api.Workflow.ProcessInstance) {
           class="sm:h-full"
         />
         <component :is="dynamicComponent" :visible="previewVisible" operate-type="detail" :business-id="businessId" />
-        <ProcessInstanceVariableDrawer v-model:visible="variableVisible" :row-data="editingData" />
+        <InstanceVariableDrawer v-model:visible="variableVisible" :row-data="editingData" />
       </NCard>
     </div>
   </TableSiderLayout>

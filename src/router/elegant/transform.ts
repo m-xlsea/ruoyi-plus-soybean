@@ -206,7 +206,8 @@ const routeMap: RouteMap = {
   "workflow_process-definition": "/workflow/process-definition",
   "workflow_process-instance": "/workflow/process-instance",
   "workflow_task": "/workflow/task",
-  "workflow_task_all-task-waiting": "/workflow/task/all-task-waiting"
+  "workflow_task_all-task-waiting": "/workflow/task/all-task-waiting",
+  "workflow_task_my-document": "/workflow/task/my-document"
 };
 
 /**

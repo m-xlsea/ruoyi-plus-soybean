@@ -2,11 +2,11 @@
 import JsonPreview from '@/components/custom/json-preview.vue';
 
 defineOptions({
-  name: 'ProcessInstanceVariableDrawer'
+  name: 'InstanceVariableDrawer'
 });
 
 interface Props {
-  rowData: Api.Workflow.ProcessInstance | null;
+  rowData: Api.Workflow.Instance | null;
 }
 
 const props = defineProps<Props>();

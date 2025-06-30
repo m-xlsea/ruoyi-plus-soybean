@@ -402,6 +402,15 @@ export const generatedRoutes: GeneratedRoute[] = [
               title: 'workflow_task_all-task-waiting',
               i18nKey: 'route.workflow_task_all-task-waiting'
             }
+          },
+          {
+            name: 'workflow_task_my-document',
+            path: '/workflow/task/my-document',
+            component: 'view.workflow_task_my-document',
+            meta: {
+              title: 'workflow_task_my-document',
+              i18nKey: 'route.workflow_task_my-document'
+            }
           }
         ]
       }

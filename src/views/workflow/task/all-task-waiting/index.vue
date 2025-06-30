@@ -20,7 +20,7 @@ interface WaitingStatusOption {
 }
 
 defineOptions({
-  name: 'ProcessInstanceList'
+  name: 'AllTaskWaitingList'
 });
 
 useDict('wf_business_status');
@@ -127,7 +127,7 @@ const operateColumns = ref<NaiveUI.TableColumn<Api.Workflow.TaskOrHisTask>[]>([
       }
 
       return (
-        <div class="flex-center gap-1px">
+        <div class="flex-center gap-8px">
           {buttons.map((btn, index) => (index > 0 ? [<NDivider vertical />, btn] : btn))}
         </div>
       );
@@ -288,9 +288,7 @@ function handleIntervene(row: Api.Workflow.Task) {
             :show-delete="false"
             :show-export="false"
             @refresh="getData"
-          >
-            <template #prefix></template>
-          </TableHeaderOperation>
+          ></TableHeaderOperation>
         </template>
         <NDataTable
           v-model:checked-row-keys="checkedRowKeys"
