@@ -52,7 +52,7 @@ function createDefaultModel(): Model {
   return {
 #foreach($column in $columns)
   #if($column.insert)
-    ${column.javaField}:#if($column.javaType == 'String' && $!column.dictType && $column.dictType == '') ''#else undefined#end#if($foreach.hasNext),#end
+      ${column.javaField}:#if($column.javaType == 'String' || ($!column.dictType && $column.dictType != '')) ''#else undefined#end#if($foreach.hasNext),#end
   #end
 #end
   };
