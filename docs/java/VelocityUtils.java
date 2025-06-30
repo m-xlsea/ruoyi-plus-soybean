@@ -192,7 +192,7 @@ public class VelocityUtils {
         } else if (template.contains("api.d.ts.vm")) {
             fileName = StringUtils.format("{}/typings/api/{}.api.d.ts", soybeanPath, moduleName);
         } else if (template.contains("api.ts.vm")) {
-            fileName = StringUtils.format("{}/api/{}/{}.ts", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
+            fileName = StringUtils.format("{}/service/api/{}/{}.ts", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("search.vue.vm")) {
             fileName = StringUtils.format("{}/views/{}/{}/modules/{}-search.vue", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'), StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("operate-drawer.vue.vm")) {

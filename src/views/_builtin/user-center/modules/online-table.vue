@@ -1,11 +1,13 @@
 <script setup lang="tsx">
 import { NTime } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { fetchForceLogout, fetchGetOnlineDeviceList } from '@/service/api/monitor';
+import { fetchGetOnlineDeviceList, fetchKickOutCurrentDevice } from '@/service/api/monitor';
 import { useAppStore } from '@/store/modules/app';
 import { useTable } from '@/hooks/common/table';
+import { useDict } from '@/hooks/business/dict';
 import { getBrowserIcon, getOsIcon } from '@/utils/icon-tag-format';
 import { $t } from '@/locales';
+import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 
@@ -13,13 +15,23 @@ defineOptions({
   name: 'OnlineTable'
 });
 
+useDict('sys_device_type');
+
 const appStore = useAppStore();
 const { loading: btnLoading, startLoading: startBtnLoading, endLoading: endBtnLoading } = useLoading(false);
 
 const { columns, data, loading, getData } = useTable({
   apiFn: fetchGetOnlineDeviceList,
   columns: () => [
-    { title: '用户名', key: 'userName', align: 'center', minWidth: 120 },
+    {
+      title: '设备类型',
+      key: 'deviceType',
+      align: 'center',
+      minWidth: 120,
+      render: row => {
+        return <DictTag size="small" value={row.deviceType} dict-code="sys_device_type" />;
+      }
+    },
     { title: 'IP地址', key: 'ipaddr', align: 'center', minWidth: 120 },
     { title: '登录地点', key: 'loginLocation', align: 'center', minWidth: 120 },
     {
@@ -86,7 +98,7 @@ const { columns, data, loading, getData } = useTable({
 /** 强制下线 */
 async function forceLogout(tokenId: string) {
   startBtnLoading();
-  const { error } = await fetchForceLogout(tokenId);
+  const { error } = await fetchKickOutCurrentDevice(tokenId);
   if (!error) {
     window.$message?.success('强制下线成功');
     await getData();

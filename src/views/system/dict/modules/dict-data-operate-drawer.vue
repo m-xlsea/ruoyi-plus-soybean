@@ -3,12 +3,13 @@ import { computed, reactive, watch } from 'vue';
 import { NTag } from 'naive-ui';
 import { fetchCreateDictData, fetchUpdateDictData } from '@/service/api/system/dict-data';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
+import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 
 defineOptions({
   name: 'DictDataOperateDrawer'
 });
-
+useDict('sys_yes_no');
 interface Props {
   /** the type of operation */
   operateType: NaiveUI.TableOperateType;
@@ -63,7 +64,8 @@ function createDefaultModel(): Model {
     dictType: props.dictType,
     cssClass: '',
     listClass: null,
-    remark: ''
+    remark: '',
+    isDefault: 'N'
   };
 }
 
@@ -95,7 +97,7 @@ async function handleSubmit() {
 
   // request
   if (props.operateType === 'add') {
-    const { dictSort, dictLabel, dictValue, dictType, cssClass, listClass, remark } = model;
+    const { dictSort, dictLabel, dictValue, dictType, cssClass, listClass, isDefault, remark } = model;
     const { error } = await fetchCreateDictData({
       dictSort,
       dictLabel,
@@ -103,13 +105,14 @@ async function handleSubmit() {
       dictType,
       cssClass,
       listClass,
+      isDefault,
       remark
     });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { dictCode, dictSort, dictLabel, dictValue, dictType, cssClass, listClass, remark } = model;
+    const { dictCode, dictSort, dictLabel, dictValue, dictType, cssClass, listClass, isDefault, remark } = model;
     const { error } = await fetchUpdateDictData({
       dictCode,
       dictSort,
@@ -118,6 +121,7 @@ async function handleSubmit() {
       dictType,
       cssClass,
       listClass,
+      isDefault,
       remark
     });
     if (error) return;
@@ -178,6 +182,9 @@ function renderTagLabel(option: { label: string; value: string }) {
         </NFormItem>
         <NFormItem :label="$t('page.system.dict.data.dictSort')" path="dictSort">
           <NInputNumber v-model:value="model.dictSort" :placeholder="$t('page.system.dict.form.dictSort.required')" />
+        </NFormItem>
+        <NFormItem :label="$t('page.system.dict.data.isDefault')" path="isDefault">
+          <DictRadio v-model:value="model.isDefault" dict-code="sys_yes_no" />
         </NFormItem>
         <NFormItem :label="$t('page.system.dict.data.remark')" path="remark">
           <NInput

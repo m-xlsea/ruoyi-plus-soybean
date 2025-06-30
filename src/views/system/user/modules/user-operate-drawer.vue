@@ -56,7 +56,7 @@ function createDefaultModel(): Model {
     nickName: '',
     email: '',
     phonenumber: '',
-    sex: '',
+    sex: '0',
     password: '',
     status: '0',
     roleIds: [],
