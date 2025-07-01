@@ -190,7 +190,7 @@ public class VelocityUtils {
         } else if (template.contains("index-tree.vue.vm")) {
             fileName = StringUtils.format("{}/views/{}/{}/index.vue", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("api.d.ts.vm")) {
-            fileName = StringUtils.format("{}/typings/api/{}.api.d.ts", soybeanPath, moduleName);
+            fileName = StringUtils.format("{}/typings/api/{}.{}.api.d.ts", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("api.ts.vm")) {
             fileName = StringUtils.format("{}/service/api/{}/{}.ts", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("search.vue.vm")) {
