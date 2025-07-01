@@ -225,6 +225,15 @@ async function handleSubmit() {
   emit('submitted', menuType!);
 }
 
+watch(
+  () => model.menuType,
+  newType => {
+    if (newType === 'M') {
+      model.isFrame = '1';
+    }
+  }
+);
+
 watch(visible, () => {
   if (visible.value) {
     handleInitModel();
@@ -246,12 +255,10 @@ function onCreate() {
       <NForm ref="formRef" :model="model" :rules="rules">
         <NGrid responsive="screen" item-responsive>
           <NFormItemGi :span="24" :label="$t('page.system.menu.parentId')" path="pid">
-            <NTreeSelect
+            <MenuTreeSelect
               v-model:value="model.parentId"
+              :immediate="false"
               :options="treeData as []"
-              label-field="menuName"
-              key-field="menuId"
-              :default-expanded-keys="[0]"
               :placeholder="$t('page.system.menu.form.parentId.required')"
             />
           </NFormItemGi>
@@ -314,6 +321,7 @@ function onCreate() {
                   :key="option.value"
                   :value="option.value"
                   :label="option.label"
+                  :disabled="option.value === '2' && isCatalog"
                 />
               </NSpace>
             </NRadioGroup>
@@ -404,7 +412,7 @@ function onCreate() {
               :placeholder="$t('page.system.menu.placeholder.queryIframe')"
             />
           </NFormItemGi>
-          <NFormItemGi :span="24" path="perms">
+          <NFormItemGi v-if="!isCatalog" :span="24" path="perms">
             <template #label>
               <div class="flex-center">
                 <FormTip :content="$t('page.system.menu.permsTip')" />

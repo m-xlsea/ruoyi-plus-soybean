@@ -112,6 +112,8 @@ declare namespace App {
         visible: boolean;
         /** Watermark text */
         text: string;
+        /** Whether to use user name as watermark text */
+        enableUserName: boolean;
       };
       table: {
         /** Whether to show the table border */
@@ -446,6 +448,7 @@ declare namespace App {
         watermark: {
           visible: string;
           text: string;
+          enableUserName: string;
         };
         tablePropsTitle: string;
         table: {
@@ -467,6 +470,8 @@ declare namespace App {
         };
       };
       route: Record<I18nRouteKey, string>;
+      menu: Record<string, string>;
+      dict: Record<string, Record<string, string>>;
       page: {
         common: {
           id: string;

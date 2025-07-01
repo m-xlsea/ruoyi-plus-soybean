@@ -1,6 +1,6 @@
 const local: App.I18n.Schema = {
   system: {
-    title: 'RuoYi Vue Plus',
+    title: 'RuoYi Plus Soybean',
     updateTitle: '系统版本更新通知',
     updateContent: '检测到系统有新版本发布，是否立即刷新页面？',
     updateConfirm: '立即刷新',
@@ -166,7 +166,8 @@ const local: App.I18n.Schema = {
     },
     watermark: {
       visible: '显示全屏水印',
-      text: '水印文本'
+      text: '水印文本',
+      enableUserName: '启用用户名水印'
     },
     tablePropsTitle: '表格配置',
     table: {
@@ -221,7 +222,7 @@ const local: App.I18n.Schema = {
     system_notice: '通知公告',
     'social-callback': '单点登录回调',
     system_oss: '文件管理',
-    'system_oss-config': 'OSS配置',
+    'system_oss-config': 'OSS 配置',
     monitor_cache: '缓存监控',
     monitor_online: '在线用户',
     'user-center': '个人中心',
@@ -233,6 +234,95 @@ const local: App.I18n.Schema = {
     exception_403: '403',
     exception_404: '404',
     exception_500: '500'
+  },
+  menu: {
+    system_tenant: '租户管理',
+    system_log: '日志管理',
+    'monitor_snail-job': '任务调度中心',
+    monitor_admin: 'Admin 监控'
+  },
+  dict: {
+    sys_user_sex: {
+      male: '男',
+      female: '女',
+      unknown: '未知'
+    },
+    sys_show_hide: {
+      show: '显示',
+      hide: '隐藏'
+    },
+    sys_normal_disable: {
+      normal: '正常',
+      disable: '停用'
+    },
+    sys_yes_no: {
+      yes: '是',
+      no: '否'
+    },
+    sys_notice_type: {
+      notice: '通知',
+      announcement: '公告'
+    },
+    sys_notice_status: {
+      normal: '正常',
+      close: '关闭'
+    },
+    sys_oper_type: {
+      insert: '新增',
+      update: '修改',
+      delete: '删除',
+      grant: '授权',
+      export: '导出',
+      import: '导入',
+      force: '强退',
+      gencode: '生成代码',
+      clean: '清空数据',
+      other: '其他'
+    },
+    sys_common_status: {
+      success: '成功',
+      fail: '失败'
+    },
+    sys_grant_type: {
+      password: '密码认证',
+      sms: '短信认证',
+      email: '邮件认证',
+      miniapp: '小程序认证',
+      social: '三方登录认证'
+    },
+    sys_device_type: {
+      pc: 'PC',
+      android: '安卓',
+      ios: 'iOS',
+      miniapp: '小程序'
+    },
+    wf_business_status: {
+      revoked: '已撤销',
+      draft: '草稿',
+      pending: '待审核',
+      completed: '已完成',
+      cancelled: '已作废',
+      returned: '已退回',
+      terminated: '已终止'
+    },
+    wf_form_type: {
+      custom_form: '自定义表单',
+      dynamic_form: '动态表单'
+    },
+    wf_task_status: {
+      revoke: '撤销',
+      pass: '通过',
+      pending_review: '待审核',
+      cancel: '作废',
+      return: '退回',
+      terminate: '终止',
+      transfer: '转办',
+      delegate: '委托',
+      copy: '抄送',
+      add_sign: '加签',
+      minus_sign: '减签',
+      timeout: '超时'
+    }
   },
   page: {
     login: {

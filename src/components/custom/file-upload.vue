@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, useAttrs, watch } from 'vue';
+import { computed, useAttrs } from 'vue';
 import type { UploadFileInfo, UploadProps } from 'naive-ui';
 import { fetchBatchDeleteOss } from '@/service/api/system/oss';
 import { getToken } from '@/store/modules/auth/shared';
 import { getServiceBaseURL } from '@/utils/service';
+import { AcceptType } from '@/enum/business';
 
 defineOptions({
   name: 'FileUpload'
@@ -26,27 +27,24 @@ const props = withDefaults(defineProps<Props>(), {
   defaultUpload: true,
   showTip: true,
   max: 5,
-  accept: '.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.pdf',
+  accept: undefined,
   fileSize: 5,
   uploadType: 'file'
+});
+
+const accept = computed(() => {
+  if (props.accept) {
+    return props.accept;
+  }
+  return props.uploadType === 'file' ? AcceptType.File : AcceptType.Image;
 });
 
 const attrs: UploadProps = useAttrs();
 
 let fileNum = 0;
-const fileList = ref<UploadFileInfo[]>([]);
-
-const needRelaodData = ref(false);
-
-defineExpose({
-  needRelaodData
+const fileList = defineModel<UploadFileInfo[]>('fileList', {
+  default: () => []
 });
-watch(
-  () => fileList.value,
-  newValue => {
-    needRelaodData.value = newValue.length > 0;
-  }
-);
 
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
@@ -61,12 +59,12 @@ function beforeUpload(options: { file: UploadFileInfo; fileList: UploadFileInfo[
   const { file } = options;
 
   // 校检文件类型
-  if (props.accept) {
+  if (accept.value) {
     const fileName = file.name.split('.');
     const fileExt = `.${fileName[fileName.length - 1]}`;
-    const isTypeOk = props.accept.split(',')?.includes(fileExt);
+    const isTypeOk = accept.value.split(',')?.includes(fileExt);
     if (!isTypeOk) {
-      window.$message?.error(`文件格式不正确, 请上传 ${props.accept} 格式文件!`);
+      window.$message?.error(`文件格式不正确, 请上传 ${accept.value} 格式文件!`);
       return false;
     }
   }
@@ -119,64 +117,67 @@ function handleError(options: { file: UploadFileInfo; event?: ProgressEvent }) {
 
 async function handleRemove(file: UploadFileInfo) {
   if (file.status !== 'finished') {
-    return;
+    return false;
   }
   const { error } = await fetchBatchDeleteOss([file.id]);
-  if (error) return;
+  if (error) return false;
   window.$message?.success('删除成功');
+  return true;
 }
 </script>
 
 <template>
-  <NUpload
-    v-bind="attrs"
-    v-model:file-list="fileList"
-    :action="`${baseURL}${action}`"
-    :data="data"
-    :headers="headers"
-    :max="max"
-    :accept="accept"
-    :multiple="max > 1"
-    directory-dnd
-    :default-upload="defaultUpload"
-    :list-type="uploadType === 'image' ? 'image-card' : 'text'"
-    :is-error-state="isErrorState"
-    @finish="handleFinish"
-    @error="handleError"
-    @before-upload="beforeUpload"
-    @remove="({ file }) => handleRemove(file)"
-  >
-    <NUploadDragger v-if="uploadType === 'file'">
-      <div class="mb-12px flex-center">
-        <SvgIcon icon="material-symbols:unarchive-outline" class="text-58px color-#d8d8db dark:color-#a1a1a2" />
-      </div>
-      <NText class="text-16px">点击或者拖动文件到该区域来上传</NText>
-      <NP v-if="showTip" depth="3" class="mt-8px text-center">
-        请上传
-        <template v-if="fileSize">
-          大小不超过
-          <b class="text-red-500">{{ fileSize }}MB</b>
-        </template>
-        <template v-if="accept">
-          ，且格式为
-          <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
-        </template>
-        的文件
-      </NP>
-    </NUploadDragger>
-  </NUpload>
-  <NP v-if="showTip && uploadType === 'image'" depth="3" class="mt-12px">
-    请上传
-    <template v-if="fileSize">
-      大小不超过
-      <b class="text-red-500">{{ fileSize }}MB</b>
-    </template>
-    <template v-if="accept">
-      ，且格式为
-      <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
-    </template>
-    的文件
-  </NP>
+  <div class="w-full flex-col">
+    <NUpload
+      v-bind="attrs"
+      v-model:file-list="fileList"
+      :action="`${baseURL}${action}`"
+      :data="data"
+      :headers="headers"
+      :max="max"
+      :accept="accept"
+      :multiple="max > 1"
+      directory-dnd
+      :default-upload="defaultUpload"
+      :list-type="uploadType === 'image' ? 'image-card' : 'text'"
+      :is-error-state="isErrorState"
+      @finish="handleFinish"
+      @error="handleError"
+      @before-upload="beforeUpload"
+      @remove="({ file }) => handleRemove(file)"
+    >
+      <NUploadDragger v-if="uploadType === 'file'">
+        <div class="mb-12px flex-center">
+          <SvgIcon icon="material-symbols:unarchive-outline" class="text-58px color-#d8d8db dark:color-#a1a1a2" />
+        </div>
+        <NText class="text-16px">点击或者拖动文件到该区域来上传</NText>
+        <NP v-if="showTip" depth="3" class="mt-8px text-center">
+          请上传
+          <template v-if="fileSize">
+            大小不超过
+            <b class="text-red-500">{{ fileSize }}MB</b>
+          </template>
+          <template v-if="accept">
+            ，且格式为
+            <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
+          </template>
+          的文件
+        </NP>
+      </NUploadDragger>
+    </NUpload>
+    <NP v-if="showTip && uploadType === 'image'" depth="3" class="mt-12px">
+      请上传
+      <template v-if="fileSize">
+        大小不超过
+        <b class="text-red-500">{{ fileSize }}MB</b>
+      </template>
+      <template v-if="accept">
+        ，且格式为
+        <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
+      </template>
+      的文件
+    </NP>
+  </div>
 </template>
 
 <style scoped></style>

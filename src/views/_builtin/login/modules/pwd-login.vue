@@ -121,63 +121,89 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
 </script>
 
 <template>
-  <NForm
-    ref="formRef"
-    :model="model"
-    :rules="rules"
-    size="large"
-    :show-label="false"
-    @keyup.enter="() => !authStore.loginLoading && handleSubmit()"
-  >
-    <NFormItem v-if="tenantEnabled" path="tenantId">
-      <NSelect
-        v-model:value="model.tenantId"
-        placeholder="请选择租户"
-        :options="tenantOption"
-        :loading="tenantLoading"
-      />
-    </NFormItem>
-    <NFormItem path="username">
-      <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
-    </NFormItem>
-    <NFormItem path="password">
-      <NInput
-        v-model:value="model.password"
-        type="password"
-        show-password-on="click"
-        :placeholder="$t('page.login.common.passwordPlaceholder')"
-      />
-    </NFormItem>
-    <NFormItem v-if="captchaEnabled" path="code">
-      <div class="w-full flex-y-center gap-16px">
-        <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
-        <NSpin :show="codeLoading" :size="28" class="h-42px">
-          <NButton :focusable="false" class="login-code h-42px w-116px" @click="handleFetchCaptchaCode">
-            <img v-if="codeUrl" :src="codeUrl" />
-            <NEmpty v-else :show-icon="false" description="暂无验证码" />
-          </NButton>
-        </NSpin>
-      </div>
-    </NFormItem>
-    <NSpace vertical :size="16" class="mb-8px">
-      <div class="mx-6px flex-y-center justify-between">
-        <NCheckbox v-model:checked="remberMe">{{ $t('page.login.pwdLogin.rememberMe') }}</NCheckbox>
-        <NSpace :size="1">
-          <ButtonIcon class="color-#44b549" icon="ic:outline-wechat" @click="handleSocialLogin('wechat_open')" />
-          <ButtonIcon local-icon="topiam" @click="handleSocialLogin('topiam')" />
-          <ButtonIcon local-icon="maxkey" @click="handleSocialLogin('maxkey')" />
-          <ButtonIcon class="color-#c71d23" icon="simple-icons:gitee" @click="handleSocialLogin('gitee')" />
-          <ButtonIcon class="color-#010409" icon="mdi:github" @click="handleSocialLogin('github')" />
-        </NSpace>
-      </div>
-      <NButton type="primary" size="large" block :loading="authStore.loginLoading" @click="handleSubmit">
-        {{ $t('common.login') }}
+  <div>
+    <div class="mb-12px text-24px text-black font-500 sm:text-30px dark:text-white">登录到您的账户</div>
+    <div class="pb-24px text-18px text-#858585">欢迎回来！请输入您的账户信息</div>
+    <NForm
+      ref="formRef"
+      :model="model"
+      :rules="rules"
+      size="large"
+      :show-label="false"
+      @keyup.enter="() => !authStore.loginLoading && handleSubmit()"
+    >
+      <NFormItem v-if="tenantEnabled" path="tenantId">
+        <NSelect
+          v-model:value="model.tenantId"
+          placeholder="请选择租户"
+          :options="tenantOption"
+          :loading="tenantLoading"
+        />
+      </NFormItem>
+      <NFormItem path="username">
+        <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
+      </NFormItem>
+      <NFormItem path="password">
+        <NInput
+          v-model:value="model.password"
+          type="password"
+          show-password-on="click"
+          :placeholder="$t('page.login.common.passwordPlaceholder')"
+        />
+      </NFormItem>
+      <NFormItem v-if="captchaEnabled" path="code">
+        <div class="w-full flex-y-center gap-16px">
+          <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
+          <NSpin :show="codeLoading" :size="28" class="h-52px">
+            <NButton :focusable="false" class="login-code h-52px w-136px" @click="handleFetchCaptchaCode">
+              <img v-if="codeUrl" :src="codeUrl" />
+              <NEmpty v-else :show-icon="false" description="暂无验证码" />
+            </NButton>
+          </NSpin>
+        </div>
+      </NFormItem>
+      <NSpace vertical :size="16" class="mb-8px">
+        <div class="mx-6px mb-10px flex-y-center justify-between">
+          <NCheckbox v-model:checked="remberMe" size="large">{{ $t('page.login.pwdLogin.rememberMe') }}</NCheckbox>
+          <NA type="primary" class="text-18px" @click="toggleLoginModule('reset-pwd')">
+            {{ $t('page.login.pwdLogin.forgetPassword') }}
+          </NA>
+        </div>
+        <NButton type="primary" size="large" block :loading="authStore.loginLoading" @click="handleSubmit">
+          {{ $t('common.login') }}
+        </NButton>
+        <NButton v-if="registerEnabled" size="large" block @click="toggleLoginModule('register')">
+          {{ $t('page.login.common.register') }}
+        </NButton>
+      </NSpace>
+    </NForm>
+
+    <NDivider>
+      <div class="color-#858585">{{ $t('page.login.pwdLogin.otherAccountLogin') }}</div>
+    </NDivider>
+
+    <div class="w-full flex-y-center gap-16px">
+      <NButton class="flex-1" @click="handleSocialLogin('gitee')">
+        <template #icon>
+          <icon-simple-icons:gitee class="color-#c71d23" />
+        </template>
+        <span class="ml-6px">Gitee</span>
       </NButton>
-      <NButton v-if="registerEnabled" size="large" block @click="toggleLoginModule('register')">
+      <NButton class="flex-1" @click="handleSocialLogin('github')">
+        <template #icon>
+          <icon-mdi:github class="color-#010409" />
+        </template>
+        <span class="ml-6px">GitHub</span>
+      </NButton>
+    </div>
+
+    <div class="mt-32px w-full text-center text-18px text-#858585">
+      您还没有账户？
+      <NA type="primary" class="text-18px" @click="toggleLoginModule('register')">
         {{ $t('page.login.common.register') }}
-      </NButton>
-    </NSpace>
-  </NForm>
+      </NA>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -188,7 +214,34 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
   }
 
   img {
-    height: 40px;
+    height: 52px;
   }
+}
+
+:deep(.n-base-selection),
+:deep(.n-input) {
+  --n-height: 52px !important;
+  --n-font-size: 16px !important;
+  --n-border-radius: 8px !important;
+}
+
+:deep(.n-base-selection-label) {
+  padding: 0 6px !important;
+}
+
+:deep(.n-checkbox) {
+  --n-size: 18px !important;
+  --n-font-size: 16px !important;
+}
+
+:deep(.n-button) {
+  --n-height: 52px !important;
+  --n-font-size: 18px !important;
+  --n-border-radius: 8px !important;
+}
+
+:deep(.n-divider) {
+  --n-font-size: 16px !important;
+  --n-font-weight: 400 !important;
 }
 </style>

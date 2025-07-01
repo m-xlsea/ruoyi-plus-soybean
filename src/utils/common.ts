@@ -1,3 +1,4 @@
+import { AcceptType } from '@/enum/business';
 import { $t } from '@/locales';
 /**
  * Transform record to option
@@ -87,8 +88,7 @@ export function isNull(value: any) {
 
 /** 判断是否为图片类型 */
 export function isImage(suffix: string) {
-  const imgSuffixList = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
-  return imgSuffixList.includes(suffix.toLowerCase());
+  return AcceptType.Image.split(',').includes(suffix.toLowerCase());
 }
 
 /**
@@ -163,3 +163,31 @@ export const handleTree = <T extends Record<string, any>>(data: T[], config: Com
 
   return tree;
 };
+
+/**
+ * 将对象转换为 URLSearchParams
+ *
+ * @param obj
+ */
+export function transformToURLSearchParams(obj: Record<string, any>, excludeKeys: string[] = []) {
+  const searchParams = new URLSearchParams();
+  if (!isNotNull(obj)) {
+    return searchParams;
+  }
+  Object.entries(obj).forEach(([key, value]) => {
+    if (excludeKeys.includes(key)) {
+      return;
+    }
+    if (typeof value === 'object') {
+      transformToURLSearchParams(value).forEach((v, k) => {
+        searchParams.append(`${key}[${k}]`, v);
+      });
+      return;
+    }
+    if (!isNotNull(value)) {
+      return;
+    }
+    searchParams.append(key, value);
+  });
+  return searchParams;
+}

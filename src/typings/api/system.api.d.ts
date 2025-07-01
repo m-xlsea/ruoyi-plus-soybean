@@ -152,9 +152,10 @@ declare namespace Api {
     type UserProfileOperateParams = CommonType.RecordNullable<Pick<User, 'nickName' | 'email' | 'phonenumber' | 'sex'>>;
 
     /** user password operate params */
-    type UserPasswordOperateParams = CommonType.RecordNullable<
-      Pick<User, 'userId' | 'password'> & { newPassword: string }
-    >;
+    type UserPasswordOperateParams = CommonType.RecordNullable<{
+      oldPassword: string;
+      newPassword: string;
+    }>;
 
     /** user info */
     type UserInfo = {
@@ -372,7 +373,15 @@ declare namespace Api {
     type DictDataOperateParams = CommonType.RecordNullable<
       Pick<
         Api.System.DictData,
-        'dictCode' | 'dictSort' | 'dictLabel' | 'dictValue' | 'dictType' | 'cssClass' | 'listClass' | 'remark'
+        | 'dictCode'
+        | 'dictSort'
+        | 'dictLabel'
+        | 'dictValue'
+        | 'dictType'
+        | 'cssClass'
+        | 'listClass'
+        | 'isDefault'
+        | 'remark'
       >
     >;
 

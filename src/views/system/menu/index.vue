@@ -108,6 +108,14 @@ async function handleDeleteMenu(id?: CommonType.IdType) {
   getMeunTree();
 }
 
+function renderLabel({ option }: { option: TreeOption }) {
+  let label = String(option.menuName);
+  if (label?.startsWith('route.') || label?.startsWith('menu.')) {
+    label = $t(label as App.I18n.I18nKey);
+  }
+  return <div>{label}</div>;
+}
+
 function renderPrefix({ option }: { option: TreeOption }) {
   const renderLocalIcon = String(option.icon).startsWith('local-icon-');
   const icon = renderLocalIcon ? undefined : String(option.icon);
@@ -347,6 +355,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
           label-field="menuName"
           virtual-scroll
           checkable
+          :render-label="renderLabel"
           :render-prefix="renderPrefix"
           :render-suffix="renderSuffix"
           @update:selected-keys="(_: Array<string & number>, option: Array<TreeOption | null>) => handleClickTree(option)"
@@ -420,7 +429,11 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
               <DictTag size="small" :value="currentMenu.status" dict-code="sys_normal_disable" />
             </NDescriptionsItem>
             <NDescriptionsItem :label="$t('page.system.menu.menuName')">
-              {{ currentMenu.menuName }}
+              {{
+                currentMenu.menuName?.startsWith('route.') || currentMenu.menuName?.startsWith('menu.')
+                  ? $t(currentMenu.menuName)
+                  : currentMenu.menuName
+              }}
             </NDescriptionsItem>
             <NDescriptionsItem v-if="isMenu" :label="$t('page.system.menu.component')">
               {{ currentMenu.component }}

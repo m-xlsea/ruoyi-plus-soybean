@@ -50,7 +50,7 @@ async function search() {
         #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
   if (dateRange${AttrName}.value?.length) {
     model.value.params!.begin${AttrName} = dateRange${AttrName}.value[0];
-    model.value.params!.end${AttrName} = dateRange${AttrName}.value[0];
+    model.value.params!.end${AttrName} = dateRange${AttrName}.value[1];
   }
     #end
 #end
@@ -66,7 +66,7 @@ async function search() {
           <NGrid responsive="screen" item-responsive>
 #foreach($column in $columns)
 #if($column.query)
-#set($dictType=$column.dictType)
+#set($dictType=$!StrUtil.toCamelCase($column.dictType))
 #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
 #set($parentheseIndex=$column.columnComment.indexOf("（"))
 #if($parentheseIndex != -1)
@@ -75,35 +75,28 @@ async function search() {
 #set($comment=$column.columnComment)
 #end
             <NFormItemGi span="24 s:12 m:6" label="$column.columnComment" path="$column.javaField" class="pr-24px">
-            #if(($column.htmlType == "select" || $column.htmlType == "radio") && "" != $dictType)
+            #if($!StrUtil.contains("select, radio, checkbox", $column.htmlType) && $dictType && "" != $dictType)
               <NSelect
                 v-model:value="model.$column.javaField"
                 placeholder="请选择$column.columnComment"
-                :options="${column.dictType}Options"
+                :options="${dictType}Options"
                 clearable
               />
-            #elseif(($column.htmlType == "select" || $column.htmlType == "radio") && $dictType)
-              <NSelect
-                v-model:value="model.$column.javaField"
-                placeholder="请选择$column.columnComment"
-                :options="[]"
-                clearable
-              />
-            #elseif($column.htmlType.equals('select') || $column.htmlType.equals('radio'))
+            #elseif($!StrUtil.contains("select, radio, checkbox", $column.htmlType))
               <NSelect
                 v-model:value="model.$column.javaField"
                 placeholder="请选择$column.columnComment"
                 :options="[]"
                 clearable
               />
-            #elseif($column.htmlType == "datetime" && $column.queryType != "BETWEEN")
+            #elseif($column.htmlType == 'datetime' && $column.queryType != "BETWEEN")
               <NDatePicker
                 v-model:formatted-value="model.$column.javaField"
-                type="date"
-                value-format="yyyy-MM-dd"
+                type="datetime"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
               />
-            #elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+            #elseif($column.htmlType == 'datetime' && $column.queryType == "BETWEEN")
               <NDatePicker
                 v-model:formatted-value="dateRange${AttrName}"
                 type="datetimerange"

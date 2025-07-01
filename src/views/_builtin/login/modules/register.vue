@@ -103,56 +103,64 @@ handleFetchCaptchaCode();
 </script>
 
 <template>
-  <NForm
-    ref="formRef"
-    :model="model"
-    :rules="rules"
-    size="large"
-    :show-label="false"
-    @keyup.enter="() => !registerLoading && handleSubmit()"
-  >
-    <NFormItem v-if="tenantEnabled" path="tenantId">
-      <NSelect v-model:value="model.tenantId" :options="tenantOption" :enabled="tenantEnabled" />
-    </NFormItem>
-    <NFormItem path="username">
-      <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
-    </NFormItem>
-    <NFormItem path="password">
-      <NInput
-        v-model:value="model.password"
-        type="password"
-        show-password-on="click"
-        :placeholder="$t('page.login.common.passwordPlaceholder')"
-      />
-    </NFormItem>
-    <NFormItem path="confirmPassword">
-      <NInput
-        v-model:value="model.confirmPassword"
-        type="password"
-        show-password-on="click"
-        :placeholder="$t('page.login.common.confirmPasswordPlaceholder')"
-      />
-    </NFormItem>
-    <NFormItem v-if="captchaEnabled" path="code">
-      <div class="w-full flex-y-center gap-16px">
-        <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
-        <NSpin :show="codeLoading" :size="28" class="h-42px">
-          <NButton :focusable="false" class="login-code h-42px w-116px" @click="handleFetchCaptchaCode">
-            <img v-if="codeUrl" :src="codeUrl" />
-            <NEmpty v-else :show-icon="false" description="暂无验证码" />
-          </NButton>
-        </NSpin>
-      </div>
-    </NFormItem>
-    <NSpace vertical :size="18" class="w-full">
-      <NButton type="primary" size="large" block :loading="registerLoading" @click="handleSubmit">
-        {{ $t('page.login.common.register') }}
-      </NButton>
-      <NButton size="large" block @click="toggleLoginModule('pwd-login')">
-        {{ $t('page.login.common.back') }}
-      </NButton>
-    </NSpace>
-  </NForm>
+  <div>
+    <div class="mb-12px text-24px text-black font-500 sm:text-30px dark:text-white">注册新账户</div>
+    <div class="pb-24px text-18px text-#858585">欢迎注册！请输入您的账户信息</div>
+    <NForm
+      ref="formRef"
+      :model="model"
+      :rules="rules"
+      size="large"
+      :show-label="false"
+      @keyup.enter="() => !registerLoading && handleSubmit()"
+    >
+      <NFormItem v-if="tenantEnabled" path="tenantId">
+        <NSelect v-model:value="model.tenantId" :options="tenantOption" :enabled="tenantEnabled" />
+      </NFormItem>
+      <NFormItem path="username">
+        <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
+      </NFormItem>
+      <NFormItem path="password">
+        <NInput
+          v-model:value="model.password"
+          type="password"
+          show-password-on="click"
+          :placeholder="$t('page.login.common.passwordPlaceholder')"
+        />
+      </NFormItem>
+      <NFormItem path="confirmPassword">
+        <NInput
+          v-model:value="model.confirmPassword"
+          type="password"
+          show-password-on="click"
+          :placeholder="$t('page.login.common.confirmPasswordPlaceholder')"
+        />
+      </NFormItem>
+      <NFormItem v-if="captchaEnabled" path="code">
+        <div class="w-full flex-y-center gap-16px">
+          <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
+          <NSpin :show="codeLoading" :size="28" class="h-52px">
+            <NButton :focusable="false" class="login-code h-52px w-136px" @click="handleFetchCaptchaCode">
+              <img v-if="codeUrl" :src="codeUrl" />
+              <NEmpty v-else :show-icon="false" description="暂无验证码" />
+            </NButton>
+          </NSpin>
+        </div>
+      </NFormItem>
+      <NSpace vertical :size="18" class="w-full pt-6px">
+        <NButton type="primary" size="large" block :loading="registerLoading" @click="handleSubmit">
+          {{ $t('page.login.common.register') }}
+        </NButton>
+      </NSpace>
+    </NForm>
+
+    <div class="mt-32px w-full text-center text-18px text-#858585">
+      您已有账户？
+      <NA type="primary" class="text-18px" @click="toggleLoginModule('pwd-login')">
+        {{ $t('common.login') }}
+      </NA>
+    </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -165,5 +173,22 @@ handleFetchCaptchaCode();
   img {
     height: 40px;
   }
+}
+
+:deep(.n-base-selection),
+:deep(.n-input) {
+  --n-height: 52px !important;
+  --n-font-size: 16px !important;
+  --n-border-radius: 8px !important;
+}
+
+:deep(.n-base-selection-label) {
+  padding: 0 6px !important;
+}
+
+:deep(.n-button) {
+  --n-height: 52px !important;
+  --n-font-size: 18px !important;
+  --n-border-radius: 8px !important;
 }
 </style>

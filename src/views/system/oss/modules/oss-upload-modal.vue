@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import type { UploadFileInfo } from 'naive-ui';
 import FileUpload from '@/components/custom/file-upload.vue';
+import { AcceptType } from '@/enum/business';
 
 defineOptions({
   name: 'OssUploadModal'
 });
-const fileUploadRef = ref<InstanceType<typeof FileUpload> | null>(null);
+
 interface Props {
   uploadType: 'file' | 'image';
 }
@@ -22,9 +24,9 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const accept = computed(() => {
-  return props.uploadType === 'file' ? '.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.pdf' : '.jpg,.jpeg,.png,.gif,.bmp,.webp';
-});
+const accept = computed(() => (props.uploadType === 'file' ? AcceptType.File : AcceptType.Image));
+
+const fileList = ref<UploadFileInfo[]>([]);
 
 function handleUpdateModelWhenUpload() {}
 
@@ -34,7 +36,7 @@ function closeDrawer() {
 
 function handleClose() {
   closeDrawer();
-  if (fileUploadRef.value?.needRelaodData) {
+  if (fileList.value?.length > 0) {
     emit('close');
   }
 }
@@ -56,7 +58,7 @@ watch(visible, () => {
     :bordered="false"
     @after-leave="handleClose"
   >
-    <FileUpload ref="fileUploadRef" :upload-type="uploadType" :accept="accept" />
+    <FileUpload v-model:file-list="fileList" :upload-type="uploadType" :accept="accept" />
   </NModal>
 </template>
 

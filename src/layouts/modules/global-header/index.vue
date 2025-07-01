@@ -45,7 +45,7 @@ const tenantId = ref<CommonType.IdType>(authStore.userInfo?.user?.tenantId || '0
     </div>
     <div class="h-full flex-y-center justify-end">
       <TenantSelect v-if="!appStore.isMobile" v-model:value="tenantId" class="mr-12px w-150px" />
-      <GlobalSearch v-if="themeStore.header.globalSearch.visible" />
+      <GlobalSearch v-if="themeStore.header.globalSearch.visible && !appStore.isMobile" />
       <MessageButton />
       <FullScreen v-if="!appStore.isMobile" :full="isFullscreen" @click="toggle" />
       <LangSwitch
@@ -59,7 +59,7 @@ const tenantId = ref<CommonType.IdType>(authStore.userInfo?.user?.tenantId || '0
         :is-dark="themeStore.darkMode"
         @switch="themeStore.toggleThemeScheme"
       />
-      <ThemeButton />
+      <ThemeButton v-if="!appStore.isMobile" />
       <UserAvatar />
     </div>
   </DarkModeContainer>

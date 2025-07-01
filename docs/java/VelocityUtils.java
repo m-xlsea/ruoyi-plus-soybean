@@ -73,8 +73,9 @@ public class VelocityUtils {
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
         velocityContext.put("dicts", getDicts(genTable));
         velocityContext.put("dictList", getDictList(genTable));
-        velocityContext.put("columns", getColumns(genTable));
+        velocityContext.put("columns", genTable.getColumns());
         velocityContext.put("table", genTable);
+        velocityContext.put("StrUtil", new StrUtil());
         setMenuVelocityContext(velocityContext, genTable);
         if (GenConstants.TPL_TREE.equals(tplCategory)) {
             setTreeVelocityContext(velocityContext, genTable);
@@ -189,9 +190,9 @@ public class VelocityUtils {
         } else if (template.contains("index-tree.vue.vm")) {
             fileName = StringUtils.format("{}/views/{}/{}/index.vue", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("api.d.ts.vm")) {
-            fileName = StringUtils.format("{}/typings/api/{}.api.d.ts", soybeanPath, moduleName);
+            fileName = StringUtils.format("{}/typings/api/{}.{}.api.d.ts", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("api.ts.vm")) {
-            fileName = StringUtils.format("{}/api/{}/{}.ts", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
+            fileName = StringUtils.format("{}/service/api/{}/{}.ts", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("search.vue.vm")) {
             fileName = StringUtils.format("{}/views/{}/{}/modules/{}-search.vue", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'), StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("operate-drawer.vue.vm")) {
@@ -295,23 +296,6 @@ public class VelocityUtils {
             }
         }
     }
-
-    /**
-     * 根据列类型获取字典组
-     *
-     * @param genTable 业务表对象
-     * @return 返回字典组
-     */
-    public static List<GenTableColumn> getColumns(GenTable genTable) {
-        List<GenTableColumn> columns = genTable.getColumns();
-        for (GenTableColumn column : columns) {
-            if (StringUtils.isNotBlank(column.getDictType())) {
-                column.setDictType(StringUtils.toCamelCase(column.getDictType()));
-            }
-        }
-        return columns;
-    }
-
 
     /**
      * 获取权限前缀

@@ -80,17 +80,21 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
         // prevent the user from refreshing the page
         window.addEventListener('beforeunload', handleLogout);
 
-        window.$dialog?.warning({
-          title: '系统提示',
-          content: '登录状态已过期，您可以继续留在该页面，或者重新登录',
-          positiveText: '重新登录',
-          negativeText: '取消',
-          maskClosable: false,
-          closeOnEsc: false,
-          onPositiveClick() {
-            logoutAndCleanup();
-          }
-        });
+        if (!window.location.pathname?.startsWith('/login')) {
+          window.$dialog?.warning({
+            title: '系统提示',
+            content: '登录状态已过期，您可以继续留在该页面，或者重新登录',
+            positiveText: '重新登录',
+            negativeText: '取消',
+            maskClosable: false,
+            closeOnEsc: false,
+            onPositiveClick() {
+              logoutAndCleanup();
+            }
+          });
+
+          request.cancelAllRequest();
+        }
 
         return null;
       }

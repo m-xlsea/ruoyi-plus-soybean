@@ -42,16 +42,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   const authRouteMode = ref(import.meta.env.VITE_AUTH_ROUTE_MODE);
 
   /** Home route key */
-  const routeHome = ref(import.meta.env.VITE_ROUTE_HOME);
-
-  /**
-   * Set route home
-   *
-   * @param routeKey Route key
-   */
-  function setRouteHome(routeKey: LastLevelRouteKey) {
-    routeHome.value = routeKey;
-  }
+  const routeHome = ref(import.meta.env.VITE_ROUTE_HOME || 'home');
 
   /** constant routes */
   const constantRoutes = shallowRef<ElegantConstRoute[]>([]);
@@ -103,6 +94,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   // eslint-disable-next-line complexity
   function parseRouter(route: ElegantConstRoute, parent?: ElegantConstRoute) {
     route.meta = route.meta ? route.meta : { title: route.name };
+    if (route.meta.title.startsWith('route.') || route.meta.title.startsWith('menu.')) {
+      route.meta.i18nKey = route.meta.title as App.I18n.I18nKey;
+    }
     const isLayout = route.component === 'Layout';
     const isFramePage = route.component === 'FrameView';
     const isParentLayout = route.component === 'ParentView';
@@ -300,9 +294,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
       handleConstantAndAuthRoutes();
 
-      setRouteHome('home');
-
-      handleUpdateRootRouteRedirect('home');
+      handleUpdateRootRouteRedirect(routeHome.value);
 
       setIsInitAuthRoute(true);
     } else {

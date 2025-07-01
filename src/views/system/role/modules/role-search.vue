@@ -21,7 +21,14 @@ const dateRangeCreateTime = ref<[string, string] | null>(null);
 
 const model = defineModel<Api.System.RoleSearchParams>('model', { required: true });
 
-const { options: sysNormalDisableOptions } = useDict('sys_normal_disable');
+const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
+
+function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
+  if (value?.length) {
+    model.value.params!.beginTime = `${value[0]} 00:00:00`;
+    model.value.params!.endTime = `${value[1]} 23:59:59`;
+  }
+}
 
 async function reset() {
   dateRangeCreateTime.value = null;
@@ -31,10 +38,6 @@ async function reset() {
 
 async function search() {
   await validate();
-  if (dateRangeCreateTime.value?.length) {
-    model.value.params!.beginTime = `${dateRangeCreateTime.value[0]} 00:00:00`;
-    model.value.params!.endTime = `${dateRangeCreateTime.value[1]} 23:59:59`;
-  }
   emit('search');
 }
 </script>
@@ -67,6 +70,7 @@ async function search() {
                 type="daterange"
                 value-format="yyyy-MM-dd"
                 clearable
+                @update:formatted-value="onDateRangeCreateTimeUpdate"
               />
             </NFormItemGi>
             <NFormItemGi span="24" class="pr-24px">

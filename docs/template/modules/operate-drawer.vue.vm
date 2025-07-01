@@ -52,7 +52,7 @@ function createDefaultModel(): Model {
   return {
 #foreach($column in $columns)
   #if($column.insert)
-    ${column.javaField}:#if($column.javaType == 'String') ''#else null#end#if($foreach.hasNext),#end
+      ${column.javaField}:#if($column.javaType == 'String' || ($!column.dictType && $column.dictType != '')) ''#else undefined#end#if($foreach.hasNext),#end
   #end
 #end
   };
@@ -91,16 +91,22 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  #set($operateColumns = [])
+  #foreach($column in $columns)#if($column.insert || $column.edit)#set($dummy = $operateColumns.add($column))#end#end
+  const { #foreach($column in $operateColumns)$column.javaField#if($foreach.hasNext), #end#end } = model;
+
   // request
   if (props.operateType === 'add') {
-    const { #foreach($column in $columns)#if($column.insert)$column.javaField#if($foreach.hasNext), #end#end#end } = model;
-    const { error } = await fetchCreate${BusinessName}({ #foreach($column in $columns)#if($column.insert)$column.javaField#if($foreach.hasNext), #end#end#end });
+    #set($addFields = [])
+    #foreach($column in $columns)#if($column.insert)#set($dummy = $addFields.add($column.javaField))#end#end
+    const { error } = await fetchCreate${BusinessName}({ #foreach($field in $addFields)$field#if($foreach.hasNext), #end#end });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { #foreach($column in $columns)#if($column.edit)$column.javaField#if($foreach.hasNext), #end#end#end } = model;
-    const { error } = await fetchUpdate${BusinessName}({ #foreach($column in $columns)#if($column.edit)$column.javaField#if($foreach.hasNext), #end#end#end });
+    #set($editFields = [])
+    #foreach($column in $columns)#if($column.edit)#set($dummy = $editFields.add($column.javaField))#end#end
+    const { error } = await fetchUpdate${BusinessName}({ #foreach($field in $editFields)$field#if($foreach.hasNext), #end#end });
     if (error) return;
   }
 
@@ -130,7 +136,7 @@ watch(visible, () => {
 #else
 #set($comment=$column.columnComment)
 #end
-#set($dictType=$column.dictType)
+#set($dictType=$!StrUtil.toCamelCase($column.dictType))
         <NFormItem label="$column.columnComment" path="$column.javaField">
         #if($column.htmlType == "textarea" || $column.htmlType == "editor")
           <NInput
@@ -143,7 +149,7 @@ watch(visible, () => {
           <NSelect
             v-model:value="model.$column.javaField"
             placeholder="请选择$column.columnComment"
-            :options="${column.dictType}Options"
+            :options="${dictType}Options"
             clearable
           />
         #elseif($column.htmlType == "select" && $dictType)
@@ -157,7 +163,7 @@ watch(visible, () => {
           <NRadioGroup v-model:value="model.$column.javaField">
             <NSpace>
               <NRadio
-                v-for="option in ${column.dictType}Options"
+                v-for="option in ${dictType}Options"
                 :key="option.value"
                 :value="option.value"
                 :label="option.label"
@@ -170,13 +176,36 @@ watch(visible, () => {
               <NRadio value="0" label="请选择字典生成" />
             </NSpace>
           </NRadioGroup>
-        #elseif($column.htmlType == "datetime")
+        #elseif($column.htmlType == "checkbox" && "" != $dictType)
+          <NCheckboxGroup v-model:value="model.$column.javaField">
+            <NSpace>
+              <NCheckbox
+                v-for="option in ${dictType}Options"
+                :key="option.value"
+                :value="option.value"
+                :label="option.label"
+              />
+            </NSpace>
+          </NCheckboxGroup>
+        #elseif($column.htmlType == "checkbox" && $dictType)
+          <NCheckboxGroup v-model:value="model.$column.javaField">
+            <NSpace>
+              <NCheckbox value="0" label="请选择字典生成" />
+            </NSpace>
+          </NCheckboxGroup>
+        #elseif($column.htmlType == 'datetime')
           <NDatePicker
             v-model:formatted-value="model.$column.javaField"
-            type="date"
+            type="datetime"
             value-format="yyyy-MM-dd HH:mm:ss"
             clearable
           />
+        #elseif($column.htmlType == "imageUpload")
+          <OssUpload v-model:value="model.$column.javaField" upload-type="image" />
+        #elseif($column.htmlType == "fileUpload")
+          <OssUpload v-model:value="model.$column.javaField" upload-type="file" />
+        #elseif($column.htmlType == "editor")
+          <TinymceEditor v-model:value="model.$column.javaField" />
 #else          <NInput v-model:value="model.$column.javaField" placeholder="请输入$column.columnComment" />
     #end
         </NFormItem>

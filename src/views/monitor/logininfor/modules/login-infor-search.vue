@@ -20,6 +20,13 @@ const dateRangeLoginTime = ref<[string, string] | null>(null);
 
 const model = defineModel<Api.Monitor.LoginInforSearchParams>('model', { required: true });
 
+function onDateRangeLoginTimeUpdate(value: [string, string] | null) {
+  if (value?.length) {
+    model.value.params!.beginTime = value[0];
+    model.value.params!.endTime = value[1];
+  }
+}
+
 async function reset() {
   dateRangeLoginTime.value = null;
   await restoreValidation();
@@ -28,10 +35,6 @@ async function reset() {
 
 async function search() {
   await validate();
-  if (dateRangeLoginTime.value?.length) {
-    model.value.params!.beginTime = dateRangeLoginTime.value[0];
-    model.value.params!.endTime = dateRangeLoginTime.value[1];
-  }
   emit('search');
 }
 </script>
@@ -62,6 +65,7 @@ async function search() {
                 type="datetimerange"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
+                @update:formatted-value="onDateRangeLoginTimeUpdate"
               />
             </NFormItemGi>
             <NFormItemGi span="24" class="pr-24px">

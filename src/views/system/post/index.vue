@@ -255,7 +255,7 @@ function handleResetSearch() {
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <PostSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
-      <NCard title="岗位信息列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+      <NCard title="岗位信息列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header-extra>
           <TableHeaderOperation
             v-model:columns="columnChecks"

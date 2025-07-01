@@ -3,6 +3,7 @@ import { computed, useAttrs } from 'vue';
 import type { TagProps } from 'naive-ui';
 import { useDict } from '@/hooks/business/dict';
 import { isNotNull } from '@/utils/common';
+import { $t } from '@/locales';
 
 defineOptions({ name: 'DictTag' });
 
@@ -23,13 +24,18 @@ const props = withDefaults(defineProps<Props>(), {
 
 const attrs = useAttrs() as TagProps;
 
+const { transformDictData } = useDict(props.dictCode, props.immediate);
+
 const dictTagData = computed<Api.System.DictData[]>(() => {
   if (props.dictData) {
-    return [props.dictData];
+    const dictData = props.dictData;
+    if (dictData.dictLabel?.startsWith(`dict.${dictData.dictType}.`)) {
+      dictData.dictLabel = $t(dictData.dictLabel as App.I18n.I18nKey);
+    }
+    return [dictData];
   }
   // 避免 props.value 为 0 时，无法触发
   if (props.dictCode && isNotNull(props.value)) {
-    const { transformDictData } = useDict(props.dictCode, props.immediate);
     return transformDictData(props.value) || [];
   }
 

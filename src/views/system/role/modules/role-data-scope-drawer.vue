@@ -2,7 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { useLoading } from '@sa/hooks';
 import { dataScopeOptions } from '@/constants/business';
-import { fetchGetRoleDeptTreeSelect, fetchUpdateRole } from '@/service/api/system/role';
+import { fetchGetRoleDeptTreeSelect, fetchUpdateRoleDataScope } from '@/service/api/system/role';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 import DeptTree from '@/components/custom/dept-tree.vue';
@@ -86,7 +86,7 @@ async function handleSubmit() {
 
   const { roleId, roleName, roleKey, roleSort, dataScope, deptIds, menuIds } = model;
 
-  const { error } = await fetchUpdateRole({
+  const { error } = await fetchUpdateRoleDataScope({
     roleId,
     roleName,
     roleKey,

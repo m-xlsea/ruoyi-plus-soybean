@@ -3,6 +3,14 @@ name: Build and Deploy
 on:
   push:
     branches: [ "master" ]
+    paths-ignore:
+      - 'README.md'
+      - 'LICENSE'
+      - 'docs/**'
+      - '.vscode/**'
+      - '.github/**'
+      - '.gitee/**'
+      - '.codeif/**'
 
 jobs:
   build-and-deploy:

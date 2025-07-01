@@ -1,15 +1,17 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-import { useLoading } from '@sa/hooks';
+import { getRgb } from '@sa/color';
+import { DARK_CLASS } from '@/constants/app';
 import { fetchSocialLoginCallback } from '@/service/api';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
+import { localStg } from '@/utils/storage';
+import { toggleHtmlClass } from '@/utils/common';
 
 const route = useRoute();
 const authStore = useAuthStore();
 const { routerPushByKey } = useRouterPush();
-const { loading, startLoading, endLoading } = useLoading(true);
 
 /**
  * 接收Route传递的参数
@@ -31,7 +33,7 @@ const processResponse = async () => {
     msg.value = '登录成功，1s 后即将跳转至首页';
   }, 1000);
   setTimeout(() => {
-    routerPushByKey('home');
+    routerPushByKey(import.meta.env.VITE_ROUTE_HOME || 'home');
   }, 1000);
 };
 
@@ -56,21 +58,19 @@ const callbackByCode = async (data: Api.Auth.SocialLoginForm) => {
     return;
   }
   await processResponse();
-  endLoading();
 };
 
 const loginByCode = async (data: Api.Auth.SocialLoginForm) => {
   try {
+    await authStore.logout();
     await authStore.login(data);
     await processResponse();
   } catch {
     handleError();
   }
-  endLoading();
 };
 
 const init = async () => {
-  startLoading();
   // 如果域名不相等 则重定向处理
   const host = window.location.host;
   if (domain !== host) {
@@ -98,17 +98,28 @@ const init = async () => {
 onMounted(async () => {
   await init();
 });
+
+const themeColor = localStg.get('themeColor') || '#2080f0';
+const darkMode = localStg.get('darkMode') || false;
+const { r, g, b } = getRgb(themeColor);
+
+if (darkMode) {
+  toggleHtmlClass(DARK_CLASS).add();
+}
+
+const primaryColor = `--primary-color: ${r} ${g} ${b}`;
 </script>
 
 <template>
-  <div class="fixed-center flex-col bg-layout">
-    <div class="my-36px h-120px w-120px">
-      <div class="relative h-full" :class="{ 'animate-spin': loading }">
-        <img src="@/assets/imgs/logo.png" width="120" />
-      </div>
+  <div class="fixed-center flex-col bg-layout" :style="primaryColor">
+    <div class="my-52px h-120px w-120px">
+      <!-- From Uiverse.io by SchawnnahJ -->
+      <div class="loader"></div>
     </div>
-    <h2 class="text-28px text-primary font-500">{{ msg }}</h2>
+    <h2 class="text-30px text-primary-400 font-500">{{ msg }}</h2>
   </div>
 </template>
 
-<style scoped></style>
+<style lang="scss" scoped>
+@use '@/styles/scss/loading.scss';
+</style>

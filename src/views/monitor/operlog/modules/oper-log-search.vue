@@ -20,6 +20,13 @@ const dateRangeOperTime = ref<[string, string] | null>(null);
 
 const model = defineModel<Api.Monitor.OperLogSearchParams>('model', { required: true });
 
+function onDateRangeOperTimeUpdate(value: [string, string] | null) {
+  if (value?.length) {
+    model.value.params!.beginTime = value[0];
+    model.value.params!.endTime = value[1];
+  }
+}
+
 async function reset() {
   dateRangeOperTime.value = null;
   await restoreValidation();
@@ -28,10 +35,6 @@ async function reset() {
 
 async function search() {
   await validate();
-  if (dateRangeOperTime.value?.length) {
-    model.value.params!.beginTime = dateRangeOperTime.value[0];
-    model.value.params!.endTime = dateRangeOperTime.value[1];
-  }
   emit('search');
 }
 </script>
@@ -73,6 +76,7 @@ async function search() {
                 type="datetimerange"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
+                @update:formatted-value="onDateRangeOperTimeUpdate"
               />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:8" class="pr-24px">

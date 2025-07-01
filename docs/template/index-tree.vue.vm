@@ -2,7 +2,7 @@
 import { NDivider } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
 import { type TableDataWithIndex } from '@sa/hooks';
-import { fetchBatchDelete${BusinessName}, fetchGet${BusinessName}List } from '@/service/api/${moduleName}/${businessName}';
+import { fetchBatchDelete${BusinessName}, fetchGet${BusinessName}List } from '@/service/api/${moduleName}/${business__name}';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useTreeTable, useTreeTableOperate } from '@/hooks/common/tree-table';

@@ -1,113 +1,150 @@
+import StreamSaver from 'streamsaver';
 import { errorCodeRecord } from '@/constants/common';
 import { localStg } from '@/utils/storage';
 import { getServiceBaseURL } from '@/utils/service';
+import { transformToURLSearchParams } from '@/utils/common';
+
+interface RequestConfig {
+  method: 'GET' | 'POST';
+  url: string;
+  params?: Record<string, any>;
+  filename?: string;
+  contentType?: string;
+}
 
 export function useDownload() {
   const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
   const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
-  function downloadByData(data: BlobPart, filename: string, type: string = 'application/octet-stream') {
-    const blobData = [data];
-    const blob = new Blob(blobData, { type });
+  /** 获取通用请求头 */
+  const getCommonHeaders = (contentType = 'application/octet-stream') => ({
+    Authorization: `Bearer ${localStg.get('token')}`,
+    Clientid: import.meta.env.VITE_APP_CLIENT_ID!,
+    'Content-Type': contentType
+  });
 
+  /** 通用下载方法 */
+  function downloadByData(data: BlobPart, filename: string, type = 'application/octet-stream') {
+    const blob = new Blob([data], { type });
     const blobURL = window.URL.createObjectURL(blob);
-    const tempLink = document.createElement('a');
-    tempLink.style.display = 'none';
-    tempLink.href = blobURL;
-    tempLink.setAttribute('download', filename);
+
+    const tempLink = Object.assign(document.createElement('a'), {
+      style: { display: 'none' },
+      href: blobURL,
+      download: filename
+    });
+
     if (typeof tempLink.download === 'undefined') {
       tempLink.setAttribute('target', '_blank');
     }
+
     document.body.appendChild(tempLink);
     tempLink.click();
     document.body.removeChild(tempLink);
     window.URL.revokeObjectURL(blobURL);
   }
 
-  function download(url: string, params: any, fileName: string) {
-    window.$loading?.startLoading('正在下载数据，请稍候...');
-    const token = localStg.get('token');
-    const clientId = import.meta.env.VITE_APP_CLIENT_ID;
-    const now = Date.now();
-    const searchParams = new FormData();
-    if (params) {
-      Object.keys(params).forEach(key => {
-        if (params[key] !== null && params[key] !== undefined) {
-          searchParams.append(key, params[key]);
-        }
-      });
+  /** 流式下载 */
+  async function downloadByStream(
+    readableStream: ReadableStream<Uint8Array>,
+    filename: string,
+    contentLength?: number
+  ): Promise<void> {
+    window.$loading?.endLoading();
+    const fileStream = StreamSaver.createWriteStream(filename, { size: contentLength });
+
+    if (window.WritableStream && readableStream?.pipeTo) {
+      await readableStream.pipeTo(fileStream);
+      window.$message?.success('下载完成');
+      return;
     }
-    fetch(`${baseURL}${url}?t=${now}`, {
-      method: 'post',
-      body: searchParams,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Clientid: clientId!,
-        'Content-Type': 'application/octet-stream'
-      }
-    })
-      .then(async response => {
-        if (response.headers.get('Content-Type')?.includes('application/json')) {
-          const res = await response.json();
-          const code = res.code as CommonType.ErrorCode;
-          throw new Error(errorCodeRecord[code] || res.msg || errorCodeRecord.default);
-        }
-        return response.blob();
-      })
-      .then(data => downloadByData(data, fileName, 'application/zip'))
-      .catch(err => window.$message?.error(err.message))
-      .finally(() => window.$loading?.endLoading());
+
+    // 降级处理
+    const writer = fileStream.getWriter();
+    const reader = readableStream.getReader();
+
+    const pump = async (): Promise<void> => {
+      const { done, value } = await reader.read();
+      if (done) return writer.close();
+      await writer.write(value);
+      return pump();
+    };
+
+    await pump();
   }
 
-  function oss(ossId: CommonType.IdType) {
-    window.$loading?.startLoading('正在下载数据，请稍候...');
-    const token = localStg.get('token');
-    const clientId = import.meta.env.VITE_APP_CLIENT_ID;
-    const url = `/resource/oss/download/${ossId}`;
-    const now = Date.now();
-    let fileName = String(`${ossId}-${now}`);
-    fetch(`${baseURL}${url}?t=${now}`, {
-      method: 'get',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Clientid: clientId!,
-        'Content-Type': 'application/octet-stream'
-      }
-    })
-      .then(async response => {
-        fileName = String(response.headers.get('Download-Filename'));
-        return response.blob();
-      })
-      .then(data => downloadByData(data, fileName))
-      .catch(err => window.$message?.error(err.message))
-      .finally(() => window.$loading?.endLoading());
+  /** 处理响应 */
+  async function handleResponse(response: Response) {
+    if (response.headers.get('Content-Type')?.includes('application/json')) {
+      const res = await response.json();
+      const code = res.code as CommonType.ErrorCode;
+      throw new Error(errorCodeRecord[code] || res.msg || errorCodeRecord.default);
+    }
   }
 
-  function zip(url: string, fileName: string) {
+  /** 核心下载逻辑 */
+  async function executeDownload(config: RequestConfig): Promise<void> {
+    const { method, url, params, filename, contentType } = config;
+    const timestamp = Date.now();
+    const fullUrl = `${baseURL}${url}${url.includes('?') ? '&' : '?'}t=${timestamp}`;
+
     window.$loading?.startLoading('正在下载数据，请稍候...');
-    const token = localStg.get('token');
-    const clientId = import.meta.env.VITE_APP_CLIENT_ID;
-    const now = Date.now();
-    fetch(`${baseURL}${url}${url.includes('?') ? '&' : '?'}t=${now}`, {
-      method: 'get',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Clientid: clientId!,
-        'Content-Type': 'application/octet-stream'
+
+    try {
+      const requestOptions: RequestInit = {
+        method,
+        headers: getCommonHeaders(contentType)
+      };
+
+      if (method === 'POST' && params) {
+        requestOptions.body = transformToURLSearchParams(params);
+        requestOptions.headers = {
+          ...requestOptions.headers,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        };
       }
-    })
-      .then(async response => {
-        if (response.headers.get('Content-Type')?.includes('application/json')) {
-          const res = await response.json();
-          const code = res.code as CommonType.ErrorCode;
-          throw new Error(errorCodeRecord[code] || res.msg || errorCodeRecord.default);
-        }
-        return response.blob();
-      })
-      .then(data => downloadByData(data, fileName, 'application/zip'))
-      .catch(err => window.$message?.error(err.message))
-      .finally(() => window.$loading?.endLoading());
+
+      const response = await fetch(fullUrl, requestOptions);
+
+      await handleResponse(response);
+
+      const finalFilename = filename || response.headers.get('Download-Filename') || `download-${timestamp}`;
+
+      if (response.body) {
+        const contentLength = Number(response.headers.get('Content-Length'));
+        await downloadByStream(response.body, finalFilename, contentLength);
+        return;
+      }
+
+      const responseContentType = response.headers.get('Content-Type');
+      const mainType = responseContentType?.split(';')[0]?.trim() || 'application/octet-stream';
+      downloadByData(await response.blob(), finalFilename, mainType);
+    } catch (error: any) {
+      window.$message?.error(error.message);
+    } finally {
+      window.$loading?.endLoading();
+    }
   }
+
+  /** 公共下载接口 */
+  const download = (url: string, params: Record<string, any>, filename: string) =>
+    executeDownload({ method: 'POST', url, params, filename });
+
+  /** OSS文件下载 */
+  const oss = (ossId: CommonType.IdType) =>
+    executeDownload({
+      method: 'GET',
+      url: `/resource/oss/download/${ossId}`
+    });
+
+  /** ZIP文件下载 */
+  const zip = (url: string, filename: string) =>
+    executeDownload({
+      method: 'GET',
+      url,
+      filename,
+      contentType: 'application/octet-stream'
+    });
 
   return {
     oss,

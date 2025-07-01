@@ -17,7 +17,7 @@ const { formRef, validate, restoreValidation } = useNaiveForm();
 
 const model = defineModel<Api.System.PostSearchParams>('model', { required: true });
 
-const { options: sysCommonStatusOptions } = useDict('sys_normal_disable');
+const { options: sysCommonStatusOptions } = useDict('sys_normal_disable', false);
 
 async function reset() {
   await restoreValidation();

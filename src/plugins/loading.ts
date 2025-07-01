@@ -3,8 +3,8 @@ import { getRgb } from '@sa/color';
 import { DARK_CLASS } from '@/constants/app';
 import { localStg } from '@/utils/storage';
 import { toggleHtmlClass } from '@/utils/common';
-import systemLogo from '@/assets/imgs/logo.png';
 import { $t } from '@/locales';
+import '@/styles/scss/loading.scss';
 
 export function setupLoading() {
   const app = document.getElementById('app');
@@ -21,12 +21,11 @@ export function setupLoading() {
 
   const loading = `
 <div class="fixed-center flex-col bg-layout" style="${primaryColor}">
-<div class="w-120px h-120px my-36px">
-    <div class="relative h-full animate-spin">
-      <img src="${systemLogo}" width="120" />
-    </div>
+  <div class="my-52px h-120px w-120px">
+    <!-- From Uiverse.io by SchawnnahJ -->
+    <div class="loader"></div>
   </div>
-  <h2 class="text-28px font-500 text-primary">${$t('system.title')}</h2>
+  <h2 class="text-30px text-primary-400 font-500">${$t('system.title')}</h2>
 </div>`;
 
   if (app) {

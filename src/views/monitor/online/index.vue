@@ -141,7 +141,7 @@ async function handleForceLogout(tokenId: string) {
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
     <OnlineSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
-    <NCard title="在线用户列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <NCard title="在线用户列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
