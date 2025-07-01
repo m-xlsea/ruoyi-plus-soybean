@@ -242,7 +242,8 @@ const local: App.I18n.Schema = {
     workflow_task: 'Task',
     'workflow_task_all-task-waiting': 'All Task Waiting',
     workflow_leave: 'Leave Apply',
-    'workflow_task_my-document': 'My Document'
+    'workflow_task_my-document': 'My Document',
+    'workflow_task_task-waiting': 'My Task Waiting'
   },
   menu: {
     system_tenant: 'Tenant Management',

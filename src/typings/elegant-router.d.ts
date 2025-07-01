@@ -62,6 +62,7 @@ declare module "@elegant-router/types" {
     "workflow_task": "/workflow/task";
     "workflow_task_all-task-waiting": "/workflow/task/all-task-waiting";
     "workflow_task_my-document": "/workflow/task/my-document";
+    "workflow_task_task-waiting": "/workflow/task/task-waiting";
   };
 
   /**
@@ -162,6 +163,7 @@ declare module "@elegant-router/types" {
     | "workflow_process-instance"
     | "workflow_task_all-task-waiting"
     | "workflow_task_my-document"
+    | "workflow_task_task-waiting"
   >;
 
   /**

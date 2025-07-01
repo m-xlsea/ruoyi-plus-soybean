@@ -217,6 +217,10 @@ function handleTaskFinished() {
   emit('submitted');
 }
 
+function handleApproval() {
+  setTaskApplyVisible();
+}
+
 async function initializeData() {
   if (visible.value) {
     startLoading();
@@ -238,10 +242,12 @@ watch(visible, initializeData, { immediate: true });
     v-model:visible="visible"
     :title="title"
     :loading="loading"
-    :readonly="readonly"
+    :operate-type="operateType"
+    :status="modelDetail.status"
     @close="closeDrawer"
     @save-draft="handleSaveDraft"
     @submit="handleSubmit"
+    @approval="handleApproval"
   >
     <div :class="loading ? 'hidden' : ''">
       <div v-if="!readonly" class="h-full">

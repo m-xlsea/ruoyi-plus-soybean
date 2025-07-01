@@ -242,7 +242,8 @@ const local: App.I18n.Schema = {
     workflow_task: '任务',
     'workflow_task_all-task-waiting': '待办任务',
     workflow_leave: '请假申请',
-    'workflow_task_my-document': '我发起的'
+    'workflow_task_my-document': '我发起的',
+    'workflow_task_task-waiting': '我的待办'
   },
   menu: {
     system_tenant: '租户管理',

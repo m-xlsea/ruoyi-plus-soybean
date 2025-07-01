@@ -11,18 +11,15 @@ interface Props {
   loading?: boolean;
   /** 抽屉宽度 */
   width?: number;
-  /** 是否为只读模式 */
-  readonly?: boolean;
-  /** 是否显示暂存按钮 */
-  showDraft?: boolean;
+  operateType: CommonType.WorkflowTableOperateType;
+  status?: string | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   visible: false,
   loading: false,
   width: 1200,
-  readonly: false,
-  showDraft: true
+  status: null
 });
 
 interface Emits {
@@ -30,6 +27,7 @@ interface Emits {
   (e: 'close'): void;
   (e: 'saveDraft'): void;
   (e: 'submit'): void;
+  (e: 'approval'): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -40,6 +38,15 @@ const visibleValue = computed({
     emit('update:visible', value);
   }
 });
+
+const showSubmit = computed(
+  () =>
+    props.operateType === 'add' ||
+    (props.operateType === 'edit' &&
+      props.status &&
+      (props.status === 'draft' || props.status === 'cancel' || props.status === 'back'))
+);
+const showApproval = computed(() => props.operateType === 'approval' && props.status && props.status === 'waiting');
 
 function handleClose() {
   emit('close');
@@ -52,11 +59,15 @@ function handleSaveDraft() {
 function handleSubmit() {
   emit('submit');
 }
+function handleApproval() {
+  emit('approval');
+}
 
 defineExpose({
   handleClose,
   handleSaveDraft,
-  handleSubmit
+  handleSubmit,
+  handleApproval
 });
 </script>
 
@@ -68,11 +79,12 @@ defineExpose({
       </NSpin>
       <template #footer>
         <slot name="footer">
-          <div v-if="!readonly">
+          <div>
             <NSpace :size="16">
-              <NButton @click="handleClose">{{ $t('common.cancel') }}</NButton>
-              <NButton v-if="showDraft" type="warning" @click="handleSaveDraft">暂存</NButton>
-              <NButton type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
+              <NButton v-if="showSubmit || showApproval" @click="handleClose">{{ $t('common.cancel') }}</NButton>
+              <NButton v-if="showSubmit" type="warning" @click="handleSaveDraft">暂存</NButton>
+              <NButton v-if="showSubmit" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
+              <NButton v-if="showApproval" type="warning" @click="handleApproval">办理</NButton>
             </NSpace>
           </div>
         </slot>

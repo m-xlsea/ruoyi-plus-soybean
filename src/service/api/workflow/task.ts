@@ -69,3 +69,12 @@ export function fetchGetCurrentTaskAllUser(taskId: CommonType.IdType) {
     method: 'get'
   });
 }
+
+/** 获取我的待办 */
+export function fetchGetTaskWaitList(data: Api.Workflow.TaskSearchParams) {
+  return request<Api.Workflow.TaskList>({
+    url: '/workflow/task/pageByTaskWait',
+    method: 'get',
+    params: data
+  });
+}
