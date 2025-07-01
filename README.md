@@ -1,5 +1,6 @@
-<div  align="center">
-  <img src="https://foruda.gitee.com/images/1679673773341074847/178e8451_1766278.png" width="50%" height="50%">
+<div align="center">
+  <img src="https://docs.ruoyi.xlsea.cn/logo.svg" width="160">
+  <h1>RuoYi-Plus-Soybean</h1>
 </div>
 
 <div style="height: 10px; clear: both;"></div>
@@ -7,19 +8,21 @@
 <div align="center">
   <p>一个基于 <a href="https://gitee.com/dromara/RuoYi-Vue-Plus" target="_blank">RuoYi-Vue-Plus</a> 的后端能力和 <a href="https://github.com/soybeanjs/soybean-admin" target="_blank">Soybean Admin</a> 前端特性的现代化多租户管理系统</p>
   <p>
-    <img src="https://gitee.com/xlsea/ruoyi-plus-soybean/badge/star.svg" alt="Gitee">
-    <img src="https://img.shields.io/github/stars/m-xlsea/ruoyi-plus-soybean" alt="Github">
-    <img src="https://img.shields.io/badge/Vue-3.5-brightgreen" alt="vue">
-    <img src="https://img.shields.io/badge/TypeScript-5.8-blue" alt="typescript">
-    <img src="https://img.shields.io/badge/Vite-6.2-orange" alt="vite">
-    <img src="https://img.shields.io/badge/NaiveUI-2.41-purple" alt="naive-ui">
-    <img src="https://img.shields.io/badge/License-MIT-yellow" alt="license">
+    <a href="https://gitee.com/xlsea/ruoyi-plus-soybean" target="_blank"><img src="https://gitee.com/xlsea/ruoyi-plus-soybean/badge/star.svg" alt="Gitee"></a>
+    <a href="https://gitee.com/dromara/RuoYi-Vue-Plus" target="_blank"><img src="https://gitee.com/xlsea/ruoyi-plus-soybean/badge/fork.svg" alt="Gitee-forks"></a>
+    <a href="https://github.com/m-xlsea/ruoyi-plus-soybean" target="_blank"><img src="https://img.shields.io/github/stars/m-xlsea/ruoyi-plus-soybean" alt="Github"></a>
+    <a href="https://github.com/m-xlsea/ruoyi-plus-soybean" target="_blank"><img src="https://img.shields.io/github/forks/m-xlsea/ruoyi-plus-soybean" alt="Github-forks"></a>
+    <a href="https://vuejs.org" target="_blank"><img src="https://img.shields.io/badge/Vue-3.5-brightgreen" alt="vue"></a>
+    <a href="https://www.typescriptlang.org" target="_blank"><img src="https://img.shields.io/badge/TypeScript-5.8-blue" alt="typescript"></a>
+    <a href="https://vite.dev" target="_blank"><img src="https://img.shields.io/badge/Vite-6.2-orange" alt="vite"></a>
+    <a href="https://www.naiveui.com" target="_blank"><img src="https://img.shields.io/badge/NaiveUI-2.41-purple" alt="naive-ui"></a>
+        <a href="./LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-MIT-yellow" alt="license"></a>
   </p>
 </div>
 
 # 📢 重要通知
 
-虽然 1.0.0 版本已经包含了完整的核心功能，但我们仍然建议：
+1.1.0 版本已发布，但仍然建议：
 - 在生产环境使用前进行充分测试
 - 关注项目更新，及时获取最新版本
 - 积极反馈问题，帮助我们快速迭代
@@ -27,9 +30,7 @@
 **后续规划**
 - 工作流引擎集成
 - 多语言国际化完善
-- 更多企业级功能模块
 - 性能优化和稳定性提升
-
 
 > 如果对该项目感兴趣，可以给一个 Star 支持一下，谢谢！
 > 请大家踊跃提交 PR 和 Issue，一起完善这个项目
@@ -348,6 +349,8 @@ console.log(t('common.confirm'));
 - [RuoYi-Vue-Plus](https://gitee.com/dromara/RuoYi-Vue-Plus) - 后端基础框架
 - [Soybean Admin](https://github.com/soybeanjs/soybean-admin) - 前端基础框架
 - [RuoYi-Plus-Soybean](https://ruoyi.xlsea.cn) - 官方演示站点
+- [RuoYi-Plus-Soybean-Docs](https://docs.ruoyi.xlsea.cn) - 项目文档
+- [Open Hives](https://openhives.com/questions) - OpenHives 问答社区
 
 ## 📮 联系方式
 
@@ -362,6 +365,12 @@ console.log(t('common.confirm'));
 
 ## 💬 交流群
 
+**加群前请先阅读一下内容：**
+
+- 禁止内容：黄腔、暴力言论、政治话题，违者直接飞机票（踢出群）
+- 遇到问题请先阅读 [项目文档](https://docs.ruoyi.xlsea.cn) 和 [Soybean 文档](https://docs.soybeanjs.cn/)，某些简单问题不予理睬
+- 蜡笔小新头像为机器人助手，私聊不保证回复，问题请在群内讨论
+
 <img src="https://foruda.gitee.com/images/1749174520085305975/ad1b54fe_5601833.png" width="300px" />
 
 添加作者微信备注：加群
@@ -374,61 +383,4 @@ console.log(t('common.confirm'));
 
 ## 🫡 捐赠列表
 
-感谢下方各位老板的捐赠 🫡
-
-> 如果不想出现在下方捐赠列表，请在备注中说明，我会匿名处理
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747030503230216352/6879cbe5_5601833.jpeg" width="24px" >
-    <span>酷酷冬天 20元</span>
-</div>
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747105640574377313/6d259bba_5601833.jpeg" width="24px" >
-    <span>Selfish Altruism(JackSue) 200元</span>
-</div>
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747190127964232140/5ffa5ac4_5601833.jpeg" width="24px" >
-    <span>匿名用户 50元</span>
-</div>
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747190127964232140/5ffa5ac4_5601833.jpeg" width="24px" >
-    <span>匿名用户 10元</span>
-</div>
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747280244120267391/6d719481_5601833.jpeg" width="24px" >
-    <span>DAS 20元</span>
-</div>
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747739790990961771/57f4b208_5601833.jpeg" width="24px" >
-    <span>大山 100元</span>
-</div>
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747742188121789563/646dff1c_5601833.jpeg" width="24px" >
-    <span>依依 20元</span>
-</div>
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747742593880284419/5b56043d_5601833.jpeg" width="24px" >
-    <span>沙海 20元</span>
-</div>
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747789196227712891/00c37bdf_5601833.jpeg" width="24px" >
-    <span>xxl 50元</span>
-</div>
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1747796468040874363/1faa75ce_5601833.jpeg" width="24px" >
-    <span>莫离支🤴 10元</span>
-</div>
-
-<div style="display: flex; gap: 8px;">
-    <img style="border-radius: 50%;" src="https://foruda.gitee.com/images/1749191537723692930/0b810403_5601833.jpeg" width="24px" >
-    <span>Ivan 100元</span>
-</div>
+**捐赠列表已移至 [捐赠列表](https://docs.ruoyi.xlsea.cn/other/donate.html)**
