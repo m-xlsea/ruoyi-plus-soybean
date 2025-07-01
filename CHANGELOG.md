@@ -1,6 +1,6 @@
 # 更新日志
 
-## [v1.1.0](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.0.0...v1.1.0) (2025-06-25)
+## [v1.1.0](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.0.0...v1.1.0) (2025-07-01)
 
 ### &nbsp;&nbsp;&nbsp;🚀 新功能
 
