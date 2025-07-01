@@ -1,15 +1,15 @@
 {
   "name": "ruoyi-vue-plus",
   "type": "module",
-  "version": "1.0.0",
-  "description": "RuoYi-Vue-Plus多租户管理系统",
+  "version": "1.1.0",
+  "description": "结合了 RuoYi-Vue-Plus 的强大后端功能和 Soybean Admin 的现代化前端特性，为开发者提供了完整的企业管理解决方案。",
   "author": {
     "name": "xlsea",
-    "email": "xlsea@linux.do",
-    "url": "https://gitee.com/xlsea/ruoyi-plus-soybean"
+    "email": "m@xlsea.cn",
+    "url": "https://gitee.com/xlsea"
   },
   "license": "MIT",
-  "homepage": "https://ruoyi.xlsea.cn",
+  "homepage": "https://docs.ruoyi.xlsea.cn",
   "repository": {
     "url": "https://gitee.com/xlsea/ruoyi-plus-soybean.git"
   },
@@ -18,6 +18,7 @@
   },
   "keywords": [
     "RuoYi-Vue-Plus",
+    "Soybean Admin",
     "Vue3 admin ",
     "vue-admin-template",
     "Vite6",
@@ -25,6 +26,13 @@
     "naive-ui",
     "naive-ui-admin",
     "UnoCSS"
+  ],
+  "contributors": [
+    {
+      "name": "Elio",
+      "email": "1983933789@qq.com",
+      "url": "https://gitee.com/elio-an"
+    }
   ],
   "engines": {
     "node": ">=20.19.0",
