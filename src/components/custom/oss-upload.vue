@@ -20,27 +20,32 @@ const fileList = ref<UploadFileInfo[]>([]);
 
 async function handleFetchOssList(ossIds: string[]) {
   startLoading();
-  const { error, data } = await fetchGetOssListByIds(ossIds);
-  if (error) return;
-  fileList.value = data.map(item => ({
-    id: String(item.ossId),
-    url: item.url,
-    name: item.originalName,
-    status: 'finished'
-  }));
-  endLoading();
+  try {
+    const { error, data } = await fetchGetOssListByIds(ossIds);
+    if (error) return;
+    fileList.value = data.map(item => ({
+      id: String(item.ossId),
+      url: item.url,
+      name: item.originalName,
+      status: 'finished'
+    }));
+  } catch (error) {
+    window.$message?.error(`获取文件列表失败: ${error}`);
+  } finally {
+    endLoading();
+  }
 }
 
 watch(
   value,
   async val => {
     const ossIds = val?.split(',')?.filter(item => isNotNull(item)) || [];
-    const fileIds = new Set(fileList.value.filter(item => item.status === 'finished').map(item => item.id));
-    if (ossIds.every(item => fileIds.has(item))) {
-      return;
-    }
     if (ossIds.length === 0) {
       fileList.value = [];
+      return;
+    }
+    const fileIds = new Set(fileList.value.filter(item => item.status === 'finished').map(item => item.id));
+    if (ossIds.every(item => fileIds.has(item))) {
       return;
     }
     await handleFetchOssList(ossIds);
@@ -48,16 +53,12 @@ watch(
   { immediate: true }
 );
 
-watch(
-  fileList,
-  val => {
-    value.value = val
-      .filter(item => item.status === 'finished')
-      .map(item => item.id)
-      .join(',');
-  },
-  { deep: true }
-);
+watch(fileList, val => {
+  value.value = val
+    .filter(item => item.status === 'finished')
+    .map(item => item.id)
+    .join(',');
+});
 </script>
 
 <template>
