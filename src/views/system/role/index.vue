@@ -273,7 +273,7 @@ function handleAuthUser(row: Api.System.Role) {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="1200"
         :loading="loading"
         remote
         :row-key="row => row.roleId"
