@@ -2,6 +2,7 @@ import { ref, toValue } from 'vue';
 import type { ComputedRef, Ref } from 'vue';
 import type { FormInst } from 'naive-ui';
 import { REG_CODE_SIX, REG_EMAIL, REG_PHONE, REG_PWD, REG_USER_NAME } from '@/constants/reg';
+import { isNull } from '@/utils/common';
 import { $t } from '@/locales';
 
 export function useFormRules() {
@@ -52,7 +53,7 @@ export function useFormRules() {
       required: true,
       trigger: ['input', 'blur'],
       validator: (_rule: any, value: any) => {
-        if (value === null || value === undefined || value === '') {
+        if (isNull(value) || (Array.isArray(value) && value.length === 0)) {
           return new Error(message);
         }
         return true;
