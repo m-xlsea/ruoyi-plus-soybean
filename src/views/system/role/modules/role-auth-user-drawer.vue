@@ -1,5 +1,6 @@
 <script setup lang="tsx">
-import { computed, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { NDatePicker } from 'naive-ui';
 import { fetchGetRoleUserList, fetchGetUserList } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { useDict } from '@/hooks/business/dict';
@@ -133,6 +134,22 @@ watch(visible, () => {
     handleUpdateModelWhenEdit();
   }
 });
+
+const dateRangeCreateTime = ref<[string, string] | null>(null);
+
+const datePickerRef = ref<InstanceType<typeof NDatePicker>>();
+
+function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
+  if (value?.length) {
+    searchParams.params!.beginTime = value[0];
+    searchParams.params!.endTime = value[1];
+  }
+}
+
+function reset() {
+  dateRangeCreateTime.value = null;
+  resetSearchParams();
+}
 </script>
 
 <template>
@@ -158,9 +175,22 @@ watch(visible, () => {
             <NFormItemGi span="24 s:12 m:8" label="手机号码" path="phonenumber" class="pr-24px">
               <NInput v-model:value="searchParams.phonenumber" placeholder="请输入手机号码" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:24" class="pr-24px" :show-feedback="false">
+            <NFormItemGi span="24 s:12 m:8" label="所属部门" path="deptId" class="pr-24px">
+              <DeptTreeSelect v-model:value="searchParams.deptId" placeholder="请选择部门" />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:10" label="创建时间" path="createTime" class="pr-24px">
+              <NDatePicker
+                ref="datePickerRef"
+                v-model:formatted-value="dateRangeCreateTime"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                clearable
+                @update:formatted-value="onDateRangeCreateTimeUpdate"
+              />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:6" class="pr-24px" :show-feedback="false">
               <NSpace class="w-full" justify="end">
-                <NButton @click="resetSearchParams">
+                <NButton @click="reset">
                   <template #icon>
                     <icon-ic-round-refresh class="text-icon" />
                   </template>

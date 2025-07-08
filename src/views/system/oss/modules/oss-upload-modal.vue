@@ -28,7 +28,9 @@ const accept = computed(() => (props.uploadType === 'file' ? AcceptType.File : A
 
 const fileList = ref<UploadFileInfo[]>([]);
 
-function handleUpdateModelWhenUpload() {}
+function handleUpdateModelWhenUpload() {
+  fileList.value = [];
+}
 
 function closeDrawer() {
   visible.value = false;

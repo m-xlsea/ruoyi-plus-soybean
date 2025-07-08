@@ -107,12 +107,12 @@ export async function loadDynamicComponent<T extends object = any>(
 
 /** 判断是否为空 */
 export function isNotNull(value: any) {
-  return value !== undefined && value !== null && value !== '' && value !== 'undefined' && value !== 'null';
+  return value !== undefined && value !== null && value !== '';
 }
 
 /** 判断是否为空 */
 export function isNull(value: any) {
-  return value === undefined || value === null || value === '' || value === 'undefined' || value === 'null';
+  return value === undefined || value === null || value === '';
 }
 
 /** 判断是否为图片类型 */
