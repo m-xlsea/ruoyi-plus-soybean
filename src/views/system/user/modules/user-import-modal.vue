@@ -142,8 +142,12 @@ watch(visible, () => {
     <div class="flex-center">
       <NCheckbox v-model="data.updateSupport">{{ $t('common.updateExisting') }}</NCheckbox>
     </div>
+
     <NAlert v-if="message" :title="$t('common.importResult')" :type="success ? 'success' : 'error'" :bordered="false">
-      {{ message }}
+      <NScrollbar class="max-h-200px">
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="message" />
+      </NScrollbar>
     </NAlert>
     <template #footer>
       <NSpace justify="end" :size="16">

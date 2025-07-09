@@ -65,14 +65,15 @@ function createDefaultModel(): Model {
   };
 }
 
-type RuleKey = Extract<keyof Model, 'userName' | 'nickName' | 'password' | 'status' | 'phonenumber'>;
+type RuleKey = Extract<keyof Model, 'userName' | 'nickName' | 'password' | 'status' | 'phonenumber' | 'roleIds'>;
 
 const rules: Record<RuleKey, App.Global.FormRule[]> = {
   userName: [createRequiredRule($t('page.system.user.form.userName.required'))],
   nickName: [createRequiredRule($t('page.system.user.form.nickName.required'))],
   password: [{ ...patternRules.pwd, required: props.operateType === 'add' }],
   phonenumber: [patternRules.phone],
-  status: [createRequiredRule($t('page.system.user.form.status.required'))]
+  status: [createRequiredRule($t('page.system.user.form.status.required'))],
+  roleIds: [{ ...createRequiredRule('请选择角色'), type: 'array' }]
 };
 
 async function getUserInfo() {
