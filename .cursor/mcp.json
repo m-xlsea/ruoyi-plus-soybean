@@ -16,7 +16,7 @@
     },
     "playwright": {
       "command": "npx",
-      "args": ["@playwright/mcp@latest"]
+      "args": ["@playwright/mcp@0.0.29"]
     },
     "mcp-server-time": {
       "command": "uvx",
@@ -26,7 +26,7 @@
       "command": "npx",
       "args": ["-y", "mcp-shrimp-task-manager"],
       "env": {
-        "DATA_DIR": "D:/workspace/Aother/mcp-shrimp-task-manager/data",
+        "DATA_DIR": "D:/workspace/mcp-shrimp-task-manager/data",
         "TEMPLATES_USE": "en",
         "ENABLE_GUI": "false"
       }
