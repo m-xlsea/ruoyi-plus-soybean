@@ -262,8 +262,8 @@ watch(visible, initializeData, { immediate: true });
             <NDatePicker
               v-model:formatted-value="dateRange"
               class="w-full"
-              type="daterange"
-              value-format="yyyy-MM-dd"
+              type="datetimerange"
+              format="yyyy-MM-dd HH:mm:ss"
               clearable
             />
           </NFormItem>
