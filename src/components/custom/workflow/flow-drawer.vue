@@ -84,7 +84,7 @@ defineExpose({
               <NButton v-if="showSubmit || showApproval" @click="handleClose">{{ $t('common.cancel') }}</NButton>
               <NButton v-if="showSubmit" type="warning" @click="handleSaveDraft">暂存</NButton>
               <NButton v-if="showSubmit" type="primary" @click="handleSubmit">{{ $t('common.confirm') }}</NButton>
-              <NButton v-if="showApproval" type="warning" @click="handleApproval">办理</NButton>
+              <NButton v-if="showApproval" type="primary" @click="handleApproval">办理</NButton>
             </NSpace>
           </div>
         </slot>

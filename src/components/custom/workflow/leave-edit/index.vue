@@ -21,13 +21,15 @@ interface Props {
   operateType: CommonType.WorkflowTableOperateType;
   /** 业务ID */
   businessId?: CommonType.IdType;
+  taskId?: CommonType.IdType;
   /** the edit row data */
   rowData?: Api.Workflow.Leave | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   rowData: null,
-  businessId: undefined
+  businessId: undefined,
+  taskId: undefined
 });
 
 interface Emits {
@@ -58,6 +60,8 @@ const title = computed(() => {
 const readonly = computed(() => {
   return props.operateType === 'detail' || props.operateType === 'approval';
 });
+
+const taskId = ref<CommonType.IdType>(props.taskId!);
 
 const respLeave = ref<Api.Workflow.Leave>();
 const startWorkflowResult = ref<Api.Workflow.StartWorkflowResult>();
@@ -209,6 +213,7 @@ async function handleSubmit() {
   const { error, data } = await fetchStartWorkflow(startWorkflowModel);
   if (error) return;
   startWorkflowResult.value = data;
+  taskId.value = data.taskId!;
   setTaskApplyVisible();
 }
 
@@ -298,7 +303,7 @@ watch(visible, initializeData, { immediate: true });
   </FlowDrawer>
   <FlowTaskApprovalModal
     v-model:visible="taskApplyVisible"
-    :task-id="startWorkflowResult?.taskId!"
+    :task-id="taskId"
     :task-variables="taskVariables"
     @finished="handleTaskFinished"
   />

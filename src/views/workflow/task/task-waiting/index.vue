@@ -159,9 +159,11 @@ function handleResetSearch() {
 }
 const modules = import.meta.glob('@/components/custom/workflow/**/*.vue');
 const businessId = ref<CommonType.IdType>();
+const taskId = ref<CommonType.IdType>();
 
 async function handleApproval(row: Api.Workflow.Task) {
   businessId.value = row.businessId;
+  taskId.value = row.id;
   const formPath = row.formPath;
   if (formPath) {
     dynamicComponent.value = await loadDynamicComponent(modules, formPath);
@@ -205,7 +207,7 @@ async function handleApproval(row: Api.Workflow.Task) {
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <TaskWaitingSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
-      <NCard title="我发起的" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
+      <NCard title="我的待办" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header-extra>
           <TableHeaderOperation
             v-model:columns="columnChecks"
@@ -235,6 +237,7 @@ async function handleApproval(row: Api.Workflow.Task) {
           :visible="viewVisible"
           operate-type="approval"
           :business-id="businessId"
+          :task-id="taskId"
           @submitted="getData"
         />
       </NCard>
