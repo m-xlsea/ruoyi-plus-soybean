@@ -1,10 +1,16 @@
 <script setup lang="tsx">
 import { computed, ref, watch } from 'vue';
 import { NDatePicker } from 'naive-ui';
-import { fetchGetRoleUserList, fetchGetUserList } from '@/service/api/system';
+import {
+  fetchGetRoleUserList,
+  fetchGetUserList,
+  fetchUpdateRoleAuthUser,
+  fetchUpdateRoleAuthUserCancel
+} from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { useDict } from '@/hooks/business/dict';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import { arraysEqualSet } from '@/utils/common';
 import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
 
@@ -110,13 +116,16 @@ const { columns, data, getData, getDataByPage, loading, mobilePagination, search
 
 const { checkedRowKeys } = useTableOperate(data, getData);
 
+const checkedUserIds = ref<CommonType.IdType[]>([]);
+
 async function handleUpdateModelWhenEdit() {
   checkedRowKeys.value = [];
   getDataByPage();
   const { data: roleUserList } = await fetchGetRoleUserList({
     roleId: props.rowData?.roleId
   });
-  checkedRowKeys.value = roleUserList?.rows.map(item => item.userId) || [];
+  checkedUserIds.value = roleUserList?.rows.map(item => item.userId) || [];
+  checkedRowKeys.value = checkedUserIds.value;
 }
 
 function closeDrawer() {
@@ -124,6 +133,25 @@ function closeDrawer() {
 }
 
 async function handleSubmit() {
+  if (arraysEqualSet(checkedUserIds.value, checkedRowKeys.value)) {
+    window.$message?.warning($t('common.noChange'));
+    return;
+  }
+
+  // 批量取消用户授权
+  const cancelUserIds = checkedUserIds.value.filter(item => !checkedRowKeys.value.includes(item));
+  if (cancelUserIds.length > 0) {
+    const { error: cancelError } = await fetchUpdateRoleAuthUserCancel(props.rowData!.roleId, cancelUserIds);
+    if (cancelError) return;
+  }
+
+  // 批量选择用户授权
+  const addUserIds = checkedRowKeys.value.filter(item => !checkedUserIds.value.includes(item));
+  if (addUserIds.length > 0) {
+    const { error: addError } = await fetchUpdateRoleAuthUser(props.rowData!.roleId, addUserIds);
+    if (addError) return;
+  }
+
   window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');

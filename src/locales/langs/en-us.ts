@@ -61,6 +61,7 @@ const local: App.I18n.Schema = {
     update: 'Update',
     saveSuccess: 'Save Success',
     updateSuccess: 'Update Success',
+    noChange: 'No actions were taken',
     userCenter: 'User Center',
     yesOrNo: {
       yes: 'Yes',

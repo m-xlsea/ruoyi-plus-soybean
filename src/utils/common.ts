@@ -191,3 +191,13 @@ export function transformToURLSearchParams(obj: Record<string, any>, excludeKeys
   });
   return searchParams;
 }
+
+/** 判断两个数组是否相等 */
+export function arraysEqualSet(arr1: Array<any>, arr2: Array<any>) {
+  return (
+    arr1.length === arr2.length &&
+    new Set(arr1).size === arr1.length &&
+    new Set(arr2).size === arr2.length &&
+    [...arr1].sort().join() === [...arr2].sort().join()
+  );
+}

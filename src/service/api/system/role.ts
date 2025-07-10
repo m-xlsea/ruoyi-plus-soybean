@@ -78,3 +78,21 @@ export function fetchGetRoleUserList(params: Api.System.UserSearchParams) {
     params
   });
 }
+
+/** 批量选择用户授权 */
+export function fetchUpdateRoleAuthUser(roleId: CommonType.IdType, userIds: CommonType.IdType[]) {
+  return request<boolean>({
+    url: '/system/role/authUser/selectAll',
+    method: 'put',
+    params: { roleId, userIds: userIds.join(',') }
+  });
+}
+
+/** 批量取消用户授权 */
+export function fetchUpdateRoleAuthUserCancel(roleId: CommonType.IdType, userIds: CommonType.IdType[]) {
+  return request<boolean>({
+    url: '/system/role/authUser/cancelAll',
+    method: 'put',
+    params: { roleId, userIds: userIds.join(',') }
+  });
+}
