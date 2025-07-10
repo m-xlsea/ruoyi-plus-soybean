@@ -376,6 +376,7 @@ declare namespace App {
         update: string;
         updateSuccess: string;
         saveSuccess: string;
+        noChange: string;
         userCenter: string;
         yesOrNo: {
           yes: string;
