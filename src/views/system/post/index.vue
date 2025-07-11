@@ -288,7 +288,7 @@ function handleResetSearch() {
           :operate-type="operateType"
           :row-data="editingData"
           :dept-data="deptData"
-          @submitted="getDataByPage"
+          @submitted="getData"
         />
       </NCard>
     </div>

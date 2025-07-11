@@ -405,7 +405,7 @@ const selectable = computed(() => {
           :operate-type="operateType"
           :row-data="editingData"
           :dict-type="searchParams.dictType || ''"
-          @submitted="getDataByPage"
+          @submitted="getData"
         />
         <DictTypeOperateDrawer
           v-model:visible="dictTypeDrawerVisible"

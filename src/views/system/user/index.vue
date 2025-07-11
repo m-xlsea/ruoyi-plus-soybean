@@ -348,7 +348,7 @@ function handleResetSearch() {
           :pagination="mobilePagination"
           class="h-full"
         />
-        <UserImportModal v-model:visible="importVisible" @submitted="getDataByPage" />
+        <UserImportModal v-model:visible="importVisible" @submitted="getData" />
         <UserOperateDrawer
           v-model:visible="drawerVisible"
           :operate-type="operateType"
