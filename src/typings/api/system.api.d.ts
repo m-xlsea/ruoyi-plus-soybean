@@ -128,6 +128,7 @@ declare namespace Api {
     type UserSearchParams = CommonType.RecordNullable<
       Pick<User, 'deptId' | 'userName' | 'nickName' | 'phonenumber' | 'status'> & {
         roleId: CommonType.IdType;
+        userIds: string;
       } & Common.CommonSearchParams
     >;
 

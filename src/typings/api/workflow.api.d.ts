@@ -428,6 +428,10 @@ declare namespace Api {
           createByIds: CommonType.IdType[];
         }
     >;
+    type TaskNextNodeSearchParams = CommonType.RecordNullable<{
+      taskId: CommonType.IdType;
+      taskVariables: { [key: string]: any };
+    }>;
 
     /** 消息类型 */
     type MessageType = '1' | '2' | '3';
@@ -455,5 +459,48 @@ declare namespace Api {
       /** 扩展字段 */
       ext: string;
     }>;
+
+    /** 工作流节点 */
+    type FlowNode = Common.CommonRecord<{
+      /** 节点ID */
+      id: CommonType.IdType;
+      /** 删除标志 */
+      delFlag: string;
+      /** 节点类型（0开始节点 1中间节点 2结束节点 3互斥网关 4并行网关） */
+      nodeType: WorkflowNodeType;
+      /** 流程定义ID */
+      definitionId: CommonType.IdType;
+      /** 节点编码 */
+      nodeCode: string;
+      /** 节点名称 */
+      nodeName: string;
+      /** 权限标识 */
+      permissionFlag: string;
+      /** 流程签署比例值 */
+      nodeRatio: string;
+      /** 节点坐标 */
+      coordinate: string;
+      /** 流程版本号 */
+      version: string;
+      /** 是否允许任意节点跳转 */
+      anyNodeSkip: string;
+      /** 监听器类型 */
+      listenerType: string;
+      /** 监听器路径 */
+      listenerPath: string;
+      /** 处理器类型 */
+      handlerType: string;
+      /** 处理器路径 */
+      handlerPath: string;
+      /** 审批表单是否自定义（Y是 N否） */
+      formCustom: Api.Common.YesOrNoStatus;
+      /** 审批表单路径 */
+      formPath: string;
+      /** 扩展字段 */
+      ext: string;
+    }>;
+
+    /** 工作流节点列表 */
+    type FlowNodeList = FlowNode[];
   }
 }

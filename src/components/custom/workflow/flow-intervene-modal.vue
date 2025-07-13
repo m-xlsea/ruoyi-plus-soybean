@@ -64,6 +64,7 @@ function handleTransferConfirm(ids: CommonType.IdType[]) {
     return;
   }
   model.userId = ids[0];
+  model.taskId = props.taskId;
   window.$dialog?.warning({
     title: '提示',
     content: '是否确认转办?',
@@ -107,6 +108,7 @@ function handleAddSignatureConfirm(ids: CommonType.IdType[]) {
 }
 
 function handleTerminate() {
+  terminateModel.taskId = props.taskId;
   window.$dialog?.warning({
     title: '提示',
     content: '是否确认中止?',

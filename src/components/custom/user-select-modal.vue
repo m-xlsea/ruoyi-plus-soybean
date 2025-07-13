@@ -19,16 +19,20 @@ interface Props {
   multiple?: boolean;
   /** 禁选用户ID */
   disabledIds?: CommonType.IdType[];
+  rowKeys?: CommonType.IdType[];
+  searchUserIds?: string | null;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   title: '用户选择',
   multiple: false,
-  disabledIds: () => []
+  disabledIds: () => [],
+  rowKeys: () => [],
+  searchUserIds: null
 });
 
 interface Emits {
-  (e: 'confirm', value: CommonType.IdType[]): void;
+  (e: 'confirm', value: CommonType.IdType[], rows?: Api.System.User[]): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -128,6 +132,23 @@ const {
 
 const { checkedRowKeys } = useTableOperate(data, getData);
 
+// 存储所有页面的用户数据，用于跨页选择
+const allPagesData = ref<Api.System.User[]>([]);
+
+// 更新allPagesData，保存当前页数据
+function updateAllPagesData() {
+  // 将当前页数据添加到allPagesData中，避免重复
+  data.value.forEach(user => {
+    const existIndex = allPagesData.value.findIndex(item => item.userId === user.userId);
+    if (existIndex === -1) {
+      allPagesData.value.push(user);
+    } else {
+      // 更新已存在的数据
+      allPagesData.value[existIndex] = user;
+    }
+  });
+}
+
 const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
 const deptPattern = ref<string>();
 const deptData = ref<Api.Common.CommonTreeRecord>([]);
@@ -165,38 +186,64 @@ function handleResetSearch() {
 }
 
 function closeModal() {
+  checkedRowKeys.value = [];
+  allPagesData.value = [];
   visible.value = false;
 }
 
 function handleConfirm() {
-  emit('confirm', checkedRowKeys.value);
+  // 获取选中行对应的用户对象（从所有页面数据中筛选）
+  const selectedUsers = allPagesData.value.filter(item => checkedRowKeys.value.includes(item.userId.toString()));
+  emit('confirm', checkedRowKeys.value, selectedUsers);
   closeModal();
 }
 
 function getRowProps(row: Api.System.User) {
   return {
-    onClick: () => {
+    onClick: (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.closest('.n-data-table-td--selection')) {
+        return;
+      }
       if (props.disabledIds.includes(row.userId.toString())) {
         return;
       }
+
+      // 将userId转为字符串
+      const userId = row.userId.toString();
+
       if (props.multiple) {
-        const index = checkedRowKeys.value.findIndex(key => key === row.userId);
+        const index = checkedRowKeys.value.findIndex(key => key === userId);
         if (index > -1) {
           checkedRowKeys.value.splice(index, 1);
         } else {
-          checkedRowKeys.value.push(row.userId);
+          checkedRowKeys.value.push(userId);
         }
       } else {
-        checkedRowKeys.value = [row.userId];
+        checkedRowKeys.value = [userId];
       }
     }
   };
 }
 
+// 监听数据变化（页面切换时）
+watch(
+  data,
+  () => {
+    updateAllPagesData();
+  },
+  { deep: true }
+);
+
 watch(visible, () => {
   if (visible.value) {
     getTreeData();
-    getData();
+    if (props.searchUserIds) {
+      searchParams.userIds = props.searchUserIds;
+    }
+    allPagesData.value = [];
+    getDataByPage();
+    checkedRowKeys.value = [...props.rowKeys];
   }
 });
 </script>
@@ -273,7 +320,7 @@ watch(visible, () => {
             :loading="loading"
             :row-props="getRowProps"
             remote
-            :row-key="row => row.userId"
+            :row-key="row => row.userId.toString()"
             :pagination="mobilePagination"
             class="h-full lt-sm:max-h-300px"
           />

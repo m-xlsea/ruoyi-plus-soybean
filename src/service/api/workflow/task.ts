@@ -17,6 +17,15 @@ export function fetchGetTask(taskId: CommonType.IdType) {
   });
 }
 
+/** 获取任务下一个节点 */
+export function fetchGetkNextNode(data: Api.Workflow.TaskNextNodeSearchParams) {
+  return request<Api.Workflow.FlowNodeList>({
+    url: '/workflow/task/getNextNodeList',
+    method: 'post',
+    data
+  });
+}
+
 /** 完成任务 */
 export function fetchCompleteTask(data: Api.Workflow.CompleteTaskOperateParams) {
   return request<Api.Workflow.Task>({
