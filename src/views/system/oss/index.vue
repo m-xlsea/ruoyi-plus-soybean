@@ -49,6 +49,8 @@ const {
     originalName: null,
     fileSuffix: null,
     service: null,
+    isAsc: 'desc',
+    orderByColumn: 'createTime',
     params: {}
   },
   columns: () => [
@@ -333,7 +335,7 @@ function handleToOssConfig() {
         :pagination="mobilePagination"
         class="sm:h-full"
       />
-      <OssUploadModal v-model:visible="uploadVisible" :upload-type="fileUploadType" @close="getData" />
+      <OssUploadModal v-model:visible="uploadVisible" :upload-type="fileUploadType" @close="getDataByPage" />
     </NCard>
   </div>
 </template>
