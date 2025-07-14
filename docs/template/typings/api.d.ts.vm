@@ -1,44 +1,51 @@
 #set($BaseEntity = ['createDept', 'createBy', 'createTime', 'updateBy', 'updateTime'])
 #set($ModuleName = $moduleName.substring(0, 1).toUpperCase() + $moduleName.substring(1))
 /**
- * namespace ${ModuleName}
+ * Namespace Api
  *
- * backend api module: "${ModuleName}"
+ * All backend api type
  */
-namespace ${ModuleName} {
-    /** ${businessname} */
-    type ${BusinessName} = Common.CommonRecord<{
-        #foreach($column in $columns)#if(!$BaseEntity.contains($column.javaField))
-        /** $column.columnComment */
-        $column.javaField:#if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) CommonType.IdType; #elseif($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number; #elseif($column.javaType == 'Boolean') boolean; #else string; #end
-        #end#end
-    }>;
+declare namespace Api {
+    /**
+     * namespace ${ModuleName}
+     *
+     * backend api module: "${ModuleName}"
+     */
+    namespace ${ModuleName} {
+        /** ${businessname} */
+        type ${BusinessName} = Common.CommonRecord<{
+            #foreach($column in $columns)#if(!$BaseEntity.contains($column.javaField))
+            /** $column.columnComment */
+                $column.javaField:#if($column.javaField.indexOf("id") != -1 || $column.javaField.indexOf("Id") != -1) CommonType.IdType; #elseif($column.javaType == 'Long' || $column.javaType == 'Integer' || $column.javaType == 'Double' || $column.javaType == 'Float' || $column.javaType == 'BigDecimal') number; #elseif($column.javaType == 'Boolean') boolean; #else string; #end
+            #end#end
+        }>;
 
-    /** ${businessname} search params */
-    type ${BusinessName}SearchParams = CommonType.RecordNullable<
-      Pick<
-        Api.${ModuleName}.${BusinessName},
-        #foreach($column in $columns)
-            #if($column.query && $column.queryType != 'BETWEEN')
-        | '${column.javaField}'
-            #end
-        #end
-      > &
-        Api.Common.CommonSearchParams
-    >;
+        /** ${businessname} search params */
+        type ${BusinessName}SearchParams = CommonType.RecordNullable<
+            Pick<
+                Api.${ModuleName}.${BusinessName},
+                #foreach($column in $columns)
+                    #if($column.query && $column.queryType != 'BETWEEN')
+                        | '${column.javaField}'
+                    #end
+                #end
+            > &
+            Api.Common.CommonSearchParams
+        >;
 
-    /** ${businessname} operate params */
-    type ${BusinessName}OperateParams = CommonType.RecordNullable<
-      Pick<
-        Api.${ModuleName}.${BusinessName},
-        #foreach($column in $columns)
-            #if($column.insert || $column.edit)
-        | '${column.javaField}'
-            #end
-        #end
-      >
-    >;
+        /** ${businessname} operate params */
+        type ${BusinessName}OperateParams = CommonType.RecordNullable<
+            Pick<
+                Api.${ModuleName}.${BusinessName},
+                #foreach($column in $columns)
+                    #if($column.insert || $column.edit)
+                        | '${column.javaField}'
+                    #end
+                #end
+            >
+        >;
 
-    /** ${businessname} list */
-    type ${BusinessName}List = Api.Common.PaginatingQueryRecord<${BusinessName}>;
+        /** ${businessname} list */
+        type ${BusinessName}List = Api.Common.PaginatingQueryRecord<${BusinessName}>;
+    }
 }
