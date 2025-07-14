@@ -192,6 +192,10 @@ function closeModal() {
 }
 
 function handleConfirm() {
+  if (checkedRowKeys.value.length === 0) {
+    window.$message?.error('请选择用户');
+    return;
+  }
   // 获取选中行对应的用户对象（从所有页面数据中筛选）
   const selectedUsers = allPagesData.value.filter(item => checkedRowKeys.value.includes(item.userId.toString()));
   emit('confirm', checkedRowKeys.value, selectedUsers);

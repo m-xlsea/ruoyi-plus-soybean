@@ -2,6 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { fetchGetTask, fetchTaskOperate, fetchTerminateTask } from '@/service/api/workflow/task';
+import ReduceSignatureModal from './reduce-signature-modal.vue';
 
 defineOptions({
   name: 'FlowInterveneModal'
@@ -59,10 +60,6 @@ function createDefaultTerminateModel(): TerminateModel {
 }
 
 function handleTransferConfirm(ids: CommonType.IdType[]) {
-  if (ids.length === 0) {
-    window.$message?.error('请选择转办用户');
-    return;
-  }
   model.userId = ids[0];
   model.taskId = props.taskId;
   window.$dialog?.warning({
@@ -84,10 +81,6 @@ function handleTransferConfirm(ids: CommonType.IdType[]) {
 }
 
 function handleAddSignatureConfirm(ids: CommonType.IdType[]) {
-  if (ids.length === 0) {
-    window.$message?.error('请选择加签用户');
-    return;
-  }
   model.userIds = ids;
   window.$dialog?.warning({
     title: '提示',
@@ -111,7 +104,7 @@ function handleTerminate() {
   terminateModel.taskId = props.taskId;
   window.$dialog?.warning({
     title: '提示',
-    content: '是否确认中止?',
+    content: '是否确认终止?',
     positiveText: '确认',
     positiveButtonProps: {
       type: 'primary'
@@ -120,7 +113,7 @@ function handleTerminate() {
     onPositiveClick: async () => {
       const { error } = await fetchTerminateTask(terminateModel);
       if (error) return;
-      window.$message?.success('中止成功');
+      window.$message?.success('终止成功');
       visible.value = false;
       emit('refresh');
     }
@@ -189,7 +182,7 @@ watch(visible, () => {
         <NButton v-if="isWaiting && isTicketOrSignInstance" type="primary" @click="openReduceSignatureModal">
           减签
         </NButton>
-        <NButton v-if="isWaiting" type="error" @click="handleTerminate">中止</NButton>
+        <NButton v-if="isWaiting" type="error" @click="handleTerminate">终止</NButton>
       </NSpace>
     </template>
     <!-- 转办用户选择器 -->
@@ -202,7 +195,7 @@ watch(visible, () => {
       @confirm="handleAddSignatureConfirm"
     />
     <!-- 减签用户 -->
-    <ReduceSignatureDrawer
+    <ReduceSignatureModal
       v-model:visible="reduceSignatureVisible"
       :task="taskInfo!"
       @reduce-submit="handleReduceSubmit"

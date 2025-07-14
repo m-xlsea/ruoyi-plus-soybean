@@ -461,7 +461,7 @@ declare namespace Api {
     }>;
 
     /** 工作流节点 */
-    type FlowNode = Common.CommonRecord<{
+    type FlowNode = Common.CommonTenantRecord<{
       /** 节点ID */
       id: CommonType.IdType;
       /** 删除标志 */
@@ -502,5 +502,16 @@ declare namespace Api {
 
     /** 工作流节点列表 */
     type FlowNodeList = FlowNode[];
+
+    /** 驳回操作参数 */
+    type BackOperateParams = CommonType.RecordNullable<{
+      taskId: CommonType.IdType;
+      fileId: CommonType.IdType;
+      messageType: string[];
+      nodeCode: string;
+      message: string;
+      notice: string;
+      variables: { [key: string]: any };
+    }>;
   }
 }

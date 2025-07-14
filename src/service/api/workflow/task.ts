@@ -28,7 +28,7 @@ export function fetchGetkNextNode(data: Api.Workflow.TaskNextNodeSearchParams) {
 
 /** 完成任务 */
 export function fetchCompleteTask(data: Api.Workflow.CompleteTaskOperateParams) {
-  return request<Api.Workflow.Task>({
+  return request<boolean>({
     url: '/workflow/task/completeTask',
     method: 'post',
     data
@@ -55,7 +55,7 @@ export function fetchGetAllFinishedTask(data: Api.Workflow.TaskSearchParams) {
 
 /** 任务操作 */
 export function fetchTaskOperate(data: Api.Workflow.TaskOperateParams, operateType: Api.Workflow.TaskOperateType) {
-  return request<Api.Workflow.Task>({
+  return request<boolean>({
     url: `/workflow/task/taskOperation/${operateType}`,
     method: 'post',
     data
@@ -85,5 +85,20 @@ export function fetchGetTaskWaitList(data: Api.Workflow.TaskSearchParams) {
     url: '/workflow/task/pageByTaskWait',
     method: 'get',
     params: data
+  });
+}
+/** 获取可驳回节点 */
+export function fetchGetBackNode(definitionId: CommonType.IdType, nodeCode: string) {
+  return request<Api.Workflow.FlowNodeList>({
+    url: `/workflow/task/getBackTaskNode/${definitionId}/${nodeCode}`,
+    method: 'get'
+  });
+}
+/** 驳回任务 */
+export function fetchBackTask(data: Api.Workflow.BackOperateParams) {
+  return request<boolean>({
+    url: '/workflow/task/backProcess',
+    method: 'post',
+    data
   });
 }

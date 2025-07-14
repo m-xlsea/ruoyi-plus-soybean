@@ -72,8 +72,8 @@ const columns = ref<NaiveUI.TableColumn<UserTaskModel>[]>([
           text
           type="error"
           icon="material-symbols:delete-outline"
-          tooltipContent={$t('common.delete')}
-          popconfirmContent={$t('common.confirmDelete')}
+          tooltipContent={'减签'}
+          popconfirmContent={'是否确认减签?'}
           onPositiveClick={() => handleReduceSignature([row.userId])}
         />
       );
@@ -128,7 +128,7 @@ watch(visible, async () => {
           <template #icon>
             <icon-material-symbols:delete-outline class="text-icon" />
           </template>
-          删除
+          批量减签
         </NButton>
       </NSpace>
       <NDataTable

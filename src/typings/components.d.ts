@@ -10,6 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppProvider: typeof import('./../components/common/app-provider.vue')['default']
     ApprovalInfoPanel: typeof import('./../components/custom/workflow/approval-info-panel.vue')['default']
+    BackTaskModal: typeof import('./../components/custom/workflow/back-task-modal.vue')['default']
     BetterScroll: typeof import('./../components/custom/better-scroll.vue')['default']
     BooleanTag: typeof import('./../components/custom/boolean-tag.vue')['default']
     ButtonIcon: typeof import('./../components/custom/button-icon.vue')['default']
@@ -145,7 +146,7 @@ declare module 'vue' {
     OssUpload: typeof import('./../components/custom/oss-upload.vue')['default']
     PinToggler: typeof import('./../components/common/pin-toggler.vue')['default']
     PostSelect: typeof import('./../components/custom/post-select.vue')['default']
-    ReduceSignatureDrawer: typeof import('./../components/custom/workflow/reduce-signature-drawer.vue')['default']
+    ReduceSignatureModal: typeof import('./../components/custom/workflow/reduce-signature-modal.vue')['default']
     ReloadButton: typeof import('./../components/common/reload-button.vue')['default']
     RoleSelect: typeof import('./../components/custom/role-select.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

@@ -1,19 +1,27 @@
 <script setup lang="ts">
-import { reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { messageTypeOptions } from '@/constants/workflow';
-import { fetchCompleteTask, fetchGetTask, fetchGetkNextNode } from '@/service/api/workflow';
+import {
+  fetchCompleteTask,
+  fetchGetTask,
+  fetchGetkNextNode,
+  fetchTaskOperate,
+  fetchTerminateTask
+} from '@/service/api/workflow';
 import FileUpload from '@/components/custom/file-upload.vue';
+import ReduceSignatureModal from './reduce-signature-modal.vue';
+import BackTaskModal from './back-task-modal.vue';
 
 defineOptions({
   name: 'FlowTaskApprovalModal'
 });
 
 interface Props {
-  /** the task id */
+  /** 任务id */
   taskId: CommonType.IdType;
-  /** the task variables */
+  /** 任务变量 */
   taskVariables: { [key: string]: any };
 }
 
@@ -32,6 +40,11 @@ const { loading: baseFormLoading, startLoading: startBaseFormLoading, endLoading
 const { loading: btnLoading, startLoading: startBtnLoading, endLoading: endBtnLoading } = useLoading();
 const { bool: copyVisible, setTrue: openCopyModal } = useBoolean();
 const { bool: assigneeVisible, setTrue: openAssigneeModal } = useBoolean();
+const { bool: delegateVisible, setTrue: openDelegateModal, setFalse: closeDelegateModal } = useBoolean();
+const { bool: transferVisible, setTrue: openTransferModal, setFalse: closeTransferModal } = useBoolean();
+const { bool: addSignatureVisible, setTrue: openAddSignatureModal, setFalse: closeAddSignatureModal } = useBoolean();
+const { bool: reduceSignatureVisible, setTrue: openReduceSignatureModal } = useBoolean();
+const { bool: backVisible, setTrue: openBackModal } = useBoolean();
 const title = defineModel<string>('title', {
   default: '流程发起'
 });
@@ -41,6 +54,8 @@ const accept = ref<string>('.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.pdf,.jpg,.jpe
 type Model = Api.Workflow.CompleteTaskOperateParams;
 
 const task = ref<Api.Workflow.Task>();
+
+const isWaiting = computed(() => task.value?.flowStatus === 'waiting');
 
 const model: Model = reactive(createDefaultModel());
 
@@ -119,19 +134,18 @@ async function getTask() {
   }
   task.value = data;
   task.value.buttonList.forEach(item => {
-    buttonPerm[item.code as keyof ButtonPerm] = !item.show;
+    buttonPerm[item.code as keyof ButtonPerm] = item.show!;
   });
   endBtnLoading();
   const { error: nextNodeError, data: nextNodeData } = await fetchGetkNextNode({
     taskId: props.taskId,
     taskVariables: props.taskVariables
   });
+  endBaseFormLoading();
   if (nextNodeError) {
-    endBaseFormLoading();
     return;
   }
   nestNodeList.value = nextNodeData;
-  endBaseFormLoading();
 }
 
 async function handleSubmit() {
@@ -231,6 +245,118 @@ function handleAssigneeTagClose(code: string, index?: number) {
   }
 }
 
+interface TaskOperationOptions {
+  userIds: CommonType.IdType[];
+  operation: 'delegateTask' | 'transferTask' | 'addSignature';
+  confirmText: string;
+  successMessage: string;
+  closeModal: () => void;
+}
+
+function handleTaskOperationConfirm(options: TaskOperationOptions) {
+  const { userIds, operation, confirmText, successMessage, closeModal } = options;
+
+  const taskModel = {
+    taskId: props.taskId,
+    userId: userIds[0],
+    message: model.message
+  };
+
+  window.$dialog?.warning({
+    title: '提示',
+    content: `是否确认${confirmText}?`,
+    positiveText: `确认${confirmText}`,
+    positiveButtonProps: {
+      type: 'primary'
+    },
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      startBtnLoading();
+      startBaseFormLoading();
+      const { error } = await fetchTaskOperate(taskModel, operation);
+      endBtnLoading();
+      endBaseFormLoading();
+      if (error) return;
+      window.$message?.success(successMessage);
+      closeModal();
+      visible.value = false;
+      emit('finished');
+    }
+  });
+}
+
+// 委托
+function handleDelegateConfirm(userIds: CommonType.IdType[]) {
+  handleTaskOperationConfirm({
+    userIds,
+    operation: 'delegateTask',
+    confirmText: '委托',
+    successMessage: '委托成功',
+    closeModal: closeDelegateModal
+  });
+}
+
+// 转办
+function handleTransferConfirm(userIds: CommonType.IdType[]) {
+  handleTaskOperationConfirm({
+    userIds,
+    operation: 'transferTask',
+    confirmText: '转办',
+    successMessage: '转办成功',
+    closeModal: closeTransferModal
+  });
+}
+
+// 加签
+function handleAddSignatureConfirm(userIds: CommonType.IdType[]) {
+  handleTaskOperationConfirm({
+    userIds,
+    operation: 'addSignature',
+    confirmText: '加签',
+    successMessage: '加签成功',
+    closeModal: closeAddSignatureModal
+  });
+}
+
+// 减签
+function handleReduceSubmit() {
+  visible.value = false;
+  emit('finished');
+}
+
+// 终止
+function handleTerminate() {
+  const terminateModel = {
+    taskId: props.taskId,
+    comment: model.message
+  };
+  window.$dialog?.warning({
+    title: '提示',
+    content: '是否确认终止?',
+    positiveText: '确认',
+    positiveButtonProps: {
+      type: 'primary'
+    },
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      startBtnLoading();
+      startBaseFormLoading();
+      const { error } = await fetchTerminateTask(terminateModel);
+      endBtnLoading();
+      endBaseFormLoading();
+      if (error) return;
+      window.$message?.success('终止成功');
+      visible.value = false;
+      emit('finished');
+    }
+  });
+}
+
+function handleBackSubmit() {
+  visible.value = false;
+  emit('finished');
+}
+
 watch(visible, () => {
   if (visible.value) {
     initDefault();
@@ -291,22 +417,80 @@ watch(visible, () => {
             </div>
           </NSpace>
         </NFormItem>
-        <NFormItem v-if="task?.flowStatus === 'waiting'" label="审批意见" path="message">
+        <NFormItem v-if="isWaiting" label="审批意见" path="message">
           <NInput v-model:value="model.message" type="textarea" />
         </NFormItem>
       </NForm>
-      <div class="flex justify-end gap-12px">
-        <NButton @click="visible = false">取消</NButton>
-        <NButton :loading="btnLoading" type="primary" @click="handleSubmit">提交</NButton>
-      </div>
     </NSpin>
+    <template #footer>
+      <NSpace justify="end" :size="16">
+        <NButton @click="visible = false">{{ $t('common.cancel') }}</NButton>
+        <!-- 委托 -->
+        <NButton v-if="isWaiting && buttonPerm.trust" :loading="btnLoading" type="warning" @click="openDelegateModal">
+          委托
+        </NButton>
+        <!-- 转办 -->
+        <NButton
+          v-if="isWaiting && buttonPerm.transfer"
+          :loading="btnLoading"
+          type="warning"
+          @click="openTransferModal"
+        >
+          转办
+        </NButton>
+        <!-- 加签 -->
+        <NButton
+          v-if="isWaiting && buttonPerm.addSign && Number(task?.nodeRatio) > 0"
+          :loading="btnLoading"
+          type="warning"
+          @click="openAddSignatureModal"
+        >
+          加签
+        </NButton>
+        <!-- 减签 -->
+        <NButton
+          v-if="isWaiting && buttonPerm.subSign && Number(task?.nodeRatio) > 0"
+          :loading="btnLoading"
+          type="warning"
+          @click="openReduceSignatureModal"
+        >
+          减签
+        </NButton>
+        <!-- 终止 -->
+        <NButton v-if="isWaiting && buttonPerm.termination" :loading="btnLoading" type="error" @click="handleTerminate">
+          终止
+        </NButton>
+        <!-- 驳回 -->
+        <NButton v-if="isWaiting && buttonPerm.back" :loading="btnLoading" type="error" @click="openBackModal">
+          驳回
+        </NButton>
+        <NButton :loading="btnLoading" type="primary" @click="handleSubmit">提交</NButton>
+      </NSpace>
+    </template>
+    <!-- 抄送人员选择 -->
+    <UserSelectModal
+      v-model:visible="copyVisible"
+      :row-keys="selectCopyUserIds"
+      multiple
+      @confirm="handleCopyConfirm"
+    />
+    <!-- 下一步审批人员选择 -->
+    <UserSelectModal
+      v-model:visible="assigneeVisible"
+      :row-keys="selectAssigneeIds"
+      :search-user-ids="assigneeSearchUserIds"
+      multiple
+      @confirm="handleAssigneeConfirm"
+    />
+    <!-- 转办 -->
+    <UserSelectModal v-model:visible="transferVisible" @confirm="handleTransferConfirm" />
+    <!-- 委托 -->
+    <UserSelectModal v-model:visible="delegateVisible" @confirm="handleDelegateConfirm" />
+    <!-- 加签 -->
+    <UserSelectModal v-model:visible="addSignatureVisible" @confirm="handleAddSignatureConfirm" />
+    <!-- 减签 -->
+    <ReduceSignatureModal v-model:visible="reduceSignatureVisible" :task="task!" @reduce-submit="handleReduceSubmit" />
+    <!-- 驳回 -->
+    <BackTaskModal v-model:visible="backVisible" :task="task!" @submit="handleBackSubmit" />
   </NModal>
-  <UserSelectModal v-model:visible="copyVisible" :row-keys="selectCopyUserIds" multiple @confirm="handleCopyConfirm" />
-  <UserSelectModal
-    v-model:visible="assigneeVisible"
-    :row-keys="selectAssigneeIds"
-    :search-user-ids="assigneeSearchUserIds"
-    multiple
-    @confirm="handleAssigneeConfirm"
-  />
 </template>
