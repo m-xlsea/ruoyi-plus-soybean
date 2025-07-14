@@ -18,7 +18,7 @@ import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import InstanceSearch from './modules/process-instance-search.vue';
-import InstanceVariableDrawer from './modules/process-instance-variable-drawer.vue';
+import InstanceVariableModal from './modules/process-instance-variable-modal.vue';
 
 const dynamicComponent = shallowRef();
 
@@ -406,7 +406,7 @@ async function handlePreview(row: Api.Workflow.Instance) {
           class="sm:h-full"
         />
         <component :is="dynamicComponent" :visible="previewVisible" operate-type="detail" :business-id="businessId" />
-        <InstanceVariableDrawer v-model:visible="variableVisible" :row-data="editingData" />
+        <InstanceVariableModal v-model:visible="variableVisible" :row-data="editingData" />
       </NCard>
     </div>
   </TableSiderLayout>

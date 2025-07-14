@@ -6,7 +6,7 @@ import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 
 defineOptions({
-  name: 'ReduceSignatureDrawer'
+  name: 'ReduceSignatureModal'
 });
 
 interface Props {

@@ -2,7 +2,7 @@
 import JsonPreview from '@/components/custom/json-preview.vue';
 
 defineOptions({
-  name: 'InstanceVariableDrawer'
+  name: 'InstanceVariableModal'
 });
 
 interface Props {
