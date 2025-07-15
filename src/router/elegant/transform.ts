@@ -208,6 +208,8 @@ const routeMap: RouteMap = {
   "workflow_task": "/workflow/task",
   "workflow_task_all-task-waiting": "/workflow/task/all-task-waiting",
   "workflow_task_my-document": "/workflow/task/my-document",
+  "workflow_task_task-copy": "/workflow/task/task-copy",
+  "workflow_task_task-finish": "/workflow/task/task-finish",
   "workflow_task_task-waiting": "/workflow/task/task-waiting"
 };
 

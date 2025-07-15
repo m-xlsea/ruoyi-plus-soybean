@@ -1,10 +1,9 @@
 <script setup lang="tsx">
 import { computed, ref, shallowRef } from 'vue';
-import { NButton, NDivider, NEmpty, NInput, NTag } from 'naive-ui';
+import { NButton, NEmpty, NInput, NTag } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
-import { workflowActivityStatusRecord } from '@/constants/workflow';
-import { fetchBatchDeleteInstance, fetchCancelProcessApply, fetchGetMyDocument } from '@/service/api/workflow/instance';
 import { fetchGetCategoryTree } from '@/service/api/workflow/category';
+import { fetchGetFinishedTask } from '@/service/api/workflow/task';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
@@ -12,13 +11,14 @@ import { loadDynamicComponent } from '@/utils/common';
 import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import { $t } from '@/locales';
-import MyDocumentSearch from './modules/my-document-search.vue';
+import TaskFinishSearch from './modules/task-finish-search.vue';
 
 defineOptions({
-  name: 'MyDocumentList'
+  name: 'TaskFinishList'
 });
 
 useDict('wf_business_status');
+useDict('wf_task_status');
 const appStore = useAppStore();
 const { bool: viewVisible, setTrue: showViewDrawer } = useBoolean();
 const dynamicComponent = shallowRef();
@@ -34,7 +34,7 @@ const {
   searchParams,
   resetSearchParams
 } = useTable({
-  apiFn: fetchGetMyDocument,
+  apiFn: fetchGetFinishedTask,
   apiParams: {
     pageNum: 1,
     pageSize: 10,
@@ -76,10 +76,14 @@ const {
       title: '版本号',
       key: 'version',
       align: 'center',
-      width: 80,
-      render: row => {
-        return <NTag type="info">v{row.version}.0</NTag>;
-      }
+      width: 100,
+      render: row => <NTag type="info">v{row.version}.0</NTag>
+    },
+    {
+      title: '任务名称',
+      key: 'nodeName',
+      align: 'center',
+      width: 100
     },
     {
       title: '流程状态',
@@ -91,87 +95,45 @@ const {
       }
     },
     {
-      title: '状态',
-      key: 'activityStatus',
+      key: 'flowTaskStatus',
+      title: '任务状态',
       align: 'center',
       width: 80,
-      render(row) {
-        return (
-          <NTag type={row.activityStatus === 0 ? 'warning' : 'success'}>
-            {workflowActivityStatusRecord[row.activityStatus]}
-          </NTag>
-        );
-      }
+      render: row => <DictTag size="small" value={row.flowTaskStatus} dict-code="wf_task_status" />
     },
     {
-      title: '启动时间',
-      key: 'createTime',
+      title: '申请人',
+      key: 'createByName',
       align: 'center',
       width: 100
+    },
+    {
+      title: '办理人',
+      key: 'approveName',
+      align: 'center',
+      width: 100
+    },
+    {
+      key: 'createTime',
+      title: '创建时间',
+      align: 'center',
+      width: 120
     },
     {
       title: '操作',
       key: 'operate',
       align: 'center',
       fixed: 'right',
-      width: 100,
+      width: 50,
       render(row) {
-        const buttons = [];
-
-        buttons.push(
+        return (
           <ButtonIcon
             text
-            type="info"
+            type="primary"
             icon="material-symbols:visibility-outline"
             tooltipContent="查看"
-            onClick={() => handleOpen(row, 'detail')}
+            onClick={() => handleView(row)}
           />
-        );
-        const showEditAndDelete =
-          row.flowStatus === 'draft' || row.flowStatus === 'cancel' || row.flowStatus === 'back';
-        if (showEditAndDelete) {
-          buttons.push(
-            <ButtonIcon
-              text
-              type="info"
-              icon="material-symbols:drive-file-rename-outline-outline"
-              tooltipContent="编辑"
-              onClick={() => handleOpen(row, 'edit')}
-            />
-          );
-        }
-
-        if (showEditAndDelete) {
-          buttons.push(
-            <ButtonIcon
-              text
-              type="error"
-              icon="material-symbols:delete-outline"
-              tooltipContent={$t('common.delete')}
-              popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row)}
-            />
-          );
-        }
-
-        if (row.flowStatus === 'waiting') {
-          buttons.push(
-            <ButtonIcon
-              text
-              type="error"
-              showPopconfirmIcon={false}
-              icon="material-symbols:cancel-outline-rounded"
-              tooltipContent="撤销"
-              popconfirmContent="确认撤销此流程申请？"
-              onPositiveClick={() => handleCancelProcessApply(row.businessId)}
-            />
-          );
-        }
-
-        return (
-          <div class="flex-center gap-8px">
-            {buttons.map((btn, index) => (index > 0 ? [<NDivider vertical />, btn] : btn))}
-          </div>
         );
       }
     }
@@ -216,30 +178,16 @@ function handleResetSearch() {
 }
 const modules = import.meta.glob('@/components/custom/workflow/**/*.vue');
 const businessId = ref<CommonType.IdType>();
-const operateType = ref<CommonType.WorkflowTableOperateType>();
+const taskId = ref<CommonType.IdType>();
 
-async function handleOpen(row: Api.Workflow.Instance, type: 'edit' | 'detail') {
-  operateType.value = type;
+async function handleView(row: Api.Workflow.HisTask) {
   businessId.value = row.businessId;
+  taskId.value = row.id;
   const formPath = row.formPath;
   if (formPath) {
     dynamicComponent.value = await loadDynamicComponent(modules, formPath);
     showViewDrawer();
   }
-}
-
-async function handleDelete(row: Api.Workflow.Instance) {
-  const { error } = await fetchBatchDeleteInstance([row.id]);
-  if (error) return;
-  window.$message?.success('删除成功');
-  getData();
-}
-
-async function handleCancelProcessApply(id: CommonType.IdType) {
-  const { error } = await fetchCancelProcessApply({ businessId: id, message: '申请人撤销流程！' });
-  if (error) return;
-  window.$message?.success('撤销成功');
-  getData();
 }
 </script>
 
@@ -277,8 +225,8 @@ async function handleCancelProcessApply(id: CommonType.IdType) {
       </NSpin>
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
-      <MyDocumentSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
-      <NCard title="我发起的" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
+      <TaskFinishSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
+      <NCard title="我的已办" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header-extra>
           <TableHeaderOperation
             v-model:columns="columnChecks"
@@ -306,8 +254,9 @@ async function handleCancelProcessApply(id: CommonType.IdType) {
         <component
           :is="dynamicComponent"
           :visible="viewVisible"
-          :operate-type="operateType"
+          operate-type="detail"
           :business-id="businessId"
+          :task-id="taskId"
           @submitted="getData"
         />
       </NCard>

@@ -423,7 +423,7 @@ declare namespace Api {
 
     /** 任务搜索参数 */
     type TaskSearchParams = CommonType.RecordNullable<
-      Pick<Task, 'flowName' | 'flowCode' | 'businessId' | 'category' | 'nodeName'> &
+      Pick<Task, 'flowName' | 'flowCode' | 'businessId' | 'category' | 'nodeName' | 'instanceId' | 'permissionList'> &
         Api.Common.CommonSearchParams & {
           createByIds: CommonType.IdType[];
         }

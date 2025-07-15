@@ -121,7 +121,7 @@ const {
   ]
 });
 
-const { checkedRowKeys, editingData: _editingData, handleEdit: _handleEdit } = useTableOperate(data, getData);
+const { checkedRowKeys } = useTableOperate(data, getData);
 
 const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
 const categoryPattern = ref<string>();

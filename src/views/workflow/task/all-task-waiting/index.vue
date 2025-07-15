@@ -164,7 +164,7 @@ const {
   }
 });
 
-const { checkedRowKeys, editingData: _editingData, handleEdit: _handleEdit } = useTableOperate(data, getData);
+const { checkedRowKeys } = useTableOperate(data, getData);
 
 watch(waitingStatus, async () => {
   const newApiFn = waitingStatus.value ? fetchGetAllWaitingTask : fetchGetAllFinishedTask;

@@ -413,6 +413,24 @@ export const generatedRoutes: GeneratedRoute[] = [
             }
           },
           {
+            name: 'workflow_task_task-copy',
+            path: '/workflow/task/task-copy',
+            component: 'view.workflow_task_task-copy',
+            meta: {
+              title: 'workflow_task_task-copy',
+              i18nKey: 'route.workflow_task_task-copy'
+            }
+          },
+          {
+            name: 'workflow_task_task-finish',
+            path: '/workflow/task/task-finish',
+            component: 'view.workflow_task_task-finish',
+            meta: {
+              title: 'workflow_task_task-finish',
+              i18nKey: 'route.workflow_task_task-finish'
+            }
+          },
+          {
             name: 'workflow_task_task-waiting',
             path: '/workflow/task/task-waiting',
             component: 'view.workflow_task_task-waiting',

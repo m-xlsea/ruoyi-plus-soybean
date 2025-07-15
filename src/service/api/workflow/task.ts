@@ -87,6 +87,7 @@ export function fetchGetTaskWaitList(data: Api.Workflow.TaskSearchParams) {
     params: data
   });
 }
+
 /** 获取可驳回节点 */
 export function fetchGetBackNode(definitionId: CommonType.IdType, nodeCode: string) {
   return request<Api.Workflow.FlowNodeList>({
@@ -94,11 +95,30 @@ export function fetchGetBackNode(definitionId: CommonType.IdType, nodeCode: stri
     method: 'get'
   });
 }
+
 /** 驳回任务 */
 export function fetchBackTask(data: Api.Workflow.BackOperateParams) {
   return request<boolean>({
     url: '/workflow/task/backProcess',
     method: 'post',
     data
+  });
+}
+
+/** 获取我的已办任务 */
+export function fetchGetFinishedTask(data: Api.Workflow.TaskSearchParams) {
+  return request<Api.Workflow.HisTaskList>({
+    url: '/workflow/task/pageByTaskFinish',
+    method: 'get',
+    params: data
+  });
+}
+
+/** 获取我的抄送任务 */
+export function fetchGetCopyTask(data: Api.Workflow.TaskSearchParams) {
+  return request<Api.Workflow.TaskList>({
+    url: '/workflow/task/pageByTaskCopy',
+    method: 'get',
+    params: data
   });
 }

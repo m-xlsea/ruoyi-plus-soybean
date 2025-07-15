@@ -48,7 +48,7 @@ UPDATE sys_menu SET component = 'workflow/task/myDocument/index', icon = 'hugeic
 UPDATE sys_menu SET component = 'Layout', icon = 'lucide:monitor-cog' WHERE menu_id = 11630;
 UPDATE sys_menu SET component = 'workflow/task/allTaskWaiting/index', icon = 'ri:todo-line' WHERE menu_id = 11631;
 UPDATE sys_menu SET component = 'workflow/task/taskFinish/index', icon = 'hugeicons:task-done-01' WHERE menu_id = 11632;
-UPDATE sys_menu SET component = 'workflow/task/taskCopyList/index', icon = 'mynaui:copy' WHERE menu_id = 11633;
+UPDATE sys_menu SET path = 'taskCopy', component = 'workflow/task/taskCopy/index', icon = 'mynaui:copy' WHERE menu_id = 11633;
 UPDATE sys_menu SET icon = 'pepicons-pencil:leave' WHERE menu_id = 11638;
 UPDATE sys_menu SET path = 'design', component = 'workflow/design/index' WHERE menu_id = 11700;
 
