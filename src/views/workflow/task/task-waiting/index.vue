@@ -165,10 +165,9 @@ async function handleApproval(row: Api.Workflow.Task) {
   businessId.value = row.businessId;
   taskId.value = row.id;
   const formPath = row.formPath;
-  if (formPath) {
-    dynamicComponent.value = await loadDynamicComponent(modules, formPath);
-    showViewDrawer();
-  }
+  if (!formPath) return;
+  dynamicComponent.value = await loadDynamicComponent(modules, formPath);
+  showViewDrawer();
 }
 </script>
 

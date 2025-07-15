@@ -169,7 +169,7 @@ const {
         }
 
         return (
-          <div class="flex-center gap-8px">
+          <div class="flex-center gap-1px">
             {buttons.map((btn, index) => (index > 0 ? [<NDivider vertical />, btn] : btn))}
           </div>
         );
@@ -222,10 +222,9 @@ async function handleOpen(row: Api.Workflow.Instance, type: 'edit' | 'detail') {
   operateType.value = type;
   businessId.value = row.businessId;
   const formPath = row.formPath;
-  if (formPath) {
-    dynamicComponent.value = await loadDynamicComponent(modules, formPath);
-    showViewDrawer();
-  }
+  if (!formPath) return;
+  dynamicComponent.value = await loadDynamicComponent(modules, formPath);
+  showViewDrawer();
 }
 
 async function handleDelete(row: Api.Workflow.Instance) {

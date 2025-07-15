@@ -323,10 +323,9 @@ const businessId = ref<CommonType.IdType>();
 async function handlePreview(row: Api.Workflow.Instance) {
   businessId.value = row.businessId;
   const formPath = row.formPath;
-  if (formPath) {
-    dynamicComponent.value = await loadDynamicComponent(modules, formPath);
-    showPreviewDrawer();
-  }
+  if (!formPath) return;
+  dynamicComponent.value = await loadDynamicComponent(modules, formPath);
+  showPreviewDrawer();
 }
 </script>
 

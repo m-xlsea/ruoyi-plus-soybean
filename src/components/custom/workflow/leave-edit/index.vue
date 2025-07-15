@@ -281,7 +281,7 @@ watch(visible, initializeData, { immediate: true });
         </NForm>
       </div>
       <div v-else>
-        <NDescriptions bordered :column="2" label-placement="left">
+        <NDescriptions size="small" bordered :column="2" label-placement="left">
           <NDescriptionsItem label="流程类型">
             {{ flowCodeTypeRecord[modelDetail.flowCode] }}
           </NDescriptionsItem>

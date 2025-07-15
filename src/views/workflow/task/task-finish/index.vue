@@ -184,10 +184,9 @@ async function handleView(row: Api.Workflow.HisTask) {
   businessId.value = row.businessId;
   taskId.value = row.id;
   const formPath = row.formPath;
-  if (formPath) {
-    dynamicComponent.value = await loadDynamicComponent(modules, formPath);
-    showViewDrawer();
-  }
+  if (!formPath) return;
+  dynamicComponent.value = await loadDynamicComponent(modules, formPath);
+  showViewDrawer();
 }
 </script>
 

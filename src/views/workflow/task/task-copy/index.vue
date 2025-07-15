@@ -171,10 +171,9 @@ async function handleView(row: Api.Workflow.Task) {
   businessId.value = row.businessId;
   taskId.value = row.id;
   const formPath = row.formPath;
-  if (formPath) {
-    dynamicComponent.value = await loadDynamicComponent(modules, formPath);
-    showViewDrawer();
-  }
+  if (!formPath) return;
+  dynamicComponent.value = await loadDynamicComponent(modules, formPath);
+  showViewDrawer();
 }
 </script>
 
@@ -240,6 +239,7 @@ async function handleView(row: Api.Workflow.Task) {
         />
         <component
           :is="dynamicComponent"
+          v-if="dynamicComponent"
           :visible="viewVisible"
           operate-type="detail"
           :business-id="businessId"
