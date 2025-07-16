@@ -214,10 +214,11 @@ const businessId = ref<CommonType.IdType>();
 async function handleView(row: Api.Workflow.TaskOrHisTask) {
   businessId.value = row.businessId;
   const formPath = row.formPath;
-  if (formPath) {
-    dynamicComponent.value = await loadDynamicComponent(modules, formPath);
-    showViewDrawer();
+  if (!formPath) {
+    return;
   }
+  dynamicComponent.value = await loadDynamicComponent(modules, formPath);
+  showViewDrawer();
 }
 
 const taskId = ref<CommonType.IdType>('');
