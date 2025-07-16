@@ -79,28 +79,24 @@ export function humpToLine(str: string, line: string = '-') {
 }
 
 /** 动态加载组件 */
-export async function loadDynamicComponent<T extends object = any>(
+export async function loadDynamicComponent(
   modules: Record<string, () => Promise<any>>,
   formPath: string,
-  options?: {
-    delay?: number;
-    timeout?: number;
-  }
+  { delay = 2000, timeout = 3000 } = {}
 ) {
-  const expectedPathSuffix = `${humpToLine(formPath)}.vue`;
+  const suffix = `${humpToLine(formPath)}.vue`;
+  const matched = Object.entries(modules).find(([path]) => path.endsWith(suffix));
 
-  const matchedKey = Object.keys(modules).find(path => path.endsWith(expectedPathSuffix));
-
-  if (!matchedKey) {
-    window.$message?.error('组件不存在');
-    throw new Error(`组件不存在: ${expectedPathSuffix}`);
+  if (!matched) {
+    window.$message?.error(`组件不存在: ${suffix}`);
+    throw new Error(`组件不存在: ${suffix}`);
   }
 
   return markRaw(
     defineAsyncComponent({
-      loader: async () => (await modules[matchedKey]()) as T,
-      delay: options?.delay ?? 200,
-      timeout: options?.timeout ?? 3000
+      loader: matched[1],
+      delay,
+      timeout
     })
   );
 }
