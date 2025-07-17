@@ -1,5 +1,3 @@
-# Changelog
-
 # 更新日志
 
 ## [v1.1.1](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.1.0...v1.1.1) (2025-07-11)
