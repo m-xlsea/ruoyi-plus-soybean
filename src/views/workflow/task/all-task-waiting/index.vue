@@ -208,7 +208,7 @@ function handleResetSearch() {
   resetSearchParams();
   selectedKeys.value = [];
 }
-const modules = import.meta.glob('@/components/custom/workflow/**/*.vue');
+const modules = import.meta.glob('@/components/workflow/**/*.vue');
 const businessId = ref<CommonType.IdType>();
 
 async function handleView(row: Api.Workflow.TaskOrHisTask) {

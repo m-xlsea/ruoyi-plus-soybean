@@ -316,7 +316,7 @@ async function handleShowVariable(id: CommonType.IdType) {
   showVariableDrawer();
 }
 
-const modules = import.meta.glob('@/components/custom/workflow/**/*.vue');
+const modules = import.meta.glob('@/components/workflow/form/**/*.vue');
 const businessId = ref<CommonType.IdType>();
 
 /** 流程预览，动态加载组件 */

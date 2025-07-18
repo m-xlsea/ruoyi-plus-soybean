@@ -7,9 +7,9 @@ import { fetchCreateLeave, fetchGetLeaveDetail, fetchStartWorkflow, fetchUpdateL
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
-import ApprovalInfoPanel from '@/components/custom/workflow/approval-info-panel.vue';
-import FlowTaskApprovalModal from '@/components/custom/workflow/flow-task-approval-modal.vue';
-import FlowDrawer from '@/components/custom/workflow/flow-drawer.vue';
+import ApprovalInfoPanel from '@/components/workflow/approval-info-panel.vue';
+import FlowTaskApprovalModal from '@/components/workflow/flow-task-approval-modal.vue';
+import FlowDrawer from '@/components/workflow/flow-drawer.vue';
 
 defineOptions({
   name: 'LeaveEdit'

@@ -85,7 +85,8 @@ export async function loadDynamicComponent(
   { delay = 2000, timeout = 3000 } = {}
 ) {
   const suffix = `${humpToLine(formPath)}.vue`;
-  const matched = Object.entries(modules).find(([path]) => path.endsWith(suffix));
+  const componentPath = suffix.replace('/workflow', '/workflow/form');
+  const matched = Object.entries(modules).find(([path]) => path.endsWith(componentPath));
 
   if (!matched) {
     window.$message?.error(`组件不存在: ${suffix}`);

@@ -35,20 +35,22 @@ UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = 'https://previe
 UPDATE `sys_menu` SET `path` = 'https://gitee.com/xlsea/ruoyi-plus-soybean', `component` = 'FrameView', `icon` = 'local-icon-gitee', `menu_name` = 'RuoYi-Plus-Soybean' WHERE `menu_id` = 4;
 
 -- plus-ui 需要禁用的页面
-UPDATE `sys_menu` SET `status` = '1' WHERE `menu_id` IN ( '116', '130', '131', '132', '11700', '11701' );
+UPDATE `sys_menu` SET `status` = '1' WHERE `menu_id` IN ( '116', '130', '131', '132' );
+-- 工作流要启用的页面
+UPDATE `sys_menu` SET `status` = '0' WHERE `menu_id` IN ( '11616', '11618', '11700', '11701' );
 
 -- 工作流菜单
-UPDATE sys_menu SET component = 'Layout', icon = 'hugeicons:flow-square' WHERE menu_id = 11616;
-UPDATE sys_menu SET component = 'Layout', icon = 'fluent:notepad-person-16-regular' WHERE menu_id = 11618;
-UPDATE sys_menu SET component = 'workflow/task/taskWaiting/index', icon = 'ri:todo-line' WHERE menu_id = 11619;
-UPDATE sys_menu SET icon = 'weui:setting-outlined' WHERE menu_id = 11620;
-UPDATE sys_menu SET icon = 'ri:instance-line' WHERE menu_id = 11621;
-UPDATE sys_menu SET icon = 'carbon:category' WHERE menu_id = 11622;
-UPDATE sys_menu SET component = 'workflow/task/myDocument/index', icon = 'hugeicons:start-up-02' WHERE menu_id = 11629;
-UPDATE sys_menu SET component = 'Layout', icon = 'lucide:monitor-cog' WHERE menu_id = 11630;
-UPDATE sys_menu SET component = 'workflow/task/allTaskWaiting/index', icon = 'ri:todo-line' WHERE menu_id = 11631;
-UPDATE sys_menu SET component = 'workflow/task/taskFinish/index', icon = 'hugeicons:task-done-01' WHERE menu_id = 11632;
-UPDATE sys_menu SET path = 'taskCopy', component = 'workflow/task/taskCopy/index', icon = 'mynaui:copy' WHERE menu_id = 11633;
-UPDATE sys_menu SET icon = 'pepicons-pencil:leave' WHERE menu_id = 11638;
-UPDATE sys_menu SET path = 'design', component = 'workflow/design/index' WHERE menu_id = 11700;
-
+UPDATE `sys_menu` SET `component` = 'Layout', `icon` = 'hugeicons:flow-square' WHERE `menu_id` = 11616;
+UPDATE `sys_menu` SET `component` = 'Layout', `icon` = 'fluent:notepad-person-16-regular' WHERE `menu_id` = 11618;
+UPDATE `sys_menu` SET `component` = 'workflow/task/taskWaiting/index', `icon` = 'ri:todo-line' WHERE `menu_id` = 11619;
+UPDATE `sys_menu` SET `icon` = 'weui:setting-outlined' WHERE `menu_id` = 11620;
+UPDATE `sys_menu` SET `icon` = 'ri:instance-line' WHERE `menu_id` = 11621;
+UPDATE `sys_menu` SET `icon` = 'carbon:category' WHERE `menu_id` = 11622;
+UPDATE `sys_menu` SET `component` = 'workflow/task/myDocument/index', `icon` = 'hugeicons:start-up-02' WHERE `menu_id` = 11629;
+UPDATE `sys_menu` SET `component` = 'Layout', `icon` = 'lucide:monitor-cog' WHERE `menu_id` = 11630;
+UPDATE `sys_menu` SET `component` = 'workflow/task/allTaskWaiting/index', `icon` = 'ri:todo-line' WHERE `menu_id` = 11631;
+UPDATE `sys_menu` SET `component` = 'workflow/task/taskFinish/index', `icon` = 'hugeicons:task-done-01' WHERE `menu_id` = 11632;
+UPDATE `sys_menu` SET `path` = 'taskCopy', `component` = 'workflow/task/taskCopy/index', `icon` = 'mynaui:copy' WHERE `menu_id` = 11633;
+UPDATE `sys_menu` SET `icon` = 'ic:twotone-time-to-leave' WHERE `menu_id` = 11638;
+UPDATE `sys_menu` SET `icon` = 'material-symbols:design-services-outline', `path` = 'design', `component` = 'workflow/design/index' WHERE `menu_id` = 11700;
+UPDATE `sys_menu` SET `icon` = 'ic:twotone-time-to-leave' WHERE `menu_id` = 11701;

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
+import type { SelectOption } from 'naive-ui';
 import { fetchCreateDefinition, fetchUpdateDefinition } from '@/service/api/workflow/definition';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
@@ -38,6 +39,14 @@ const title = computed(() => {
   return titles[props.operateType];
 });
 
+const formPaths = ref<SelectOption[]>([]);
+const modules = import.meta.glob('@/components/workflow/form/**/*.vue');
+Object.keys(modules).forEach(key => {
+  const label = key.replace('/src/components/workflow/form/', '');
+  const value = key.replace('/src/components/workflow/form', '/workflow');
+  formPaths.value.push({ label, value });
+});
+
 type Model = Api.Workflow.DefinitionOperateParams;
 
 const model: Model = reactive(createDefaultModel());
@@ -47,7 +56,7 @@ function createDefaultModel(): Model {
     flowCode: '',
     flowName: '',
     category: '',
-    formPath: ''
+    formPath: undefined
   };
 }
 
@@ -117,7 +126,13 @@ watch(visible, () => {
           <NInput v-model:value="model.flowName" placeholder="请输入流程名称" />
         </NFormItem>
         <NFormItem label="审批表单路径" path="formPath">
-          <NInput v-model:value="model.formPath" placeholder="请输入审批表单路径" />
+          <template #label>
+            <div class="flex-center">
+              <FormTip content="需要在 /src/components/workflow/form 路径下创建组件" />
+              <span class="pl-3px">审批表单路径</span>
+            </div>
+          </template>
+          <NSelect v-model:value="model.formPath" :options="formPaths" placeholder="请选择审批表单路径" />
         </NFormItem>
       </NForm>
       <template #footer>

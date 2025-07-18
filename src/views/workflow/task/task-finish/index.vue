@@ -176,7 +176,7 @@ function handleResetSearch() {
   resetSearchParams();
   selectedKeys.value = [];
 }
-const modules = import.meta.glob('@/components/custom/workflow/**/*.vue');
+const modules = import.meta.glob('@/components/workflow/**/*.vue');
 const businessId = ref<CommonType.IdType>();
 const taskId = ref<CommonType.IdType>();
 

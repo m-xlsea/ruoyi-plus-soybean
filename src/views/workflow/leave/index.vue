@@ -12,7 +12,7 @@ import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import LeaveEdit from '@/components/custom/workflow/leave-edit/index.vue';
+import LeaveEdit from '@/components/workflow/form/leave-edit/index.vue';
 import LeaveSearch from './modules/leave-search.vue';
 
 defineOptions({
