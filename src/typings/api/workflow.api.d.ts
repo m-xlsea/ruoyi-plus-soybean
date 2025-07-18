@@ -40,7 +40,7 @@ declare namespace Api {
 
     /** leave search params */
     type LeaveSearchParams = CommonType.RecordNullable<
-      Pick<Api.Workflow.Leave, 'leaveDays'> & Api.Common.CommonSearchParams
+      { startLeaveDays: number; endLeaveDays: number } & Api.Common.CommonSearchParams
     >;
 
     /** leave operate params */
