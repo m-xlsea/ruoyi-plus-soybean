@@ -30,10 +30,10 @@ async function search() {
       <NCollapseItem :title="$t('common.search')">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="100">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="6 s:12 m:6" label="流程定义编码" path="flowCode" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:12" label="流程定义编码" path="flowCode" class="pr-24px">
               <NInput v-model:value="model.flowCode" placeholder="请输入流程定义编码" />
             </NFormItemGi>
-            <NFormItemGi span="6" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:12" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

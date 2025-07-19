@@ -87,7 +87,7 @@ const {
     },
     {
       key: 'flowCode',
-      title: '标识 Key',
+      title: '流程定义编码',
       align: 'center',
       minWidth: 120
     },
