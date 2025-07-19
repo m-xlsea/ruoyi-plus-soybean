@@ -35,10 +35,14 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="请假天数" path="leaveDays" class="pr-24px">
-              <NInputNumber v-model:value="model.leaveDays" placeholder="请输入请假天数" />
+            <NFormItemGi span="24 s:12 m:16" label="请假天数" path="startLeaveDays" class="pr-24px">
+              <NSpace align="center" class="w-full">
+                <NInputNumber v-model:value="model.startLeaveDays" placeholder="开始天数" />
+                <span class="mx-2">至</span>
+                <NInputNumber v-model:value="model.endLeaveDays" placeholder="结束天数" />
+              </NSpace>
             </NFormItemGi>
-            <NFormItemGi span="24" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:8" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

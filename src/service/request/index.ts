@@ -77,36 +77,34 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
       // when the backend response code is in `modalLogoutCodes`, it means the user will be logged out by displaying a modal
       const modalLogoutCodes = import.meta.env.VITE_SERVICE_MODAL_LOGOUT_CODES?.split(',') || [];
       if (modalLogoutCodes.includes(responseCode) && isLogin) {
-        const isExist = request.state.errMsgStack.includes(response.data.msg);
+        const isExist = request.state.errMsgStack && request.state.errMsgStack.includes(response.data.msg);
         if (isExist) {
           return null;
         }
-
-        if (!window.location.pathname?.startsWith('/login')) {
-          request.state.errMsgStack = [...(request.state.errMsgStack || []), response.data.msg];
-
-          // prevent the user from refreshing the page
-          window.addEventListener('beforeunload', handleLogout);
-
-          window.$dialog?.warning({
-            title: '系统提示',
-            content: '登录状态已过期，您可以继续留在该页面，或者重新登录',
-            positiveText: '重新登录',
-            negativeText: '取消',
-            maskClosable: false,
-            closeOnEsc: false,
-            onPositiveClick() {
-              logoutAndCleanup();
-            },
-            onClose() {
-              window.removeEventListener('beforeunload', handleLogout);
-              request.state.errMsgStack = request.state.errMsgStack.filter(msg => msg !== response.data.msg);
-            }
-          });
-          request.cancelAllRequest();
+        if (window.location.pathname?.startsWith('/login')) {
+          logoutAndCleanup();
           return null;
         }
-        logoutAndCleanup();
+        request.state.errMsgStack = [...(request.state.errMsgStack || []), response.data.msg];
+        // prevent the user from refreshing the page
+        window.addEventListener('beforeunload', handleLogout);
+
+        window.$dialog?.warning({
+          title: '系统提示',
+          content: '登录状态已过期，您可以继续留在该页面，或者重新登录',
+          positiveText: '重新登录',
+          negativeText: '取消',
+          maskClosable: false,
+          closeOnEsc: false,
+          onPositiveClick() {
+            logoutAndCleanup();
+          },
+          onClose() {
+            window.removeEventListener('beforeunload', handleLogout);
+            request.state.errMsgStack = request.state.errMsgStack.filter(msg => msg !== response.data.msg);
+          }
+        });
+        request.cancelAllRequest();
         return null;
       }
 
