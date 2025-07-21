@@ -321,11 +321,15 @@ const businessId = ref<CommonType.IdType>();
 
 /** 流程预览，动态加载组件 */
 async function handlePreview(row: Api.Workflow.Instance) {
+  dynamicComponent.value = null;
+  previewVisible.value = false;
   businessId.value = row.businessId;
   const formPath = row.formPath;
   if (!formPath) return;
   dynamicComponent.value = await loadDynamicComponent(modules, formPath);
-  showPreviewDrawer();
+  setTimeout(() => {
+    showPreviewDrawer();
+  }, 300);
 }
 </script>
 

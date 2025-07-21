@@ -219,12 +219,16 @@ const businessId = ref<CommonType.IdType>();
 const operateType = ref<CommonType.WorkflowTableOperateType>();
 
 async function handleOpen(row: Api.Workflow.Instance, type: 'edit' | 'detail') {
+  dynamicComponent.value = null;
+  viewVisible.value = false;
   operateType.value = type;
   businessId.value = row.businessId;
   const formPath = row.formPath;
   if (!formPath) return;
   dynamicComponent.value = await loadDynamicComponent(modules, formPath);
-  showViewDrawer();
+  setTimeout(() => {
+    showViewDrawer();
+  }, 300);
 }
 
 async function handleDelete(row: Api.Workflow.Instance) {

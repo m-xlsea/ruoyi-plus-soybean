@@ -168,12 +168,16 @@ const businessId = ref<CommonType.IdType>();
 const taskId = ref<CommonType.IdType>();
 
 async function handleView(row: Api.Workflow.Task) {
+  dynamicComponent.value = null;
+  viewVisible.value = false;
   businessId.value = row.businessId;
   taskId.value = row.id;
   const formPath = row.formPath;
   if (!formPath) return;
   dynamicComponent.value = await loadDynamicComponent(modules, formPath);
-  showViewDrawer();
+  setTimeout(() => {
+    showViewDrawer();
+  }, 300);
 }
 </script>
 

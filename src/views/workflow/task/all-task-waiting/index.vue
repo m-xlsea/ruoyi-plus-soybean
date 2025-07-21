@@ -225,10 +225,14 @@ const taskId = ref<CommonType.IdType>('');
 const assigneeIds = ref<CommonType.IdType[]>([]);
 const assigneeNames = ref<string[]>([]);
 function handleIntervene(row: Api.Workflow.Task) {
+  dynamicComponent.value = null;
+  interveneVisible.value = false;
   taskId.value = row.id;
   assigneeIds.value = row.assigneeIds?.split(',') || [];
   assigneeNames.value = row.assigneeNames?.split(',') || [];
-  showInterveneDrawer();
+  setTimeout(() => {
+    showInterveneDrawer();
+  }, 300);
 }
 </script>
 
