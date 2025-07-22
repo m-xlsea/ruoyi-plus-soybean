@@ -86,6 +86,39 @@ declare namespace Api {
     /** 工作流分类列表 */
     type WorkflowCategoryList = WorkflowCategory[];
 
+    /** spel */
+    type Spel = Common.CommonRecord<{
+      /** 主键id */
+      id: CommonType.IdType;
+      /** 组件名称 */
+      componentName: string;
+      /** 方法名 */
+      methodName: string;
+      /** 参数 */
+      methodParams: string;
+      /** spel表达式 */
+      viewSpel: string;
+      /** 备注 */
+      remark: string;
+      /** 状态 */
+      status: string;
+      /** 删除标志 */
+      delFlag: string;
+    }>;
+
+    /** spel search params */
+    type SpelSearchParams = CommonType.RecordNullable<
+      Pick<Api.Workflow.Spel, 'componentName' | 'methodName' | 'status'> & Api.Common.CommonSearchParams
+    >;
+
+    /** spel operate params */
+    type SpelOperateParams = CommonType.RecordNullable<
+      Pick<Api.Workflow.Spel, 'id' | 'componentName' | 'methodName' | 'methodParams' | 'viewSpel' | 'remark' | 'status'>
+    >;
+
+    /** spel list */
+    type SpelList = Api.Common.PaginatingQueryRecord<Spel>;
+
     /** 工作流发布状态 */
     type WorkflowPublishStatus = 0 | 1 | 9;
 

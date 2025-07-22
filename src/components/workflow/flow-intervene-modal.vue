@@ -164,7 +164,7 @@ watch(visible, () => {
           {{ taskInfo?.instanceId }}
         </NDescriptionsItem>
         <NDescriptionsItem label="办理人">
-          <GroupTag :value="assigneeNames" />
+          <TagGroup :value="assigneeNames" />
         </NDescriptionsItem>
         <NDescriptionsItem label="版本号">
           <NTag type="info" size="small">v{{ taskInfo?.version }}.0</NTag>

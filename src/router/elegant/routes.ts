@@ -387,6 +387,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'workflow_spel',
+        path: '/workflow/spel',
+        component: 'view.workflow_spel',
+        meta: {
+          title: 'workflow_spel',
+          i18nKey: 'route.workflow_spel'
+        }
+      },
+      {
         name: 'workflow_task',
         path: '/workflow/task',
         meta: {

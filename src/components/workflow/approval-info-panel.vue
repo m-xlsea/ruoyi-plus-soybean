@@ -7,7 +7,7 @@ import { fetchGetOssListByIds } from '@/service/api/system/oss';
 import { useDict } from '@/hooks/business/dict';
 import { useDownload } from '@/hooks/business/download';
 import DictTag from '@/components/custom/dict-tag.vue';
-import GroupTag from '@/components/custom/group-tag.vue';
+import TagGroup from '@/components/custom/tag-group.vue';
 
 defineOptions({
   name: 'ApprovalInfoPanel'
@@ -39,7 +39,7 @@ const columns = ref<NaiveUI.TableColumn<Api.Workflow.HisTask>[]>([
     align: 'center',
     width: 100,
     render: row => {
-      return <GroupTag value={row.approveName} />;
+      return <TagGroup value={row.approveName} />;
     }
   },
   {

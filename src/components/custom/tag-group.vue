@@ -8,13 +8,15 @@ interface Props {
   size?: 'small' | 'medium' | 'large';
   placeholder?: string;
   closable?: boolean;
+  threadshold?: number; // 超过该数量显示popover
 }
 
 const props = withDefaults(defineProps<Props>(), {
   type: 'info',
   size: 'small',
   placeholder: '无',
-  closable: false
+  closable: false,
+  threadshold: 1 // 默认超过1个就显示popover
 });
 
 interface Emits {
@@ -41,9 +43,17 @@ function handleClose(index?: number) {
     </NTag>
   </template>
 
-  <template v-else-if="tags.length === 1">
-    <NTag :type="type" :size="size" :closable="closable" @close="handleClose(0)">
-      {{ tags[0] }}
+  <template v-else-if="tags.length <= threadshold">
+    <NTag
+      v-for="(tag, index) in tags"
+      :key="index"
+      :type="type"
+      class="m-1"
+      :size="size"
+      :closable="closable"
+      @close="handleClose(index)"
+    >
+      {{ tag }}
     </NTag>
   </template>
 

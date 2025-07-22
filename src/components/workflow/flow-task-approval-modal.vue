@@ -388,7 +388,7 @@ watch(visible, () => {
         <NFormItem v-if="buttonPerm.copy" label="抄送人员">
           <NSpace>
             <NButton ghost type="primary" @click="openCopyModal">选择抄送人员</NButton>
-            <GroupTag
+            <TagGroup
               size="large"
               :value="selectCopyUserList.map(item => item.nickName)"
               :closable="true"
@@ -407,7 +407,7 @@ watch(visible, () => {
               <NSpace>
                 <NButton ghost type="primary" @click="handleAssigneeOpen(item)">选择审批人员</NButton>
                 <NInput v-if="false" v-model:value="model.assigneeMap![item.nodeCode]" />
-                <GroupTag
+                <TagGroup
                   size="large"
                   :value="nickNameMap[item.nodeCode]"
                   :closable="true"

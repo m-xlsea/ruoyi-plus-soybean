@@ -8,7 +8,7 @@ import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { loadDynamicComponent } from '@/utils/common';
-import GroupTag from '@/components/custom/group-tag.vue';
+import TagGroup from '@/components/custom/tag-group.vue';
 import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import { $t } from '@/locales';
@@ -89,7 +89,7 @@ const {
       key: 'assigneeNames',
       align: 'center',
       width: 100,
-      render: row => <GroupTag value={row.assigneeNames} />
+      render: row => <TagGroup value={row.assigneeNames} />
     },
     {
       title: '流程状态',

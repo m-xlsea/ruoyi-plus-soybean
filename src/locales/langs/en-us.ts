@@ -238,6 +238,7 @@ const local: App.I18n.Schema = {
     exception_404: '404',
     exception_500: '500',
     workflow_design: 'Process Design',
+    workflow_spel: 'Process Spel',
     'workflow_process-definition': 'Process Definition',
     'workflow_process-instance': 'Process Instance',
     workflow_task: 'Task',
