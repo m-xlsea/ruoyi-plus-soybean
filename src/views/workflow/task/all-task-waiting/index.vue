@@ -212,27 +212,25 @@ const modules = import.meta.glob('@/components/workflow/**/*.vue');
 const businessId = ref<CommonType.IdType>();
 
 async function handleView(row: Api.Workflow.TaskOrHisTask) {
+  dynamicComponent.value = null;
+  viewVisible.value = false;
   businessId.value = row.businessId;
   const formPath = row.formPath;
-  if (!formPath) {
-    return;
-  }
+  if (!formPath) return;
   dynamicComponent.value = await loadDynamicComponent(modules, formPath);
-  showViewDrawer();
+  setTimeout(() => {
+    showViewDrawer();
+  }, 300);
 }
 
 const taskId = ref<CommonType.IdType>('');
 const assigneeIds = ref<CommonType.IdType[]>([]);
 const assigneeNames = ref<string[]>([]);
 function handleIntervene(row: Api.Workflow.Task) {
-  dynamicComponent.value = null;
-  interveneVisible.value = false;
   taskId.value = row.id;
   assigneeIds.value = row.assigneeIds?.split(',') || [];
   assigneeNames.value = row.assigneeNames?.split(',') || [];
-  setTimeout(() => {
-    showInterveneDrawer();
-  }, 300);
+  showInterveneDrawer();
 }
 </script>
 
