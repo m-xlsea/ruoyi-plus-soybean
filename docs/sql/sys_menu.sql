@@ -54,3 +54,4 @@ UPDATE `sys_menu` SET `path` = 'taskCopy', `component` = 'workflow/task/taskCopy
 UPDATE `sys_menu` SET `icon` = 'ic:twotone-time-to-leave' WHERE `menu_id` = 11638;
 UPDATE `sys_menu` SET `icon` = 'material-symbols:design-services-outline', `path` = 'design', `component` = 'workflow/design/index' WHERE `menu_id` = 11700;
 UPDATE `sys_menu` SET `icon` = 'ic:twotone-time-to-leave' WHERE `menu_id` = 11701;
+UPDATE `sys_menu` SET `icon` = 'material-symbols:regular-expression-rounded' WHERE `menu_id` = 11801;
