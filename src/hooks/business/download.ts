@@ -51,6 +51,7 @@ export function useDownload() {
     contentLength?: number
   ): Promise<void> {
     window.$loading?.endLoading();
+    StreamSaver.mitm = '/streamsaver/mitm.html?version=2.0.0';
     const fileStream = StreamSaver.createWriteStream(filename, { size: contentLength });
 
     if (window.WritableStream && readableStream?.pipeTo) {

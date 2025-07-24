@@ -33,17 +33,16 @@ async function search() {
     <NCollapse>
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
-          <NGrid responsive="self" item-responsive>
+          <NGrid responsive="screen" item-responsive>
             <NFormItemGi
-              :show-feedback="false"
-              span="12"
+              span="24 s:12 m:12"
               :label="$t('page.system.dict.data.label')"
               path="dictLabel"
               class="pr-24px"
             >
               <NInput v-model:value="model.dictLabel" :placeholder="$t('page.system.dict.form.dictLabel.required')" />
             </NFormItemGi>
-            <NFormItemGi :show-feedback="false" span="12" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:12" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

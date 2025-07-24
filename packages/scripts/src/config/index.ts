@@ -5,7 +5,7 @@ import type { CliOption } from '../types';
 const defaultOptions: CliOption = {
   cwd: process.cwd(),
   cleanupDirs: [
-    '**/dist',
+    'dist',
     '**/package-lock.json',
     '**/yarn.lock',
     '**/pnpm-lock.yaml',

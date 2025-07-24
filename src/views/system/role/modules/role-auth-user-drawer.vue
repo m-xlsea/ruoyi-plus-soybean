@@ -1,9 +1,16 @@
 <script setup lang="tsx">
-import { computed, watch } from 'vue';
-import { fetchGetRoleUserList, fetchGetUserList } from '@/service/api/system';
+import { computed, ref, watch } from 'vue';
+import { NDatePicker } from 'naive-ui';
+import {
+  fetchGetRoleUserList,
+  fetchGetUserList,
+  fetchUpdateRoleAuthUser,
+  fetchUpdateRoleAuthUserCancel
+} from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { useDict } from '@/hooks/business/dict';
 import { useTable, useTableOperate } from '@/hooks/common/table';
+import { arraysEqualSet } from '@/utils/common';
 import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
 
@@ -109,13 +116,16 @@ const { columns, data, getData, getDataByPage, loading, mobilePagination, search
 
 const { checkedRowKeys } = useTableOperate(data, getData);
 
+const checkedUserIds = ref<CommonType.IdType[]>([]);
+
 async function handleUpdateModelWhenEdit() {
   checkedRowKeys.value = [];
   getDataByPage();
   const { data: roleUserList } = await fetchGetRoleUserList({
     roleId: props.rowData?.roleId
   });
-  checkedRowKeys.value = roleUserList?.rows.map(item => item.userId) || [];
+  checkedUserIds.value = roleUserList?.rows.map(item => item.userId) || [];
+  checkedRowKeys.value = checkedUserIds.value;
 }
 
 function closeDrawer() {
@@ -123,6 +133,25 @@ function closeDrawer() {
 }
 
 async function handleSubmit() {
+  if (arraysEqualSet(checkedUserIds.value, checkedRowKeys.value)) {
+    window.$message?.warning($t('common.noChange'));
+    return;
+  }
+
+  // 批量取消用户授权
+  const cancelUserIds = checkedUserIds.value.filter(item => !checkedRowKeys.value.includes(item));
+  if (cancelUserIds.length > 0) {
+    const { error: cancelError } = await fetchUpdateRoleAuthUserCancel(props.rowData!.roleId, cancelUserIds);
+    if (cancelError) return;
+  }
+
+  // 批量选择用户授权
+  const addUserIds = checkedRowKeys.value.filter(item => !checkedUserIds.value.includes(item));
+  if (addUserIds.length > 0) {
+    const { error: addError } = await fetchUpdateRoleAuthUser(props.rowData!.roleId, addUserIds);
+    if (addError) return;
+  }
+
   window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');
@@ -133,6 +162,22 @@ watch(visible, () => {
     handleUpdateModelWhenEdit();
   }
 });
+
+const dateRangeCreateTime = ref<[string, string] | null>(null);
+
+const datePickerRef = ref<InstanceType<typeof NDatePicker>>();
+
+function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
+  if (value?.length) {
+    searchParams.params!.beginTime = value[0];
+    searchParams.params!.endTime = value[1];
+  }
+}
+
+function reset() {
+  dateRangeCreateTime.value = null;
+  resetSearchParams();
+}
 </script>
 
 <template>
@@ -158,9 +203,22 @@ watch(visible, () => {
             <NFormItemGi span="24 s:12 m:8" label="手机号码" path="phonenumber" class="pr-24px">
               <NInput v-model:value="searchParams.phonenumber" placeholder="请输入手机号码" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:24" class="pr-24px" :show-feedback="false">
+            <NFormItemGi span="24 s:12 m:8" label="所属部门" path="deptId" class="pr-24px">
+              <DeptTreeSelect v-model:value="searchParams.deptId" placeholder="请选择部门" />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:10" label="创建时间" path="createTime" class="pr-24px">
+              <NDatePicker
+                ref="datePickerRef"
+                v-model:formatted-value="dateRangeCreateTime"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                clearable
+                @update:formatted-value="onDateRangeCreateTimeUpdate"
+              />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:6" class="pr-24px" :show-feedback="false">
               <NSpace class="w-full" justify="end">
-                <NButton @click="resetSearchParams">
+                <NButton @click="reset">
                   <template #icon>
                     <icon-ic-round-refresh class="text-icon" />
                   </template>

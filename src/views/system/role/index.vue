@@ -273,7 +273,7 @@ function handleAuthUser(row: Api.System.Role) {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="1200"
         :loading="loading"
         remote
         :row-key="row => row.roleId"
@@ -284,14 +284,10 @@ function handleAuthUser(row: Api.System.Role) {
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
-        @submitted="getDataByPage"
+        @submitted="getData"
       />
-      <RoleDataScopeDrawer
-        v-model:visible="dataScopeDrawerVisible"
-        :row-data="editingData"
-        @submitted="getDataByPage"
-      />
-      <RoleAuthUserDrawer v-model:visible="authUserDrawerVisible" :row-data="editingData" @submitted="getDataByPage" />
+      <RoleDataScopeDrawer v-model:visible="dataScopeDrawerVisible" :row-data="editingData" @submitted="getData" />
+      <RoleAuthUserDrawer v-model:visible="authUserDrawerVisible" :row-data="editingData" @submitted="getData" />
     </NCard>
   </div>
 </template>

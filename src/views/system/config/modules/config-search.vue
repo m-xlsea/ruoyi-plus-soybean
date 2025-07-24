@@ -77,7 +77,7 @@ async function search() {
                 clearable
               />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:12" label="创建时间" path="createTime" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:6" label="创建时间" path="createTime" class="pr-24px">
               <NDatePicker
                 v-model:formatted-value="dateRangeCreateTime"
                 type="datetimerange"
@@ -86,7 +86,7 @@ async function search() {
                 @update:formatted-value="onDateRangeCreateTimeUpdate"
               />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:12" class="pr-24px">
+            <NFormItemGi span="24" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

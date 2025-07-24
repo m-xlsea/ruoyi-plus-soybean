@@ -72,8 +72,11 @@ async function handleUpdateModelWhenEdit() {
   model.menuIds = [];
 
   if (props.operateType === 'add') {
-    menuTreeRef.value?.refresh();
     Object.assign(model, createDefaultModel());
+    const { data, error } = await fetchGetTenantPackageMenuTreeSelect(0);
+    if (error) return;
+    model.menuIds = data.checkedKeys;
+    menuOptions.value = data.menus;
     return;
   }
 
@@ -145,7 +148,7 @@ watch(visible, () => {
             v-model:options="menuOptions"
             v-model:cascade="model.menuCheckStrictly"
             v-model:loading="menuLoading"
-            :immediate="operateType === 'add'"
+            :immediate="false"
           />
         </NFormItem>
         <NFormItem :label="$t('page.system.tenantPackage.remark')" path="remark">

@@ -313,8 +313,8 @@ getDataNames();
         :pagination="mobilePagination"
         class="sm:h-full"
       />
-      <GenTableImportDrawer v-model:visible="importVisible" :options="dataNameOptions" @submitted="getDataByPage" />
-      <GenTableOperateDrawer v-model:visible="drawerVisible" :row-data="editingData" @submitted="getDataByPage" />
+      <GenTableImportDrawer v-model:visible="importVisible" :options="dataNameOptions" @submitted="getData" />
+      <GenTableOperateDrawer v-model:visible="drawerVisible" :row-data="editingData" @submitted="getData" />
       <GenTablePreviewDrawer
         v-model:visible="previewVisible"
         :row-data="editingData"
