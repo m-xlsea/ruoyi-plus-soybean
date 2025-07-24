@@ -65,11 +65,13 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
 
     routes.forEach(route => {
       if (authRouteMode.value === 'dynamic') {
-        if (route.path === '/') {
-          route.children?.forEach(child => {
-            parseRouter(child);
-            authRoutesMap.set(child.name, child);
-          });
+        if (route.path === '/' && route.children?.length) {
+          const child = route.children[0];
+          parseRouter(child);
+          child.name = Math.random().toString(36).slice(2, 12);
+          Object.assign(route, child);
+          delete route.children;
+          authRoutesMap.set(route.name, route);
           return;
         }
         parseRouter(route);
