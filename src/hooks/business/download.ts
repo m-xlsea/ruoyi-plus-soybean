@@ -16,6 +16,12 @@ export function useDownload() {
   const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
   const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
+  const isHttps = () => {
+    const protocol = document.location.protocol;
+    const hostname = document.location.hostname;
+    return protocol === 'https' || hostname === 'localhost' || hostname === '127.0.0.1';
+  };
+
   /** 获取通用请求头 */
   const getCommonHeaders = (contentType = 'application/octet-stream') => ({
     Authorization: `Bearer ${localStg.get('token')}`,
@@ -111,7 +117,7 @@ export function useDownload() {
 
       const finalFilename = filename || response.headers.get('Download-Filename') || `download-${timestamp}`;
 
-      if (response.body) {
+      if (response.body && isHttps()) {
         const contentLength = Number(response.headers.get('Content-Length'));
         await downloadByStream(response.body, finalFilename, contentLength);
         return;
