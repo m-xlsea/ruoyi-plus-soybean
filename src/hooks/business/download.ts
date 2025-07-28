@@ -115,7 +115,8 @@ export function useDownload() {
 
       await handleResponse(response);
 
-      const finalFilename = filename || response.headers.get('Download-Filename') || `download-${timestamp}`;
+      const rawHeader = response.headers.get('Download-Filename');
+      const finalFilename = filename || (rawHeader ? decodeURIComponent(rawHeader) : null) || `download-${timestamp}`;
 
       if (response.body && isHttps()) {
         const contentLength = Number(response.headers.get('Content-Length'));
