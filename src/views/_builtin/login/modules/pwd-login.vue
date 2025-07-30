@@ -53,12 +53,14 @@ async function handleFetchTenantList() {
   const { data, error } = await fetchTenantList();
   if (error) return;
   tenantEnabled.value = data.tenantEnabled;
-  tenantOption.value = data.voList.map(tenant => {
-    return {
-      label: tenant.companyName,
-      value: tenant.tenantId
-    };
-  });
+  if (data.tenantEnabled) {
+    tenantOption.value = data.voList.map(tenant => {
+      return {
+        label: tenant.companyName,
+        value: tenant.tenantId
+      };
+    });
+  }
   endTenantLoading();
 }
 
