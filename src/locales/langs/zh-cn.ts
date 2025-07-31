@@ -82,93 +82,137 @@ const local: App.I18n.Schema = {
     tokenExpired: 'token已过期'
   },
   theme: {
-    themeSchema: {
-      title: '主题模式',
-      light: '亮色模式',
-      dark: '暗黑模式',
-      auto: '跟随系统'
+    themeDrawerTitle: '主题配置',
+    tabs: {
+      appearance: '外观',
+      layout: '布局',
+      general: '通用'
     },
-    grayscale: '灰色模式',
-    colourWeakness: '色弱模式',
-    layoutMode: {
-      title: '布局模式',
-      vertical: '左侧菜单模式',
-      'vertical-mix': '左侧菜单混合模式',
-      horizontal: '顶部菜单模式',
-      'horizontal-mix': '顶部菜单混合模式',
-      reverseHorizontalMix: '一级菜单与子级菜单位置反转'
+    appearance: {
+      themeSchema: {
+        title: '主题模式',
+        light: '亮色模式',
+        dark: '暗黑模式',
+        auto: '跟随系统'
+      },
+      grayscale: '灰色模式',
+      colourWeakness: '色弱模式',
+      themeColor: {
+        title: '主题颜色',
+        primary: '主色',
+        info: '信息色',
+        success: '成功色',
+        warning: '警告色',
+        error: '错误色',
+        followPrimary: '跟随主色'
+      },
+      recommendColor: '应用推荐算法的颜色',
+      recommendColorDesc: '推荐颜色的算法参照'
     },
-    recommendColor: '应用推荐算法的颜色',
-    recommendColorDesc: '推荐颜色的算法参照',
-    themeColor: {
-      title: '主题颜色',
-      primary: '主色',
-      info: '信息色',
-      success: '成功色',
-      warning: '警告色',
-      error: '错误色',
-      followPrimary: '跟随主色'
-    },
-    scrollMode: {
-      title: '滚动模式',
-      wrapper: '外层滚动',
-      content: '主体滚动'
-    },
-    page: {
-      animate: '页面切换动画',
-      mode: {
-        title: '页面切换动画类型',
-        'fade-slide': '滑动',
-        fade: '淡入淡出',
-        'fade-bottom': '底部消退',
-        'fade-scale': '缩放消退',
-        'zoom-fade': '渐变',
-        'zoom-out': '闪现',
-        none: '无'
+    layout: {
+      layoutMode: {
+        title: '布局模式',
+        vertical: '左侧菜单模式',
+        'vertical-mix': '左侧菜单混合模式',
+        'vertical-hybrid-header-first': '左侧混合-顶部优先',
+        horizontal: '顶部菜单模式',
+        'top-hybrid-sidebar-first': '顶部混合-侧边优先',
+        'top-hybrid-header-first': '顶部混合-顶部优先',
+        vertical_detail: '左侧菜单布局，菜单在左，内容在右。',
+        'vertical-mix_detail': '左侧双菜单布局，一级菜单在左侧深色区域，二级菜单在左侧浅色区域。',
+        'vertical-hybrid-header-first_detail':
+          '左侧混合布局，一级菜单在顶部，二级菜单在左侧深色区域，三级菜单在左侧浅色区域。',
+        horizontal_detail: '顶部菜单布局，菜单在顶部，内容在下方。',
+        'top-hybrid-sidebar-first_detail': '顶部混合布局，一级菜单在左侧，二级菜单在顶部。',
+        'top-hybrid-header-first_detail': '顶部混合布局，一级菜单在顶部，二级菜单在左侧。'
+      },
+      tab: {
+        title: '标签栏设置',
+        visible: '显示标签栏',
+        cache: '标签栏信息缓存',
+        height: '标签栏高度',
+        mode: {
+          title: '标签栏风格',
+          chrome: '谷歌风格',
+          button: '按钮风格'
+        }
+      },
+      header: {
+        title: '头部设置',
+        height: '头部高度',
+        breadcrumb: {
+          visible: '显示面包屑',
+          showIcon: '显示面包屑图标'
+        }
+      },
+      sider: {
+        title: '侧边栏设置',
+        inverted: '深色侧边栏',
+        width: '侧边栏宽度',
+        collapsedWidth: '侧边栏折叠宽度',
+        mixWidth: '混合布局侧边栏宽度',
+        mixCollapsedWidth: '混合布局侧边栏折叠宽度',
+        mixChildMenuWidth: '混合布局子菜单宽度'
+      },
+      footer: {
+        title: '底部设置',
+        visible: '显示底部',
+        fixed: '固定底部',
+        height: '底部高度',
+        right: '底部局右'
+      },
+      content: {
+        title: '内容区域设置',
+        scrollMode: {
+          title: '滚动模式',
+          wrapper: '外层滚动',
+          content: '主体滚动'
+        },
+        page: {
+          animate: '页面切换动画',
+          mode: {
+            title: '页面切换动画类型',
+            'fade-slide': '滑动',
+            fade: '淡入淡出',
+            'fade-bottom': '底部消退',
+            'fade-scale': '缩放消退',
+            'zoom-fade': '渐变',
+            'zoom-out': '闪现',
+            none: '无'
+          }
+        },
+        fixedHeaderAndTab: '固定头部和标签栏'
+      },
+      resetCacheStrategy: {
+        title: '重置缓存策略',
+        close: '关闭页面',
+        refresh: '刷新页面'
       }
     },
-    fixedHeaderAndTab: '固定头部和标签栏',
-    header: {
-      height: '头部高度',
-      breadcrumb: {
-        visible: '显示面包屑',
-        showIcon: '显示面包屑图标'
+    general: {
+      title: '通用设置',
+      watermark: {
+        title: '水印设置',
+        visible: '显示全屏水印',
+        text: '自定义水印文本',
+        enableUserName: '启用用户名水印',
+        enableTime: '显示当前时间',
+        timeFormat: '时间格式'
       },
       multilingual: {
+        title: '多语言设置',
         visible: '显示多语言按钮'
       },
       globalSearch: {
+        title: '全局搜索设置',
         visible: '显示全局搜索按钮'
       }
     },
-    tab: {
-      visible: '显示标签栏',
-      cache: '标签栏信息缓存',
-      height: '标签栏高度',
-      mode: {
-        title: '标签栏风格',
-        chrome: '谷歌风格',
-        button: '按钮风格'
-      }
-    },
-    sider: {
-      inverted: '深色侧边栏',
-      width: '侧边栏宽度',
-      collapsedWidth: '侧边栏折叠宽度',
-      mixWidth: '混合布局侧边栏宽度',
-      mixCollapsedWidth: '混合布局侧边栏折叠宽度',
-      mixChildMenuWidth: '混合布局子菜单宽度'
-    },
-    footer: {
-      visible: '显示底部',
-      fixed: '固定底部',
-      height: '底部高度',
-      right: '底部局右'
-    },
-    watermark: {
-      visible: '显示全屏水印',
-      text: '水印文本',
-      enableUserName: '启用用户名水印'
+    configOperation: {
+      copyConfig: '复制配置',
+      copySuccessMsg: '复制成功，请替换 src/theme/settings.ts 中的变量 themeSettings',
+      resetConfig: '重置配置',
+      resetSuccessMsg: '重置成功'
     },
     tablePropsTitle: '表格配置',
     table: {
@@ -183,19 +227,6 @@ const local: App.I18n.Schema = {
       singleColumn: '设定行的分割线',
       singleLine: '设定列的分割线',
       striped: '斑马线条纹'
-    },
-    themeDrawerTitle: '主题配置',
-    pageFunTitle: '页面功能',
-    resetCacheStrategy: {
-      title: '重置缓存策略',
-      close: '关闭页面',
-      refresh: '刷新页面'
-    },
-    configOperation: {
-      copyConfig: '复制配置',
-      copySuccessMsg: '复制成功，请替换 src/theme/settings.ts 中的变量 themeSettings',
-      resetConfig: '重置配置',
-      resetSuccessMsg: '重置成功'
     }
   },
   route: {
@@ -205,32 +236,10 @@ const local: App.I18n.Schema = {
     500: '服务器错误',
     'iframe-page': '外链页面',
     home: '首页',
-    system: '系统管理',
-    system_menu: '菜单管理',
-    tool: '系统工具',
-    tool_gen: '代码生成',
-    system_user: '用户管理',
-    system_dict: '字典管理',
-    system_tenant: '租户管理',
-    'system_tenant-package': '租户套餐',
-    system_config: '参数设置',
-    system_dept: '部门管理',
-    system_post: '岗位管理',
     monitor: '系统监控',
-    monitor_logininfor: '登录日志',
-    monitor_operlog: '操作日志',
-    system_client: '客户端管理',
-    system_notice: '通知公告',
     'social-callback': '单点登录回调',
-    system_oss: '文件管理',
-    'system_oss-config': 'OSS 配置',
     monitor_cache: '缓存监控',
-    monitor_online: '在线用户',
     'user-center': '个人中心',
-    system_role: '角色管理',
-    demo: '测试',
-    demo_demo: '测试单表',
-    demo_tree: '测试树表',
     exception: '异常页',
     exception_403: '403',
     exception_404: '404',

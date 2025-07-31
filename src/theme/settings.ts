@@ -15,8 +15,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
   resetCacheStrategy: 'close',
   layout: {
     mode: 'vertical',
-    scrollMode: 'content',
-    reverseHorizontalMix: false
+    scrollMode: 'content'
   },
   page: {
     animate: true,
@@ -58,8 +57,10 @@ export const themeSettings: App.Theme.ThemeSetting = {
   },
   watermark: {
     visible: import.meta.env.VITE_WATERMARK === 'Y',
-    text: 'RuoYi-Vue-Plus',
-    enableUserName: false
+    text: 'RuoYi-Plus-Soybean',
+    enableUserName: true,
+    enableTime: false,
+    timeFormat: 'YYYY-MM-DD HH:mm'
   },
   table: {
     bordered: true,

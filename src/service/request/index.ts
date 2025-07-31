@@ -12,7 +12,7 @@ const encryptHeader = 'encrypt-key';
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
-export const request = createFlatRequest<App.Service.Response, RequestInstanceState>(
+export const request = createFlatRequest(
   {
     baseURL,
     'axios-retry': {
@@ -20,6 +20,13 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
     }
   },
   {
+    defaultState: {
+      errMsgStack: [],
+      refreshTokenPromise: null
+    } as RequestInstanceState,
+    transform(response: AxiosResponse<App.Service.Response<any>>) {
+      return response.data.data;
+    },
     async onRequest(config) {
       const isToken = config.headers?.isToken === false;
       // set token
