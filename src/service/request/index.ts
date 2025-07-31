@@ -25,6 +25,32 @@ export const request = createFlatRequest(
       refreshTokenPromise: null
     } as RequestInstanceState,
     transform(response: AxiosResponse<App.Service.Response<any>>) {
+      if (import.meta.env.VITE_APP_ENCRYPT === 'Y') {
+        // 加密后的 AES 秘钥
+        const keyStr = response.headers[encryptHeader];
+        // 加密
+        if (keyStr && keyStr !== '') {
+          const data = String(response.data);
+          // 请求体 AES 解密
+          const base64Str = decrypt(keyStr);
+          // base64 解码 得到请求头的 AES 秘钥
+          const aesKey = decryptBase64(base64Str.toString());
+          // aesKey 解码 data
+          const decryptData = decryptWithAes(data, aesKey);
+          // 将结果 (得到的是 JSON 字符串) 转为 JSON
+          response.data = JSON.parse(decryptData);
+        }
+      }
+
+      // 二进制数据则直接返回
+      if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
+        return response.data;
+      }
+
+      if (response.data.rows) {
+        return response.data;
+      }
+
       return response.data.data;
     },
     async onRequest(config) {
@@ -130,35 +156,6 @@ export const request = createFlatRequest(
       }
 
       return null;
-    },
-    transformBackendResponse(response) {
-      if (import.meta.env.VITE_APP_ENCRYPT === 'Y') {
-        // 加密后的 AES 秘钥
-        const keyStr = response.headers[encryptHeader];
-        // 加密
-        if (keyStr && keyStr !== '') {
-          const data = String(response.data);
-          // 请求体 AES 解密
-          const base64Str = decrypt(keyStr);
-          // base64 解码 得到请求头的 AES 秘钥
-          const aesKey = decryptBase64(base64Str.toString());
-          // aesKey 解码 data
-          const decryptData = decryptWithAes(data, aesKey);
-          // 将结果 (得到的是 JSON 字符串) 转为 JSON
-          response.data = JSON.parse(decryptData);
-        }
-      }
-
-      // 二进制数据则直接返回
-      if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
-        return response.data;
-      }
-
-      if (response.data.rows) {
-        return response.data;
-      }
-
-      return response.data.data;
     },
     onError(error) {
       // when the request is fail, you can show error message

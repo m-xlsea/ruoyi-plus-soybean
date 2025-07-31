@@ -1,4 +1,4 @@
-import { computed, effectScope, onScopeDispose, reactive, shallowRef, watch } from 'vue';
+import { computed, effectScope, onScopeDispose, reactive, ref, shallowRef, watch } from 'vue';
 import type { Ref } from 'vue';
 import type { PaginationProps } from 'naive-ui';
 import { useBoolean, useTable } from '@sa/hooks';
@@ -224,23 +224,214 @@ export function defaultTransform<ApiData>(
 ): PaginationData<ApiData> {
   const { data, error } = response;
 
-  if (!error) {
-    const { rows: records, pageSize: current, pageNum: size, total } = data;
-
+  if (error) {
     return {
-      data: records,
-      pageNum: current,
-      pageSize: size,
-      total
+      data: [],
+      pageNum: 1,
+      pageSize: 10,
+      total: 0
     };
   }
 
+  const { rows: records, pageSize: current, pageNum: size, total } = data;
+
   return {
-    data: [],
-    pageNum: 1,
-    pageSize: 10,
-    total: 0
+    data: records,
+    pageNum: current,
+    pageSize: size,
+    total
   };
+}
+
+type UseNaiveTreeTableOptions<ResponseData, ApiData> = UseNaiveTableOptions<ResponseData, ApiData, false> & {
+  keyField: keyof ApiData;
+  defaultExpandAll?: boolean;
+};
+
+export function useNaiveTreeTable<ResponseData, ApiData>(options: UseNaiveTreeTableOptions<ResponseData, ApiData>) {
+  const scope = effectScope();
+  const appStore = useAppStore();
+  const rows: Ref<ApiData[]> = ref([]);
+
+  const result = useTable<ResponseData, ApiData, NaiveUI.TableColumn<ApiData>, false>({
+    ...options,
+    pagination: false,
+    getColumnChecks: cols => getColumnChecks(cols, options.getColumnVisible),
+    getColumns,
+    onFetched: data => {
+      rows.value = data;
+    }
+  });
+
+  const { keyField = 'id', defaultExpandAll = false } = options;
+
+  const expandedRowKeys = ref<ApiData[keyof ApiData][]>([]);
+  const { bool: isCollapse, toggle: toggleCollapse } = useBoolean(defaultExpandAll);
+
+  /** expand all nodes */
+  function expandAll() {
+    toggleCollapse();
+    expandedRowKeys.value = rows.value.map(item => item[keyField as keyof ApiData]);
+  }
+
+  /** collapse all nodes */
+  function collapseAll() {
+    toggleCollapse();
+    expandedRowKeys.value = [];
+  }
+
+  scope.run(() => {
+    watch(
+      () => appStore.locale,
+      () => {
+        result.reloadColumns();
+      }
+    );
+  });
+
+  onScopeDispose(() => {
+    scope.stop();
+  });
+
+  return {
+    ...result,
+    rows,
+    isCollapse,
+    expandedRowKeys,
+    expandAll,
+    collapseAll
+  };
+}
+
+export function useTreeTableOperate<ApiData>(data: Ref<ApiData[]>, idKey: keyof ApiData, getData: () => Promise<void>) {
+  const { bool: drawerVisible, setTrue: openDrawer, setFalse: closeDrawer } = useBoolean();
+
+  const operateType = shallowRef<NaiveUI.TableOperateType>('add');
+
+  function handleAdd() {
+    operateType.value = 'add';
+    openDrawer();
+  }
+
+  /** the editing row data */
+  const editingData = shallowRef<ApiData | null>(null);
+
+  function handleEdit(id: ApiData[keyof ApiData]) {
+    operateType.value = 'edit';
+    const findItem = data.value.find(item => item[idKey] === id) || null;
+    editingData.value = jsonClone(findItem);
+
+    openDrawer();
+  }
+
+  /** the checked row keys of table */
+  const checkedRowKeys = shallowRef<string[]>([]);
+
+  /** the hook after the batch delete operation is completed */
+  async function onBatchDeleted() {
+    window.$message?.success($t('common.deleteSuccess'));
+
+    checkedRowKeys.value = [];
+
+    await getData();
+  }
+
+  /** the hook after the delete operation is completed */
+  async function onDeleted() {
+    window.$message?.success($t('common.deleteSuccess'));
+
+    await getData();
+  }
+
+  return {
+    drawerVisible,
+    openDrawer,
+    closeDrawer,
+    operateType,
+    handleAdd,
+    editingData,
+    handleEdit,
+    checkedRowKeys,
+    onBatchDeleted,
+    onDeleted
+  };
+}
+
+type TreeTableOptions<ApiData> = {
+  /** id field name */
+  idField?: keyof ApiData;
+  /** parent id field name */
+  parentIdField?: keyof ApiData;
+  /** children field name */
+  childrenField?: keyof ApiData;
+  /** filter function */
+  filterFn?: (node: ApiData) => boolean;
+};
+
+export function treeTransform<ApiData>(
+  response: FlatResponseData<any, ApiData[]>,
+  options: TreeTableOptions<ApiData>
+): ApiData[] {
+  const { data, error } = response;
+
+  if (error || !data.length) {
+    return [];
+  }
+
+  const { idField = 'id', parentIdField = 'parentId', childrenField = 'children', filterFn = () => true } = options;
+
+  // 使用 Map 替代普通对象，提高性能
+  const childrenMap = new Map<ApiData[keyof ApiData], ApiData[]>();
+  const nodeMap = new Map<ApiData[keyof ApiData], ApiData>();
+  const tree: ApiData[] = [];
+
+  // 第一遍遍历：构建节点映射
+  for (const item of data) {
+    const id = item[idField as keyof ApiData];
+    const parentId = item[parentIdField as keyof ApiData];
+
+    nodeMap.set(id, item);
+
+    if (!childrenMap.has(parentId)) {
+      childrenMap.set(parentId, []);
+    }
+    // 应用过滤函数
+    if (filterFn(item)) {
+      childrenMap.get(parentId)!.push(item);
+    }
+  }
+
+  // 第二遍遍历：找出根节点
+  for (const item of data) {
+    const parentId = item[parentIdField as keyof ApiData];
+    if (!nodeMap.has(parentId) && filterFn(item)) {
+      tree.push(item);
+    }
+  }
+
+  // 递归构建树形结构
+  const buildTree = (node: ApiData) => {
+    const id = node[idField as keyof ApiData];
+    const children = childrenMap.get(id);
+
+    if (children?.length) {
+      // 使用类型断言确保类型安全
+      (node as any)[childrenField] = children;
+      for (const child of children) {
+        buildTree(child);
+      }
+    } else {
+      // 如果没有子节点，设置为 undefined
+      (node as any)[childrenField] = undefined;
+    }
+  };
+
+  // 从根节点开始构建树
+  for (const root of tree) {
+    buildTree(root);
+  }
+
+  return tree;
 }
 
 function getColumnChecks<Column extends NaiveUI.TableColumn<any>>(
