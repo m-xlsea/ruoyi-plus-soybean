@@ -168,9 +168,12 @@ const dateRangeCreateTime = ref<[string, string] | null>(null);
 const datePickerRef = ref<InstanceType<typeof NDatePicker>>();
 
 function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
-  if (value?.length) {
-    searchParams.params!.beginTime = value[0];
-    searchParams.params!.endTime = value[1];
+  const params = searchParams.params!;
+  if (value && value.length === 2) {
+    [params.beginTime, params.endTime] = value;
+  } else {
+    params.beginTime = undefined;
+    params.endTime = undefined;
   }
 }
 

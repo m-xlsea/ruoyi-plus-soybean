@@ -21,9 +21,12 @@ const dateRangeCreateTime = ref<[string, string] | null>(null);
 const model = defineModel<Api.System.ConfigSearchParams>('model', { required: true });
 
 function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
-  if (value?.length) {
-    model.value.params!.beginTime = value[0];
-    model.value.params!.endTime = value[1];
+  const params = model.value.params!;
+  if (value && value.length === 2) {
+    [params.beginTime, params.endTime] = value;
+  } else {
+    params.beginTime = undefined;
+    params.endTime = undefined;
   }
 }
 
