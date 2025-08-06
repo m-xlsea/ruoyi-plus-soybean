@@ -21,27 +21,27 @@ const attrs: SelectProps = useAttrs();
 
 const { loading: postLoading, startLoading: startPostLoading, endLoading: endPostLoading } = useLoading();
 
-/** the enabled role options */
-const roleOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
+/** the enabled post options */
+const postOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
 
 watch(
   () => props.deptId,
   () => {
     if (!props.deptId) {
-      roleOptions.value = [];
+      postOptions.value = [];
       return;
     }
-    getRoleOptions();
+    getPostOptions();
   },
   { immediate: true }
 );
 
-async function getRoleOptions() {
+async function getPostOptions() {
   startPostLoading();
   const { error, data } = await fetchGetPostSelect(props.deptId!);
 
   if (!error) {
-    roleOptions.value = data.map(item => ({
+    postOptions.value = data.map(item => ({
       label: item.postName,
       value: item.postId
     }));
@@ -54,7 +54,7 @@ async function getRoleOptions() {
   <NSelect
     v-model:value="value"
     :loading="postLoading"
-    :options="roleOptions"
+    :options="postOptions"
     v-bind="attrs"
     placeholder="请选择岗位"
   />
