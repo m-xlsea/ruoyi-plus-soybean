@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { useLoading } from '@sa/hooks';
 import { fetchCreateUser, fetchGetUserInfo, fetchUpdateUser } from '@/service/api/system';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -49,6 +49,8 @@ type Model = Api.System.UserOperateParams;
 
 const model: Model = reactive(createDefaultModel());
 
+const roleOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
+
 function createDefaultModel(): Model {
   return {
     deptId: null,
@@ -82,6 +84,10 @@ async function getUserInfo() {
   if (!error) {
     model.roleIds = data.roleIds;
     model.postIds = data.postIds;
+    roleOptions.value = data.roles.map(role => ({
+      label: role.roleName,
+      value: role.roleId
+    }));
   }
   endLoading();
 }
@@ -209,7 +215,14 @@ watch(visible, () => {
             <PostSelect v-model:value="model.postIds" :dept-id="model.deptId" multiple clearable />
           </NFormItem>
           <NFormItem :label="$t('page.system.user.roleIds')" path="roleIds">
-            <RoleSelect v-model:value="model.roleIds" multiple clearable />
+            <NSelect
+              v-model:value="model.roleIds"
+              :loading="loading"
+              :options="roleOptions"
+              multiple
+              clearable
+              placeholder="请选择角色"
+            />
           </NFormItem>
           <NFormItem :label="$t('page.system.user.status')" path="status">
             <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />

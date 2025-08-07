@@ -164,6 +164,8 @@ declare namespace Api {
       postIds: string[];
       /** user role ids */
       roleIds: string[];
+      /** roles */
+      roles: Role[];
     };
 
     /** user list */

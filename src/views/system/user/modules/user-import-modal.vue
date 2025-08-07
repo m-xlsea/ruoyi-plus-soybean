@@ -48,6 +48,7 @@ function closeDrawer() {
 }
 
 async function handleSubmit() {
+  console.log(data.value);
   fileList.value.forEach(item => {
     item.status = 'pending';
   });
@@ -91,6 +92,7 @@ function handleDownloadTemplate() {
 
 watch(visible, () => {
   if (visible.value) {
+    data.value.updateSupport = false;
     fileList.value = [];
     success.value = false;
     message.value = '';
@@ -140,7 +142,7 @@ watch(visible, () => {
       </NUploadDragger>
     </NUpload>
     <div class="flex-center">
-      <NCheckbox v-model="data.updateSupport">{{ $t('common.updateExisting') }}</NCheckbox>
+      <NCheckbox v-model:checked="data.updateSupport">{{ $t('common.updateExisting') }}</NCheckbox>
     </div>
 
     <NAlert v-if="message" :title="$t('common.importResult')" :type="success ? 'success' : 'error'" :bordered="false">
