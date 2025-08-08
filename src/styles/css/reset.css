@@ -14,6 +14,13 @@
 }
 
 /*
+* [Naive UI] Fix the icon size in the image preview toolbar
+*/
+.n-image-preview-toolbar .n-base-icon {
+  box-sizing: unset !important;
+}
+
+/*
 1. Use a consistent sensible line-height in all browsers.
 2. Prevent adjustments of font size after orientation changes in iOS.
 3. Use a more readable tab size.
