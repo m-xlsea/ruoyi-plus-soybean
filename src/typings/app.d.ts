@@ -426,6 +426,7 @@ declare namespace App {
             title: string;
             visible: string;
             cache: string;
+            cacheTip: string;
             height: string;
             mode: { title: string } & Record<UnionKey.ThemeTabMode, string>;
           };
@@ -455,7 +456,7 @@ declare namespace App {
           };
           content: {
             title: string;
-            scrollMode: { title: string } & Record<UnionKey.ThemeScrollMode, string>;
+            scrollMode: { title: string; tip: string } & Record<UnionKey.ThemeScrollMode, string>;
             page: {
               animate: string;
               mode: { title: string } & Record<UnionKey.ThemePageAnimateMode, string>;

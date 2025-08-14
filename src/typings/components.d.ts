@@ -46,6 +46,7 @@ declare module 'vue' {
     'IconQuill:collapse': typeof import('~icons/quill/collapse')['default']
     'IconQuill:expand': typeof import('~icons/quill/expand')['default']
     'IconSimpleIcons:gitee': typeof import('~icons/simple-icons/gitee')['default']
+    IconTooltip: typeof import('./../components/common/icon-tooltip.vue')['default']
     IconUilSearch: typeof import('~icons/uil/search')['default']
     JsonPreview: typeof import('./../components/custom/json-preview.vue')['default']
     LangSwitch: typeof import('./../components/common/lang-switch.vue')['default']
