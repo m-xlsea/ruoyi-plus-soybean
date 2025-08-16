@@ -24,9 +24,12 @@ const model = defineModel<Api.System.RoleSearchParams>('model', { required: true
 const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
 
 function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
-  if (value?.length) {
-    model.value.params!.beginTime = `${value[0]} 00:00:00`;
-    model.value.params!.endTime = `${value[1]} 23:59:59`;
+  const params = model.value.params!;
+  if (value && value.length === 2) {
+    [params.beginTime, params.endTime] = value;
+  } else {
+    params.beginTime = undefined;
+    params.endTime = undefined;
   }
 }
 

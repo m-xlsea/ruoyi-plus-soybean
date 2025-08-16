@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
 import { useLoading } from '@sa/hooks';
 import { fetchCreateUser, fetchGetUserInfo, fetchUpdateUser } from '@/service/api/system';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -49,6 +49,8 @@ type Model = Api.System.UserOperateParams;
 
 const model: Model = reactive(createDefaultModel());
 
+const roleOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
+
 function createDefaultModel(): Model {
   return {
     deptId: null,
@@ -76,18 +78,23 @@ const rules: Record<RuleKey, App.Global.FormRule[]> = {
   roleIds: [{ ...createRequiredRule('请选择角色'), type: 'array' }]
 };
 
-async function getUserInfo() {
+async function getUserInfo(id: CommonType.IdType = '') {
   startLoading();
-  const { error, data } = await fetchGetUserInfo(props.rowData?.userId);
+  const { error, data } = await fetchGetUserInfo(id);
   if (!error) {
     model.roleIds = data.roleIds;
     model.postIds = data.postIds;
+    roleOptions.value = data.roles.map(role => ({
+      label: role.roleName,
+      value: role.roleId
+    }));
   }
   endLoading();
 }
 
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
+    getUserInfo();
     Object.assign(model, createDefaultModel());
     model.deptId = props.deptId;
     return;
@@ -97,7 +104,7 @@ function handleUpdateModelWhenEdit() {
     startDeptLoading();
     Object.assign(model, props.rowData);
     model.password = '';
-    getUserInfo();
+    getUserInfo(props.rowData.userId);
     endDeptLoading();
   }
 }
@@ -209,7 +216,14 @@ watch(visible, () => {
             <PostSelect v-model:value="model.postIds" :dept-id="model.deptId" multiple clearable />
           </NFormItem>
           <NFormItem :label="$t('page.system.user.roleIds')" path="roleIds">
-            <RoleSelect v-model:value="model.roleIds" multiple clearable />
+            <NSelect
+              v-model:value="model.roleIds"
+              :loading="loading"
+              :options="roleOptions"
+              multiple
+              clearable
+              placeholder="请选择角色"
+            />
           </NFormItem>
           <NFormItem :label="$t('page.system.user.status')" path="status">
             <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
