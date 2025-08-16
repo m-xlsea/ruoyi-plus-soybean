@@ -1,5 +1,44 @@
 # 更新日志
 
+## [v1.1.3](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.1.2...v1.1.3) (2025-08-16)
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug 修复
+
+- **hooks**:
+  - 非安全环境下不使用流式下载 &nbsp;-&nbsp; by @m-xlsea [<samp>(f8983)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/f8983557)
+  - 修复oss下载时未转码问题 &nbsp;-&nbsp; by **AN** [<samp>(2d31d)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/2d31d7dc)
+- **project**:
+  - 关闭多租户功能后仍然遍历租户列表导致控制台报错的问题 &nbsp;-&nbsp; by **wang_rui** [<samp>(b96c4)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/b96c46ba)
+  - 关闭多租户功能后仍然遍历租户列表导致控制台报错的问题 Merge pull request !25 from littleghost2016/dev &nbsp;-&nbsp; by **不寻俗** [<samp>(90276)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/9027632b)
+- **projects**:
+  - 修复一级菜单隐藏失效问题 &nbsp;-&nbsp; by **AN** [<samp>(8fcc7)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/8fcc70d7)
+  - 修复日期搜索条件清除问题 &nbsp;-&nbsp; by **AN** [<samp>(52318)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/52318c10)
+  - 修复登录过期事件监听未被重置 &nbsp;-&nbsp; by @m-xlsea [<samp>(71037)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/71037439)
+  - 修复用户新增时角色下拉包含超级管理员问题 &nbsp;-&nbsp; by **AN** [<samp>(a15b6)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/a15b683b)
+  - 修复用户导入功能无法更新问题 &nbsp;-&nbsp; by **AN** [<samp>(4e983)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4e9839bd)
+  - Fix the icon size in the image preview toolbar &nbsp;-&nbsp; by @m-xlsea [<samp>(4539f)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4539fe01)
+  - 修复新增用户未查询角色列表问题 &nbsp;-&nbsp; by **AN** [<samp>(d6ae8)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/d6ae85d2)
+- **readme**:
+  - update GitHub stars and forks links for gitee &nbsp;-&nbsp; by @soybeanjs [<samp>(923eb)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/923eb98a)
+
+### &nbsp;&nbsp;&nbsp;💅 重构
+
+- **menu**:
+  - 菜单管理中隐藏的菜单显示灰色 &nbsp;-&nbsp; by **NicholasLD** [<samp>(adca2)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/adca2e26)
+  - 菜单管理中隐藏的菜单显示灰色 Merge pull request !24 from NicholasLD/N/A &nbsp;-&nbsp; by **不寻俗** [<samp>(4eb77)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4eb77eac)
+- **projects**:
+  - 菜单列表新增禁用菜单样式 &nbsp;-&nbsp; by @m-xlsea [<samp>(e5383)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/e538355f)
+
+### &nbsp;&nbsp;&nbsp;🏡 杂项
+
+- **other**: update the ESLint validation configuration to support more file types. &nbsp;-&nbsp; by **Azir-11** [<samp>(8d7f9)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/8d7f91dc)
+- **readme**: remove DartNode sponsorship badge from README files &nbsp;-&nbsp; by @soybeanjs [<samp>(33ade)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/33ade539)
+
+### &nbsp;&nbsp;&nbsp;❤️ 贡献者
+
+[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;[![m-xlsea](https://github.com/m-xlsea.png?size=48)](https://github.com/m-xlsea)&nbsp;&nbsp;[![Elio-An](https://github.com/Elio-An.png?size=48)](https://gitee.com/elio-an)&nbsp;&nbsp;[![Azir-11](https://github.com/Azir-11.png?size=48)](https://github.com/Azir-11)&nbsp;&nbsp;[![Azir-11](https://github.com/NicholasLD.png?size=48)](https://github.com/NicholasLD)&nbsp;&nbsp;
+[wang_rui](mailto:wrr1996@163.com)
+
 ## [v1.1.2](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.1.1...v1.1.2) (2025-07-24)
 
 ### &nbsp;&nbsp;&nbsp;🐞 Bug 修复
