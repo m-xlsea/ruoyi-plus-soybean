@@ -78,9 +78,9 @@ const rules: Record<RuleKey, App.Global.FormRule[]> = {
   roleIds: [{ ...createRequiredRule('请选择角色'), type: 'array' }]
 };
 
-async function getUserInfo() {
+async function getUserInfo(id: CommonType.IdType = '') {
   startLoading();
-  const { error, data } = await fetchGetUserInfo(props.rowData?.userId);
+  const { error, data } = await fetchGetUserInfo(id);
   if (!error) {
     model.roleIds = data.roleIds;
     model.postIds = data.postIds;
@@ -94,6 +94,7 @@ async function getUserInfo() {
 
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
+    getUserInfo();
     Object.assign(model, createDefaultModel());
     model.deptId = props.deptId;
     return;
@@ -103,7 +104,7 @@ function handleUpdateModelWhenEdit() {
     startDeptLoading();
     Object.assign(model, props.rowData);
     model.password = '';
-    getUserInfo();
+    getUserInfo(props.rowData.userId);
     endDeptLoading();
   }
 }

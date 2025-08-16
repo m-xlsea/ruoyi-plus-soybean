@@ -48,7 +48,6 @@ function closeDrawer() {
 }
 
 async function handleSubmit() {
-  console.log(data.value);
   fileList.value.forEach(item => {
     item.status = 'pending';
   });
