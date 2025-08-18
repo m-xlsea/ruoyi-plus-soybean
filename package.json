@@ -84,7 +84,8 @@
     "vue-advanced-cropper": "^2.8.9",
     "vue-draggable-plus": "0.6.0",
     "vue-i18n": "11.1.9",
-    "vue-router": "4.5.1"
+    "vue-router": "4.5.1",
+    "xlsx": "0.18.5"
   },
   "devDependencies": {
     "@elegant-router/vue": "0.3.8",
