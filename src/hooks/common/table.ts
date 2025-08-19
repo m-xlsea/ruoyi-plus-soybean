@@ -268,7 +268,19 @@ export function useNaiveTreeTable<ResponseData, ApiData>(options: UseNaiveTreeTa
     pagination: false,
     getColumnChecks: cols => getColumnChecks(cols, options.getColumnVisible),
     getColumns,
-    onFetched: data => {
+    onFetched: transformData => {
+      const data: ApiData[] = [];
+
+      const collect = (nodes: any[]) => {
+        nodes.forEach(node => {
+          data.push(node);
+          if (node?.children?.length) {
+            collect(node.children);
+          }
+        });
+      };
+
+      collect(transformData);
       rows.value = data;
     }
   });
