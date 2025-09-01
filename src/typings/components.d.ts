@@ -68,6 +68,8 @@ declare module 'vue' {
     NCollapseItem: typeof import('naive-ui')['NCollapseItem']
     NColorPicker: typeof import('naive-ui')['NColorPicker']
     NDataTable: typeof import('naive-ui')['NDataTable']
+    NDescriptions: typeof import('naive-ui')['NDescriptions']
+    NDescriptionsItem: typeof import('naive-ui')['NDescriptionsItem']
     NDialogProvider: typeof import('naive-ui')['NDialogProvider']
     NDivider: typeof import('naive-ui')['NDivider']
     NDrawer: typeof import('naive-ui')['NDrawer']

@@ -12,7 +12,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
     error: '#CB2634'
   },
   isInfoFollowPrimary: true,
-  resetCacheStrategy: 'close',
+  resetCacheStrategy: 'refresh',
   layout: {
     mode: 'vertical',
     scrollMode: 'content'

@@ -406,6 +406,7 @@ declare namespace App {
           appearance: string;
           layout: string;
           general: string;
+          preset: string;
         };
         appearance: {
           themeSchema: { title: string } & Record<UnionKey.ThemeScheme, string>;
@@ -417,6 +418,17 @@ declare namespace App {
           } & Theme.ThemeColor;
           recommendColor: string;
           recommendColorDesc: string;
+          preset: {
+            title: string;
+            apply: string;
+            applySuccess: string;
+            [key: string]:
+              | {
+                  name: string;
+                  desc: string;
+                }
+              | string;
+          };
         };
         layout: {
           layoutMode: { title: string } & Record<UnionKey.ThemeLayoutMode, string> & {
