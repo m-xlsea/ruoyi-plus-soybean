@@ -39,6 +39,7 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
 </script>
 
 <template>
+  <!-- Copyright By https://github.com/Daymychen/art-design-pro/blob/main/src/components/core/views/login/LoginLeftView.vue -->
   <div class="box-border size-full flex">
     <div class="relative box-border hidden h-full w-65vw overflow-hidden bg-primary-50 xl:block dark:bg-primary-900">
       <div class="relative z-100 flex items-center pl-30px pt-30px">
@@ -52,6 +53,7 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
         <h1 class="text-24px font-400">{{ $t('page.login.common.title') }}</h1>
         <p class="mt-8px text-14px color-gray-500">{{ $t('page.login.common.subTitle') }}</p>
       </div>
+      <WaveBg />
     </div>
     <header class="relative h-full flex-1 xl:m-auto sm:!w-full">
       <div class="relative z-100 block flex items-center pl-30px pt-30px xl:hidden">
