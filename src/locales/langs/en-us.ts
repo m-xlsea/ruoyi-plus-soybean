@@ -367,6 +367,8 @@ const local: App.I18n.Schema = {
   page: {
     login: {
       common: {
+        title: 'Modern enterprise-level multi-tenant management system',
+        subTitle: 'Provides developers with a complete enterprise management solution',
         loginOrRegister: 'Login / Register',
         register: 'Register',
         userNamePlaceholder: 'Please enter user name',

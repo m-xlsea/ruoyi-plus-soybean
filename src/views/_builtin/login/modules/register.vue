@@ -104,8 +104,8 @@ handleFetchCaptchaCode();
 
 <template>
   <div>
-    <div class="mb-12px text-24px text-black font-500 sm:text-30px dark:text-white">注册新账户</div>
-    <div class="pb-24px text-18px text-#858585">欢迎注册！请输入您的账户信息</div>
+    <div class="mb-5px text-32px text-black font-600 sm:text-30px dark:text-white">注册新账户</div>
+    <div class="pb-18px text-16px text-#858585">欢迎注册！请输入您的账户信息</div>
     <NForm
       ref="formRef"
       :model="model"
@@ -147,14 +147,14 @@ handleFetchCaptchaCode();
           </NSpin>
         </div>
       </NFormItem>
-      <NSpace vertical :size="18" class="w-full pt-6px">
+      <NSpace vertical :size="18" class="w-full">
         <NButton type="primary" size="large" block :loading="registerLoading" @click="handleSubmit">
           {{ $t('page.login.common.register') }}
         </NButton>
       </NSpace>
     </NForm>
 
-    <div class="mt-32px w-full text-center text-18px text-#858585">
+    <div class="mt-24px w-full text-center text-18px text-#858585">
       您已有账户？
       <NA type="primary" class="text-18px" @click="toggleLoginModule('pwd-login')">
         {{ $t('common.login') }}
@@ -177,7 +177,7 @@ handleFetchCaptchaCode();
 
 :deep(.n-base-selection),
 :deep(.n-input) {
-  --n-height: 52px !important;
+  --n-height: 42px !important;
   --n-font-size: 16px !important;
   --n-border-radius: 8px !important;
 }
@@ -187,7 +187,7 @@ handleFetchCaptchaCode();
 }
 
 :deep(.n-button) {
-  --n-height: 52px !important;
+  --n-height: 42px !important;
   --n-font-size: 18px !important;
   --n-border-radius: 8px !important;
 }

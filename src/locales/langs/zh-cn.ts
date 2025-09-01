@@ -364,6 +364,8 @@ const local: App.I18n.Schema = {
   page: {
     login: {
       common: {
+        title: '现代化的企业级多租户管理系统',
+        subTitle: '为开发者提供了完整的企业管理解决方案',
         loginOrRegister: '登录 / 注册',
         register: '注册',
         userNamePlaceholder: '请输入用户名',

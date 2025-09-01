@@ -529,6 +529,8 @@ declare namespace App {
         };
         login: {
           common: {
+            title: string;
+            subTitle: string;
             loginOrRegister: string;
             register: string;
             userNamePlaceholder: string;
