@@ -22,7 +22,7 @@
 
 # 📢 重要通知
 
-1.1.2 版本已经正式发布，工作流版本迎来首个版本（请切换 [flow](https://gitee.com/xlsea/ruoyi-plus-soybean/tree/flow/) 分支查看），但仍然建议：
+1.1.3 版本已经正式发布（工作流版本请切换 [flow](https://gitee.com/xlsea/ruoyi-plus-soybean/tree/flow/) 分支查看），但仍然建议：
 - 在生产环境使用前进行充分测试
 - 关注项目更新，及时获取最新版本
 - 积极反馈问题，帮助我们快速迭代
@@ -39,6 +39,11 @@
 <p style="font-weight: bold; font-size: 24px;">本项目强制使用 pnpm 构建，详细请看 <a href="#安装步骤及说明">安装步骤及说明</a></p>
 
 <p style="font-weight: bold; font-size: 24px;">后端需要替换代码生成模板与菜单 SQL，详细请看 <a href="#代码生成与菜单更新">代码生成与菜单更新</a></p>
+
+# 💎 友情链接
+
+- [Snail Job Pro](https://pro.snailjob.opensnail.com/home) - 灵活，可靠和快速的分布式任务重试和分布式任务调度平台
+- [AiZuDa - 爱组搭（飞龙工作流企业版）](https://naiveui.aizuda.com) - 像搭积木一样进行低代码甚至零代码快速构建应用
 
 ## 📋 项目概述
 
