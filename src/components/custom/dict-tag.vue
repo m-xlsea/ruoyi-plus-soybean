@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue';
 import type { TagProps } from 'naive-ui';
+import { jsonClone } from '@sa/utils';
 import { useDict } from '@/hooks/business/dict';
 import { isNotNull } from '@/utils/common';
 import { $t } from '@/locales';
@@ -28,7 +29,7 @@ const { transformDictData } = useDict(props.dictCode, props.immediate);
 
 const dictTagData = computed<Api.System.DictData[]>(() => {
   if (props.dictData) {
-    const dictData = props.dictData;
+    const dictData = jsonClone(props.dictData);
     if (dictData.dictLabel?.startsWith(`dict.${dictData.dictType}.`)) {
       dictData.dictLabel = $t(dictData.dictLabel as App.I18n.I18nKey);
     }
