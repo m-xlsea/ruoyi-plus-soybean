@@ -46,10 +46,10 @@ async function handleSubmit() {
 
 <template>
   <div>
-    <div class="mb-12px text-24px text-black font-500 sm:text-30px dark:text-white">
+    <div class="mb-5px text-32px text-black font-600 sm:text-30px dark:text-white">
       {{ $t('page.login.resetPwd.title') }}
     </div>
-    <div class="pb-24px text-18px text-#858585">请输入您的手机号，我们将发送验证码到您的手机</div>
+    <div class="pb-18px text-16px text-#858585">请输入您的手机号，我们将发送验证码到您的手机</div>
     <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
       <NFormItem path="phone">
         <NInput v-model:value="model.phone" :placeholder="$t('page.login.common.phonePlaceholder')" />
@@ -73,7 +73,7 @@ async function handleSubmit() {
           :placeholder="$t('page.login.common.confirmPasswordPlaceholder')"
         />
       </NFormItem>
-      <NSpace vertical :size="18" class="w-full">
+      <NSpace vertical :size="20" class="w-full">
         <NButton type="primary" size="large" block @click="handleSubmit">
           {{ $t('page.login.resetPwd.title') }}
         </NButton>
@@ -88,7 +88,7 @@ async function handleSubmit() {
 <style scoped>
 :deep(.n-base-selection),
 :deep(.n-input) {
-  --n-height: 52px !important;
+  --n-height: 42px !important;
   --n-font-size: 16px !important;
   --n-border-radius: 8px !important;
 }
@@ -98,7 +98,7 @@ async function handleSubmit() {
 }
 
 :deep(.n-button) {
-  --n-height: 52px !important;
+  --n-height: 42px !important;
   --n-font-size: 18px !important;
   --n-border-radius: 8px !important;
 }

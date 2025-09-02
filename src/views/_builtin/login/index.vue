@@ -39,45 +39,51 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
 </script>
 
 <template>
-  <div class="relative min-h-screen w-full flex flex-wrap">
-    <div class="hidden min-h-screen w-50% bg-primary-100 lg:block dark:bg-primary-800">
-      <div class="size-full flex-center">
-        <img class="w-60% sm:w-80%" :src="loginBackground" />
+  <!-- Copyright By https://github.com/Daymychen/art-design-pro/blob/main/src/components/core/views/login/LoginLeftView.vue -->
+  <div class="box-border size-full flex">
+    <div class="relative box-border hidden h-full w-65vw overflow-hidden bg-primary-50 xl:block dark:bg-primary-900">
+      <div class="relative z-100 flex items-center pl-30px pt-30px">
+        <SystemLogo class="text-32px text-primary" />
+        <h3 class="ml-10px text-20px font-400">{{ $t('system.title') }}</h3>
       </div>
-    </div>
-    <div class="w-full flex-col-center px-24px py-32px lg:w-50%">
-      <div class="mx-auto max-w-464px w-full">
-        <header class="flex-y-center justify-between">
-          <div class="flex-y-center gap-16px">
-            <SystemLogo class="text-30px text-primary sm:text-42px" />
-            <h3 class="text-24px text-primary font-500 sm:text-32px">{{ $t('system.title') }}</h3>
-          </div>
-          <div class="flex-y-center">
-            <ThemeSchemaSwitch
-              :theme-schema="themeStore.themeScheme"
-              :show-tooltip="false"
-              class="text-20px lt-sm:text-18px"
-              @switch="themeStore.toggleThemeScheme"
-            />
-            <LangSwitch
-              v-if="themeStore.header.multilingual.visible"
-              :lang="appStore.locale"
-              :lang-options="appStore.localeOptions"
-              :show-tooltip="false"
-              class="text-20px lt-sm:text-18px"
-              @change-lang="appStore.changeLocale"
-            />
-          </div>
-        </header>
-        <main class="pt-24px">
-          <div>
-            <Transition :name="themeStore.page.animateMode" mode="out-in" appear>
-              <component :is="activeModule.component" />
-            </Transition>
-          </div>
-        </main>
+      <div class="absolute inset-x-0 inset-b-10.5% inset-t-0 z-10 m-auto w-40%">
+        <img class="size-full" :src="loginBackground" />
       </div>
+      <div class="absolute bottom-80px w-full text-center">
+        <h1 class="text-24px font-400">{{ $t('page.login.common.title') }}</h1>
+        <p class="mt-8px text-14px color-gray-500">{{ $t('page.login.common.subTitle') }}</p>
+      </div>
+      <WaveBg />
     </div>
+    <header class="relative h-full flex-1 xl:m-auto sm:!w-full">
+      <div class="relative z-100 block flex items-center pl-30px pt-30px xl:hidden">
+        <SystemLogo class="text-32px text-primary" />
+        <h3 class="ml-10px text-20px font-400">{{ $t('system.title') }}</h3>
+      </div>
+      <div class="position-fixed right-30px top-24px z-100 flex items-center justify-end">
+        <div class="ml-15px inline-block flex cursor-pointer select-none p-5px">
+          <ThemeSchemaSwitch
+            :theme-schema="themeStore.themeScheme"
+            :show-tooltip="false"
+            class="text-20px lt-sm:text-18px"
+            @switch="themeStore.toggleThemeScheme"
+          />
+          <LangSwitch
+            v-if="themeStore.header.multilingual.visible"
+            :lang="appStore.locale"
+            :lang-options="appStore.localeOptions"
+            :show-tooltip="false"
+            class="text-20px lt-sm:text-18px"
+            @change-lang="appStore.changeLocale"
+          />
+        </div>
+      </div>
+      <main class="absolute inset-0 m-auto h-630px max-w-450px w-full overflow-hidden rounded-5px bg-cover px-24px">
+        <Transition :name="themeStore.page.animateMode" mode="out-in" appear>
+          <component :is="activeModule.component" />
+        </Transition>
+      </main>
+    </header>
   </div>
 </template>
 

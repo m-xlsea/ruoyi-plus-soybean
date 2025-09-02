@@ -124,8 +124,8 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
 
 <template>
   <div>
-    <div class="mb-12px text-24px text-black font-500 sm:text-30px dark:text-white">登录到您的账户</div>
-    <div class="pb-24px text-18px text-#858585">欢迎回来！请输入您的账户信息</div>
+    <div class="mb-5px text-32px text-black font-600 dark:text-white">登录到您的账户</div>
+    <div class="pb-18px text-16px text-#858585">欢迎回来！请输入您的账户信息</div>
     <NForm
       ref="formRef"
       :model="model"
@@ -156,16 +156,16 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
       <NFormItem v-if="captchaEnabled" path="code">
         <div class="w-full flex-y-center gap-16px">
           <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
-          <NSpin :show="codeLoading" :size="28" class="h-52px">
-            <NButton :focusable="false" class="login-code h-52px w-136px" @click="handleFetchCaptchaCode">
+          <NSpin :show="codeLoading" :size="28" class="h-42px">
+            <NButton :focusable="false" class="login-code h-42px w-136px" @click="handleFetchCaptchaCode">
               <img v-if="codeUrl" :src="codeUrl" />
               <NEmpty v-else :show-icon="false" description="暂无验证码" />
             </NButton>
           </NSpin>
         </div>
       </NFormItem>
-      <NSpace vertical :size="16" class="mb-8px">
-        <div class="mx-6px mb-10px flex-y-center justify-between">
+      <NSpace vertical :size="12" class="mb-8px">
+        <div class="mx-6px mb-8px flex-y-center justify-between">
           <NCheckbox v-model:checked="remberMe" size="large">{{ $t('page.login.pwdLogin.rememberMe') }}</NCheckbox>
           <NA type="primary" class="text-18px" @click="toggleLoginModule('reset-pwd')">
             {{ $t('page.login.pwdLogin.forgetPassword') }}
@@ -199,7 +199,7 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
       </NButton>
     </div>
 
-    <div class="mt-32px w-full text-center text-18px text-#858585">
+    <div class="mt-24px w-full text-center text-18px text-#858585">
       您还没有账户？
       <NA type="primary" class="text-18px" @click="toggleLoginModule('register')">
         {{ $t('page.login.common.register') }}
@@ -216,13 +216,13 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
   }
 
   img {
-    height: 52px;
+    height: 42px;
   }
 }
 
 :deep(.n-base-selection),
 :deep(.n-input) {
-  --n-height: 52px !important;
+  --n-height: 42px !important;
   --n-font-size: 16px !important;
   --n-border-radius: 8px !important;
 }
@@ -237,7 +237,7 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
 }
 
 :deep(.n-button) {
-  --n-height: 52px !important;
+  --n-height: 42px !important;
   --n-font-size: 18px !important;
   --n-border-radius: 8px !important;
 }
