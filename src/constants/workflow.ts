@@ -73,6 +73,14 @@ export const workflowNodeTypeRecord: Record<Api.Workflow.WorkflowNodeType, strin
 
 export const workflowNodeTypeOptions = transformRecordToOption(workflowNodeTypeRecord);
 
+/** definition designer mode */
+export const definitionDesignerModeRecord: Record<Api.Workflow.DefinitionDesignerMode, string> = {
+  CLASSICS: '经典模式',
+  MIMIC: '仿钉钉模式'
+};
+
+export const definitionDesignerModeOptions = transformRecordToOption(definitionDesignerModeRecord);
+
 /** activity status */
 export const workflowActivityStatusRecord: Record<Api.Workflow.WorkflowActivityStatus, string> = {
   0: '挂起',

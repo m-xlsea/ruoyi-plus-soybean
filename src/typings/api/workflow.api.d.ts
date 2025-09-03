@@ -122,6 +122,9 @@ declare namespace Api {
     /** 工作流发布状态 */
     type WorkflowPublishStatus = 0 | 1 | 9;
 
+    /** 设计器模式 */
+    type DefinitionDesignerMode = 'CLASSICS' | 'MIMIC';
+
     /** definition */
     type Definition = Common.CommonTenantRecord<{
       /** 主键id */
@@ -139,17 +142,19 @@ declare namespace Api {
       /** 是否发布（0未发布 1已发布 9失效） */
       isPublish: WorkflowPublishStatus;
       /** 审批表单是否自定义（Y是 N否） */
-      formCustom: string;
+      formCustom: Api.Common.YesOrNoStatus;
       /** 审批表单路径 */
       formPath: string;
       /** 流程激活状态（0挂起 1激活） */
-      activityStatus: number;
+      activityStatus: WorkflowActivityStatus;
       /** 监听器类型 */
       listenerType: string;
       /** 监听器路径 */
       listenerPath: string;
       /** 业务详情 存业务表对象json字符串 */
       ext: string;
+      /** 设计器模式 */
+      modelValue: DefinitionDesignerMode;
       /** 删除标志 */
       delFlag: string;
     }>;
@@ -161,7 +166,10 @@ declare namespace Api {
 
     /** definition operate params */
     type DefinitionOperateParams = CommonType.RecordNullable<
-      Pick<Api.Workflow.Definition, 'id' | 'flowCode' | 'flowName' | 'category' | 'formPath'>
+      Pick<
+        Api.Workflow.Definition,
+        'id' | 'flowCode' | 'flowName' | 'category' | 'formPath' | 'formCustom' | 'modelValue' | 'ext'
+      >
     >;
 
     /** definition list */

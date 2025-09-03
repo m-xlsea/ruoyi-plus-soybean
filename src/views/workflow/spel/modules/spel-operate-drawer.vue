@@ -55,7 +55,7 @@ function createDefaultModel(): Model {
     methodParams: '',
     viewSpel: '',
     remark: '',
-    status: ''
+    status: '0'
   };
 }
 

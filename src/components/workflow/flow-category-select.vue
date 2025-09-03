@@ -15,6 +15,7 @@ defineProps<Props>();
 
 const rawValue = defineModel<CommonType.IdType | null>('value', { required: false });
 const options = defineModel<Api.Common.CommonTreeRecord>('options', { required: false, default: [] });
+const expandedKeys = defineModel<CommonType.IdType[]>('expandedKeys', { required: false, default: [] });
 
 const attrs: TreeSelectProps = useAttrs();
 const { loading, startLoading, endLoading } = useLoading();
@@ -34,6 +35,10 @@ async function getCategoryList() {
   const { error, data } = await fetchGetCategoryTree();
   if (error) return;
   options.value = data;
+  // 设置默认展开的节点
+  if (data?.length && !expandedKeys.value.length) {
+    expandedKeys.value = [data[0].id];
+  }
   endLoading();
 }
 
@@ -43,13 +48,13 @@ getCategoryList();
 <template>
   <NTreeSelect
     v-model:value="strValue"
+    v-model:expanded-keys="expandedKeys"
     filterable
     class="h-full"
     :loading="loading"
     key-field="id"
     label-field="label"
     :options="options as []"
-    :default-expanded-keys="[0]"
     v-bind="attrs"
   />
 </template>

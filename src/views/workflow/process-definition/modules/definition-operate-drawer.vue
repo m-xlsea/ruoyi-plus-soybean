@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, reactive, ref, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
+import { definitionDesignerModeOptions } from '@/constants/workflow';
 import { fetchCreateDefinition, fetchUpdateDefinition } from '@/service/api/workflow/definition';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
+import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 
 defineOptions({
@@ -24,6 +26,7 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
+useDict('sys_yes_no');
 const visible = defineModel<boolean>('visible', {
   default: false
 });
@@ -51,31 +54,55 @@ type Model = Api.Workflow.DefinitionOperateParams;
 
 const model: Model = reactive(createDefaultModel());
 
+/** 是否自动通过 */
+const autoPass = ref<boolean>(false);
+
 function createDefaultModel(): Model {
   return {
     flowCode: '',
     flowName: '',
     category: '',
-    formPath: undefined
+    formPath: null,
+    formCustom: 'N',
+    modelValue: 'CLASSICS',
+    ext: ''
   };
 }
 
-type RuleKey = Extract<keyof Model, 'flowCode' | 'flowName' | 'category'>;
+type RuleKey = Extract<keyof Model, 'flowCode' | 'flowName' | 'category' | 'modelValue' | 'formCustom'>;
 
 const rules: Record<RuleKey, App.Global.FormRule> = {
   flowCode: createRequiredRule('流程编码不能为空'),
   flowName: createRequiredRule('流程名称不能为空'),
-  category: createRequiredRule('流程类别不能为空')
+  category: createRequiredRule('流程类别不能为空'),
+  modelValue: createRequiredRule('设计器模式不能为空'),
+  formCustom: createRequiredRule('审批表单是否自定义不能为空')
 };
 
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
     Object.assign(model, createDefaultModel());
+    model.formCustom = 'N';
+    autoPass.value = false;
+    // 设置默认的 ext JSON
+    model.ext = JSON.stringify({ autoPass: false });
     return;
   }
 
   if (props.operateType === 'edit' && props.rowData) {
     Object.assign(model, props.rowData);
+    // 从 ext 字段解析 JSON 并设置 autoPass 值
+    try {
+      if (props.rowData.ext) {
+        const extData = JSON.parse(props.rowData.ext);
+        autoPass.value = extData.autoPass || false;
+      } else {
+        autoPass.value = false;
+      }
+    } catch {
+      // 如果解析失败，设置默认值
+      autoPass.value = false;
+    }
   }
 }
 
@@ -86,16 +113,36 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  // 将 autoPass 值序列化为 JSON 并存储到 ext 字段
+  model.ext = JSON.stringify({ autoPass: autoPass.value });
+
   // request
   if (props.operateType === 'add') {
-    const { flowCode, flowName, category, formPath } = model;
-    const { error } = await fetchCreateDefinition({ flowCode, flowName, category, formPath });
+    const { flowCode, flowName, category, formPath, modelValue, formCustom, ext } = model;
+    const { error } = await fetchCreateDefinition({
+      flowCode,
+      flowName,
+      category,
+      formPath: formPath || '',
+      modelValue,
+      formCustom,
+      ext
+    });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { id, flowCode, flowName, category, formPath } = model;
-    const { error } = await fetchUpdateDefinition({ id, flowCode, flowName, category, formPath });
+    const { id, flowCode, flowName, category, formPath, modelValue, formCustom, ext } = model;
+    const { error } = await fetchUpdateDefinition({
+      id,
+      flowCode,
+      flowName,
+      category,
+      formPath: formPath || '',
+      modelValue,
+      formCustom,
+      ext
+    });
     if (error) return;
   }
 
@@ -124,6 +171,25 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem label="流程名称" path="flowName">
           <NInput v-model:value="model.flowName" placeholder="请输入流程名称" />
+        </NFormItem>
+        <NFormItem label="设计器模式" path="modelValue">
+          <NRadioGroup v-model:value="model.modelValue" :disabled="operateType === 'edit'">
+            <NSpace>
+              <NRadioButton
+                v-for="option in definitionDesignerModeOptions"
+                :key="option.value"
+                :value="option.value"
+                :label="option.label"
+              />
+            </NSpace>
+          </NRadioGroup>
+        </NFormItem>
+        <!-- 流程配置 -->
+        <NFormItem label="流程配置" path="ext">
+          <NCheckbox v-model:checked="autoPass" label="下一节点执行人是当前任务处理人自动审批" />
+        </NFormItem>
+        <NFormItem label="是否动态表单" path="formCustom">
+          <DictRadio v-model:value="model.formCustom" dict-code="sys_yes_no" />
         </NFormItem>
         <NFormItem label="审批表单路径" path="formPath">
           <template #label>
