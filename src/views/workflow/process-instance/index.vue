@@ -68,6 +68,18 @@ const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.Instance>[]>([
     width: 48
   },
   {
+    key: 'businessCode',
+    title: '业务编码',
+    align: 'center',
+    width: 120
+  },
+  {
+    key: 'businessName',
+    title: '业务名称',
+    align: 'center',
+    width: 120
+  },
+  {
     key: 'flowName',
     title: '流程名称',
     align: 'center',
@@ -109,7 +121,7 @@ const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.Instance>[]>([
     key: 'activityStatus',
     title: '状态',
     align: 'center',
-    minWidth: 100,
+    minWidth: 80,
     render(row) {
       return (
         <NTag type={row.activityStatus === 0 ? 'warning' : 'success'}>
@@ -122,7 +134,7 @@ const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.Instance>[]>([
     key: 'flowStatus',
     title: '流程状态',
     align: 'center',
-    minWidth: 100,
+    minWidth: 80,
     render(row) {
       return <DictTag value={row.flowStatus} dictCode="wf_business_status" />;
     }
@@ -242,7 +254,7 @@ const {
       : [...baseColumns.value, ...finishColumns.value, ...operateColumns.value]
 });
 
-const { checkedRowKeys, editingData, handleEdit, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
+const { checkedRowKeys, onBatchDeleted, onDeleted } = useTableOperate(data, getData);
 // 监听运行状态变化
 watch(runningStatus, async () => {
   const newApiFn = runningStatus.value ? fetchGetRunningInstanceList : fetchGetFinishedInstanceList;
@@ -256,7 +268,7 @@ const categoryPattern = ref<string>();
 const categoryData = ref<Api.Common.CommonTreeRecord>([]);
 const selectedKeys = ref<string[]>([]);
 const expandedKeys = ref<CommonType.IdType[]>(['100']);
-
+const instanceRowId = ref<CommonType.IdType>();
 const selectable = computed(() => {
   return !loading.value;
 });
@@ -312,7 +324,7 @@ async function handleCancel(instanceId: CommonType.IdType) {
 }
 
 async function handleShowVariable(id: CommonType.IdType) {
-  handleEdit('id', id);
+  instanceRowId.value = id;
   showVariableDrawer();
 }
 
@@ -409,7 +421,7 @@ async function handlePreview(row: Api.Workflow.Instance) {
           class="sm:h-full"
         />
         <component :is="dynamicComponent" :visible="previewVisible" operate-type="detail" :business-id="businessId" />
-        <InstanceVariableModal v-model:visible="variableVisible" :row-data="editingData" />
+        <InstanceVariableModal v-model:visible="variableVisible" :instance-id="instanceRowId!" />
       </NCard>
     </div>
   </TableSiderLayout>

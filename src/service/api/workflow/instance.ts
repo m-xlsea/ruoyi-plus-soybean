@@ -59,3 +59,20 @@ export function fetchGetMyDocument(data: Api.Workflow.InstanceSearchParams) {
     params: data
   });
 }
+
+/** 更新流程变量信息 */
+export function fetchUpdateInstanceVariable(data: Api.Workflow.InstanceVariableOperateParams) {
+  return request<boolean>({
+    url: '/workflow/instance/updateVariable',
+    method: 'put',
+    data
+  });
+}
+
+/** 获取流程变量信息 */
+export function fetchGetInstanceVariable(instanceId: CommonType.IdType) {
+  return request<Api.Workflow.InstanceVariableInfo>({
+    url: `/workflow/instance/instanceVariable/${instanceId}`,
+    method: 'get'
+  });
+}

@@ -175,6 +175,23 @@ declare namespace Api {
     /** definition list */
     type DefinitionList = Api.Common.PaginatingQueryRecord<Definition>;
 
+    type InstanceVariable = CommonType.RecordNullable<{
+      key: string;
+      value: string;
+    }>;
+
+    type InstanceVariableOperateParams = CommonType.RecordNullable<{
+      instanceId: CommonType.IdType;
+    }> &
+      InstanceVariable;
+
+    type InstanceVariableInfo = CommonType.RecordNullable<{
+      /** 键 */
+      variable: string;
+      /** 值 */
+      variableList: InstanceVariable[];
+    }>;
+
     /** 节点类型 */
     type WorkflowNodeType = 0 | 1 | 2 | 3 | 4;
 
@@ -199,6 +216,10 @@ declare namespace Api {
       flowCode: string;
       /** 业务ID */
       businessId: CommonType.IdType;
+      /** 业务编码 */
+      businessCode: string;
+      /** 业务名称 */
+      businessName: string;
       /** 节点类型 */
       nodeType: WorkflowNodeType;
       /** 节点编码 */
@@ -221,15 +242,8 @@ declare namespace Api {
       ext: string;
       /** 流程定义版本 */
       version: string;
-      /** 创建者 */
-      createBy: string;
       /** 创建者名称 */
       createByName: string;
-      /** 创建时间 */
-      createTime: string;
-
-      /** 更新时间 */
-      updateTime: string;
       /** 删除标志 */
       delFlag: number;
     }>;
