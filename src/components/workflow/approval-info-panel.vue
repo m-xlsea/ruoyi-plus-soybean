@@ -165,7 +165,7 @@ defineExpose({
 
 <template>
   <NDivider />
-  <div>
+  <div class="h-full">
     <NTabs v-model:value="activeTab" type="segment" animated>
       <NTabPane display-directive="show" bar-width="100px" name="image" tab="流程图">
         <FlowPreview v-if="instanceId" :instance-id="instanceId" />

@@ -177,12 +177,24 @@ watch(visible, () => {
 
     <template #footer>
       <NSpace justify="end" :size="16">
-        <NButton v-if="isWaiting" type="primary" @click="openTransferModal">转办</NButton>
-        <NButton v-if="isWaiting && isTicketOrSignInstance" type="primary" @click="openAddSignatureModal">加签</NButton>
-        <NButton v-if="isWaiting && isTicketOrSignInstance" type="primary" @click="openReduceSignatureModal">
+        <NButton v-if="isWaiting" :loading="loading" type="primary" @click="openTransferModal">转办</NButton>
+        <NButton
+          v-if="isWaiting && isTicketOrSignInstance"
+          :loading="loading"
+          type="primary"
+          @click="openAddSignatureModal"
+        >
+          加签
+        </NButton>
+        <NButton
+          v-if="isWaiting && isTicketOrSignInstance"
+          :loading="loading"
+          type="primary"
+          @click="openReduceSignatureModal"
+        >
           减签
         </NButton>
-        <NButton v-if="isWaiting" type="error" @click="handleTerminate">终止</NButton>
+        <NButton v-if="isWaiting" :loading="loading" type="error" @click="handleTerminate">终止</NButton>
       </NSpace>
     </template>
     <!-- 转办用户选择器 -->

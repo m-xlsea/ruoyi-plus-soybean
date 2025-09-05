@@ -133,7 +133,7 @@ async function getTask() {
     return;
   }
   task.value = data;
-  task.value.buttonList.forEach(item => {
+  task.value.buttonList?.forEach(item => {
     buttonPerm[item.code as keyof ButtonPerm] = item.show!;
   });
   endBtnLoading();

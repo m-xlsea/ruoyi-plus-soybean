@@ -122,3 +122,21 @@ export function fetchGetCopyTask(data: Api.Workflow.TaskSearchParams) {
     params: data
   });
 }
+
+/** 修改办理人 */
+export function fetchTaskAssignee(taskIds: CommonType.IdType[], userId: CommonType.IdType) {
+  return request<boolean>({
+    url: `/workflow/task/updateAssignee/${userId}`,
+    method: 'put',
+    data: taskIds
+  });
+}
+
+/** 任务催办 */
+export function fetchTaskUrge(data: Api.Workflow.TaskUrgeOperateParams) {
+  return request<boolean>({
+    url: '/workflow/task/urgeTask',
+    method: 'post',
+    data
+  });
+}

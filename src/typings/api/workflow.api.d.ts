@@ -375,6 +375,13 @@ declare namespace Api {
     /** 任务列表 */
     type TaskList = Common.PaginatingQueryRecord<Task>;
 
+    /** 任务催办操作参数 */
+    type TaskUrgeOperateParams = CommonType.RecordNullable<{
+      taskIdList: CommonType.IdType[];
+      messageType: MessageType[];
+      message: string;
+    }>;
+
     /** 任务操作类型 */
     type TaskOperateType = 'delegateTask' | 'transferTask' | 'addSignature' | 'reductionSignature' | 'stopTask';
 

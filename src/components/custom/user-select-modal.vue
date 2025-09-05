@@ -260,7 +260,7 @@ watch(visible, () => {
     size="medium"
     :title="props.title"
   >
-    <TableSiderLayout :sider-title="$t('page.system.dept.title')">
+    <TableSiderLayout class="bg-gray-50 p-2" :sider-title="$t('page.system.dept.title')">
       <template #header-extra>
         <NButton size="small" text class="h-18px" @click.stop="() => handleResetTreeData()">
           <template #icon>

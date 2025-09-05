@@ -2,7 +2,7 @@
 import { computed, ref, shallowRef, watch } from 'vue';
 import { NButton, NDivider, NEmpty, NInput, NRadioButton, NRadioGroup, NTag } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
-import { fetchGetAllFinishedTask, fetchGetAllWaitingTask } from '@/service/api/workflow/task';
+import { fetchGetAllFinishedTask, fetchGetAllWaitingTask, fetchTaskAssignee } from '@/service/api/workflow/task';
 import { fetchGetCategoryTree } from '@/service/api/workflow/category';
 import { useAppStore } from '@/store/modules/app';
 import { useTable, useTableOperate } from '@/hooks/common/table';
@@ -28,6 +28,8 @@ useDict('wf_task_status');
 const appStore = useAppStore();
 const { bool: viewVisible, setTrue: showViewDrawer } = useBoolean();
 const { bool: interveneVisible, setTrue: showInterveneDrawer } = useBoolean();
+const { bool: urgeVisible, setTrue: showUrgeModal } = useBoolean();
+const { bool: assigneeVisible, setTrue: showAssigneeModal } = useBoolean();
 const dynamicComponent = shallowRef();
 
 const waitingStatus = ref<boolean>(true);
@@ -232,6 +234,14 @@ function handleIntervene(row: Api.Workflow.Task) {
   assigneeNames.value = row.assigneeNames?.split(',') || [];
   showInterveneDrawer();
 }
+
+async function handleAssigneeConfirm(userIds: CommonType.IdType[]) {
+  const { error } = await fetchTaskAssignee(checkedRowKeys.value, userIds[0]);
+  if (error) return;
+  window.$message?.success('修改办理人成功');
+  assigneeVisible.value = false;
+  await getData();
+}
 </script>
 
 <template>
@@ -291,7 +301,36 @@ function handleIntervene(row: Api.Workflow.Task) {
             :show-delete="false"
             :show-export="false"
             @refresh="getData"
-          ></TableHeaderOperation>
+          >
+            <template #prefix>
+              <NButton
+                v-if="waitingStatus"
+                :disabled="checkedRowKeys.length === 0"
+                size="small"
+                type="warning"
+                ghost
+                @click="showAssigneeModal"
+              >
+                <template #icon>
+                  <icon-material-symbols:drive-file-rename-outline-outline class="text-icon" />
+                </template>
+                修改办理人
+              </NButton>
+              <NButton
+                v-if="waitingStatus"
+                :disabled="checkedRowKeys.length === 0"
+                size="small"
+                type="success"
+                ghost
+                @click="showUrgeModal"
+              >
+                <template #icon>
+                  <SvgIcon local-icon="bell" class="text-16px" />
+                </template>
+                催办
+              </NButton>
+            </template>
+          </TableHeaderOperation>
         </template>
         <NDataTable
           v-model:checked-row-keys="checkedRowKeys"
@@ -314,6 +353,10 @@ function handleIntervene(row: Api.Workflow.Task) {
           :assignee-names="assigneeNames"
           @refresh="getData"
         />
+        <!-- 催办 -->
+        <FlowUrgeModal v-model:visible="urgeVisible" :task-ids="checkedRowKeys" @submit="getData" />
+        <!-- 修改办理人 -->
+        <UserSelectModal v-model:visible="assigneeVisible" @confirm="handleAssigneeConfirm" />
       </NCard>
     </div>
   </TableSiderLayout>
