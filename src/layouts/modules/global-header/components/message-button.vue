@@ -33,7 +33,7 @@ const toGitee = () => {
             </NBadge>
           </NButton>
         </template>
-        消息
+        {{ $t('page.home.message') }}
       </NTooltip>
     </template>
     <NCard
