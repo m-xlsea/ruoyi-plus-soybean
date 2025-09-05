@@ -40,6 +40,8 @@ const waitingStatusOptions = ref<WaitingStatusOption[]>([
 
 const commonColumns: NaiveUI.TableColumn<Api.Workflow.TaskOrHisTask>[] = [
   { type: 'selection', align: 'center', width: 50 },
+  { key: 'businessCode', title: '业务编码', align: 'center', width: 120 },
+  { key: 'businessTitle', title: '业务名称', align: 'center', width: 120 },
   { key: 'flowName', title: '流程定义名称', align: 'center', width: 120 },
   { key: 'flowCode', title: '流程定义编码', align: 'center', width: 120 },
   {

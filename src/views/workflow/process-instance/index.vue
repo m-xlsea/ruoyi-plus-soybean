@@ -74,7 +74,7 @@ const baseColumns = ref<NaiveUI.TableColumn<Api.Workflow.Instance>[]>([
     width: 120
   },
   {
-    key: 'businessName',
+    key: 'businessTitle',
     title: '业务名称',
     align: 'center',
     width: 120

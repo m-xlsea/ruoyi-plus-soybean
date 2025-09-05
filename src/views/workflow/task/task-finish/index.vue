@@ -52,6 +52,18 @@ const {
       width: 64
     },
     {
+      title: '业务编码',
+      key: 'businessCode',
+      align: 'center',
+      width: 120
+    },
+    {
+      title: '业务名称',
+      key: 'businessTitle',
+      align: 'center',
+      width: 120
+    },
+    {
       title: '流程定义名称',
       key: 'flowName',
       align: 'center',

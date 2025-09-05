@@ -219,7 +219,7 @@ declare namespace Api {
       /** 业务编码 */
       businessCode: string;
       /** 业务名称 */
-      businessName: string;
+      businessTitle: string;
       /** 节点类型 */
       nodeType: WorkflowNodeType;
       /** 节点编码 */
@@ -370,6 +370,10 @@ declare namespace Api {
       flowCode: string;
       /** 流程版本号 */
       version: string;
+      /** 业务编码 */
+      businessCode: string;
+      /** 业务名称 */
+      businessTitle: string;
     }>;
 
     /** 任务列表 */
@@ -470,6 +474,10 @@ declare namespace Api {
       runDuration: string;
       /** 附件 */
       attachmentList: Api.System.Oss[];
+      /** 业务编码 */
+      businessCode: string;
+      /** 业务名称 */
+      businessTitle: string;
     }>;
 
     /** 历史任务列表 */
