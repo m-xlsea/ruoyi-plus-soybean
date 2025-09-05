@@ -6,6 +6,7 @@ html,
 body,
 #app {
   height: 100%;
+  font-family: inherit;
 }
 
 html {
