@@ -150,7 +150,13 @@ watch(visible, () => {
     :native-scrollbar="false"
   >
     <NSpin :show="loading">
-      <NDescriptions :title="taskInfo?.flowName" label-placement="left" :column="2" size="small" bordered>
+      <NDescriptions
+        :title="`${taskInfo?.flowName} (${taskInfo?.flowCode})`"
+        label-placement="left"
+        :column="2"
+        size="small"
+        bordered
+      >
         <NDescriptionsItem label="任务名称">
           {{ taskInfo?.nodeName }}
         </NDescriptionsItem>

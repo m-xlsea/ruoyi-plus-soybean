@@ -112,6 +112,7 @@ function createDefaultStartWorkflowModel(): StartWorkflowModel {
   return {
     flowCode: null,
     businessId: null,
+    flowInstanceBizExtBo: null,
     variables: {}
   };
 }
@@ -205,6 +206,10 @@ async function handleSubmit() {
   // 提交流程
   startWorkflowModel.businessId = respLeave.value?.id;
   startWorkflowModel.flowCode = model.flowCode;
+  startWorkflowModel.flowInstanceBizExtBo = {
+    businessCode: respLeave.value?.applyCode,
+    businessTitle: '请假申请'
+  };
   taskVariables.value = {
     leaveDays: respLeave.value?.leaveDays,
     userList: ['1', '3', '4']

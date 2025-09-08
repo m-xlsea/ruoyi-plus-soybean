@@ -22,8 +22,8 @@ declare namespace Api {
     type Leave = Common.CommonRecord<{
       /** id */
       id: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
+      /** 申请编码 */
+      applyCode: string;
       /** 请假类型 */
       leaveType: LeaveType;
       /** 开始时间 */
@@ -275,12 +275,20 @@ declare namespace Api {
       message: string;
     }>;
 
+    type BusinessInfo = CommonType.RecordNullable<{
+      /** 业务编码 */
+      businessCode: string;
+      /** 业务名称 */
+      businessTitle: string;
+    }>;
     /** 启动流程操作参数 */
     type StartWorkflowOperateParams = CommonType.RecordNullable<{
       /** 流程定义ID */
       flowCode: string;
       /** 业务ID */
       businessId: CommonType.IdType;
+      /** 业务信息 */
+      flowInstanceBizExtBo: BusinessInfo;
       /** 变量 */
       variables: { [key: string]: any };
     }>;
