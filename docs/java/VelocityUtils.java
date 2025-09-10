@@ -10,6 +10,7 @@ import org.apache.velocity.VelocityContext;
 import org.dromara.common.core.utils.DateUtils;
 import org.dromara.common.core.utils.StringUtils;
 import org.dromara.common.json.utils.JsonUtils;
+import org.dromara.common.mybatis.enums.DataBaseType;
 import org.dromara.common.mybatis.helper.DataBaseHelper;
 import org.dromara.generator.constant.GenConstants;
 import org.dromara.generator.domain.GenTable;
@@ -58,7 +59,7 @@ public class VelocityUtils {
         velocityContext.put("functionName", StringUtils.isNotEmpty(functionName) ? functionName : "【请填写功能名称】");
         velocityContext.put("ClassName", genTable.getClassName());
         velocityContext.put("className", StringUtils.uncapitalize(genTable.getClassName()));
-        velocityContext.put("moduleName", genTable.getModuleName());
+        velocityContext.put("moduleName", StrUtil.toSymbolCase(genTable.getModuleName(), '-'));
         velocityContext.put("BusinessName", StringUtils.capitalize(genTable.getBusinessName()));
         velocityContext.put("businessName", genTable.getBusinessName());
         velocityContext.put("business_name", StrUtil.toUnderlineCase(genTable.getBusinessName()));
@@ -124,11 +125,12 @@ public class VelocityUtils {
         templates.add("vm/java/serviceImpl.java.vm");
         templates.add("vm/java/controller.java.vm");
         templates.add("vm/xml/mapper.xml.vm");
-        if (DataBaseHelper.isOracle()) {
+        DataBaseType dataBaseType = DataBaseHelper.getDataBaseType();
+        if (dataBaseType.isOracle()) {
             templates.add("vm/sql/oracle/sql.vm");
-        } else if (DataBaseHelper.isPostgerSql()) {
+        } else if (dataBaseType.isPostgreSql()) {
             templates.add("vm/sql/postgres/sql.vm");
-        } else if (DataBaseHelper.isSqlServer()) {
+        } else if (dataBaseType.isSqlServer()) {
             templates.add("vm/sql/sqlserver/sql.vm");
         } else {
             templates.add("vm/sql/sql.vm");
@@ -163,7 +165,7 @@ public class VelocityUtils {
         String javaPath = PROJECT_PATH + "/" + StringUtils.replace(packageName, ".", "/");
         String mybatisPath = MYBATIS_PATH + "/" + moduleName;
         String soybeanPath = "soy";
-
+        String soybeanModuleName = StrUtil.toSymbolCase(moduleName, '-');
         if (template.contains("domain.java.vm")) {
             fileName = StringUtils.format("{}/domain/{}.java", javaPath, className);
         }
@@ -186,17 +188,17 @@ public class VelocityUtils {
         } else if (template.contains("sql.vm")) {
             fileName = businessName + "Menu.sql";
         } else if (template.contains("index.vue.vm")) {
-            fileName = StringUtils.format("{}/views/{}/{}/index.vue", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
+            fileName = StringUtils.format("{}/views/{}/{}/index.vue", soybeanPath, soybeanModuleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("index-tree.vue.vm")) {
-            fileName = StringUtils.format("{}/views/{}/{}/index.vue", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
+            fileName = StringUtils.format("{}/views/{}/{}/index.vue", soybeanPath, soybeanModuleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("api.d.ts.vm")) {
-            fileName = StringUtils.format("{}/typings/api/{}.{}.api.d.ts", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
+            fileName = StringUtils.format("{}/typings/api/{}.{}.api.d.ts", soybeanPath, soybeanModuleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("api.ts.vm")) {
-            fileName = StringUtils.format("{}/service/api/{}/{}.ts", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'));
+            fileName = StringUtils.format("{}/service/api/{}/{}.ts", soybeanPath, soybeanModuleName, StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("search.vue.vm")) {
-            fileName = StringUtils.format("{}/views/{}/{}/modules/{}-search.vue", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'), StrUtil.toSymbolCase(businessName, '-'));
+            fileName = StringUtils.format("{}/views/{}/{}/modules/{}-search.vue", soybeanPath, soybeanModuleName, StrUtil.toSymbolCase(businessName, '-'), StrUtil.toSymbolCase(businessName, '-'));
         } else if (template.contains("operate-drawer.vue.vm")) {
-            fileName = StringUtils.format("{}/views/{}/{}/modules/{}-operate-drawer.vue", soybeanPath, moduleName, StrUtil.toSymbolCase(businessName, '-'), StrUtil.toSymbolCase(businessName, '-'));
+            fileName = StringUtils.format("{}/views/{}/{}/modules/{}-operate-drawer.vue", soybeanPath, soybeanModuleName, StrUtil.toSymbolCase(businessName, '-'), StrUtil.toSymbolCase(businessName, '-'));
         }
         return fileName;
     }
