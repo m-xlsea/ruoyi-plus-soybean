@@ -356,7 +356,7 @@ const columns: NaiveUI.TableColumn<Api.Tool.GenTableColumn>[] = [
                 <NFormItemGi span="24 s:12" path="moduleName">
                   <template #label>
                     <div class="flex-center">
-                      <FormTip content="可理解为子系统名，例如 system" />
+                      <FormTip content="可理解为子系统名，例如 system，flow-instance。避免驼峰命名" />
                       <span class="pl-3px">生成模块名</span>
                     </div>
                   </template>
