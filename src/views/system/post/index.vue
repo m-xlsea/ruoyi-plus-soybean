@@ -323,11 +323,11 @@ function handleResetSearch() {
   }
 
   :deep(.n-tree-node) {
-    height: 33px;
+    height: 30px;
   }
 
   :deep(.n-tree-node-switcher) {
-    height: 33px;
+    height: 30px;
   }
 
   :deep(.n-tree-node-switcher__icon) {

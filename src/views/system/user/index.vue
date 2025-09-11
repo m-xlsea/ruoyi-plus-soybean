@@ -415,11 +415,11 @@ function handleResetSearch() {
   }
 
   :deep(.n-tree-node) {
-    height: 25px;
+    height: 30px;
   }
 
   :deep(.n-tree-node-switcher) {
-    height: 25px;
+    height: 30px;
   }
 
   :deep(.n-tree-node-switcher__icon) {
