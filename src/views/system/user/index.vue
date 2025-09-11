@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { computed, ref } from 'vue';
-import { NButton, NDivider } from 'naive-ui';
+import { NAvatar, NButton, NDivider, NEllipsis } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { jsonClone } from '@sa/utils';
 import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList, fetchUpdateUserStatus } from '@/service/api/system';
@@ -12,6 +12,7 @@ import { useDownload } from '@/hooks/business/download';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import { $t } from '@/locales';
 import StatusSwitch from '@/components/custom/status-switch.vue';
+import DictTag from '@/components/custom/dict-tag.vue';
 import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserImportModal from './modules/user-import-modal.vue';
 import UserPasswordDrawer from './modules/user-password-drawer.vue';
@@ -65,41 +66,64 @@ const {
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 48
     },
     {
       key: 'userName',
       title: $t('page.system.user.userName'),
-      align: 'center',
-      minWidth: 120,
-      ellipsis: true
+      align: 'left',
+      width: 200,
+      ellipsis: true,
+      render: row => {
+        return (
+          <div class="flex items-center justify-center gap-2">
+            <NAvatar src={row.avatar} class="bg-primary">
+              {row.avatar ? undefined : row.nickName.charAt(0)}
+            </NAvatar>
+            <div class="max-w-160px flex flex-col">
+              <NEllipsis>{row.userName}</NEllipsis>
+              <NEllipsis>{row.nickName}</NEllipsis>
+            </div>
+          </div>
+        );
+      }
     },
     {
-      key: 'nickName',
-      title: $t('page.system.user.nickName'),
+      key: 'sex',
+      title: $t('page.system.user.sex'),
       align: 'center',
-      minWidth: 120,
-      ellipsis: true
+      width: 80,
+      ellipsis: true,
+      render(row) {
+        return <DictTag value={row.sex} dictCode="sys_user_sex" />;
+      }
     },
     {
       key: 'deptName',
       title: $t('page.system.user.deptName'),
       align: 'center',
-      minWidth: 120,
+      width: 120,
+      ellipsis: true
+    },
+    {
+      key: 'email',
+      title: $t('page.system.user.email'),
+      align: 'center',
+      width: 120,
       ellipsis: true
     },
     {
       key: 'phonenumber',
       title: $t('page.system.user.phonenumber'),
       align: 'center',
-      minWidth: 120,
+      width: 120,
       ellipsis: true
     },
     {
       key: 'status',
       title: $t('page.system.user.status'),
       align: 'center',
-      minWidth: 80,
+      width: 80,
       render(row) {
         return (
           <StatusSwitch
@@ -115,7 +139,7 @@ const {
       key: 'createTime',
       title: $t('page.system.user.createTime'),
       align: 'center',
-      minWidth: 120
+      width: 120
     },
     {
       key: 'operate',
@@ -341,7 +365,7 @@ function handleResetSearch() {
           :data="data"
           size="small"
           :flex-height="!appStore.isMobile"
-          :scroll-x="962"
+          :scroll-x="1200"
           :loading="loading"
           remote
           :row-key="row => row.userId"
