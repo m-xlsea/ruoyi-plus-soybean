@@ -69,7 +69,7 @@ function createDefaultModel(): Model {
     visible: '0',
     status: '0',
     perms: '',
-    icon: undefined,
+    icon: null,
     remark: ''
   };
 }
@@ -118,6 +118,7 @@ const localIconOptions = localIcons.map<SelectOption>(item => ({
 
 function handleInitModel() {
   queryList.value = [];
+  iconType.value = '1';
   Object.assign(model, createDefaultModel());
 
   if (props.operateType === 'edit' && props.rowData) {
