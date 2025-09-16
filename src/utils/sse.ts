@@ -1,6 +1,7 @@
 import { watch } from 'vue';
 import { useEventSource } from '@vueuse/core';
 import useNoticeStore from '@/store/modules/notice';
+import { $t } from '@/locales';
 import { localStg } from './storage';
 
 // 初始化
@@ -34,9 +35,14 @@ export const initSSE = (url: any) => {
       read: false,
       time: new Date().toLocaleString()
     });
+    let content = data.value;
+    const noticeType = content.match(/\[dict\.(.*?)\]/)?.[1];
+    if (noticeType) {
+      content = content.replace(`dict.${noticeType}`, $t(`dict.${noticeType}` as App.I18n.I18nKey));
+    }
     window.$notification?.create({
       title: '消息',
-      content: data.value,
+      content,
       type: 'success',
       duration: 3000
     });

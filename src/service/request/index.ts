@@ -8,7 +8,7 @@ import { decrypt, encrypt } from '@/utils/jsencrypt';
 import { getAuthorization, handleExpiredRequest, showErrorMsg } from './shared';
 import type { RequestInstanceState } from './type';
 
-const encryptHeader = 'encrypt-key';
+const encryptHeader = import.meta.env.VITE_HEADER_FLAG || 'encrypt-key';
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
@@ -25,23 +25,6 @@ export const request = createFlatRequest(
       refreshTokenPromise: null
     } as RequestInstanceState,
     transform(response: AxiosResponse<App.Service.Response<any>>) {
-      if (import.meta.env.VITE_APP_ENCRYPT === 'Y') {
-        // 加密后的 AES 秘钥
-        const keyStr = response.headers[encryptHeader];
-        // 加密
-        if (keyStr && keyStr !== '') {
-          const data = String(response.data);
-          // 请求体 AES 解密
-          const base64Str = decrypt(keyStr);
-          // base64 解码 得到请求头的 AES 秘钥
-          const aesKey = decryptBase64(base64Str.toString());
-          // aesKey 解码 data
-          const decryptData = decryptWithAes(data, aesKey);
-          // 将结果 (得到的是 JSON 字符串) 转为 JSON
-          response.data = JSON.parse(decryptData);
-        }
-      }
-
       // 二进制数据则直接返回
       if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
         return response.data;
@@ -81,6 +64,14 @@ export const request = createFlatRequest(
     isBackendSuccess(response) {
       // when the backend response code is "0000"(default), it means the request is success
       // to change this logic by yourself, you can modify the `VITE_SERVICE_SUCCESS_CODE` in `.env` file
+      if (import.meta.env.VITE_APP_ENCRYPT === 'Y' && response.headers[encryptHeader]) {
+        const keyStr = response.headers[encryptHeader];
+        const data = String(response.data);
+        const base64Str = decrypt(keyStr);
+        const aesKey = decryptBase64(base64Str.toString());
+        const decryptData = decryptWithAes(data, aesKey);
+        response.data = JSON.parse(decryptData);
+      }
       return String(response.data.code) === import.meta.env.VITE_SERVICE_SUCCESS_CODE;
     },
     async onBackendFail(response, instance) {

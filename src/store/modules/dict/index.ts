@@ -1,8 +1,9 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import { $t } from '@/locales';
+import { SetupStoreId } from '@/enum';
 
-export const useDictStore = defineStore('dict', () => {
+export const useDictStore = defineStore(SetupStoreId.Dict, () => {
   const dictData = ref<{ [key: string]: Api.System.DictData[] }>({});
 
   const getDict = (key: string) => {

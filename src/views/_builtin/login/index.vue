@@ -39,8 +39,7 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
 </script>
 
 <template>
-  <!-- Copyright By https://github.com/Daymychen/art-design-pro/blob/main/src/components/core/views/login/LoginLeftView.vue -->
-  <div class="box-border size-full flex">
+  <div class="scroll box-border size-full flex">
     <div class="relative box-border hidden h-full w-65vw overflow-hidden bg-primary-50 xl:block dark:bg-primary-900">
       <div class="relative z-100 flex items-center pl-30px pt-30px">
         <SystemLogo class="text-32px text-primary" />
@@ -55,13 +54,13 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
       </div>
       <WaveBg />
     </div>
-    <header class="relative h-full flex-1 xl:m-auto sm:!w-full">
-      <div class="relative z-100 block flex items-center pl-30px pt-30px xl:hidden">
-        <SystemLogo class="text-32px text-primary" />
-        <h3 class="ml-10px text-20px font-400">{{ $t('system.title') }}</h3>
-      </div>
-      <div class="position-fixed right-30px top-24px z-100 flex items-center justify-end">
-        <div class="ml-15px inline-block flex cursor-pointer select-none p-5px">
+    <div class="relative h-full flex-1 xl:m-auto sm:!w-full">
+      <header class="flex-y-center justify-between px-30px pt-30px xl:justify-end">
+        <div class="relative z-100 block flex items-center xl:hidden">
+          <SystemLogo class="text-32px text-primary" />
+          <h3 class="ml-10px text-20px font-400">{{ $t('system.title') }}</h3>
+        </div>
+        <div class="flex items-center justify-end">
           <ThemeSchemaSwitch
             :theme-schema="themeStore.themeScheme"
             :show-tooltip="false"
@@ -77,14 +76,32 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
             @change-lang="appStore.changeLocale"
           />
         </div>
-      </div>
-      <main class="absolute inset-0 m-auto h-630px max-w-450px w-full overflow-hidden rounded-5px bg-cover px-24px">
+      </header>
+      <main
+        class="m-auto mt-10% h-630px max-w-450px w-full rounded-5px bg-cover px-24px xl:absolute xl:inset-0 lg:mt-15% xl:mt-auto"
+      >
         <Transition :name="themeStore.page.animateMode" mode="out-in" appear>
           <component :is="activeModule.component" />
         </Transition>
       </main>
-    </header>
+    </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.scroll {
+  overflow: auto;
+}
+
+.scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll {
+  -ms-overflow-style: none;
+}
+
+.scroll {
+  scrollbar-width: none;
+}
+</style>

@@ -16,7 +16,7 @@
     },
     "playwright": {
       "command": "npx",
-      "args": ["@playwright/mcp@0.0.29"]
+      "args": ["@playwright/mcp@latest"]
     },
     "mcp-server-time": {
       "command": "uvx",
@@ -26,14 +26,21 @@
       "command": "npx",
       "args": ["-y", "mcp-shrimp-task-manager"],
       "env": {
-        "DATA_DIR": "D:/workspace/mcp-shrimp-task-manager/data",
+        "DATA_DIR": "D:/workspace/tools/mcp-shrimp-task-manager/data",
         "TEMPLATES_USE": "en",
-        "ENABLE_GUI": "false"
+        "ENABLE_GUI": "true"
       }
     },
     "mcp-deepwiki": {
       "command": "npx",
       "args": ["-y", "mcp-deepwiki@latest"]
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "env": {
+        "MEMORY_FILE_PATH": "D:/workspace/tools/server-memory/memory.json"
+      }
     }
   }
 }
