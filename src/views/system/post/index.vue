@@ -2,8 +2,7 @@
 import { computed, ref } from 'vue';
 import { NButton, NDivider } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { fetchBatchDeletePost, fetchGetPostList } from '@/service/api/system/post';
-import { fetchGetDeptTree } from '@/service/api/system';
+import { fetchBatchDeletePost, fetchGetPostDeptSelect, fetchGetPostList } from '@/service/api/system/post';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
@@ -191,16 +190,17 @@ const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTre
 const deptPattern = ref<string>();
 const deptData = ref<Api.Common.CommonTreeRecord>([]);
 const selectedKeys = ref<string[]>([]);
-async function getTreeData() {
+
+async function getDeptOptions() {
+  // 加载
   startTreeLoading();
-  const { data: tree, error } = await fetchGetDeptTree();
+  const { data: tree, error } = await fetchGetPostDeptSelect();
   if (!error) {
     deptData.value = tree;
   }
   endTreeLoading();
 }
-
-getTreeData();
+getDeptOptions();
 
 function handleClickTree(keys: string[]) {
   searchParams.belongDeptId = keys.length ? keys[0] : null;
@@ -210,7 +210,7 @@ function handleClickTree(keys: string[]) {
 
 function handleResetTreeData() {
   deptPattern.value = undefined;
-  getTreeData();
+  getDeptOptions();
 }
 
 function handleResetSearch() {
