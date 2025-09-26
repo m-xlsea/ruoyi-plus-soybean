@@ -1,5 +1,139 @@
 # 更新日志
 
+## [v1.2.0](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.1.3...v1.2.0) (2025-09-26)
+
+### &nbsp;&nbsp;&nbsp;🚀 新功能
+
+- 对接工作流分类模块 &nbsp;-&nbsp; by **AN** [<samp>(25790)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/25790d4b)
+- 新增流程定义页面 &nbsp;-&nbsp; by @m-xlsea [<samp>(11aba)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/11aba9e2)
+- 添加流程实例功能 &nbsp;-&nbsp; by **AN** [<samp>(f9d57)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/f9d57f1b)
+- 增加流程作废功能并优化按钮组件 &nbsp;-&nbsp; by **AN** [<samp>(350de)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/350de08f)
+- 流程实例，查看变量功能 &nbsp;-&nbsp; by **AN** [<samp>(92b9c)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/92b9c213)
+- 更新工作流分类选择组件，修复值回显问题并优化添加数据操作 &nbsp;-&nbsp; by **AN** [<samp>(14a29)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/14a29070)
+- 添加请假申请功能 &nbsp;-&nbsp; by **AN** [<samp>(d7e05)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/d7e0516c)
+- 更新请假申请功能，添加日期范围选择和请假天数自动计算 &nbsp;-&nbsp; by **AN** [<samp>(89a2a)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/89a2a6cb)
+- 添加请假申请详情接口,优化请假操作表单样式 &nbsp;-&nbsp; by **AN** [<samp>(ab1d3)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/ab1d3a23)
+- 更新请假申请表单，添加流程类型选择和流程启动功能 &nbsp;-&nbsp; by **AN** [<samp>(49521)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/49521b66)
+- 更新工作流任务申请模态框样式，添加消息类型选择禁用功能 &nbsp;-&nbsp; by **AN** [<samp>(4614b)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4614b977)
+- **components**:
+  - 增强审批信息面板，优化附件处理 &nbsp;-&nbsp; by **AN** [<samp>(49224)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/49224afe)
+  - 面板添加流程图 &nbsp;-&nbsp; by **AN** [<samp>(ae5c7)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/ae5c7e83)
+  - 新增 umodoc 编辑器集成 &nbsp;-&nbsp; by @m-xlsea [<samp>(f182d)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/f182def5)
+- **projects**:
+  - 优化组件，完成流程实例-流程预览 &nbsp;-&nbsp; by **AN** [<samp>(50e7b)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/50e7b515)
+  - 新增group-tag组件，待办任务查看功能 &nbsp;-&nbsp; by **AN** [<samp>(1c322)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/1c322e28)
+  - 新增用户选择器组件，添加流程干预按钮 &nbsp;-&nbsp; by **AN** [<samp>(b8c77)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/b8c771cd)
+  - 新增转办和终止功能 &nbsp;-&nbsp; by **AN** [<samp>(80faf)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/80faf4b4)
+  - 新增加签功能 &nbsp;-&nbsp; by **AN** [<samp>(55dce)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/55dceca2)
+  - 新增减签功能 &nbsp;-&nbsp; by **AN** [<samp>(f1d7b)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/f1d7b973)
+  - 新增 '我发起的' 功能 &nbsp;-&nbsp; by **AN** [<samp>(a77ed)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/a77edc2e)
+  - 新增抄送、下一审批人提交功能，优化组件通用性 &nbsp;-&nbsp; by **AN** [<samp>(523ac)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/523aca6b)
+  - 新增我的待办功能,新增审批,驳回组件 &nbsp;-&nbsp; by **AN** [<samp>(130ee)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/130ee1dc)
+  - 新增我的已办，我的抄送功能 &nbsp;-&nbsp; by **AN** [<samp>(01d42)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/01d42722)
+  - 补充搜索条件 &nbsp;-&nbsp; by **AN** [<samp>(b6c7b)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/b6c7b1b3)
+  - 新增流程表达式功能 &nbsp;-&nbsp; by **AN** [<samp>(d562f)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/d562f8c1)
+  - 重构登录页面样式 &nbsp;-&nbsp; by @m-xlsea [<samp>(8412a)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/8412a8db)
+  - 路由兼容 activeMenu 选项 &nbsp;-&nbsp; by @m-xlsea [<samp>(25ee3)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/25ee3207)
+  - 流程定义添加设计器样式等拓展字段，优化流程分类下拉组件 &nbsp;-&nbsp; by **AN** [<samp>(f739e)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/f739e1e0)
+  - 流程实例添加变量修改功能 &nbsp;-&nbsp; by **AN** [<samp>(9b605)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/9b605121)
+  - 添加修改办理人，催办功能，优化组件样式 &nbsp;-&nbsp; by **AN** [<samp>(bc44d)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/bc44d2cd)
+  - 补充Task的业务扩展字段 &nbsp;-&nbsp; by **AN** [<samp>(1eb0a)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/1eb0a3da)
+  - 补充发起流程字段参数 &nbsp;-&nbsp; by **AN** [<samp>(34ad7)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/34ad79e8)
+  - 用户列表新增头像展示 &nbsp;-&nbsp; by @m-xlsea [<samp>(3146c)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/3146c039)
+  - 新增岗位部门树接口 &nbsp;-&nbsp; by **AN** [<samp>(28101)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/28101cb2)
+- **styles**:
+  - 优化左侧树形结构样式 &nbsp;-&nbsp; by @m-xlsea [<samp>(513dc)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/513dc31e)
+- **types**:
+  - 补充类型定义 &nbsp;-&nbsp; by **AN** [<samp>(bd6b5)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/bd6b575a)
+- **utils**:
+  - 新增本地 Excel 导出工具类 &nbsp;-&nbsp; by @m-xlsea [<samp>(7f2f3)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/7f2f3bd0)
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug 修复
+
+- 修复控制台报错：Message compilation error，i18n的@为特殊符号 &nbsp;-&nbsp; by **AN** [<samp>(1c646)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/1c646937)
+- 修复运行状态变化时数据加载顺序问题 &nbsp;-&nbsp; by **AN** [<samp>(ed118)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/ed118069)
+- 修复添加行时的操作顺序问题 &nbsp;-&nbsp; by **AN** [<samp>(f004e)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/f004e75c)
+- **components**:
+  - 修复字典标签会修改字典数据值问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(90a14)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/90a14e33)
+- **hooks**:
+  - 修复下载 hooks 错误未处理 &nbsp;-&nbsp; by @m-xlsea [<samp>(5ef1c)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/5ef1c5de)
+- **other**:
+  - 修复代码生成字典相关问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(9aa65)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/9aa6597d)
+- **packages**:
+  - axios: fix json response. fixed #815 &nbsp;-&nbsp; by @soybeanjs in https://gitee.com/xlsea/ruoyi-plus-soybean/issues/815 [<samp>(fd087)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/fd087f59)
+  - 修复tinymce层级问题 &nbsp;-&nbsp; by **AN** [<samp>(2c248)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/2c248d82)
+- **projects**:
+  - 修复更新后产生问题 &nbsp;-&nbsp; by **AN** [<samp>(400ea)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/400eaf89)
+  - 修复动态组件弹窗动画问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(2e029)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/2e029929)
+  - 修复抽屉问题 &nbsp;-&nbsp; by **AN** [<samp>(a9c58)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/a9c58b25)
+  - 修改代码生成功能模块名为驼峰时，路由错误问题 &nbsp;-&nbsp; by **AN** [<samp>(19bf5)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/19bf5434)
+  - 修改代码生成功能模块名为驼峰时，路由错误问题 &nbsp;-&nbsp; by **AN** [<samp>(2f794)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/2f794c4b)
+  - 修复新增部门时不显示上级部门问题 &nbsp;-&nbsp; by **AN** [<samp>(d5bbc)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/d5bbc37d)
+  - 修复菜单弹窗打开未清空默认值问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(ad207)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/ad207255)
+  - 修复退出登录未清空消息列表问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(dc2fb)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/dc2fbbd5)
+  - 修复菜单默认图标问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(34ab7)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/34ab7d5d)
+  - 修复消息通知字典值未处理问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(3f148)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/3f148a4e)
+  - 修复登录页面跳转问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(8aeb7)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/8aeb7362)
+  - 修复登录页面样式问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(4e27f)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4e27f3b5)
+- **types**:
+  - fix proxy types &nbsp;-&nbsp; by @soybeanjs [<samp>(12b25)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/12b25e0d)
+- **utils**:
+  - 修复请求工具响应解密问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(9ef0b)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/9ef0bd41)
+
+### &nbsp;&nbsp;&nbsp;🛠 优化
+
+- **components**:
+  - 补充国际化 &nbsp;-&nbsp; by **AN** [<samp>(ecad1)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/ecad1c3e)
+- **projects**:
+  - 统一button的添加方式 &nbsp;-&nbsp; by **AN** [<samp>(b3f81)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/b3f81ba3)
+  - 动态加载组件方法抽取为公共函数 &nbsp;-&nbsp; by **AN** [<samp>(2f8a6)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/2f8a6b4b)
+  - 优化代码 &nbsp;-&nbsp; by **AN** [<samp>(59a69)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/59a69dd9)
+  - 优化代码 &nbsp;-&nbsp; by **AN** [<samp>(6c608)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/6c6086f8)
+  - 优化搜索FormItem展示 &nbsp;-&nbsp; by **AN** [<samp>(94faf)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/94fafe39)
+  - 字典状态使用枚举值 &nbsp;-&nbsp; by @m-xlsea [<samp>(56fd5)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/56fd5434)
+- **types**:
+  - 补充标签类型 &nbsp;-&nbsp; by **AN** [<samp>(30316)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/30316d7e)
+  - 补充标签类型 &nbsp;-&nbsp; by **AN** [<samp>(71297)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/71297cf2)
+
+### &nbsp;&nbsp;&nbsp;💅 重构
+
+- remove WorkflowLeaveForm type from Vue typings &nbsp;-&nbsp; by **AN** [<samp>(394db)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/394db6fe)
+- 优化代码 &nbsp;-&nbsp; by **AN** [<samp>(56d6d)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/56d6d77d)
+- **projects**:
+  - 调整为批量上传文件 &nbsp;-&nbsp; by **AN** [<samp>(ffd62)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/ffd6211e)
+  - 重构流程设计菜单层级 &nbsp;-&nbsp; by **AN** [<samp>(b6f4f)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/b6f4fb5a)
+  - 修改流程实例动态引入组件 &nbsp;-&nbsp; by **AN** [<samp>(a3dce)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/a3dcee4a)
+  - 文件命名修正 &nbsp;-&nbsp; by **AN** [<samp>(5e496)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/5e49622e)
+  - 移动工作流组件位置 &nbsp;-&nbsp; by @m-xlsea [<samp>(7ffaa)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/7ffaac58)
+- **types**:
+  - 移除无用type &nbsp;-&nbsp; by **AN** [<samp>(e86a6)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/e86a6d1b)
+- **utils**:
+  - 简化加载组件方法 &nbsp;-&nbsp; by **AN** [<samp>(22710)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/22710ecb)
+
+### &nbsp;&nbsp;&nbsp;📖 文档
+
+- **other**:
+  - 更新 cursor 规则 &nbsp;-&nbsp; by @m-xlsea [<samp>(e623b)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/e623b560)
+- **projects**:
+  - 流程定义菜单更新 &nbsp;-&nbsp; by **AN** [<samp>(1af4e)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/1af4e963)
+  - 新增工作流更新sql &nbsp;-&nbsp; by **AN** [<samp>(89e7e)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/89e7edb3)
+  - 流程表达式菜单sql更新 &nbsp;-&nbsp; by **AN** [<samp>(7484f)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/7484f79b)
+
+### &nbsp;&nbsp;&nbsp;🏡 杂项
+
+- **deps**:
+  - update deps &nbsp;-&nbsp; by @soybeanjs [<samp>(e33f9)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/e33f944a)
+  - update deps &nbsp;-&nbsp; by @soybeanjs [<samp>(9fa95)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/9fa951aa)
+
+### &nbsp;&nbsp;&nbsp;🎨 样式
+
+- **components**: 修改json预览组件样式问题 &nbsp;-&nbsp; by **AN** [<samp>(378aa)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/378aa869)
+- **styles**: 修复字体样式导致下划线不可见问题 &nbsp;-&nbsp; by **AN** [<samp>(4a424)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4a4244b5)
+
+### &nbsp;&nbsp;&nbsp;❤️ 贡献者
+
+[![m-xlsea](https://github.com/m-xlsea.png?size=48)](https://github.com/m-xlsea)&nbsp;&nbsp;[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;[![Elio-An](https://github.com/Elio-An.png?size=48)](https://gitee.com/elio-an)
+
 ## [v1.1.3](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.1.2...v1.1.3) (2025-08-16)
 
 ### &nbsp;&nbsp;&nbsp;🚀 新功能
