@@ -24,3 +24,17 @@ export function fetchGetOssListByIds(ossIds: CommonType.IdType[]) {
     method: 'get'
   });
 }
+
+// 上传文件
+export function fetchUploadFile(file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  return request<Api.System.Oss>({
+    url: '/resource/oss/upload',
+    method: 'post',
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+}

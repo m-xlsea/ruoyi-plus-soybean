@@ -31,7 +31,8 @@
   "vue.server.hybridMode": true,
   "files.exclude": { "/docs": true },
   "search.exclude": {
-    "/docs": true
+    "/docs": true,
+    "**/dist/**": true
   },
   "cSpell.words": ["Axios", "tinymce"]
 }

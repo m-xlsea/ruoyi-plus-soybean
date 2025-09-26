@@ -8,6 +8,7 @@ import { localStg } from '@/utils/storage';
 import { SetupStoreId } from '@/enum';
 import { useRouteStore } from '../route';
 import { useTabStore } from '../tab';
+import useNoticeStore from '../notice';
 import { clearAuthStorage, getToken } from './shared';
 
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
@@ -15,6 +16,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const authStore = useAuthStore();
   const routeStore = useRouteStore();
   const tabStore = useTabStore();
+  const noticeStore = useNoticeStore();
   const { toLogin, redirectFromLogin } = useRouterPush(false);
   const { loading: loginLoading, startLoading, endLoading } = useLoading();
 
@@ -48,6 +50,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
       await toLogin();
     }
 
+    noticeStore.clearNotice();
     tabStore.cacheTabs();
     routeStore.resetStore();
   }

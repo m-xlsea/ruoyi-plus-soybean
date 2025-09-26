@@ -157,6 +157,8 @@ declare module 'vue' {
     TenantSelect: typeof import('./../components/custom/tenant-select.vue')['default']
     ThemeSchemaSwitch: typeof import('./../components/common/theme-schema-switch.vue')['default']
     TinymceEditor: typeof import('./../components/custom/tinymce-editor.vue')['default']
+    UmoDocEditor: typeof import('./../components/custom/umo-doc-editor.vue')['default']
+    UmoEditor: typeof import('./../components/custom/umo-editor.vue')['default']
     UserSelect: typeof import('./../components/custom/user-select.vue')['default']
     UserSelectModal: typeof import('./../components/custom/user-select-modal.vue')['default']
     WaveBg: typeof import('./../components/custom/wave-bg.vue')['default']

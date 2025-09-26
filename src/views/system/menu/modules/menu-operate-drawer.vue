@@ -38,6 +38,8 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
+const defaultIcon = import.meta.env.VITE_MENU_ICON;
+
 const iconType = ref<Api.System.IconType>('1');
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule, createNumberRequiredRule } = useFormRules();
@@ -69,7 +71,7 @@ function createDefaultModel(): Model {
     visible: '0',
     status: '0',
     perms: '',
-    icon: undefined,
+    icon: defaultIcon,
     remark: ''
   };
 }
@@ -118,6 +120,7 @@ const localIconOptions = localIcons.map<SelectOption>(item => ({
 
 function handleInitModel() {
   queryList.value = [];
+  iconType.value = '1';
   Object.assign(model, createDefaultModel());
 
   if (props.operateType === 'edit' && props.rowData) {
@@ -208,7 +211,7 @@ async function handleSubmit() {
     visible: menuVisible,
     status,
     perms,
-    icon,
+    icon: icon || defaultIcon,
     component: processComponent(component),
     remark
   };

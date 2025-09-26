@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue';
+import type { UmoEditor } from '@umoteam/editor';
 import { fetchCreateNotice, fetchUpdateNotice } from '@/service/api/system/notice';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
@@ -27,6 +28,7 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
+const umoEditorRef = ref<InstanceType<typeof UmoEditor>>();
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
 
@@ -77,6 +79,7 @@ function closeDrawer() {
 }
 
 async function handleSubmit() {
+  umoEditorRef.value?.saveContent();
   await validate();
 
   // request
@@ -111,22 +114,24 @@ watch(visible, () => {
     :trap-focus="false"
     :title="title"
     display-directive="show"
-    :width="800"
+    :width="1000"
     class="max-w-90%"
   >
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem label="公告标题" path="noticeTitle">
-          <NInput v-model:value="model.noticeTitle" placeholder="请输入公告标题" />
-        </NFormItem>
-        <NFormItem label="公告类型" path="noticeType">
-          <DictRadio v-model:value="model.noticeType" dict-code="sys_notice_type" />
-        </NFormItem>
-        <NFormItem label="公告内容" path="noticeContent">
-          <TinymceEditor v-model:value="model.noticeContent" />
-        </NFormItem>
-        <NFormItem label="公告状态" path="status">
-          <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
+        <div class="grid grid-cols-1 gap-16px md:grid-cols-4">
+          <NFormItem class="col-span-2" label="公告标题" path="noticeTitle">
+            <NInput v-model:value="model.noticeTitle" placeholder="请输入公告标题" />
+          </NFormItem>
+          <NFormItem class="col-span-1" label="公告类型" path="noticeType">
+            <DictRadio v-model:value="model.noticeType" dict-code="sys_notice_type" />
+          </NFormItem>
+          <NFormItem class="col-span-1" label="公告状态" path="status">
+            <DictRadio v-model:value="model.status" dict-code="sys_normal_disable" />
+          </NFormItem>
+        </div>
+        <NFormItem :show-label="false" path="noticeContent">
+          <UmoDocEditor ref="umoEditorRef" v-model:value="model.noticeContent!" />
         </NFormItem>
       </NForm>
       <template #footer>

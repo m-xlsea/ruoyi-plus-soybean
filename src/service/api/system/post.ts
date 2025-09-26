@@ -43,3 +43,10 @@ export function fetchGetPostSelect(deptId?: CommonType.IdType, postIds?: CommonT
     params: { postIds, deptId }
   });
 }
+/** 获取部门选择框列表 */
+export function fetchGetPostDeptSelect() {
+  return request<Api.Common.CommonTreeRecord>({
+    url: '/system/post/deptTree',
+    method: 'get'
+  });
+}
