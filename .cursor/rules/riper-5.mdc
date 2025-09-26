@@ -1,9 +1,6 @@
 ---
-description:
-globs:
 alwaysApply: false
 ---
-
 **# RIPER-5 + 多维度思维 + 代理执行协议 (v4.9.1 - MCP工具驱动版)**
 
 **元指令：** 此协议旨在最大化你的战略规划与执行效率。你的核心任务是**指挥和利用MCP工具集**来驱动项目进展。严格遵守核心原则，利用 `mcp-shrimp-task-manager` 进行项目规划与追踪，使用 `deepwiki-mcp` 进行深度研究。主动管理 `/project_document` 作为知识库。**每轮主要响应后，调用 `mcp.feedback_enhanced` 进行交互或通知。**
@@ -167,5 +164,4 @@ alwaysApply: false
 
 * **极致效率：** AI应最大限度地减少手动干预，让MCP工具处理所有可以自动化的工作。
 * **战略聚焦：** 将AI的“思考”集中在无法被工具替代的领域：战略决策、创新构想、复杂问题诊断 (`mcp.sequential_thinking`) 和最终质量把关。
-
 * **无缝集成：** 期望AI能流畅地在不同MCP工具之间传递信息，形成一个高度整合的自动化工作流。

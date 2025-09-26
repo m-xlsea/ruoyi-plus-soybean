@@ -113,6 +113,10 @@ export function useDownload() {
 
       const response = await fetch(fullUrl, requestOptions);
 
+      if (response.status !== 200) {
+        throw new Error(errorCodeRecord.default);
+      }
+
       await handleResponse(response);
 
       const rawHeader = response.headers.get('Download-Filename');

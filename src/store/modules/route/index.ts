@@ -127,7 +127,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     }
     // @ts-expect-error no hidden field
     route.meta.hideInMenu = route.hidden;
-    if (route.meta.hideInMenu && parent) {
+    if (route.meta.hideInMenu && parent && !route.meta.activeMenu) {
       // @ts-expect-error parent.name is activeMenu type
       route.meta.activeMenu = parent.name;
     }

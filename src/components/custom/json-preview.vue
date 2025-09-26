@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import hljs from 'highlight.js/lib/core';
 import json from 'highlight.js/lib/languages/json';
+import { twMerge } from 'tailwind-merge';
 
 hljs.registerLanguage('json', json);
 
@@ -10,14 +11,18 @@ defineOptions({
 });
 
 interface Props {
+  class?: string;
   code?: string;
   showLineNumbers?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
+  class: '',
   code: '',
   showLineNumbers: false
 });
+
+const DEFAULT_CLASS = 'max-h-500px';
 
 /** 格式化JSON数据 */
 const jsonData = computed<string>(() => {
@@ -33,29 +38,15 @@ const jsonData = computed<string>(() => {
 </script>
 
 <template>
-  <div class="json-preview">
-    <NCode :code="jsonData" :hljs="hljs" language="json" :show-line-numbers="showLineNumbers" />
-  </div>
+  <NScrollbar :class="twMerge(DEFAULT_CLASS, props.class)">
+    <NCode :code="jsonData" :hljs="hljs" language="json" :show-line-numbers="showLineNumbers" :word-wrap="true" />
+  </NScrollbar>
 </template>
 
 <style lang="scss">
 html[class='dark'] {
   .vjs-tree-node:hover {
     background-color: #7c7777;
-  }
-}
-.json-preview {
-  width: 100%;
-  max-height: 500px;
-  overflow-y: auto;
-  @include scrollbar();
-  .empty-data {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    color: #999;
-    font-size: 14px;
   }
 }
 </style>

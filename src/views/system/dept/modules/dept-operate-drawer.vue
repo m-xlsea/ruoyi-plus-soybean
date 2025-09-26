@@ -40,6 +40,7 @@ const deptData = ref<Api.System.Dept[]>([]);
 const userOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
 const placeholder = ref<string>($t('page.system.dept.placeholder.defaultLeaderPlaceHolder'));
 const disabled = ref<boolean>(false);
+const expandedKeys = ref<CommonType.IdType[]>([]);
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
@@ -55,7 +56,7 @@ const model: Model = reactive(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
-    parentId: '',
+    parentId: props.rowData?.deptId || '',
     deptName: '',
     deptCategory: '',
     orderNum: null,
@@ -80,7 +81,6 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 function handleUpdateModelWhenEdit() {
   if (props.operateType === 'add') {
     Object.assign(model, createDefaultModel());
-    model.parentId = props.rowData?.deptId || 0;
   }
 
   if (props.operateType === 'edit' && props.rowData) {
@@ -144,6 +144,7 @@ async function getDeptData() {
 
   if (data) {
     deptData.value = handleTree(data, { idField: 'deptId' });
+    expandedKeys.value = [deptData.value[0].deptId];
   }
   endDeptLoading();
 }
@@ -186,15 +187,15 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NForm ref="formRef" :model="model" :rules="rules">
-        <NFormItem v-if="model.parentId != 0" :label="$t('page.system.dept.parentId')" path="parentId">
+        <NFormItem v-if="model.parentId !== 0" :label="$t('page.system.dept.parentId')" path="parentId">
           <NTreeSelect
             v-model:value="model.parentId"
+            v-model:expanded-keys="expandedKeys"
             :loading="deptLoading"
             clearable
             :options="deptData"
             label-field="deptName"
             key-field="deptId"
-            default-expand-all
             :placeholder="$t('page.system.dept.form.parentId.required')"
           />
         </NFormItem>
