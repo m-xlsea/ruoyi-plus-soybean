@@ -3,7 +3,6 @@ import { NDivider } from 'naive-ui';
 import { fetchBatchDeleteSpel, fetchGetSpelList } from '@/service/api/workflow/spel';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
-import { useDownload } from '@/hooks/business/download';
 import { useTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
@@ -17,7 +16,6 @@ defineOptions({
 });
 
 const appStore = useAppStore();
-const { download } = useDownload();
 const { hasAuth } = useAuth();
 const {
   columns,
@@ -171,10 +169,6 @@ async function handleDelete(id: CommonType.IdType) {
 function edit(id: CommonType.IdType) {
   handleEdit('id', id);
 }
-
-function handleExport() {
-  download('/workflow/spel/export', searchParams, `流程spel达式定义_${new Date().getTime()}.xlsx`);
-}
 </script>
 
 <template>
@@ -188,10 +182,9 @@ function handleExport() {
           :loading="loading"
           :show-add="hasAuth('workflow:spel:add')"
           :show-delete="hasAuth('workflow:spel:remove')"
-          :show-export="hasAuth('workflow:spel:export')"
+          :show-export="false"
           @add="handleAdd"
           @delete="handleBatchDelete"
-          @export="handleExport"
           @refresh="getData"
         />
       </template>
