@@ -449,7 +449,7 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
             <NDescriptionsItem :label="$t('page.system.menu.menuName')">
               {{
                 currentMenu.menuName?.startsWith('route.') || currentMenu.menuName?.startsWith('menu.')
-                  ? $t(currentMenu.menuName)
+                  ? $t(currentMenu.menuName as App.I18n.I18nKey)
                   : currentMenu.menuName
               }}
             </NDescriptionsItem>
