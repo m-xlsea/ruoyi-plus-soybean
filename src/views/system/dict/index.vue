@@ -1,7 +1,8 @@
 <script setup lang="tsx">
 import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import type { TreeOption } from 'naive-ui';
-import { NDivider, NTooltip } from 'naive-ui';
+import { NDivider, NEllipsis, NTooltip } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import {
   fetchBatchDeleteDictData,
@@ -15,6 +16,7 @@ import { useTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
+import { handleCopy } from '@/utils/copy';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
@@ -31,11 +33,14 @@ useDict('sys_user_sex');
 const { hasAuth } = useAuth();
 const appStore = useAppStore();
 const { download } = useDownload();
+const route = useRoute();
 
+const selectedKeys = ref<string[]>([]);
 const dictTypeData = ref<Api.System.DictType>();
 const dictOperateType = ref<NaiveUI.TableOperateType>('add');
 const { bool: dictTypeDrawerVisible, setTrue: openDictTypeDrawer } = useBoolean();
 const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, searchParams } = useTable({
+  immediate: false,
   apiFn: fetchGetDictDataList,
   apiParams: {
     pageNum: 1,
@@ -212,6 +217,7 @@ async function getTreeData() {
   const { data: tree, error } = await fetchGetDictTypeOption();
   if (!error) {
     dictData.value = tree;
+    handleClickTree(route.query.dictType ? [route.query.dictType as string] : []);
   }
   endTreeLoading();
 }
@@ -219,7 +225,10 @@ async function getTreeData() {
 getTreeData();
 
 function handleClickTree(keys: string[]) {
-  searchParams.dictType = keys.length ? keys[0] : null;
+  const dictType = keys.length ? keys[0] : null;
+  selectedKeys.value = keys;
+  searchParams.dictType = dictType;
+  window.history.pushState(null, '', `${route.path}${dictType ? `?dictType=${dictType}` : ''}`);
   checkedRowKeys.value = [];
   getDataByPage();
 }
@@ -305,6 +314,20 @@ async function handleExportType() {
 const selectable = computed(() => {
   return !loading.value;
 });
+
+const tableTitle = computed(() => {
+  const dictType = dictData.value.find(item => item.dictType === searchParams.dictType);
+  return dictType ? (
+    <NEllipsis lineClamp={2} class="flex">
+      <span>{dictType.dictName}</span>
+      <span class="cursor-copy" onClick={async () => await handleCopy(dictType.dictType)}>
+        {` (${dictType.dictType} )`}
+      </span>
+    </NEllipsis>
+  ) : (
+    <div>{$t('page.system.dict.title')}</div>
+  );
+});
 </script>
 
 <template>
@@ -338,6 +361,7 @@ const selectable = computed(() => {
       <NInput v-model:value="dictPattern" clearable :placeholder="$t('common.keywordSearch')" />
       <NSpin class="dict-tree" :show="treeLoading">
         <NTree
+          v-model:selected-keys="selectedKeys"
           block-node
           show-line
           :data="dictData as []"
@@ -362,7 +386,7 @@ const selectable = computed(() => {
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
       <DictDataSearch v-model:model="searchParams" @reset="handleReset" @search="getDataByPage" />
       <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
-      <NCard :title="$t('page.system.dict.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
+      <NCard :title="() => tableTitle" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header-extra>
           <TableHeaderOperation
             v-model:columns="columnChecks"
@@ -479,6 +503,6 @@ const selectable = computed(() => {
 }
 
 :deep(.n-card-header__main) {
-  min-width: 69px !important;
+  min-width: 180px !important;
 }
 </style>
