@@ -234,7 +234,7 @@ function handleClickTree(keys: string[]) {
 }
 
 function handleResetTreeData() {
-  dictPattern.value = undefined;
+  dictPattern.value = '';
   getTreeData();
 }
 
