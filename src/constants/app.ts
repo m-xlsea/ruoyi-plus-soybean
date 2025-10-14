@@ -40,7 +40,8 @@ export const themeScrollModeOptions = transformRecordToOption(themeScrollModeRec
 
 export const themeTabModeRecord: Record<UnionKey.ThemeTabMode, App.I18n.I18nKey> = {
   chrome: 'theme.layout.tab.mode.chrome',
-  button: 'theme.layout.tab.mode.button'
+  button: 'theme.layout.tab.mode.button',
+  slider: 'theme.layout.tab.mode.slider'
 };
 
 export const themeTabModeOptions = transformRecordToOption(themeTabModeRecord);
@@ -56,13 +57,6 @@ export const themePageAnimationModeRecord: Record<UnionKey.ThemePageAnimateMode,
 };
 
 export const themePageAnimationModeOptions = transformRecordToOption(themePageAnimationModeRecord);
-
-export const resetCacheStrategyRecord: Record<UnionKey.ResetCacheStrategy, App.I18n.I18nKey> = {
-  refresh: 'theme.layout.resetCacheStrategy.refresh',
-  close: 'theme.layout.resetCacheStrategy.close'
-};
-
-export const resetCacheStrategyOptions = transformRecordToOption(resetCacheStrategyRecord);
 
 export const DARK_CLASS = 'dark';
 

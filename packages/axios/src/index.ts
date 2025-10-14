@@ -4,7 +4,7 @@ import axiosRetry from 'axios-retry';
 import { nanoid } from '@sa/utils';
 import { createAxiosConfig, createDefaultOptions, createRetryOptions } from './options';
 import { transformResponse } from './shared';
-import { BACKEND_ERROR_CODE, REQUEST_CANCELED_CODE, REQUEST_ID_KEY } from './constant';
+import { BACKEND_ERROR_CODE, REQUEST_ID_KEY } from './constant';
 import type {
   CustomAxiosRequestConfig,
   FlatRequestInstance,
@@ -174,6 +174,6 @@ export function createFlatRequest<ResponseData, ApiData, State extends Record<st
   return flatRequest;
 }
 
-export { BACKEND_ERROR_CODE, REQUEST_CANCELED_CODE, REQUEST_ID_KEY };
+export { BACKEND_ERROR_CODE, REQUEST_ID_KEY };
 export type * from './type';
 export type { CreateAxiosDefaults, AxiosError };

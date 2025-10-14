@@ -12,7 +12,6 @@ export const themeSettings: App.Theme.ThemeSetting = {
     error: '#CB2634'
   },
   isInfoFollowPrimary: true,
-  resetCacheStrategy: 'refresh',
   layout: {
     mode: 'vertical',
     scrollMode: 'content'

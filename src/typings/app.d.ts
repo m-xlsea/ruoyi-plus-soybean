@@ -20,8 +20,6 @@ declare namespace App {
       otherColor: OtherColor;
       /** Whether info color is followed by the primary color */
       isInfoFollowPrimary: boolean;
-      /** Reset cache strategy */
-      resetCacheStrategy: UnionKey.ResetCacheStrategy;
       /** Layout */
       layout: {
         /** Layout mode */
@@ -415,7 +413,7 @@ declare namespace App {
           themeColor: {
             title: string;
             followPrimary: string;
-          } & Theme.ThemeColor;
+          } & Record<Theme.ThemeColorKey, string>;
           recommendColor: string;
           recommendColorDesc: string;
           preset: {
@@ -475,7 +473,6 @@ declare namespace App {
             };
             fixedHeaderAndTab: string;
           };
-          resetCacheStrategy: { title: string } & Record<UnionKey.ResetCacheStrategy, string>;
         };
         general: {
           title: string;

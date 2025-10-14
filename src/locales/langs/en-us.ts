@@ -159,6 +159,7 @@ const local: App.I18n.Schema = {
         height: 'Tab Height',
         mode: {
           title: 'Tab Mode',
+          slider: 'Slider',
           chrome: 'Chrome',
           button: 'Button'
         }
@@ -209,11 +210,6 @@ const local: App.I18n.Schema = {
           }
         },
         fixedHeaderAndTab: 'Fixed Header And Tab'
-      },
-      resetCacheStrategy: {
-        title: 'Reset Cache Strategy',
-        close: 'Close Page',
-        refresh: 'Refresh Page'
       }
     },
     general: {

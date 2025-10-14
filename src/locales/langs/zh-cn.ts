@@ -156,6 +156,7 @@ const local: App.I18n.Schema = {
         height: '标签栏高度',
         mode: {
           title: '标签栏风格',
+          slider: '滑块风格',
           chrome: '谷歌风格',
           button: '按钮风格'
         }
@@ -182,7 +183,7 @@ const local: App.I18n.Schema = {
         visible: '显示底部',
         fixed: '固定底部',
         height: '底部高度',
-        right: '底部局右'
+        right: '底部居右'
       },
       content: {
         title: '内容区域设置',
@@ -206,11 +207,6 @@ const local: App.I18n.Schema = {
           }
         },
         fixedHeaderAndTab: '固定头部和标签栏'
-      },
-      resetCacheStrategy: {
-        title: '重置缓存策略',
-        close: '关闭页面',
-        refresh: '刷新页面'
       }
     },
     general: {
