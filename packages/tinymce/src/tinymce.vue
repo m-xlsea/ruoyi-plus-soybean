@@ -220,7 +220,7 @@ const events = computed(() => {
 <style lang="scss">
 .tox.tox-silver-sink.tox-tinymce-aux {
   /** 该样式默认为1300的zIndex  */
-  z-index: 2025;
+  z-index: 2025 !important;
 }
 
 .app-tinymce {

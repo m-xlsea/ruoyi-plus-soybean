@@ -1,14 +1,19 @@
 import { request } from '@/service/request';
+#set($responseType = "")
+#if($tplCategory == "tree")
+    #set($responseType = "Api.${ModuleName}.${BusinessName}[]")
+#else
+    #set($responseType = "Api.${ModuleName}.${BusinessName}List")
+#end
 
 /** 获取${functionName}列表 */
 export function fetchGet${BusinessName}List (params?: Api.${ModuleName}.${BusinessName}SearchParams) {
-    return request<Api.${ModuleName}.${BusinessName}List>({
+    return request<$responseType>({
         url: '/${moduleName}/${businessName}/list',
         method: 'get',
         params
     });
 }
-
 /** 新增${functionName} */
 export function fetchCreate${BusinessName} (data: Api.${ModuleName}.${BusinessName}OperateParams) {
     return request<boolean>({
