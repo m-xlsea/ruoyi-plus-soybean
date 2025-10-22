@@ -322,6 +322,14 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
     }
   }
 ];
+
+const renderIframeQuery = (queryParam: string) => {
+  try {
+    return JSON.parse(queryParam || '{}')?.url;
+  } catch {
+    return queryParam;
+  }
+};
 </script>
 
 <template>
@@ -461,11 +469,14 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
             >
               {{ currentMenu.path }}
             </NDescriptionsItem>
-            <NDescriptionsItem
-              v-if="isMenu && !isExternalType"
-              :label="!isIframeType ? $t('page.system.menu.query') : $t('page.system.menu.iframeQuery')"
-            >
+            <NDescriptionsItem v-if="isMenu && !isExternalType && !isIframeType" :label="$t('page.system.menu.query')">
               {{ currentMenu.queryParam }}
+            </NDescriptionsItem>
+            <NDescriptionsItem
+              v-if="isMenu && !isExternalType && isIframeType"
+              :label="$t('page.system.menu.iframeQuery')"
+            >
+              {{ renderIframeQuery(currentMenu.queryParam) }}
             </NDescriptionsItem>
             <NDescriptionsItem v-if="!isCatalog" :label="$t('page.system.menu.perms')">
               {{ currentMenu.perms }}
