@@ -34,3 +34,12 @@ export function fetchBatchDeleteClient(ids: CommonType.IdType[]) {
     method: 'delete'
   });
 }
+
+/** 修改客户端状态 */
+export function fetchUpdateClientStatus(data: Api.System.ClientOperateParams) {
+  return request<boolean>({
+    url: '/system/client/changeStatus',
+    method: 'put',
+    data
+  });
+}
