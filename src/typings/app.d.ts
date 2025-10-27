@@ -16,6 +16,8 @@ declare namespace App {
       recommendColor: boolean;
       /** Theme color */
       themeColor: string;
+      /** Theme radius */
+      themeRadius: number;
       /** Other color */
       otherColor: OtherColor;
       /** Whether info color is followed by the primary color */
@@ -69,6 +71,8 @@ declare namespace App {
         height: number;
         /** Tab mode */
         mode: UnionKey.ThemeTabMode;
+        /** Whether to close tab by middle click */
+        closeTabByMiddleClick: boolean;
       };
       /** Fixed header and tab */
       fixedHeaderAndTab: boolean;
@@ -416,6 +420,9 @@ declare namespace App {
           } & Record<Theme.ThemeColorKey, string>;
           recommendColor: string;
           recommendColorDesc: string;
+          themeRadius: {
+            title: string;
+          };
           preset: {
             title: string;
             apply: string;
@@ -439,6 +446,8 @@ declare namespace App {
             cacheTip: string;
             height: string;
             mode: { title: string } & Record<UnionKey.ThemeTabMode, string>;
+            closeByMiddleClick: string;
+            closeByMiddleClickTip: string;
           };
           header: {
             title: string;

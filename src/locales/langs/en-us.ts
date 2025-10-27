@@ -107,6 +107,9 @@ const local: App.I18n.Schema = {
         error: 'Error',
         followPrimary: 'Follow Primary'
       },
+      themeRadius: {
+        title: 'Theme Radius'
+      },
       recommendColor: 'Apply Recommended Color Algorithm',
       recommendColorDesc: 'The recommended color algorithm refers to',
       preset: {
@@ -162,7 +165,9 @@ const local: App.I18n.Schema = {
           slider: 'Slider',
           chrome: 'Chrome',
           button: 'Button'
-        }
+        },
+        closeByMiddleClick: 'Close Tab by Middle Click',
+        closeByMiddleClickTip: 'Enable closing tabs by clicking with the middle mouse button'
       },
       header: {
         title: 'Header Settings',

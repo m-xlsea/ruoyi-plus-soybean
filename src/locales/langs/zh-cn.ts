@@ -107,6 +107,9 @@ const local: App.I18n.Schema = {
         error: '错误色',
         followPrimary: '跟随主色'
       },
+      themeRadius: {
+        title: '主题圆角'
+      },
       recommendColor: '应用推荐算法的颜色',
       recommendColorDesc: '推荐颜色的算法参照',
       preset: {
@@ -159,7 +162,9 @@ const local: App.I18n.Schema = {
           slider: '滑块风格',
           chrome: '谷歌风格',
           button: '按钮风格'
-        }
+        },
+        closeByMiddleClick: '鼠标中键关闭标签页',
+        closeByMiddleClickTip: '启用后可以使用鼠标中键点击标签页进行关闭'
       },
       header: {
         title: '头部设置',
