@@ -253,9 +253,23 @@ export function defaultTransform<ApiData>(
   };
 }
 
-type UseNaiveTreeTableOptions<ResponseData, ApiData> = UseNaiveTableOptions<ResponseData, ApiData, false> & {
+type TreeTableTransformResult<ApiData> = {
+  /** tree data for display */
+  tree: ApiData[];
+  /** flat data for operations */
+  flatData: ApiData[];
+};
+
+type UseNaiveTreeTableOptions<ResponseData, ApiData> = Omit<
+  UseNaiveTableOptions<ResponseData, ApiData, false>,
+  'transform'
+> & {
   keyField: keyof ApiData;
   defaultExpandAll?: boolean;
+  /**
+   * transform api response to tree table data
+   */
+  transform: (response: ResponseData) => TreeTableTransformResult<ApiData>;
 };
 
 export function useNaiveTreeTable<ResponseData, ApiData>(options: UseNaiveTreeTableOptions<ResponseData, ApiData>) {
@@ -266,23 +280,15 @@ export function useNaiveTreeTable<ResponseData, ApiData>(options: UseNaiveTreeTa
   const result = useTable<ResponseData, ApiData, NaiveUI.TableColumn<ApiData>, false>({
     ...options,
     pagination: false,
+    transform: response => {
+      const transformed = options.transform(response);
+      // save flat data for operations
+      rows.value = transformed.flatData;
+      // return tree data for display
+      return transformed.tree;
+    },
     getColumnChecks: cols => getColumnChecks(cols, options.getColumnVisible),
-    getColumns,
-    onFetched: transformData => {
-      const data: ApiData[] = [];
-
-      const collect = (nodes: any[]) => {
-        nodes.forEach(node => {
-          data.push(node);
-          if (node?.children?.length) {
-            collect(node.children);
-          }
-        });
-      };
-
-      collect(transformData);
-      rows.value = data;
-    }
+    getColumns
   });
 
   const { keyField = 'id', defaultExpandAll = false } = options;
@@ -393,14 +399,20 @@ type TreeTableOptions<ApiData> = {
 export function treeTransform<ApiData>(
   response: FlatResponseData<any, ApiData[]>,
   options: TreeTableOptions<ApiData>
-): ApiData[] {
+): TreeTableTransformResult<ApiData> {
   const { data, error } = response;
 
   if (error || !data.length) {
-    return [];
+    return {
+      tree: [],
+      flatData: []
+    };
   }
 
   const { idField = 'id', parentIdField = 'parentId', childrenField = 'children', filterFn = () => true } = options;
+
+  // filter flat data
+  const flatData = data.filter(filterFn);
 
   // 使用 Map 替代普通对象，提高性能
   const childrenMap = new Map<ApiData[keyof ApiData], ApiData[]>();
@@ -408,7 +420,7 @@ export function treeTransform<ApiData>(
   const tree: ApiData[] = [];
 
   // 第一遍遍历：构建节点映射
-  for (const item of data) {
+  for (const item of flatData) {
     const id = item[idField as keyof ApiData];
     const parentId = item[parentIdField as keyof ApiData];
 
@@ -417,16 +429,13 @@ export function treeTransform<ApiData>(
     if (!childrenMap.has(parentId)) {
       childrenMap.set(parentId, []);
     }
-    // 应用过滤函数
-    if (filterFn(item)) {
-      childrenMap.get(parentId)!.push(item);
-    }
+    childrenMap.get(parentId)!.push(item);
   }
 
   // 第二遍遍历：找出根节点
-  for (const item of data) {
+  for (const item of flatData) {
     const parentId = item[parentIdField as keyof ApiData];
-    if (!nodeMap.has(parentId) && filterFn(item)) {
+    if (!nodeMap.has(parentId)) {
       tree.push(item);
     }
   }
@@ -453,7 +462,10 @@ export function treeTransform<ApiData>(
     buildTree(root);
   }
 
-  return tree;
+  return {
+    tree,
+    flatData
+  };
 }
 
 function getColumnChecks<Column extends NaiveUI.TableColumn<any>>(
