@@ -1,6 +1,6 @@
 /** Default theme settings */
 export const themeSettings: App.Theme.ThemeSetting = {
-  themeScheme: 'light',
+  themeScheme: 'auto',
   grayscale: false,
   colourWeakness: false,
   recommendColor: false,
@@ -39,7 +39,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
     cache: true,
     height: 44,
     mode: 'chrome',
-    closeTabByMiddleClick: false
+    closeTabByMiddleClick: true
   },
   fixedHeaderAndTab: true,
   sider: {

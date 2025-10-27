@@ -3,6 +3,7 @@
   "desc": "It is a cold and elegant preset that Azir likes",
   "i18nkey": "theme.appearance.preset.azir",
   "version": "1.0.0",
+  "sort": 20,
   "themeScheme": "light",
   "grayscale": false,
   "colourWeakness": false,

@@ -118,6 +118,10 @@ const local: App.I18n.Schema = {
         applySuccess: '预设应用成功',
         default: {
           name: '默认预设',
+          desc: '系统默认主题预设'
+        },
+        soybean: {
+          name: 'Soybean',
           desc: 'Soybean 默认主题预设'
         },
         dark: {

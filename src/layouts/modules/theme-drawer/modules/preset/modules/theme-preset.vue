@@ -31,6 +31,7 @@ type ThemePreset = Pick<
   desc: string;
   i18nkey?: string;
   version: string;
+  sort: number;
 };
 
 const presetModules = import.meta.glob('@/theme/preset/*.json', { eager: true, import: 'default' });
@@ -48,9 +49,7 @@ const presets = computed(() =>
       };
     })
     .sort((a, b) => {
-      if (a.name === 'default') return -1;
-      if (b.name === 'default') return 1;
-      return a.name.localeCompare(b.name);
+      return (a.sort ?? 0) - (b.sort ?? 0);
     })
 );
 

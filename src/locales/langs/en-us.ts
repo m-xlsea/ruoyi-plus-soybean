@@ -120,6 +120,10 @@ const local: App.I18n.Schema = {
           name: 'Default Preset',
           desc: 'Default theme preset with balanced settings'
         },
+        soybean: {
+          name: 'Soybean',
+          desc: 'Default theme preset of SoybeanAdmin'
+        },
         dark: {
           name: 'Dark Preset',
           desc: 'Dark theme preset for night time usage'
