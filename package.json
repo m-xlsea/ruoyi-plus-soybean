@@ -64,7 +64,6 @@
     "@sa/color": "workspace:*",
     "@sa/hooks": "workspace:*",
     "@sa/materials": "workspace:*",
-    "@sa/tinymce": "workspace:*",
     "@sa/utils": "workspace:*",
     "@types/streamsaver": "^2.0.5",
     "@umoteam/editor": "^8.1.0",
@@ -86,8 +85,7 @@
     "vue-advanced-cropper": "^2.8.9",
     "vue-draggable-plus": "0.6.0",
     "vue-i18n": "11.1.12",
-    "vue-router": "4.6.3",
-    "xlsx": "0.18.5"
+    "vue-router": "4.6.3"
   },
   "devDependencies": {
     "@elegant-router/vue": "0.3.8",
@@ -118,7 +116,6 @@
     "vite": "7.1.12",
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-progress": "0.0.7",
-    "vite-plugin-static-copy": "^3.1.0",
     "vite-plugin-svg-icons": "2.0.1",
     "vite-plugin-vue-devtools": "8.0.3",
     "vue-eslint-parser": "10.2.0",
