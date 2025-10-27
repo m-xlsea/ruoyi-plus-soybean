@@ -323,6 +323,10 @@ const btnColumns: DataTableColumns<Api.System.Menu> = [
   }
 ];
 
+function renderMenuName(menuName: string) {
+  return menuName?.startsWith('route.') || menuName?.startsWith('menu.') ? $t(menuName as App.I18n.I18nKey) : menuName;
+}
+
 const renderIframeQuery = (queryParam: string) => {
   try {
     return JSON.parse(queryParam || '{}')?.url;
@@ -455,11 +459,7 @@ const renderIframeQuery = (queryParam: string) => {
               <DictTag size="small" :value="currentMenu.status" dict-code="sys_normal_disable" />
             </NDescriptionsItem>
             <NDescriptionsItem :label="$t('page.system.menu.menuName')">
-              {{
-                currentMenu.menuName?.startsWith('route.') || currentMenu.menuName?.startsWith('menu.')
-                  ? $t(currentMenu.menuName as App.I18n.I18nKey)
-                  : currentMenu.menuName
-              }}
+              {{ renderMenuName(currentMenu.menuName) }}
             </NDescriptionsItem>
             <NDescriptionsItem v-if="isMenu" :label="$t('page.system.menu.component')">
               {{ currentMenu.component }}
