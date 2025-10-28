@@ -134,6 +134,13 @@ export function useNaivePaginatedTable<ResponseData, ApiData>(
     }
   });
 
+  // calculate the total width of the table this is used for horizontal scrolling
+  const scrollX = computed(() => {
+    return result.columns.value.reduce((acc, column) => {
+      return acc + Number(column.width ?? column.minWidth ?? 120);
+    }, 0);
+  });
+
   async function getDataByPage(page: number = 1) {
     if (page !== pagination.page) {
       pagination.page = page;
@@ -165,6 +172,7 @@ export function useNaivePaginatedTable<ResponseData, ApiData>(
 
   return {
     ...result,
+    scrollX,
     getDataByPage,
     pagination,
     mobilePagination
@@ -291,6 +299,13 @@ export function useNaiveTreeTable<ResponseData, ApiData>(options: UseNaiveTreeTa
     getColumns
   });
 
+  // calculate the total width of the table this is used for horizontal scrolling
+  const scrollX = computed(() => {
+    return result.columns.value.reduce((acc, column) => {
+      return acc + Number(column.width ?? column.minWidth ?? 120);
+    }, 0);
+  });
+
   const { keyField = 'id', defaultExpandAll = false } = options;
 
   const expandedRowKeys = ref<ApiData[keyof ApiData][]>([]);
@@ -323,6 +338,7 @@ export function useNaiveTreeTable<ResponseData, ApiData>(options: UseNaiveTreeTa
 
   return {
     ...result,
+    scrollX,
     rows,
     isCollapse,
     expandedRowKeys,

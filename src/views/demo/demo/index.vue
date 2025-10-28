@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive } from 'vue';
+import { ref } from 'vue';
 import { NDivider } from 'naive-ui';
 import { fetchBatchDeleteDemo, fetchGetDemoList } from '@/service/api/demo';
 import { useAppStore } from '@/store/modules/app';
@@ -19,7 +19,7 @@ const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
 
-const searchParams: Api.Demo.DemoSearchParams = reactive({
+const searchParams = ref<Api.Demo.DemoSearchParams>({
   pageNum: 1,
   pageSize: 10,
   deptId: null,
@@ -30,110 +30,111 @@ const searchParams: Api.Demo.DemoSearchParams = reactive({
   params: {}
 });
 
-const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination } = useNaivePaginatedTable({
-  api: () => fetchGetDemoList(searchParams),
-  transform: response => defaultTransform(response),
-  onPaginationParamsChange: params => {
-    searchParams.pageSize = params.page;
-    searchParams.pageNum = params.pageSize;
-  },
-  columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, scrollX } =
+  useNaivePaginatedTable({
+    api: () => fetchGetDemoList(searchParams.value),
+    transform: response => defaultTransform(response),
+    onPaginationParamsChange: params => {
+      searchParams.value.pageNum = params.page;
+      searchParams.value.pageSize = params.pageSize;
     },
-    {
-      key: 'id',
-      title: '主键',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'deptId',
-      title: '部门 ID',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'userId',
-      title: '用户 ID',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'orderNum',
-      title: '排序号',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'testKey',
-      title: 'key 键',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'value',
-      title: '值',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 130,
-      render: row => {
-        const divider = () => {
-          if (!hasAuth('demo:demo:edit') || !hasAuth('demo:demo:remove')) {
-            return null;
-          }
-          return <NDivider vertical />;
-        };
+    columns: () => [
+      {
+        type: 'selection',
+        align: 'center',
+        width: 48
+      },
+      {
+        key: 'id',
+        title: '主键',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'deptId',
+        title: '部门 ID',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'userId',
+        title: '用户 ID',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'orderNum',
+        title: '排序号',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'testKey',
+        title: 'key 键',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'value',
+        title: '值',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'operate',
+        title: $t('common.operate'),
+        align: 'center',
+        width: 130,
+        render: row => {
+          const divider = () => {
+            if (!hasAuth('demo:demo:edit') || !hasAuth('demo:demo:remove')) {
+              return null;
+            }
+            return <NDivider vertical />;
+          };
 
-        const editBtn = () => {
-          if (!hasAuth('demo:demo:edit')) {
-            return null;
-          }
+          const editBtn = () => {
+            if (!hasAuth('demo:demo:edit')) {
+              return null;
+            }
+            return (
+              <ButtonIcon
+                text
+                type="primary"
+                icon="material-symbols:drive-file-rename-outline-outline"
+                tooltipContent={$t('common.edit')}
+                onClick={() => edit(row.id!)}
+              />
+            );
+          };
+
+          const deleteBtn = () => {
+            if (!hasAuth('demo:demo:remove')) {
+              return null;
+            }
+            return (
+              <ButtonIcon
+                text
+                type="error"
+                icon="material-symbols:delete-outline"
+                tooltipContent={$t('common.delete')}
+                popconfirmContent={$t('common.confirmDelete')}
+                onPositiveClick={() => handleDelete(row.id!)}
+              />
+            );
+          };
+
           return (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:drive-file-rename-outline-outline"
-              tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.id!)}
-            />
+            <div class="flex-center gap-8px">
+              {editBtn()}
+              {divider()}
+              {deleteBtn()}
+            </div>
           );
-        };
-
-        const deleteBtn = () => {
-          if (!hasAuth('demo:demo:remove')) {
-            return null;
-          }
-          return (
-            <ButtonIcon
-              text
-              type="error"
-              icon="material-symbols:delete-outline"
-              tooltipContent={$t('common.delete')}
-              popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.id!)}
-            />
-          );
-        };
-
-        return (
-          <div class="flex-center gap-8px">
-            {editBtn()}
-            {divider()}
-            {deleteBtn()}
-          </div>
-        );
+        }
       }
-    }
-  ]
-});
+    ]
+  });
 
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
   useTableOperate(data, 'id', getData);
@@ -163,7 +164,7 @@ async function handleExport() {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <DemoSearch v-model:model="searchParams" @search="getDataByPage" />
+    <DemoSearch v-model:model="searchParams" @reset="getDataByPage" @search="getDataByPage" />
     <NCard title="测试单表列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
@@ -184,7 +185,7 @@ async function handleExport() {
         :columns="columns"
         :data="data"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="scrollX"
         :loading="loading"
         remote
         :row-key="row => row.id"

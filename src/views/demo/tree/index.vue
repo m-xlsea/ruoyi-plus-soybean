@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { reactive } from 'vue';
+import { ref } from 'vue';
 import { NDivider } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
 import { fetchBatchDeleteTree, fetchGetTreeList } from '@/service/api/demo/tree';
@@ -20,9 +20,7 @@ const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
 
-const searchParams: Api.Demo.TreeSearchParams = reactive({
-  pageNum: 1,
-  pageSize: 10,
+const searchParams = ref<Api.Demo.TreeSearchParams>({
   parentId: null,
   deptId: null,
   userId: null,
@@ -30,109 +28,120 @@ const searchParams: Api.Demo.TreeSearchParams = reactive({
   params: {}
 });
 
-const { columns, columnChecks, data, rows, getData, loading, expandedRowKeys, isCollapse, expandAll, collapseAll } =
-  useNaiveTreeTable({
-    keyField: 'id',
-    api: fetchGetTreeList,
-    transform: response => treeTransform(response, { idField: 'id' }),
-    columns: () => [
-      {
-        type: 'selection',
-        align: 'center',
-        width: 48
-      },
-      {
-        key: 'id',
-        title: '主键',
-        align: 'center',
-        minWidth: 120
-      },
-      {
-        key: 'parentId',
-        title: '父 ID',
-        align: 'center',
-        minWidth: 120
-      },
-      {
-        key: 'deptId',
-        title: '部门 ID',
-        align: 'center',
-        minWidth: 120
-      },
-      {
-        key: 'userId',
-        title: '用户 ID',
-        align: 'center',
-        minWidth: 120
-      },
-      {
-        key: 'treeName',
-        title: '值',
-        align: 'center',
-        minWidth: 120
-      },
-      {
-        key: 'operate',
-        title: $t('common.operate'),
-        align: 'center',
-        width: 130,
-        render: row => {
-          const addBtn = () => {
-            return (
-              <ButtonIcon
-                text
-                type="primary"
-                icon="material-symbols:add-2-rounded"
-                tooltipContent={$t('common.add')}
-                onClick={() => addInRow(row)}
-              />
-            );
-          };
-
-          const editBtn = () => {
-            return (
-              <ButtonIcon
-                text
-                type="primary"
-                icon="material-symbols:drive-file-rename-outline-outline"
-                tooltipContent={$t('common.edit')}
-                onClick={() => edit(row.id)}
-              />
-            );
-          };
-
-          const deleteBtn = () => {
-            return (
-              <ButtonIcon
-                text
-                type="error"
-                icon="material-symbols:delete-outline"
-                tooltipContent={$t('common.delete')}
-                popconfirmContent={$t('common.confirmDelete')}
-                onPositiveClick={() => handleDelete(row.id)}
-              />
-            );
-          };
-
-          const buttons = [];
-          if (hasAuth('demo:tree:add')) buttons.push(addBtn());
-          if (hasAuth('demo:tree:edit')) buttons.push(editBtn());
-          if (hasAuth('demo:tree:remove')) buttons.push(deleteBtn());
-
+const {
+  columns,
+  columnChecks,
+  data,
+  rows,
+  getData,
+  loading,
+  expandedRowKeys,
+  isCollapse,
+  expandAll,
+  collapseAll,
+  scrollX
+} = useNaiveTreeTable({
+  keyField: 'id',
+  api: () => fetchGetTreeList(searchParams.value),
+  transform: response => treeTransform(response, { idField: 'id' }),
+  columns: () => [
+    {
+      type: 'selection',
+      align: 'center',
+      width: 48
+    },
+    {
+      key: 'id',
+      title: '主键',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'parentId',
+      title: '父 ID',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'deptId',
+      title: '部门 ID',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'userId',
+      title: '用户 ID',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'treeName',
+      title: '值',
+      align: 'center',
+      minWidth: 120
+    },
+    {
+      key: 'operate',
+      title: $t('common.operate'),
+      align: 'center',
+      width: 130,
+      render: row => {
+        const addBtn = () => {
           return (
-            <div class="flex-center gap-8px">
-              {buttons.map((btn, index) => (
-                <>
-                  {index !== 0 && <NDivider vertical />}
-                  {btn}
-                </>
-              ))}
-            </div>
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:add-2-rounded"
+              tooltipContent={$t('common.add')}
+              onClick={() => addInRow(row)}
+            />
           );
-        }
+        };
+
+        const editBtn = () => {
+          return (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="material-symbols:drive-file-rename-outline-outline"
+              tooltipContent={$t('common.edit')}
+              onClick={() => edit(row.id)}
+            />
+          );
+        };
+
+        const deleteBtn = () => {
+          return (
+            <ButtonIcon
+              text
+              type="error"
+              icon="material-symbols:delete-outline"
+              tooltipContent={$t('common.delete')}
+              popconfirmContent={$t('common.confirmDelete')}
+              onPositiveClick={() => handleDelete(row.id)}
+            />
+          );
+        };
+
+        const buttons = [];
+        if (hasAuth('demo:tree:add')) buttons.push(addBtn());
+        if (hasAuth('demo:tree:edit')) buttons.push(editBtn());
+        if (hasAuth('demo:tree:remove')) buttons.push(deleteBtn());
+
+        return (
+          <div class="flex-center gap-8px">
+            {buttons.map((btn, index) => (
+              <>
+                {index !== 0 && <NDivider vertical />}
+                {btn}
+              </>
+            ))}
+          </div>
+        );
       }
-    ]
-  });
+    }
+  ]
+});
 
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
   useTableOperate(rows, 'id', getData);
@@ -167,7 +176,7 @@ function handleExport() {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <TreeSearch v-model:model="searchParams" :tree-list="data" @search="getData" />
+    <TreeSearch v-model:model="searchParams" :tree-list="data" @reset="getData" @search="getData" />
     <NCard title="测试树列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
@@ -204,7 +213,7 @@ function handleExport() {
         :columns="columns"
         :data="data"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="scrollX"
         :loading="loading"
         remote
         :row-key="row => row.id"
