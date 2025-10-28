@@ -51,6 +51,13 @@ const {
       width: 48
     },
     {
+      key: 'index',
+      title: $t('common.index'),
+      align: 'center',
+      width: 64,
+      render: (_, index) => index + 1
+    },
+    {
       key: 'id',
       title: '主键',
       align: 'center',
@@ -160,7 +167,7 @@ async function handleDelete(id: CommonType.IdType) {
   onDeleted();
 }
 
-async function edit(id: CommonType.IdType) {
+function edit(id: CommonType.IdType) {
   handleEdit(id);
 }
 
@@ -170,14 +177,14 @@ function addInRow(row: Api.Demo.Tree) {
 }
 
 function handleExport() {
-  download('/demo/tree/export', searchParams, `demo_tree_#[[${new Date().getTime()}]]#.xlsx`);
+  download('/demo/tree/export', searchParams, `测试树表_${new Date().getTime()}.xlsx`);
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <TreeSearch v-model:model="searchParams" :tree-list="data" @reset="getData" @search="getData" />
-    <NCard title="测试树列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
+    <TreeSearch v-model:model="searchParams" @search="getData" />
+    <NCard title="测试树表列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
@@ -194,13 +201,13 @@ function handleExport() {
           <template #prefix>
             <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
               <template #icon>
-                <icon-quill:expand />
+                <icon-quill-expand />
               </template>
               全部展开
             </NButton>
             <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
-                <icon-quill:collapse />
+                <icon-quill-collapse />
               </template>
               全部收起
             </NButton>
@@ -212,6 +219,7 @@ function handleExport() {
         v-model:expanded-row-keys="expandedRowKeys"
         :columns="columns"
         :data="data"
+        :indent="32"
         :flex-height="!appStore.isMobile"
         :scroll-x="scrollX"
         :loading="loading"

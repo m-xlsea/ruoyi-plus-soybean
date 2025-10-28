@@ -2,7 +2,6 @@
 import { ref } from 'vue';
 import { NDivider } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
-import { type TableDataWithIndex } from '@sa/hooks';
 import { fetchBatchDelete${BusinessName}, fetchGet${BusinessName}List } from '@/service/api/${moduleName}/${business__name}';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
@@ -44,13 +43,20 @@ const {
   scrollX
 } = useNaiveTreeTable({
   keyField: '$pkColumn.javaField',
-  api: () => fetchGet${BusinessName}List(searchParams),
+  api: () => fetchGet${BusinessName}List(searchParams.value),
   transform: response => treeTransform(response, { idField: '$pkColumn.javaField' }),
   columns: () => [
     {
       type: 'selection',
       align: 'center',
       width: 48
+    },
+    {
+      key: 'index',
+      title: $t('common.index'),
+      align: 'center',
+      width: 64,
+      render: (_, index) => index + 1
     },
 #foreach ($column in $columns)
   #if($column.list)
@@ -87,7 +93,7 @@ const {
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
               tooltipContent={$t('common.edit')}
-              onClick={() => edit(row)}
+              onClick={() => edit(row.$pkColumn.javaField)}
             />
           );
         };
@@ -100,7 +106,7 @@ const {
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.#foreach($column in $columns)#if($column.isPk == '1')$column.javaField#end#end!)}
+              onPositiveClick={() => handleDelete(row.$pkColumn.javaField)}
             />
           );
         };
@@ -158,8 +164,8 @@ function handleExport() {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <${BusinessName}Search v-model:model="searchParams" @reset="getData" @search="getData" />
-    <NCard title="${functionName}列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <${BusinessName}Search v-model:model="searchParams" @search="getData" />
+    <NCard title="${functionName}列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
@@ -176,13 +182,13 @@ function handleExport() {
           <template #prefix>
             <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
               <template #icon>
-                <icon-quill:expand />
+                <icon-quill-expand />
               </template>
               全部展开
             </NButton>
             <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
-                <icon-quill:collapse />
+                <icon-quill-collapse />
               </template>
               全部收起
             </NButton>
@@ -207,6 +213,7 @@ function handleExport() {
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
+        :tree-list="data"
         @submitted="getData"
       />
     </NCard>

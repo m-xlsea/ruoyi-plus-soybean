@@ -278,7 +278,9 @@ const local: App.I18n.Schema = {
     exception: 'Exception',
     exception_403: '403',
     exception_404: '404',
-    exception_500: '500'
+    exception_500: '500',
+    tool: 'System Tools',
+    tool_gen: 'Code Generation'
   },
   menu: {
     system_tenant: 'Tenant Management',

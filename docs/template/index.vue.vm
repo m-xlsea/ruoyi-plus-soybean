@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { ref } from 'vue'
+import { ref } from 'vue';
 import { NDivider } from 'naive-ui';
 import { fetchBatchDelete${BusinessName}, fetchGet${BusinessName}List } from '@/service/api/${moduleName}/${business__name}';
 import { useAppStore } from '@/store/modules/app';
@@ -35,8 +35,8 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
   api: () => fetchGet${BusinessName}List(searchParams.value),
   transform: response => defaultTransform(response),
   onPaginationParamsChange: params => {
-    searchParams.pageSize = params.page;
-    searchParams.pageNum = params.pageSize;
+    searchParams.value.pageNum = params.page;
+    searchParams.value.pageSize = params.pageSize;
   },
   columns: () => [
     {
@@ -48,7 +48,8 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       key: 'index',
       title: $t('common.index'),
       align: 'center',
-      width: 64
+      width: 64,
+      render: (_, index) => index + 1
     },
 #foreach ($column in $columns)
   #if($column.list)
@@ -83,7 +84,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
               tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.$pkColumn.javaField!)}
+              onClick={() => edit(row.$pkColumn.javaField)}
             />
           );
         };
@@ -99,7 +100,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.$pkColumn.javaField!)}
+              onPositiveClick={() => handleDelete(row.$pkColumn.javaField)}
             />
           );
         };
@@ -144,8 +145,8 @@ function handleExport() {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <${BusinessName}Search v-model:model="searchParams" @reset="getDataByPage" @search="getDataByPage" />
-    <NCard title="${functionName}列表" :bordered="false" size="small" class="sm:flex-1-hidden card-wrapper">
+    <${BusinessName}Search v-model:model="searchParams" @search="getDataByPage" />
+    <NCard title="${functionName}列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"

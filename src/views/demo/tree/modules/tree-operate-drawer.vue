@@ -35,8 +35,8 @@ const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增测试树',
-    edit: '编辑测试树'
+    add: '新增测试树表',
+    edit: '编辑测试树表'
   };
   return titles[props.operateType];
 });
@@ -47,6 +47,7 @@ const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
+    id: null,
     parentId: null,
     deptId: null,
     userId: null,

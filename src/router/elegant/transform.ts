@@ -179,6 +179,8 @@ const routeMap: RouteMap = {
   "monitor": "/monitor",
   "monitor_cache": "/monitor/cache",
   "social-callback": "/social-callback",
+  "tool": "/tool",
+  "tool_gen": "/tool/gen",
   "user-center": "/user-center"
 };
 

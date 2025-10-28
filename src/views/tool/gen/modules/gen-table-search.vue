@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { toRaw } from 'vue';
+import { ref, toRaw } from 'vue';
 import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'TreeSearch'
+  name: 'GenTableSearch'
 });
 
 interface Props {
-  /** the tree list */
-  treeList?: Api.Demo.Tree[] | null;
+  options: CommonType.Option[];
 }
 
 defineProps<Props>();
@@ -23,11 +22,22 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const model = defineModel<Api.Demo.TreeSearchParams>('model', { required: true });
+const model = defineModel<Api.Tool.GenTableSearchParams>('model', { required: true });
+
+const dateRange = ref<[string, string]>();
+
+function onDateRangeUpdate(value: [string, string] | null) {
+  if (value?.length) {
+    model.value.params!.beginTime = value[0];
+    model.value.params!.endTime = value[1];
+  }
+}
 
 const defaultModel = jsonClone(toRaw(model.value));
 
 function resetModel() {
+  model.value.params!.beginTime = null;
+  model.value.params!.endTime = null;
   Object.assign(model.value, defaultModel);
 }
 
@@ -46,30 +56,28 @@ async function search() {
 <template>
   <NCard :bordered="false" size="small" class="card-wrapper">
     <NCollapse>
-      <NCollapseItem :title="$t('common.search')" name="demo-tree-search">
+      <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="父 ID" label-width="auto" path="parentId" class="pr-24px">
-              <NTreeSelect
-                v-model:value="model.parentId"
-                filterable
-                class="h-full"
-                key-field="id"
-                label-field="treeName"
-                :options="treeList!"
-                :default-expanded-keys="[0]"
+            <NFormItemGi span="24 s:12 m:6" label="数据源" label-width="auto" path="dataName" class="pr-24px">
+              <NSelect v-model:value="model.dataName" :options="options" placeholder="请选择数据源" />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:6" label="表名称" label-width="auto" path="tableName" class="pr-24px">
+              <NInput v-model:value="model.tableName" placeholder="请输入表名称" />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:6" label="表描述" label-width="auto" path="tableComment" class="pr-24px">
+              <NInput v-model:value="model.tableComment" placeholder="请输入表描述" />
+            </NFormItemGi>
+            <NFormItemGi span="24 s:12 m:6" label="创建时间" label-width="auto" class="pr-24px">
+              <NDatePicker
+                v-model:formatted-value="dateRange"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                type="daterange"
+                clearable
+                @update:formatted-value="onDateRangeUpdate"
               />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="部门" label-width="auto" path="deptId" class="pr-24px">
-              <DeptTreeSelect v-model:value="model.deptId" placeholder="请选择部门" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="用户" label-width="auto" path="userId" class="pr-24px">
-              <UserSelect v-model:value="model.userId" placeholder="请选择用户" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="值" label-width="auto" path="treeName" class="pr-24px">
-              <NInput v-model:value="model.treeName" placeholder="请输入值" />
-            </NFormItemGi>
-            <NFormItemGi :show-feedback="false" span="24" class="pr-24px">
+            <NFormItemGi :show-feedback="false" span="24" class="pb-6px pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

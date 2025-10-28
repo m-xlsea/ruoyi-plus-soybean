@@ -9,7 +9,6 @@ defineOptions({
 });
 
 interface Emits {
-  (e: 'reset'): void;
   (e: 'search'): void;
 }
 
@@ -28,7 +27,7 @@ function resetModel() {
 async function reset() {
   await restoreValidation();
   resetModel();
-  emit('reset');
+  emit('search');
 }
 
 async function search() {
@@ -40,19 +39,19 @@ async function search() {
 <template>
   <NCard :bordered="false" size="small" class="card-wrapper">
     <NCollapse>
-      <NCollapseItem :title="$t('common.search')" name="user-search">
+      <NCollapseItem :title="$t('common.search')" name="demo-demo-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="部门" path="deptId" class="pr-24px" label-width="auto">
+            <NFormItemGi span="24 s:12 m:6" label="部门 ID" label-width="auto" path="deptId" class="pr-24px">
               <DeptTreeSelect v-model:value="model.deptId" placeholder="请选择部门" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="用户" path="userId" class="pr-24px" label-width="auto">
+            <NFormItemGi span="24 s:12 m:6" label="用户 ID" label-width="auto" path="userId" class="pr-24px">
               <UserSelect v-model:value="model.userId" placeholder="请选择用户" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="key 键" path="testKey" class="pr-24px" label-width="auto">
-              <NInput v-model:value="model.testKey" placeholder="请输入 key 键" />
+            <NFormItemGi span="24 s:12 m:6" label="Key 键" label-width="auto" path="testKey" class="pr-24px">
+              <NInput v-model:value="model.testKey" placeholder="请输入Key 键" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="值" path="value" class="pr-24px" label-width="auto">
+            <NFormItemGi span="24 s:12 m:6" label="值" label-width="auto" path="value" class="pr-24px">
               <NInput v-model:value="model.value" placeholder="请输入值" />
             </NFormItemGi>
             <NFormItemGi :show-feedback="false" span="24" class="pr-24px">

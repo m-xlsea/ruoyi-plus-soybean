@@ -45,9 +45,10 @@ const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
+    id: null,
     deptId: null,
     userId: null,
-    orderNum: null,
+    orderNum: 0,
     testKey: '',
     value: '',
     remark: ''
@@ -124,9 +125,6 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem label="值" path="value">
           <NInput v-model:value="model.value" placeholder="请输入值" />
-        </NFormItem>
-        <NFormItem label="备注" path="remark">
-          <NInput v-model:value="model.remark" type="textarea" placeholder="请输入备注" />
         </NFormItem>
       </NForm>
       <template #footer>

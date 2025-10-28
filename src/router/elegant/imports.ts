@@ -26,4 +26,5 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   demo_tree: () => import("@/views/demo/tree/index.vue"),
   home: () => import("@/views/home/index.vue"),
   monitor_cache: () => import("@/views/monitor/cache/index.vue"),
+  tool_gen: () => import("@/views/tool/gen/index.vue"),
 };

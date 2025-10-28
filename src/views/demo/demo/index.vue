@@ -1,7 +1,7 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
 import { NDivider } from 'naive-ui';
-import { fetchBatchDeleteDemo, fetchGetDemoList } from '@/service/api/demo';
+import { fetchBatchDeleteDemo, fetchGetDemoList } from '@/service/api/demo/demo';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
@@ -24,7 +24,6 @@ const searchParams = ref<Api.Demo.DemoSearchParams>({
   pageSize: 10,
   deptId: null,
   userId: null,
-  orderNum: null,
   testKey: null,
   value: null,
   params: {}
@@ -43,6 +42,13 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
         type: 'selection',
         align: 'center',
         width: 48
+      },
+      {
+        key: 'index',
+        title: $t('common.index'),
+        align: 'center',
+        width: 64,
+        render: (_, index) => index + 1
       },
       {
         key: 'id',
@@ -70,7 +76,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       },
       {
         key: 'testKey',
-        title: 'key 键',
+        title: 'Key 键',
         align: 'center',
         minWidth: 120
       },
@@ -103,7 +109,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
                 type="primary"
                 icon="material-symbols:drive-file-rename-outline-outline"
                 tooltipContent={$t('common.edit')}
-                onClick={() => edit(row.id!)}
+                onClick={() => edit(row.id)}
               />
             );
           };
@@ -119,7 +125,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
                 icon="material-symbols:delete-outline"
                 tooltipContent={$t('common.delete')}
                 popconfirmContent={$t('common.confirmDelete')}
-                onPositiveClick={() => handleDelete(row.id!)}
+                onPositiveClick={() => handleDelete(row.id)}
               />
             );
           };
@@ -153,18 +159,18 @@ async function handleDelete(id: CommonType.IdType) {
   onDeleted();
 }
 
-async function edit(id: CommonType.IdType) {
+function edit(id: CommonType.IdType) {
   handleEdit(id);
 }
 
-async function handleExport() {
+function handleExport() {
   download('/demo/demo/export', searchParams, `测试单表_${new Date().getTime()}.xlsx`);
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <DemoSearch v-model:model="searchParams" @reset="getDataByPage" @search="getDataByPage" />
+    <DemoSearch v-model:model="searchParams" @search="getDataByPage" />
     <NCard title="测试单表列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
@@ -196,7 +202,7 @@ async function handleExport() {
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
-        @submitted="getData"
+        @submitted="getDataByPage"
       />
     </NCard>
   </div>

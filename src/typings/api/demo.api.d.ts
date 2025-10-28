@@ -36,8 +36,7 @@ declare namespace Api {
 
     /** demo search params */
     type DemoSearchParams = CommonType.RecordNullable<
-      Pick<Api.Demo.Demo, 'deptId' | 'userId' | 'orderNum' | 'testKey' | 'value' | 'remark'> &
-        Api.Common.CommonSearchParams
+      Pick<Api.Demo.Demo, 'deptId' | 'userId' | 'testKey' | 'value'> & Api.Common.CommonSearchParams
     >;
 
     /** demo operate params */

@@ -57,7 +57,7 @@ function createDefaultModel(): Model {
   return {
 #foreach($column in $columns)
   #if($column.insert || $column.isEdit)
-      ${column.javaField}:#if($column.javaType == 'String' || ($!column.dictType && $column.dictType != '')) ''#else undefined#end#if($foreach.hasNext),#end
+      ${column.javaField}:#if($column.javaType == 'String' || ($!column.dictType && $column.dictType != '')) ''#else null#end#if($foreach.hasNext),#end
   #end
 #end
   };
@@ -81,7 +81,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 function handleUpdateModelWhenEdit() {
   model.value = createDefaultModel();
 #if($tplCategory == 'tree')
-  model.value.$table.treeParentCode = props.rowData?.$table.treeCode || 0;
+  model.value.$treeParentCode = props.rowData?.$treeCode || 0;
 #end
 
   if (props.operateType === 'edit' && props.rowData) {
@@ -127,6 +127,7 @@ watch(visible, () => {
   }
 });
 
+#if($tplCategory == 'tree')
 const treeOptions = computed(() => {
   return [
     {
@@ -136,6 +137,7 @@ const treeOptions = computed(() => {
     }
   ];
 });
+#end
 </script>
 
 <template>
@@ -153,13 +155,13 @@ const treeOptions = computed(() => {
 #end
 #set($dictType=$!StrUtil.toCamelCase($column.dictType))
         <NFormItem label="$column.columnComment" path="$column.javaField">
-        #if($tplCategory == 'tree' && $column.javaField == $table.treeParentCode)
+        #if($tplCategory == 'tree' && $column.javaField == $treeParentCode)
           <NTreeSelect
-            v-model:value="model.$table.treeParentCode"
+            v-model:value="model.$treeParentCode"
             filterable
             class="h-full"
-            key-field="$table.treeCode"
-            label-field="$table.treeParentName"
+            key-field="$treeCode"
+            label-field="$treeName"
             :options="treeOptions"
             :default-expanded-keys="[0]"
           />
