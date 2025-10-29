@@ -1,6 +1,6 @@
 <script setup lang="tsx">
 import { NDivider } from 'naive-ui';
-import { fetchBatchDeleteClient, fetchGetClientList } from '@/service/api/system/client';
+import { fetchBatchDeleteClient, fetchGetClientList, fetchUpdateClientStatus } from '@/service/api/system/client';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
@@ -9,6 +9,7 @@ import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
 import ButtonIcon from '@/components/custom/button-icon.vue';
+import StatusSwitch from '@/components/custom/status-switch.vue';
 import ClientOperateDrawer from './modules/client-operate-drawer.vue';
 import ClientSearch from './modules/client-search.vue';
 
@@ -114,11 +115,18 @@ const {
     },
     {
       key: 'status',
-      title: $t('page.system.client.status'),
+      title: $t('page.system.user.status'),
       align: 'center',
-      minWidth: 120,
-      render: row => {
-        return <DictTag value={row.status} dict-code="sys_normal_disable" />;
+      width: 80,
+      render(row) {
+        return (
+          <StatusSwitch
+            v-model:value={row.status}
+            disabled={row.id === 1}
+            info={row.clientId}
+            onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
+          />
+        );
       }
     },
     {
@@ -202,6 +210,25 @@ async function edit(id: CommonType.IdType) {
 async function handleExport() {
   download('/system/client/export', searchParams, `客户端_${new Date().getTime()}.xlsx`);
 }
+
+/** 处理状态切换 */
+async function handleStatusChange(
+  row: Api.System.Client,
+  value: Api.Common.EnableStatus,
+  callback: (flag: boolean) => void
+) {
+  const { error } = await fetchUpdateClientStatus({
+    clientId: row.clientId,
+    status: value
+  });
+
+  callback(!error);
+
+  if (!error) {
+    window.$message?.success($t('page.system.user.statusChangeSuccess'));
+    getData();
+  }
+}
 </script>
 
 <template>
@@ -228,7 +255,7 @@ async function handleExport() {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="1200"
         :loading="loading"
         remote
         :row-key="row => row.id"
