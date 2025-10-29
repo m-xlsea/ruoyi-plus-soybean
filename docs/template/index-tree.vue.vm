@@ -195,7 +195,7 @@ function handleExport() {
       </template>
       <NDataTable
         v-model:checked-row-keys="checkedRowKeys"
-        v-model::expanded-row-keys="expandedRowKeys"
+        v-model:expanded-row-keys="expandedRowKeys"
         :columns="columns"
         :data="data"
         size="small"

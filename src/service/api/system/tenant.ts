@@ -56,6 +56,14 @@ export function fetchSyncTenantPackage(params: Api.System.TenantPackageSyncParam
   });
 }
 
+/** 同步租户参数配置 */
+export function fetchSyncTenantConfig() {
+  return request<boolean>({
+    url: '/system/tenant/syncTenantConfig',
+    method: 'get'
+  });
+}
+
 /** 动态切换租户 */
 export function fetchChangeTenant(tenantId: CommonType.IdType) {
   return request<boolean>({

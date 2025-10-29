@@ -60,7 +60,7 @@ export function fetchGetTenantPackageMenuTreeSelect(packageId: CommonType.IdType
   });
 }
 
-// 级联删除菜单
+/** 级联删除菜单 */
 export function fetchCascadeDeleteMenu(menuIds: CommonType.IdType[]) {
   return request<boolean>({
     url: `/system/menu/cascade/${menuIds.join(',')}`,

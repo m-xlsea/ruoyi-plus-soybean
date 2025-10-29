@@ -133,7 +133,14 @@ function handleInitModel() {
     if (model.isFrame === '1') {
       const queryObj: { [key: string]: string } = JSON.parse(model.queryParam || '{}');
       queryList.value = Object.keys(queryObj).map(item => ({ key: item, value: queryObj[item] }));
+      return;
     }
+
+    try {
+      if (model.isFrame === '2') {
+        model.queryParam = JSON.parse(model.queryParam || '{}')?.url || '';
+      }
+    } catch {}
   }
 }
 
@@ -173,7 +180,7 @@ function processQueryParam(queryParam: string | null | undefined): string {
 
   // iframe类型，直接使用原始参数
   if (isIframeType.value) {
-    return queryParam || '';
+    return queryParam ? `{"url": "${queryParam}"}` : '';
   }
 
   return '';
