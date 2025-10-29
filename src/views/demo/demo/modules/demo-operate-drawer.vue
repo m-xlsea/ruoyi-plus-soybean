@@ -125,7 +125,7 @@ watch(visible, () => {
           <NInput v-model:value="model.testKey" placeholder="请输入 key 键" />
         </NFormItem>
         <NFormItem label="值" path="value">
-          <OssUpload v-model:value="model.value as string" upload-type="image" placeholder="请输入值" />
+          <NInput v-model:value="model.value" placeholder="请输入值" />
         </NFormItem>
         <NFormItem label="备注" path="remark">
           <NInput v-model:value="model.remark" type="textarea" placeholder="请输入备注" />

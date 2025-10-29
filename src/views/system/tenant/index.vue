@@ -4,6 +4,7 @@ import { NButton, NDivider } from 'naive-ui';
 import {
   fetchBatchDeleteTenant,
   fetchGetTenantList,
+  fetchSyncTenantConfig,
   fetchSyncTenantDict,
   fetchSyncTenantPackage
 } from '@/service/api/system/tenant';
@@ -195,10 +196,33 @@ async function edit(id: CommonType.IdType) {
 }
 
 async function handleSyncTenantDict() {
-  const { error } = await fetchSyncTenantDict();
-  if (error) return;
-  window.$message?.success('同步租户字典成功');
-  await getData();
+  window.$dialog?.warning({
+    title: '同步租户字典',
+    content: '确认同步租户字典吗?',
+    positiveText: '确认',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      const { error } = await fetchSyncTenantDict();
+      if (error) return;
+      window.$message?.success('同步租户字典成功');
+      await getData();
+    }
+  });
+}
+
+async function handleSyncTenantConfig() {
+  window.$dialog?.warning({
+    title: '同步租户参数配置',
+    content: '确认同步租户参数配置吗?',
+    positiveText: '确认',
+    negativeText: '取消',
+    onPositiveClick: async () => {
+      const { error } = await fetchSyncTenantConfig();
+      if (error) return;
+      window.$message?.success('同步租户参数配置成功');
+      await getData();
+    }
+  });
 }
 
 async function handleSyncTenantPackage(row: Api.System.Tenant) {
@@ -241,6 +265,12 @@ async function handleExport() {
               </template>
               同步租户字典
             </NButton>
+            <NButton v-if="isSuperAdmin" ghost size="small" @click="handleSyncTenantConfig">
+              <template #icon>
+                <icon-material-symbols:sync-outline />
+              </template>
+              同步租户参数配置
+            </NButton>
           </template>
         </TableHeaderOperation>
       </template>
@@ -267,4 +297,8 @@ async function handleExport() {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.n-card-header__main) {
+  min-width: 36px !important;
+}
+</style>
