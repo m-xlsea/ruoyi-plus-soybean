@@ -66,6 +66,24 @@ function renderLabel({ option }: { option: TreeOption }) {
   if (label?.startsWith('route.') || label?.startsWith('menu.')) {
     label = $t(label as App.I18n.I18nKey);
   }
+  // 禁用的菜单显示红色
+  if (option.status === '1') {
+    return (
+      <div class="flex items-center gap-4px text-error-200">
+        {label}
+        <SvgIcon icon="ri:prohibited-line" class="text-16px" />
+      </div>
+    );
+  }
+  // 隐藏的菜单显示灰色
+  if (option.visible === '1') {
+    return (
+      <div class="flex items-center gap-4px text-gray-400">
+        {label}
+        <SvgIcon icon="codex:hidden" class="text-21px" />
+      </div>
+    );
+  }
   return <div>{label}</div>;
 }
 

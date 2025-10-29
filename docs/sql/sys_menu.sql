@@ -29,8 +29,8 @@ UPDATE `sys_menu` SET `icon` = 'gg:debug', `menu_name` = 'route.demo_tree' WHERE
 UPDATE `sys_menu` SET `path` = 'oss/config', `component` = 'system/oss-config/index', `icon` = 'hugeicons:configuration-01', `menu_name` = 'route.system_oss-config' WHERE `menu_id` = 133;
 
 -- IFrame 类型
-UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = 'https://ruoyi.xlsea.cn/admin/', `is_frame` = 2, `icon` = 'bx:bxl-spring-boot', `menu_name` = 'menu.monitor_admin' WHERE `menu_id` = 117;
-UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = 'https://preview.snailjob.opensnail.com/', `is_frame` = 2, `icon` = 'gridicons:scheduled', `menu_name` = 'menu.monitor_snail-job' WHERE `menu_id` = 120;
+UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = '{"url": "https://ruoyi.xlsea.cn/admin/"}', `is_frame` = 2, `icon` = 'bx:bxl-spring-boot', `menu_name` = 'menu.monitor_admin' WHERE `menu_id` = 117;
+UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = '{"url": "https://preview.snailjob.opensnail.com/"}', `is_frame` = 2, `icon` = 'gridicons:scheduled', `menu_name` = 'menu.monitor_snail-job' WHERE `menu_id` = 120;
 -- 外链类型
 UPDATE `sys_menu` SET `path` = 'https://gitee.com/xlsea/ruoyi-plus-soybean', `component` = 'FrameView', `icon` = 'local-icon-gitee', `menu_name` = 'RuoYi-Plus-Soybean' WHERE `menu_id` = 4;
 

@@ -87,9 +87,10 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const { id, clientId, clientKey, clientSecret, grantTypeList, deviceType, activeTimeout, timeout, status } = model;
+
   // request
   if (props.operateType === 'add') {
-    const { clientKey, clientSecret, grantTypeList, deviceType, activeTimeout, timeout, status } = model;
     const { error } = await fetchCreateClient({
       clientKey,
       clientSecret,
@@ -103,7 +104,6 @@ async function handleSubmit() {
   }
 
   if (props.operateType === 'edit') {
-    const { id, clientId, clientKey, clientSecret, grantTypeList, deviceType, activeTimeout, timeout, status } = model;
     const { error } = await fetchUpdateClient({
       id,
       clientId,
