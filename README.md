@@ -8,11 +8,9 @@
 <div align="center">
   <p>一个基于 <a href="https://gitee.com/dromara/RuoYi-Vue-Plus" target="_blank">RuoYi-Vue-Plus</a> 的后端能力和 <a href="https://github.com/soybeanjs/soybean-admin" target="_blank">Soybean Admin</a> 前端特性的现代化多租户管理系统</p>
   <p>
-    <a href="https://gitee.com/xlsea/ruoyi-plus-soybean" target="_blank"><img src="https://gitee.com/xlsea/ruoyi-plus-soybean/badge/star.svg" alt="Gitee"></a>
-    <a href="https://gitee.com/dromara/RuoYi-Vue-Plus" target="_blank"><img src="https://gitee.com/xlsea/ruoyi-plus-soybean/badge/fork.svg" alt="Gitee-forks"></a>
     <a href="https://gitcode.com/xlsea/ruoyi-plus-soybean" target="_blank"><img src="https://gitcode.com/xlsea/ruoyi-plus-soybean/star/badge.svg" alt="GitCode"></a>
     <a href="https://github.com/m-xlsea/ruoyi-plus-soybean" target="_blank"><img src="https://img.shields.io/github/stars/m-xlsea/ruoyi-plus-soybean" alt="Github"></a>
-    <a href="https://github.com/m-xlsea/ruoyi-plus-soybean" target="_blank"><img src="https://img.shields.io/github/forks/m-xlsea/ruoyi-plus-soybean" alt="Github-forks"></a>
+    <a href="https://gitee.com/xlsea/ruoyi-plus-soybean" target="_blank"><img src="https://gitee.com/xlsea/ruoyi-plus-soybean/badge/star.svg" alt="Gitee"></a>
     <a href="https://vuejs.org" target="_blank"><img src="https://img.shields.io/badge/Vue-3.5-brightgreen" alt="vue"></a>
     <a href="https://www.typescriptlang.org" target="_blank"><img src="https://img.shields.io/badge/TypeScript-5.8-blue" alt="typescript"></a>
     <a href="https://vite.dev" target="_blank"><img src="https://img.shields.io/badge/Vite-6.2-orange" alt="vite"></a>
@@ -23,7 +21,7 @@
 
 # 📢 重要通知
 
-1.2.0 版本已经正式发布（工作流版本请切换 [flow](https://gitee.com/xlsea/ruoyi-plus-soybean/tree/flow/) 分支查看），但仍然建议：
+1.2.1 版本已经正式发布（工作流版本请切换 [flow](https://gitee.com/xlsea/ruoyi-plus-soybean/tree/flow/) 分支查看），但仍然建议：
 - 在生产环境使用前进行充分测试
 - 关注项目更新，及时获取最新版本
 - 积极反馈问题，帮助我们快速迭代
@@ -167,12 +165,12 @@ pnpm build
 项目提供了代码生成工具和菜单SQL更新文件，在 <a href="https://gitee.com/xlsea/ruoyi-plus-soybean/tree/master/docs" target="_blank">docs</a> 目录下：
 
 - **代码生成工具**
-   - 代码生成工具类位于 `docs/java` 目录，如果没有修改过VelocityUtils.java文件，直接替换即可
-   - 代码生成模板位于 `docs/template` 目录，请在ruoyi-generator模块的`resource/vm`下新建 `soy`文件夹，并将所有模板拷贝至`soy`文件夹中
+  - 代码生成工具类位于 `docs/java` 目录，如果没有修改过VelocityUtils.java文件，直接替换即可
+  - 代码生成模板位于 `docs/template` 目录，请在ruoyi-generator模块的`resource/vm`下新建 `soy`文件夹，并将所有模板拷贝至`soy`文件夹中
 
 - **菜单SQL更新**
-   - 菜单数据更新SQL文件位于 `docs/sql` 目录
-   - 在系统初始化或更新时，需要执行相应的SQL文件来更新菜单数据
+  - 菜单数据更新SQL文件位于 `docs/sql` 目录
+  - 在系统初始化或更新时，需要执行相应的SQL文件来更新菜单数据
 
 ## 📝 开发指南
 
