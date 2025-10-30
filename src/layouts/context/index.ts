@@ -16,13 +16,44 @@ function useMixMenu() {
     activeFirstLevelMenuKey.value = key;
   }
 
-  function getActiveFirstLevelMenuKey() {
-    const [firstLevelRouteName] = selectedKey.value.split('_');
+  const allMenus = computed<App.Global.Menu[]>(() => routeStore.menus);
 
-    setActiveFirstLevelMenuKey(firstLevelRouteName);
+  function getActiveFirstLevelMenuKey() {
+    const currentKey = selectedKey.value;
+
+    const firstLevelMenu = allMenus.value.find(menu => {
+      if (menu.key === currentKey) {
+        return true;
+      }
+
+      if (menu.children && menu.children.length > 0) {
+        return findMenuByKey(menu.children, currentKey);
+      }
+
+      return false;
+    });
+
+    if (firstLevelMenu) {
+      setActiveFirstLevelMenuKey(firstLevelMenu.key);
+    } else {
+      const [firstLevelRouteName] = currentKey.split('_');
+      setActiveFirstLevelMenuKey(firstLevelRouteName);
+    }
   }
 
-  const allMenus = computed<App.Global.Menu[]>(() => routeStore.menus);
+  function findMenuByKey(menus: App.Global.Menu[], key: string): boolean {
+    return menus.some(menu => {
+      if (menu.key === key) {
+        return true;
+      }
+
+      if (menu.children && menu.children.length > 0) {
+        return findMenuByKey(menu.children, key);
+      }
+
+      return false;
+    });
+  }
 
   const firstLevelMenus = computed<App.Global.Menu[]>(() =>
     routeStore.menus.map(menu => {
