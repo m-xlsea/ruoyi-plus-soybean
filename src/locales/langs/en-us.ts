@@ -268,6 +268,8 @@ const local: App.I18n.Schema = {
     500: 'Server Error',
     'iframe-page': 'Iframe',
     home: 'Home',
+    system: 'System Management',
+    system_user: 'User Management',
     monitor: 'Monitor',
     'social-callback': 'Social Callback',
     monitor_cache: 'Cache Monitor',

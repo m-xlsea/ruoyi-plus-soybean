@@ -136,6 +136,28 @@ export const generatedRoutes: GeneratedRoute[] = [
     }
   },
   {
+    name: 'system',
+    path: '/system',
+    component: 'layout.base',
+    meta: {
+      title: 'system',
+      i18nKey: 'route.system',
+      localIcon: 'menu-system',
+      order: 1
+    },
+    children: [
+      {
+        name: 'system_user',
+        path: '/system/user',
+        component: 'view.system_user',
+        meta: {
+          title: 'system_user',
+          i18nKey: 'route.system_user'
+        }
+      }
+    ]
+  },
+  {
     name: 'tool',
     path: '/tool',
     component: 'layout.base',

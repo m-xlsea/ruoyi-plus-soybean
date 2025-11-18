@@ -33,6 +33,8 @@ declare module "@elegant-router/types" {
     "monitor": "/monitor";
     "monitor_cache": "/monitor/cache";
     "social-callback": "/social-callback";
+    "system": "/system";
+    "system_user": "/system/user";
     "tool": "/tool";
     "tool_gen": "/tool/gen";
     "user-center": "/user-center";
@@ -80,6 +82,7 @@ declare module "@elegant-router/types" {
     | "login"
     | "monitor"
     | "social-callback"
+    | "system"
     | "tool"
     | "user-center"
   >;
@@ -110,6 +113,7 @@ declare module "@elegant-router/types" {
     | "demo_tree"
     | "home"
     | "monitor_cache"
+    | "system_user"
     | "tool_gen"
   >;
 
