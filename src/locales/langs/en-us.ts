@@ -277,6 +277,8 @@ const local: App.I18n.Schema = {
     system_dict: 'Dict Management',
     system_config: 'Config Management',
     system_notice: 'Notice Management',
+    system_oss: 'File Management',
+    'system_oss-config': 'OSS Config',
     monitor: 'Monitor',
     'social-callback': 'Social Callback',
     monitor_cache: 'Cache Monitor',

@@ -185,6 +185,8 @@ const routeMap: RouteMap = {
   "system_dict": "/system/dict",
   "system_menu": "/system/menu",
   "system_notice": "/system/notice",
+  "system_oss": "/system/oss",
+  "system_oss-config": "/system/oss-config",
   "system_post": "/system/post",
   "system_role": "/system/role",
   "system_user": "/system/user",
