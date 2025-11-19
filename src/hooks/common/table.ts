@@ -205,7 +205,7 @@ export function useTableOperate<TableData>(
   }
 
   /** the checked row keys of table */
-  const checkedRowKeys = shallowRef<string[]>([]);
+  const checkedRowKeys = shallowRef<CommonType.IdType[]>([]);
 
   /** the hook after the batch delete operation is completed */
   async function onBatchDeleted() {

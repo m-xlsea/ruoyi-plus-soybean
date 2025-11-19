@@ -270,6 +270,7 @@ const local: App.I18n.Schema = {
     home: 'Home',
     system: 'System Management',
     system_user: 'User Management',
+    system_role: 'Role Management',
     monitor: 'Monitor',
     'social-callback': 'Social Callback',
     monitor_cache: 'Cache Monitor',
