@@ -34,6 +34,7 @@ declare module 'vue' {
     IconIcRoundSearch: typeof import('~icons/ic/round-search')['default']
     IconLocalBanner: typeof import('~icons/local/banner')['default']
     IconLocalLogo: typeof import('~icons/local/logo')['default']
+    'IconMaterialSymbols:refreshRounded': typeof import('~icons/material-symbols/refresh-rounded')['default']
     'IconMaterialSymbols:uploadRounded': typeof import('~icons/material-symbols/upload-rounded')['default']
     IconMaterialSymbolsAdd: typeof import('~icons/material-symbols/add')['default']
     IconMaterialSymbolsAddRounded: typeof import('~icons/material-symbols/add-rounded')['default']

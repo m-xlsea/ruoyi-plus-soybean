@@ -281,6 +281,11 @@ const expandedKeys = ref<CommonType.IdType[]>([100]);
 const selectable = computed(() => {
   return !loading.value;
 });
+
+function handleResetSearch() {
+  selectedKeys.value = [];
+  getDataByPage();
+}
 </script>
 
 <template>
@@ -317,7 +322,7 @@ const selectable = computed(() => {
       </NSpin>
     </template>
     <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
-      <UserSearch v-model:model="searchParams" @search="getDataByPage" />
+      <UserSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
       <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
       <NCard :title="$t('page.system.user.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
         <template #header-extra>

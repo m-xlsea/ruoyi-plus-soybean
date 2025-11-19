@@ -2,11 +2,10 @@
 import { toRaw } from 'vue';
 import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
-import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'PostSearch'
+  name: 'DictDataSearch'
 });
 
 interface Emits {
@@ -18,9 +17,7 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const model = defineModel<Api.System.PostSearchParams>('model', { required: true });
-
-const { options: sysCommonStatusOptions } = useDict('sys_normal_disable', false);
+const model = defineModel<Api.System.DictDataSearchParams>('model', { required: true });
 
 const defaultModel = jsonClone(toRaw(model.value));
 
@@ -46,21 +43,15 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="岗位编码" path="postCode" class="pr-24px">
-              <NInput v-model:value="model.postCode" placeholder="请输入岗位编码" />
+            <NFormItemGi
+              span="24 s:12 m:12"
+              :label="$t('page.system.dict.data.label')"
+              path="dictLabel"
+              class="pr-24px"
+            >
+              <NInput v-model:value="model.dictLabel" :placeholder="$t('page.system.dict.form.dictLabel.required')" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="岗位名称" path="postName" class="pr-24px">
-              <NInput v-model:value="model.postName" placeholder="请输入岗位名称" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="状态" path="status" class="pr-24px">
-              <NSelect
-                v-model:value="model.status"
-                placeholder="请选择状态"
-                :options="sysCommonStatusOptions"
-                clearable
-              />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:12" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

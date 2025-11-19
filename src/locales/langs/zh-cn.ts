@@ -271,6 +271,7 @@ const local: App.I18n.Schema = {
     system_menu: '菜单管理',
     system_dept: '部门管理',
     system_post: '岗位管理',
+    system_dict: '字典管理',
     monitor: '系统监控',
     'social-callback': '单点登录回调',
     monitor_cache: '缓存监控',
