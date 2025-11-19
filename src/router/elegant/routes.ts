@@ -185,6 +185,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'system_notice',
+        path: '/system/notice',
+        component: 'view.system_notice',
+        meta: {
+          title: 'system_notice',
+          i18nKey: 'route.system_notice'
+        }
+      },
+      {
         name: 'system_post',
         path: '/system/post',
         component: 'view.system_post',
