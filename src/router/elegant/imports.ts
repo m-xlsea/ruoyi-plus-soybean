@@ -28,6 +28,7 @@ export const views: Record<LastLevelRouteKey, RouteComponent | (() => Promise<Ro
   monitor_cache: () => import("@/views/monitor/cache/index.vue"),
   system_dept: () => import("@/views/system/dept/index.vue"),
   system_menu: () => import("@/views/system/menu/index.vue"),
+  system_post: () => import("@/views/system/post/index.vue"),
   system_role: () => import("@/views/system/role/index.vue"),
   system_user: () => import("@/views/system/user/index.vue"),
   tool_gen: () => import("@/views/tool/gen/index.vue"),

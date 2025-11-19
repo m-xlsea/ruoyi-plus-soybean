@@ -36,6 +36,7 @@ declare module "@elegant-router/types" {
     "system": "/system";
     "system_dept": "/system/dept";
     "system_menu": "/system/menu";
+    "system_post": "/system/post";
     "system_role": "/system/role";
     "system_user": "/system/user";
     "tool": "/tool";
@@ -118,6 +119,7 @@ declare module "@elegant-router/types" {
     | "monitor_cache"
     | "system_dept"
     | "system_menu"
+    | "system_post"
     | "system_role"
     | "system_user"
     | "tool_gen"
