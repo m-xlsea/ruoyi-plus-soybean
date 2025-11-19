@@ -1,30 +1,30 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
-import { NDivider } from 'naive-ui';
+import { NButton, NDivider } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
-import { fetchBatchDeleteTree, fetchGetTreeList } from '@/service/api/demo/tree';
+import { fetchBatchDeleteDept, fetchGetDeptList } from '@/service/api/system/dept';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { treeTransform, useNaiveTreeTable, useTableOperate } from '@/hooks/common/table';
-import { useDownload } from '@/hooks/business/download';
+import { useDict } from '@/hooks/business/dict';
+import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
-import TreeOperateDrawer from './modules/tree-operate-drawer.vue';
-import TreeSearch from './modules/tree-search.vue';
+import DeptOperateDrawer from './modules/dept-operate-drawer.vue';
+import DeptSearch from './modules/dept-search.vue';
 
 defineOptions({
-  name: 'TreeList'
+  name: 'DeptList'
 });
 
+useDict('sys_normal_disable');
+
 const appStore = useAppStore();
-const { download } = useDownload();
 const { hasAuth } = useAuth();
 
-const searchParams = ref<Api.Demo.TreeSearchParams>({
-  parentId: null,
-  deptId: null,
-  userId: null,
-  treeName: null,
+const searchParams = ref<Api.System.DeptSearchParams>({
+  deptName: null,
+  status: null,
   params: {}
 });
 
@@ -41,42 +41,40 @@ const {
   collapseAll,
   scrollX
 } = useNaiveTreeTable({
-  keyField: 'id',
-  api: () => fetchGetTreeList(searchParams.value),
-  transform: response => treeTransform(response, { idField: 'id' }),
+  keyField: 'deptId',
+  api: () => fetchGetDeptList(searchParams.value),
+  transform: response => treeTransform(response, { idField: 'deptId' }),
   columns: () => [
     {
-      type: 'selection',
+      key: 'deptName',
+      title: $t('page.system.dept.deptName'),
       align: 'center',
-      width: 48
+      minWidth: 180
     },
     {
-      key: 'id',
-      title: '主键',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'parentId',
-      title: '父 ID',
+      key: 'deptCategory',
+      title: $t('page.system.dept.deptCategory'),
       align: 'center',
       minWidth: 120
     },
     {
-      key: 'deptId',
-      title: '部门 ID',
+      key: 'orderNum',
+      title: $t('page.system.dept.sort'),
       align: 'center',
-      minWidth: 120
+      minWidth: 60
     },
     {
-      key: 'userId',
-      title: '用户 ID',
+      key: 'status',
+      title: $t('page.system.dept.status'),
       align: 'center',
-      minWidth: 120
+      minWidth: 120,
+      render(row) {
+        return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
+      }
     },
     {
-      key: 'treeName',
-      title: '值',
+      key: 'createTime',
+      title: $t('page.system.dept.createTime'),
       align: 'center',
       minWidth: 120
     },
@@ -84,7 +82,7 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 130,
+      width: 150,
       render: row => {
         const addBtn = () => {
           return (
@@ -105,7 +103,7 @@ const {
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
               tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.id)}
+              onClick={() => edit(row.deptId)}
             />
           );
         };
@@ -118,15 +116,15 @@ const {
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.id)}
+              onPositiveClick={() => handleDelete(row.deptId)}
             />
           );
         };
 
         const buttons = [];
-        if (hasAuth('demo:tree:add')) buttons.push(addBtn());
-        if (hasAuth('demo:tree:edit')) buttons.push(editBtn());
-        if (hasAuth('demo:tree:remove')) buttons.push(deleteBtn());
+        if (hasAuth('system:dept:add')) buttons.push(addBtn());
+        if (hasAuth('system:dept:edit')) buttons.push(editBtn());
+        if (hasAuth('system:dept:remove')) buttons.push(deleteBtn());
 
         return (
           <div class="flex-center gap-8px">
@@ -143,88 +141,74 @@ const {
   ]
 });
 
-const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
-  useTableOperate(rows, 'id', getData);
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, onDeleted } = useTableOperate(
+  rows,
+  'deptId',
+  getData
+);
 
-async function handleBatchDelete() {
+async function handleDelete(deptId: CommonType.IdType) {
   // request
-  const { error } = await fetchBatchDeleteTree(checkedRowKeys.value);
-  if (error) return;
-  onBatchDeleted();
-}
-
-async function handleDelete(id: CommonType.IdType) {
-  // request
-  const { error } = await fetchBatchDeleteTree([id]);
+  const { error } = await fetchBatchDeleteDept([deptId]);
   if (error) return;
   onDeleted();
 }
 
-function edit(id: CommonType.IdType) {
-  handleEdit(id);
+function edit(deptId: CommonType.IdType) {
+  handleEdit(deptId);
 }
 
-function addInRow(row: Api.Demo.Tree) {
+function addInRow(row: Api.System.Dept) {
   editingData.value = jsonClone(row);
   handleAdd();
-}
-
-function handleExport() {
-  download('/demo/tree/export', searchParams, `测试树表_${new Date().getTime()}.xlsx`);
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <TreeSearch v-model:model="searchParams" @search="getData" />
-    <NCard title="测试树表列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
+    <DeptSearch v-model:model="searchParams" @search="getData" />
+    <NCard :title="$t('page.system.dept.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
-          :disabled-delete="checkedRowKeys.length === 0"
           :loading="loading"
-          :show-add="hasAuth('demo:tree:add')"
-          :show-delete="hasAuth('demo:tree:remove')"
-          :show-export="false"
+          :show-add="hasAuth('system:dept:add')"
+          :show-delete="false"
           @add="handleAdd"
-          @delete="handleBatchDelete"
-          @export="handleExport"
           @refresh="getData"
         >
           <template #prefix>
             <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
               <template #icon>
-                <icon-quill-expand />
+                <icon-quill:expand />
               </template>
-              全部展开
+              {{ $t('page.system.dept.expandAll') }}
             </NButton>
             <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
-                <icon-quill-collapse />
+                <icon-quill:collapse />
               </template>
-              全部收起
+              {{ $t('page.system.dept.collapseAll') }}
             </NButton>
           </template>
         </TableHeaderOperation>
       </template>
-      <DataTable
-        v-model:checked-row-keys="checkedRowKeys"
+      <NDataTable
         v-model:expanded-row-keys="expandedRowKeys"
         :columns="columns"
         :data="data"
+        size="small"
         :indent="64"
         :flex-height="!appStore.isMobile"
         :scroll-x="scrollX"
         :loading="loading"
-        remote
-        :row-key="row => row.id"
+        :row-key="row => row.deptId"
         class="sm:h-full"
       />
-      <TreeOperateDrawer
+      <DeptOperateDrawer
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
-        :tree-list="data"
         @submitted="getData"
       />
     </NCard>

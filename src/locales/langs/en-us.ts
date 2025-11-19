@@ -272,6 +272,7 @@ const local: App.I18n.Schema = {
     system_user: 'User Management',
     system_role: 'Role Management',
     system_menu: 'Menu Management',
+    system_dept: 'Dept Management',
     monitor: 'Monitor',
     'social-callback': 'Social Callback',
     monitor_cache: 'Cache Monitor',

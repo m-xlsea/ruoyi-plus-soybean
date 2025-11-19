@@ -51,12 +51,6 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
         render: (_, index) => index + 1
       },
       {
-        key: 'id',
-        title: '主键',
-        align: 'center',
-        minWidth: 120
-      },
-      {
         key: 'deptId',
         title: '部门 ID',
         align: 'center',

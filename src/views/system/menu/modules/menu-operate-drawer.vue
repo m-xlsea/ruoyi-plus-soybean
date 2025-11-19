@@ -1,6 +1,7 @@
 <script setup lang="tsx">
 import { computed, ref, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
+import { jsonClone } from '@sa/utils';
 import { menuIconTypeOptions, menuIsFrameOptions, menuTypeOptions } from '@/constants/business';
 import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api/system';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -121,10 +122,10 @@ const localIconOptions = localIcons.map<SelectOption>(item => ({
 function handleInitModel() {
   queryList.value = [];
   iconType.value = '1';
-  Object.assign(model, createDefaultModel());
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
     if (isMenu.value && isInternalType.value) {
       model.value.component = model.value.component?.slice(0, -6);
     }

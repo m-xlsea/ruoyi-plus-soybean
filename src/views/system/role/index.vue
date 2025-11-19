@@ -124,7 +124,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
                 type="primary"
                 icon="material-symbols:drive-file-rename-outline-outline"
                 tooltipContent={$t('common.edit')}
-                onClick={() => edit(row.roleId!)}
+                onClick={() => edit(row.roleId)}
               />
             );
           };
@@ -161,7 +161,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
                 icon="material-symbols:delete-outline"
                 tooltipContent={$t('common.delete')}
                 popconfirmContent={$t('common.confirmDelete')}
-                onPositiveClick={() => handleDelete(row.roleId!)}
+                onPositiveClick={() => handleDelete(row.roleId)}
               />
             );
           };

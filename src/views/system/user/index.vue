@@ -145,7 +145,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
                 type="primary"
                 icon="material-symbols:drive-file-rename-outline-outline"
                 tooltipContent={$t('common.edit')}
-                onClick={() => edit(row.userId!)}
+                onClick={() => edit(row.userId)}
               />
             );
           };
@@ -157,7 +157,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
                 type="primary"
                 icon="material-symbols:key-vertical-outline"
                 tooltipContent="重置密码"
-                onClick={() => handleResetPwd(row.userId!)}
+                onClick={() => handleResetPwd(row.userId)}
               />
             );
           };
@@ -170,7 +170,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
                 icon="material-symbols:delete-outline"
                 tooltipContent={$t('common.delete')}
                 popconfirmContent={$t('common.confirmDelete')}
-                onPositiveClick={() => handleDelete(row.userId!)}
+                onPositiveClick={() => handleDelete(row.userId)}
               />
             );
           };

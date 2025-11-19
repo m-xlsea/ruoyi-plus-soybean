@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { ref, toRaw } from 'vue';
+import { toRaw } from 'vue';
 import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 
 defineOptions({
-  name: 'RoleSearch'
+  name: 'DeptSearch'
 });
 
 interface Emits {
@@ -18,26 +18,13 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const dateRangeCreateTime = ref<[string, string] | null>(null);
+const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
 
-const model = defineModel<Api.System.RoleSearchParams>('model', { required: true });
+const model = defineModel<Api.System.DeptSearchParams>('model', { required: true });
 
 const defaultModel = jsonClone(toRaw(model.value));
 
-const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
-
-function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
-  const params = model.value.params!;
-  if (value && value.length === 2) {
-    [params.beginTime, params.endTime] = value;
-  } else {
-    params.beginTime = undefined;
-    params.endTime = undefined;
-  }
-}
-
 function resetModel() {
-  dateRangeCreateTime.value = null;
   Object.assign(model.value, defaultModel);
 }
 
@@ -59,32 +46,18 @@ async function search() {
       <NCollapseItem :title="$t('common.search')" name="user-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="角色名称" path="roleName" class="pr-24px">
-              <NInput v-model:value="model.roleName" placeholder="请输入角色名称" />
+            <NFormItemGi span="24 s:12 m:8" :label="$t('page.system.dept.deptName')" path="deptName" class="pr-24px">
+              <NInput v-model:value="model.deptName" :placeholder="$t('page.system.dept.form.deptName.required')" />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="权限字符" path="roleKey" class="pr-24px">
-              <NInput v-model:value="model.roleKey" placeholder="请输入权限字符" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="角色状态" path="status" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:8 " :label="$t('page.system.dept.status')" path="status" class="pr-24px">
               <NSelect
                 v-model:value="model.status"
-                placeholder="请选择角色状态"
+                :placeholder="$t('page.system.dept.form.status.required')"
                 :options="sysNormalDisableOptions"
                 clearable
               />
             </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="创建时间" path="createTime" class="pr-24px">
-              <NDatePicker
-                v-model:formatted-value="dateRangeCreateTime"
-                update-value-on-close
-                class="w-full"
-                type="daterange"
-                value-format="yyyy-MM-dd"
-                clearable
-                @update:formatted-value="onDateRangeCreateTimeUpdate"
-              />
-            </NFormItemGi>
-            <NFormItemGi span="24" class="pr-24px">
+            <NFormItemGi span="24 s:12 m:8" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

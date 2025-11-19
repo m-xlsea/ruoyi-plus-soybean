@@ -13,7 +13,7 @@ defineOptions({
 #if($tplCategory == 'tree')
 interface Props {
   /** the tree list */
-  treeList?: Api.Demo.Tree[] | null;
+  treeList?: Api.$ModuleName.${BusinessName}[] | null;
 }
 #end
 

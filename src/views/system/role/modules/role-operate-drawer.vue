@@ -78,8 +78,8 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 
 async function handleUpdateModelWhenEdit() {
   menuOptions.value = [];
+  model.value = createDefaultModel();
   model.value.menuIds = [];
-  Object.assign(model.value, jsonClone(props.rowData));
 
   if (props.operateType === 'add') {
     menuTreeRef.value?.refresh();
@@ -88,7 +88,7 @@ async function handleUpdateModelWhenEdit() {
 
   if (props.operateType === 'edit' && props.rowData) {
     startMenuLoading();
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
     const { data, error } = await fetchGetRoleMenuTreeSelect(model.value.roleId!);
     if (error) return;
     model.value.menuIds = data.checkedKeys;
