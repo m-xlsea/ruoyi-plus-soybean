@@ -180,6 +180,7 @@ const routeMap: RouteMap = {
   "monitor_cache": "/monitor/cache",
   "social-callback": "/social-callback",
   "system": "/system",
+  "system_client": "/system/client",
   "system_config": "/system/config",
   "system_dept": "/system/dept",
   "system_dict": "/system/dict",

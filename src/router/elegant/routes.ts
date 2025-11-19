@@ -147,6 +147,15 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'system_client',
+        path: '/system/client',
+        component: 'view.system_client',
+        meta: {
+          title: 'system_client',
+          i18nKey: 'route.system_client'
+        }
+      },
+      {
         name: 'system_config',
         path: '/system/config',
         component: 'view.system_config',

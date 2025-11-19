@@ -276,6 +276,7 @@ const local: App.I18n.Schema = {
     system_notice: '通知公告',
     system_oss: '文件管理',
     'system_oss-config': 'OSS 配置',
+    system_client: '客户端管理',
     monitor: '系统监控',
     'social-callback': '单点登录回调',
     monitor_cache: '缓存监控',
