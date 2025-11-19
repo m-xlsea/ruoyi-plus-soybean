@@ -147,6 +147,17 @@ export const generatedRoutes: GeneratedRoute[] = [
     },
     children: [
       {
+        name: 'system_menu',
+        path: '/system/menu',
+        component: 'view.system_menu',
+        meta: {
+          title: 'system_menu',
+          i18nKey: 'route.system_menu',
+          localIcon: 'menu-tree-table',
+          order: 3
+        }
+      },
+      {
         name: 'system_role',
         path: '/system/role',
         component: 'view.system_role',
