@@ -127,6 +127,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     }
     // @ts-expect-error no hidden field
     route.meta.hideInMenu = route.hidden;
+    // @ts-expect-error route.meta.activeMenu is activeMenu type
+    route.meta.activeMenu = route.meta?.activeMenu?.substring(1);
     if (route.meta.hideInMenu && parent && !route.meta.activeMenu) {
       // @ts-expect-error parent.name is activeMenu type
       route.meta.activeMenu = parent.name;
@@ -142,10 +144,12 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
         route.name = random;
         route.component = 'layout.base$view.iframe-page';
       } else {
-        route.props = {
-          // @ts-expect-error no query field
-          url: route.query
-        };
+        try {
+          route.props = {
+            // @ts-expect-error no query field
+            url: JSON.parse(route.query)?.url
+          };
+        } catch {}
       }
       route.component = parent && !isExternalLink ? 'view.iframe-page' : 'layout.base$view.iframe-page';
     } else if (!isLayout && !isParentLayout) {

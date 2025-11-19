@@ -4,8 +4,12 @@ import useNoticeStore from '@/store/modules/notice';
 import { $t } from '@/locales';
 import { localStg } from './storage';
 
-// 初始化
-export const initSSE = (url: any) => {
+/**
+ * 初始化 SSE
+ *
+ * @param url - SSE 地址
+ */
+export const initSSE = (url: string) => {
   const token = localStg.get('token');
   if (import.meta.env.VITE_APP_SSE === 'N' || !token) {
     return;

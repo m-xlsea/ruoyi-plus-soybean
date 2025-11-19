@@ -17,7 +17,7 @@ export function fetchBatchDeleteOss(ossIds: CommonType.IdType[]) {
   });
 }
 
-// 查询OSS对象基于id串
+/**  查询OSS对象基于id串 */
 export function fetchGetOssListByIds(ossIds: CommonType.IdType[]) {
   return request<Api.System.Oss[]>({
     url: `/resource/oss/listByIds/${ossIds.join(',')}`,
@@ -25,7 +25,7 @@ export function fetchGetOssListByIds(ossIds: CommonType.IdType[]) {
   });
 }
 
-// 上传文件
+/** 上传文件 */
 export function fetchUploadFile(file: File) {
   const formData = new FormData();
   formData.append('file', file);
