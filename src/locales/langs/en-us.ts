@@ -275,6 +275,7 @@ const local: App.I18n.Schema = {
     system_dept: 'Dept Management',
     system_post: 'Post Management',
     system_dict: 'Dict Management',
+    system_config: 'Config Management',
     monitor: 'Monitor',
     'social-callback': 'Social Callback',
     monitor_cache: 'Cache Monitor',
