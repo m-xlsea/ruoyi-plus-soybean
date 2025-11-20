@@ -284,6 +284,7 @@ const local: App.I18n.Schema = {
     monitor_logininfor: 'Login Log',
     monitor_operlog: 'Operate Log',
     monitor_cache: 'Cache Monitor',
+    monitor_online: 'Online User',
     'user-center': 'User Center',
     'social-callback': 'Social Callback',
     demo: 'Demo',

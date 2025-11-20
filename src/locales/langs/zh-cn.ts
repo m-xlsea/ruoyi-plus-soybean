@@ -281,6 +281,7 @@ const local: App.I18n.Schema = {
     monitor_cache: '缓存监控',
     monitor_logininfor: '登录日志',
     monitor_operlog: '操作日志',
+    monitor_online: '在线用户',
     'social-callback': '单点登录回调',
     'user-center': '个人中心',
     demo: '测试',

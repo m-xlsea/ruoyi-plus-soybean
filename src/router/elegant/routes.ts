@@ -132,6 +132,15 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'monitor_online',
+        path: '/monitor/online',
+        component: 'view.monitor_online',
+        meta: {
+          title: 'monitor_online',
+          i18nKey: 'route.monitor_online'
+        }
+      },
+      {
         name: 'monitor_operlog',
         path: '/monitor/operlog',
         component: 'view.monitor_operlog',

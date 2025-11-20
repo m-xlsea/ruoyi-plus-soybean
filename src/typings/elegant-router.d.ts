@@ -33,6 +33,7 @@ declare module "@elegant-router/types" {
     "monitor": "/monitor";
     "monitor_cache": "/monitor/cache";
     "monitor_logininfor": "/monitor/logininfor";
+    "monitor_online": "/monitor/online";
     "monitor_operlog": "/monitor/operlog";
     "social-callback": "/social-callback";
     "system": "/system";
@@ -126,6 +127,7 @@ declare module "@elegant-router/types" {
     | "home"
     | "monitor_cache"
     | "monitor_logininfor"
+    | "monitor_online"
     | "monitor_operlog"
     | "system_client"
     | "system_config"
