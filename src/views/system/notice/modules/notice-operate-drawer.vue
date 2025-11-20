@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { jsonClone } from '@sa/utils';
 import type { UmoEditor } from '@umoteam/editor';
 import { fetchCreateNotice, fetchUpdateNotice } from '@/service/api/system/notice';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -42,7 +43,7 @@ const title = computed(() => {
 
 type Model = Api.System.NoticeOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
@@ -64,13 +65,10 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-    return;
-  }
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
   }
 }
 
@@ -82,15 +80,15 @@ async function handleSubmit() {
   umoEditorRef.value?.saveContent();
   await validate();
 
+  const { noticeId, noticeTitle, noticeType, noticeContent, status } = model.value;
+
   // request
   if (props.operateType === 'add') {
-    const { noticeTitle, noticeType, noticeContent, status } = model;
     const { error } = await fetchCreateNotice({ noticeTitle, noticeType, noticeContent, status });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { noticeId, noticeTitle, noticeType, noticeContent, status } = model;
     const { error } = await fetchUpdateNotice({ noticeId, noticeTitle, noticeType, noticeContent, status });
     if (error) return;
   }

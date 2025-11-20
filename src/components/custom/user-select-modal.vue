@@ -4,7 +4,7 @@ import { NButton } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchGetDeptTree, fetchGetUserList } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 import UserSearch from '@/views/system/user/modules/user-search.vue';
@@ -45,92 +45,87 @@ useDict('sys_normal_disable');
 
 const appStore = useAppStore();
 
-const {
-  columns,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  mobilePagination,
-  searchParams,
-  resetSearchParams
-} = useTable({
-  apiFn: fetchGetUserList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    deptId: null,
-    userName: null,
-    nickName: null,
-    phonenumber: null,
-    status: null,
-    params: {}
-  },
-  immediate: false,
-  columns: () => [
-    {
-      type: 'selection',
-      multiple: props.multiple,
-      align: 'center',
-      width: 48,
-      disabled: row => props.disabledIds.includes(row.userId.toString())
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64
-    },
-    {
-      key: 'userName',
-      title: $t('page.system.user.userName'),
-      align: 'center',
-      minWidth: 120,
-      ellipsis: true
-    },
-    {
-      key: 'nickName',
-      title: $t('page.system.user.nickName'),
-      align: 'center',
-      minWidth: 120,
-      ellipsis: true
-    },
-    {
-      key: 'deptName',
-      title: $t('page.system.user.deptName'),
-      align: 'center',
-      minWidth: 120,
-      ellipsis: true
-    },
-    {
-      key: 'phonenumber',
-      title: $t('page.system.user.phonenumber'),
-      align: 'center',
-      minWidth: 120,
-      ellipsis: true
-    },
-    {
-      key: 'status',
-      title: $t('page.system.user.status'),
-      align: 'center',
-      minWidth: 80,
-      render(row) {
-        return <DictTag dict-code="sys_normal_disable" value={row.status} />;
-      }
-    },
-    {
-      key: 'createTime',
-      title: $t('page.system.user.createTime'),
-      align: 'center',
-      minWidth: 120
-    }
-  ]
+const searchParams = ref<Api.System.UserSearchParams>({
+  pageNum: 1,
+  pageSize: 10,
+  deptId: null,
+  userName: null,
+  nickName: null,
+  phonenumber: null,
+  status: null,
+  params: {}
 });
 
-const { checkedRowKeys } = useTableOperate(data, getData);
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, scrollX } =
+  useNaivePaginatedTable({
+    immediate: false,
+    api: () => fetchGetUserList(searchParams.value),
+    transform: response => defaultTransform(response),
+    onPaginationParamsChange: params => {
+      searchParams.value.pageNum = params.page;
+      searchParams.value.pageSize = params.pageSize;
+    },
+    columns: () => [
+      {
+        type: 'selection',
+        multiple: props.multiple,
+        align: 'center',
+        width: 48,
+        disabled: row => props.disabledIds.includes(row.userId.toString())
+      },
+      {
+        key: 'index',
+        title: $t('common.index'),
+        align: 'center',
+        width: 64
+      },
+      {
+        key: 'userName',
+        title: $t('page.system.user.userName'),
+        align: 'center',
+        minWidth: 120,
+        ellipsis: true
+      },
+      {
+        key: 'nickName',
+        title: $t('page.system.user.nickName'),
+        align: 'center',
+        minWidth: 120,
+        ellipsis: true
+      },
+      {
+        key: 'deptName',
+        title: $t('page.system.user.deptName'),
+        align: 'center',
+        minWidth: 120,
+        ellipsis: true
+      },
+      {
+        key: 'phonenumber',
+        title: $t('page.system.user.phonenumber'),
+        align: 'center',
+        minWidth: 120,
+        ellipsis: true
+      },
+      {
+        key: 'status',
+        title: $t('page.system.user.status'),
+        align: 'center',
+        minWidth: 80,
+        render(row) {
+          return <DictTag dict-code="sys_normal_disable" value={row.status} />;
+        }
+      },
+      {
+        key: 'createTime',
+        title: $t('page.system.user.createTime'),
+        align: 'center',
+        minWidth: 120
+      }
+    ]
+  });
+
+const { checkedRowKeys } = useTableOperate(data, 'userId', getData);
 
 // 存储所有页面的用户数据，用于跨页选择
 const allPagesData = ref<Api.System.User[]>([]);
@@ -164,7 +159,7 @@ async function getTreeData() {
 }
 
 function handleClickTree(keys: string[]) {
-  searchParams.deptId = keys.length ? keys[0] : null;
+  searchParams.value.deptId = keys.length ? keys[0] : null;
   checkedRowKeys.value = [];
   getDataByPage();
 }
@@ -181,7 +176,6 @@ const selectable = computed(() => {
 });
 
 function handleResetSearch() {
-  resetSearchParams();
   selectedKeys.value = [];
 }
 
@@ -243,7 +237,7 @@ watch(visible, () => {
   if (visible.value) {
     getTreeData();
     if (props.searchUserIds) {
-      searchParams.userIds = props.searchUserIds;
+      searchParams.value.userIds = props.searchUserIds;
     }
     allPagesData.value = [];
     getDataByPage();
@@ -320,7 +314,7 @@ watch(visible, () => {
             :data="data"
             size="small"
             :flex-height="!appStore.isMobile"
-            :scroll-x="962"
+            :scroll-x="scrollX"
             :loading="loading"
             :row-props="getRowProps"
             remote

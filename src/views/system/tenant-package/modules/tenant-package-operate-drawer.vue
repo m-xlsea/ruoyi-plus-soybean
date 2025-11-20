@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { useLoading } from '@sa/hooks';
 import { fetchCreateTenantPackage, fetchUpdateTenantPackage } from '@/service/api/system/tenant-package';
 import { fetchGetTenantPackageMenuTreeSelect } from '@/service/api/system/menu';
@@ -49,7 +50,7 @@ const title = computed(() => {
 
 type Model = Api.System.TenantPackageOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
@@ -69,23 +70,23 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 
 async function handleUpdateModelWhenEdit() {
   menuOptions.value = [];
-  model.menuIds = [];
+  model.value = createDefaultModel();
+  model.value.menuIds = [];
 
   if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
     const { data, error } = await fetchGetTenantPackageMenuTreeSelect(0);
     if (error) return;
-    model.menuIds = data.checkedKeys;
+    model.value.menuIds = data.checkedKeys || [];
     menuOptions.value = data.menus;
     return;
   }
 
   if (props.operateType === 'edit' && props.rowData) {
     startMenuLoading();
-    Object.assign(model, { ...props.rowData, menuIds: [] });
-    const { data, error } = await fetchGetTenantPackageMenuTreeSelect(model.packageId!);
+    Object.assign(model.value, jsonClone(props.rowData));
+    const { data, error } = await fetchGetTenantPackageMenuTreeSelect(model.value.packageId!);
     if (error) return;
-    model.menuIds = data.checkedKeys;
+    model.value.menuIds = data.checkedKeys || [];
     menuOptions.value = data.menus;
     stopMenuLoading();
   }
@@ -98,7 +99,8 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
-  const { packageId, packageName, remark, menuCheckStrictly } = model;
+  const { packageId, packageName, remark, menuCheckStrictly } = model.value;
+
   const menuIds = menuTreeRef.value?.getCheckedMenuIds();
   // request
   if (props.operateType === 'add') {

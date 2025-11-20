@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue';
 import { fetchGetGenDataNames, fetchGetGenDbList, fetchImportGenTable } from '@/service/api/tool';
 import { useAppStore } from '@/store/modules/app';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { $t } from '@/locales';
 import GenTableDbSearch from './gen-table-db-search.vue';
 
@@ -22,18 +22,20 @@ const emit = defineEmits<Emits>();
 
 const appStore = useAppStore();
 
-const { columns, data, getData, getDataByPage, loading, mobilePagination, searchParams } = useTable({
-  apiFn: fetchGetGenDbList,
-  immediate: false,
-  showTotal: true,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 15,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    dataName: null,
-    tableName: null,
-    tableComment: null
+const searchParams = ref<Api.Tool.GenTableDbSearchParams>({
+  pageNum: 1,
+  pageSize: 10,
+  dataName: null,
+  tableName: null,
+  tableComment: null
+});
+
+const { columns, data, getData, getDataByPage, loading, mobilePagination, scrollX } = useNaivePaginatedTable({
+  api: () => fetchGetGenDbList(searchParams.value),
+  transform: response => defaultTransform(response),
+  onPaginationParamsChange: params => {
+    searchParams.value.pageNum = params.page;
+    searchParams.value.pageSize = params.pageSize;
   },
   columns: () => [
     {
@@ -62,7 +64,7 @@ const { columns, data, getData, getDataByPage, loading, mobilePagination, search
   ]
 });
 
-const { checkedRowKeys } = useTableOperate(data, getData);
+const { checkedRowKeys } = useTableOperate(data, 'tableName', getData);
 
 function closeDrawer() {
   visible.value = false;
@@ -71,7 +73,7 @@ function closeDrawer() {
 async function handleSubmit() {
   if (checkedRowKeys.value.length > 0) {
     // request
-    const { error } = await fetchImportGenTable(checkedRowKeys.value as string[], searchParams.dataName!);
+    const { error } = await fetchImportGenTable(checkedRowKeys.value as string[], searchParams.value.dataName!);
     if (error) return;
     window.$message?.success('导入成功');
     emit('submitted');
@@ -82,9 +84,9 @@ async function handleSubmit() {
 const dataNameOptions = ref<CommonType.Option[]>([]);
 
 async function handleResetSearchParams() {
-  searchParams.dataName = dataNameOptions.value.length ? dataNameOptions.value[0].value : null;
-  searchParams.tableName = null;
-  searchParams.tableComment = null;
+  searchParams.value.dataName = dataNameOptions.value.length ? dataNameOptions.value[0].value : null;
+  searchParams.value.tableName = null;
+  searchParams.value.tableComment = null;
   data.value = [];
   checkedRowKeys.value = [];
   await getDataByPage();
@@ -121,7 +123,7 @@ watch(visible, async () => {
           :data="data"
           size="small"
           :flex-height="!appStore.isMobile"
-          :scroll-x="750"
+          :scroll-x="scrollX"
           :loading="loading"
           remote
           :row-key="row => row.tableName"

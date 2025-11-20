@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -8,7 +9,6 @@ defineOptions({
 });
 
 interface Emits {
-  (e: 'reset'): void;
   (e: 'search'): void;
 }
 
@@ -20,6 +20,8 @@ const dateRangeLoginTime = ref<[string, string] | null>(null);
 
 const model = defineModel<Api.Monitor.LoginInforSearchParams>('model', { required: true });
 
+const defaultModel = jsonClone(toRaw(model.value));
+
 function onDateRangeLoginTimeUpdate(value: [string, string] | null) {
   if (value?.length) {
     model.value.params!.beginTime = value[0];
@@ -27,10 +29,15 @@ function onDateRangeLoginTimeUpdate(value: [string, string] | null) {
   }
 }
 
-async function reset() {
+function resetModel() {
   dateRangeLoginTime.value = null;
+  Object.assign(model.value, defaultModel);
+}
+
+async function reset() {
   await restoreValidation();
-  emit('reset');
+  resetModel();
+  emit('search');
 }
 
 async function search() {

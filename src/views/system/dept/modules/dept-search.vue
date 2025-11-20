@@ -1,13 +1,15 @@
 <script setup lang="ts">
+import { toRaw } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
+
 defineOptions({
   name: 'DeptSearch'
 });
 
 interface Emits {
-  (e: 'reset'): void;
   (e: 'search'): void;
 }
 
@@ -15,13 +17,20 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
+const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
+
 const model = defineModel<Api.System.DeptSearchParams>('model', { required: true });
 
-const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
+const defaultModel = jsonClone(toRaw(model.value));
+
+function resetModel() {
+  Object.assign(model.value, defaultModel);
+}
 
 async function reset() {
   await restoreValidation();
-  emit('reset');
+  resetModel();
+  emit('search');
 }
 
 async function search() {

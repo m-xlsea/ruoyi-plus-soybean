@@ -17,6 +17,7 @@ const props = defineProps<Props>();
 const visible = defineModel<boolean>('visible', {
   default: false
 });
+
 const title = '操作日志详情';
 
 function closeDrawer() {

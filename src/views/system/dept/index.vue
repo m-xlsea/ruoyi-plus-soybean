@@ -1,11 +1,11 @@
 <script setup lang="tsx">
+import { ref } from 'vue';
 import { NButton, NDivider } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
-import { type TableDataWithIndex } from '@sa/hooks';
 import { fetchBatchDeleteDept, fetchGetDeptList } from '@/service/api/system/dept';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
-import { useTreeTable, useTreeTableOperate } from '@/hooks/common/tree-table';
+import { treeTransform, useNaiveTreeTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
@@ -22,31 +22,34 @@ useDict('sys_normal_disable');
 const appStore = useAppStore();
 const { hasAuth } = useAuth();
 
+const searchParams = ref<Api.System.DeptSearchParams>({
+  deptName: null,
+  status: null,
+  params: {}
+});
+
 const {
   columns,
   columnChecks,
   data,
+  rows,
   getData,
   loading,
-  searchParams,
-  resetSearchParams,
   expandedRowKeys,
   isCollapse,
   expandAll,
-  collapseAll
-} = useTreeTable({
-  apiFn: fetchGetDeptList,
-  apiParams: {
-    deptName: null,
-    status: null
-  },
-  idField: 'deptId',
+  collapseAll,
+  scrollX
+} = useNaiveTreeTable({
+  keyField: 'deptId',
+  api: () => fetchGetDeptList(searchParams.value),
+  transform: response => treeTransform(response, { idField: 'deptId' }),
   columns: () => [
     {
       key: 'deptName',
       title: $t('page.system.dept.deptName'),
       align: 'center',
-      minWidth: 120
+      minWidth: 180
     },
     {
       key: 'deptCategory',
@@ -100,7 +103,7 @@ const {
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
               tooltipContent={$t('common.edit')}
-              onClick={() => edit(row)}
+              onClick={() => edit(row.deptId)}
             />
           );
         };
@@ -113,7 +116,7 @@ const {
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.deptId!)}
+              onPositiveClick={() => handleDelete(row.deptId)}
             />
           );
         };
@@ -138,8 +141,9 @@ const {
   ]
 });
 
-const { drawerVisible, operateType, editingData, handleAdd, handleEdit, onDeleted } = useTreeTableOperate(
-  data,
+const { drawerVisible, operateType, editingData, handleAdd, handleEdit, onDeleted } = useTableOperate(
+  rows,
+  'deptId',
   getData
 );
 
@@ -150,24 +154,19 @@ async function handleDelete(deptId: CommonType.IdType) {
   onDeleted();
 }
 
-async function edit(row: TableDataWithIndex<Api.System.Dept>) {
-  handleEdit(row);
+function edit(deptId: CommonType.IdType) {
+  handleEdit(deptId);
 }
 
-async function addInRow(row: TableDataWithIndex<Api.System.Dept>) {
+function addInRow(row: Api.System.Dept) {
   editingData.value = jsonClone(row);
-  handleAdd();
-}
-
-async function handleAddOperate() {
-  editingData.value = null;
   handleAdd();
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <DeptSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
+    <DeptSearch v-model:model="searchParams" @search="getData" />
     <NCard :title="$t('page.system.dept.title')" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
@@ -175,19 +174,19 @@ async function handleAddOperate() {
           :loading="loading"
           :show-add="hasAuth('system:dept:add')"
           :show-delete="false"
-          @add="handleAddOperate"
+          @add="handleAdd"
           @refresh="getData"
         >
           <template #prefix>
             <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
               <template #icon>
-                <icon-quill:expand />
+                <icon-quill-expand />
               </template>
               {{ $t('page.system.dept.expandAll') }}
             </NButton>
             <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
-                <icon-quill:collapse />
+                <icon-quill-collapse />
               </template>
               {{ $t('page.system.dept.collapseAll') }}
             </NButton>
@@ -199,9 +198,9 @@ async function handleAddOperate() {
         :columns="columns"
         :data="data"
         size="small"
-        :indent="32"
+        :indent="64"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="scrollX"
         :loading="loading"
         :row-key="row => row.deptId"
         class="sm:h-full"

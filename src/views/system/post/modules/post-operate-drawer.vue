@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { useLoading } from '@sa/hooks';
 import { fetchCreatePost, fetchUpdatePost } from '@/service/api/system/post';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
+
 defineOptions({
   name: 'PostOperateDrawer'
 });
@@ -42,7 +44,7 @@ const title = computed(() => {
 
 type Model = Api.System.PostOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
@@ -68,14 +70,11 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-    return;
-  }
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
     startDeptLoading();
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
     endDeptLoading();
   }
 }
@@ -87,15 +86,15 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const { postId, deptId, postCode, postCategory, postName, postSort, status, remark } = model.value;
+
   // request
   if (props.operateType === 'add') {
-    const { deptId, postCode, postCategory, postName, postSort, status, remark } = model;
     const { error } = await fetchCreatePost({ deptId, postCode, postCategory, postName, postSort, status, remark });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { postId, deptId, postCode, postCategory, postName, postSort, status, remark } = model;
     const { error } = await fetchUpdatePost({
       postId,
       deptId,

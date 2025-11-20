@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { ossAccessPolicyOptions, ossConfigIsHttpsOptions } from '@/constants/business';
 import { fetchCreateOssConfig, fetchUpdateOssConfig } from '@/service/api/system/oss-config';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -41,7 +42,7 @@ const title = computed(() => {
 
 type Model = Api.System.OssConfigOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
@@ -75,13 +76,10 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-    return;
-  }
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
   }
 }
 
@@ -92,21 +90,23 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const {
+    ossConfigId,
+    configKey,
+    accessKey,
+    secretKey,
+    bucketName,
+    prefix,
+    endpoint,
+    domain,
+    isHttps,
+    region,
+    accessPolicy,
+    remark
+  } = model.value;
+
   // request
   if (props.operateType === 'add') {
-    const {
-      configKey,
-      accessKey,
-      secretKey,
-      bucketName,
-      prefix,
-      endpoint,
-      domain,
-      isHttps,
-      region,
-      accessPolicy,
-      remark
-    } = model;
     const { error } = await fetchCreateOssConfig({
       configKey,
       accessKey,
@@ -124,20 +124,6 @@ async function handleSubmit() {
   }
 
   if (props.operateType === 'edit') {
-    const {
-      ossConfigId,
-      configKey,
-      accessKey,
-      secretKey,
-      bucketName,
-      prefix,
-      endpoint,
-      domain,
-      isHttps,
-      region,
-      accessPolicy,
-      remark
-    } = model;
     const { error } = await fetchUpdateOssConfig({
       ossConfigId,
       configKey,

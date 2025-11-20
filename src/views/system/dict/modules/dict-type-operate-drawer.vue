@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { fetchCreateDictType, fetchUpdateDictType } from '@/service/api/system/dict';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
@@ -40,7 +41,7 @@ const title = computed(() => {
 
 type Model = Api.System.DictTypeOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
@@ -59,13 +60,10 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-    return;
-  }
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
   }
 }
 
@@ -76,15 +74,15 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const { dictId, dictName, dictType, remark } = model.value;
+
   // request
   if (props.operateType === 'add') {
-    const { dictName, dictType, remark } = model;
     const { error } = await fetchCreateDictType({ dictName, dictType, remark });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { dictId, dictName, dictType, remark } = model;
     const { error } = await fetchUpdateDictType({ dictId, dictName, dictType, remark });
     if (error) return;
   }

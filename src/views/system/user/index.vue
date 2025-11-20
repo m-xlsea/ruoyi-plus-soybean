@@ -5,7 +5,7 @@ import { useBoolean, useLoading } from '@sa/hooks';
 import { jsonClone } from '@sa/utils';
 import { fetchBatchDeleteUser, fetchGetDeptTree, fetchGetUserList, fetchUpdateUserStatus } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
@@ -32,182 +32,171 @@ const { download } = useDownload();
 const { bool: importVisible, setTrue: openImportModal } = useBoolean();
 const { bool: passwordVisible, setTrue: openPasswordDrawer } = useBoolean();
 
-const {
-  columns,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  mobilePagination,
-  searchParams,
-  resetSearchParams
-} = useTable({
-  apiFn: fetchGetUserList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    deptId: null,
-    userName: null,
-    nickName: null,
-    phonenumber: null,
-    status: null,
-    params: {}
-  },
-  columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'userName',
-      title: $t('page.system.user.userName'),
-      align: 'left',
-      width: 200,
-      ellipsis: true,
-      render: row => {
-        return (
-          <div class="flex items-center justify-center gap-2">
-            <NAvatar src={row.avatar} class="bg-primary">
-              {row.avatar ? undefined : row.nickName.charAt(0)}
-            </NAvatar>
-            <div class="max-w-160px flex flex-col">
-              <NEllipsis>{row.userName}</NEllipsis>
-              <NEllipsis>{row.nickName}</NEllipsis>
-            </div>
-          </div>
-        );
-      }
-    },
-    {
-      key: 'sex',
-      title: $t('page.system.user.sex'),
-      align: 'center',
-      width: 80,
-      ellipsis: true,
-      render(row) {
-        return <DictTag value={row.sex} dictCode="sys_user_sex" />;
-      }
-    },
-    {
-      key: 'deptName',
-      title: $t('page.system.user.deptName'),
-      align: 'center',
-      width: 120,
-      ellipsis: true
-    },
-    {
-      key: 'email',
-      title: $t('page.system.user.email'),
-      align: 'center',
-      width: 120,
-      ellipsis: true
-    },
-    {
-      key: 'phonenumber',
-      title: $t('page.system.user.phonenumber'),
-      align: 'center',
-      width: 120,
-      ellipsis: true
-    },
-    {
-      key: 'status',
-      title: $t('page.system.user.status'),
-      align: 'center',
-      width: 80,
-      render(row) {
-        return (
-          <StatusSwitch
-            v-model:value={row.status}
-            disabled={row.userId === 1}
-            info={row.userName}
-            onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
-          />
-        );
-      }
-    },
-    {
-      key: 'createTime',
-      title: $t('page.system.user.createTime'),
-      align: 'center',
-      width: 120
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 150,
-      render: row => {
-        if (row.userId === 1) return null;
-
-        const editBtn = () => {
-          return (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:drive-file-rename-outline-outline"
-              tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.userId!)}
-            />
-          );
-        };
-
-        const passwordBtn = () => {
-          return (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:key-vertical-outline"
-              tooltipContent="重置密码"
-              onClick={() => handleResetPwd(row.userId!)}
-            />
-          );
-        };
-
-        const deleteBtn = () => {
-          return (
-            <ButtonIcon
-              text
-              type="error"
-              icon="material-symbols:delete-outline"
-              tooltipContent={$t('common.delete')}
-              popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.userId!)}
-            />
-          );
-        };
-
-        const buttons = [];
-        if (hasAuth('system:user:edit')) buttons.push(editBtn());
-        if (hasAuth('system:user:resetPwd')) buttons.push(passwordBtn());
-        if (hasAuth('system:user:remove')) buttons.push(deleteBtn());
-
-        return (
-          <div class="flex-center gap-8px">
-            {buttons.map((btn, index) => (
-              <>
-                {index !== 0 && <NDivider vertical />}
-                {btn}
-              </>
-            ))}
-          </div>
-        );
-      }
-    }
-  ]
+const searchParams = ref<Api.System.UserSearchParams>({
+  pageNum: 1,
+  pageSize: 10,
+  deptId: null,
+  userName: null,
+  nickName: null,
+  phonenumber: null,
+  status: null,
+  params: {}
 });
 
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, scrollX } =
+  useNaivePaginatedTable({
+    api: () => fetchGetUserList(searchParams.value),
+    transform: response => defaultTransform(response),
+    onPaginationParamsChange: params => {
+      searchParams.value.pageNum = params.page;
+      searchParams.value.pageSize = params.pageSize;
+    },
+    columns: () => [
+      {
+        type: 'selection',
+        align: 'center',
+        width: 48
+      },
+      {
+        key: 'userName',
+        title: $t('page.system.user.userName'),
+        align: 'left',
+        width: 220,
+        ellipsis: true,
+        render: row => {
+          return (
+            <div class="flex items-center justify-center gap-2">
+              <NAvatar src={row.avatar} class="bg-primary">
+                {row.avatar ? undefined : row.nickName.charAt(0)}
+              </NAvatar>
+              <div class="max-w-160px flex flex-col">
+                <NEllipsis>{row.userName}</NEllipsis>
+                <NEllipsis>{row.nickName}</NEllipsis>
+              </div>
+            </div>
+          );
+        }
+      },
+      {
+        key: 'sex',
+        title: $t('page.system.user.sex'),
+        align: 'center',
+        width: 80,
+        ellipsis: true,
+        render(row) {
+          return <DictTag value={row.sex} dictCode="sys_user_sex" />;
+        }
+      },
+      {
+        key: 'deptName',
+        title: $t('page.system.user.deptName'),
+        align: 'center',
+        width: 120,
+        ellipsis: true
+      },
+      {
+        key: 'email',
+        title: $t('page.system.user.email'),
+        align: 'center',
+        width: 120,
+        ellipsis: true
+      },
+      {
+        key: 'phonenumber',
+        title: $t('page.system.user.phonenumber'),
+        align: 'center',
+        width: 120,
+        ellipsis: true
+      },
+      {
+        key: 'status',
+        title: $t('page.system.user.status'),
+        align: 'center',
+        width: 80,
+        render(row) {
+          return (
+            <StatusSwitch
+              v-model:value={row.status}
+              disabled={row.userId === 1}
+              info={row.userName}
+              onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
+            />
+          );
+        }
+      },
+      {
+        key: 'createTime',
+        title: $t('page.system.user.createTime'),
+        align: 'center',
+        width: 120
+      },
+      {
+        key: 'operate',
+        title: $t('common.operate'),
+        align: 'center',
+        width: 150,
+        render: row => {
+          if (row.userId === 1) return null;
+
+          const editBtn = () => {
+            return (
+              <ButtonIcon
+                text
+                type="primary"
+                icon="material-symbols:drive-file-rename-outline-outline"
+                tooltipContent={$t('common.edit')}
+                onClick={() => edit(row.userId)}
+              />
+            );
+          };
+
+          const passwordBtn = () => {
+            return (
+              <ButtonIcon
+                text
+                type="primary"
+                icon="material-symbols:key-vertical-outline"
+                tooltipContent="重置密码"
+                onClick={() => handleResetPwd(row.userId)}
+              />
+            );
+          };
+
+          const deleteBtn = () => {
+            return (
+              <ButtonIcon
+                text
+                type="error"
+                icon="material-symbols:delete-outline"
+                tooltipContent={$t('common.delete')}
+                popconfirmContent={$t('common.confirmDelete')}
+                onPositiveClick={() => handleDelete(row.userId)}
+              />
+            );
+          };
+
+          const buttons = [];
+          if (hasAuth('system:user:edit')) buttons.push(editBtn());
+          if (hasAuth('system:user:resetPwd')) buttons.push(passwordBtn());
+          if (hasAuth('system:user:remove')) buttons.push(deleteBtn());
+
+          return (
+            <div class="flex-center gap-8px">
+              {buttons.map((btn, index) => (
+                <>
+                  {index !== 0 && <NDivider vertical />}
+                  {btn}
+                </>
+              ))}
+            </div>
+          );
+        }
+      }
+    ]
+  });
+
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
-  useTableOperate(data, getData);
+  useTableOperate(data, 'userId', getData);
 
 async function handleBatchDelete() {
   // request
@@ -224,7 +213,7 @@ async function handleDelete(userId: CommonType.IdType) {
 }
 
 async function edit(userId: CommonType.IdType) {
-  handleEdit('userId', userId);
+  handleEdit(userId);
 }
 
 async function handleResetPwd(userId: CommonType.IdType) {
@@ -250,7 +239,7 @@ async function getTreeData() {
 getTreeData();
 
 function handleClickTree(keys: string[]) {
-  searchParams.deptId = keys.length ? keys[0] : null;
+  searchParams.value.deptId = keys.length ? keys[0] : null;
   checkedRowKeys.value = [];
   getDataByPage();
 }
@@ -294,8 +283,8 @@ const selectable = computed(() => {
 });
 
 function handleResetSearch() {
-  resetSearchParams();
   selectedKeys.value = [];
+  getDataByPage();
 }
 </script>
 
@@ -352,7 +341,7 @@ function handleResetSearch() {
             <template #after>
               <NButton v-if="hasAuth('system:user:import')" size="small" ghost @click="handleImport">
                 <template #icon>
-                  <icon-material-symbols:upload-rounded class="text-icon" />
+                  <icon-material-symbols-upload-rounded class="text-icon" />
                 </template>
                 {{ $t('common.import') }}
               </NButton>
@@ -365,7 +354,7 @@ function handleResetSearch() {
           :data="data"
           size="small"
           :flex-height="!appStore.isMobile"
-          :scroll-x="1200"
+          :scroll-x="scrollX"
           :loading="loading"
           remote
           :row-key="row => row.userId"

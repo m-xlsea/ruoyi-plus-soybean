@@ -1,6 +1,7 @@
 <script setup lang="tsx">
-import { computed, reactive, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { NTag } from 'naive-ui';
+import { jsonClone } from '@sa/utils';
 import { fetchCreateDictData, fetchUpdateDictData } from '@/service/api/system/dict-data';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { useDict } from '@/hooks/business/dict';
@@ -43,7 +44,7 @@ const title = computed(() => {
 
 type Model = Api.System.DictDataOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 const listClassOptions: Record<string, string>[] = [
   { label: 'Text', value: 'text' },
@@ -78,13 +79,10 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-    return;
-  }
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
   }
 }
 
@@ -95,9 +93,10 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const { dictCode, dictSort, dictLabel, dictValue, dictType, cssClass, listClass, isDefault, remark } = model.value;
+
   // request
   if (props.operateType === 'add') {
-    const { dictSort, dictLabel, dictValue, dictType, cssClass, listClass, isDefault, remark } = model;
     const { error } = await fetchCreateDictData({
       dictSort,
       dictLabel,
@@ -112,7 +111,6 @@ async function handleSubmit() {
   }
 
   if (props.operateType === 'edit') {
-    const { dictCode, dictSort, dictLabel, dictValue, dictType, cssClass, listClass, isDefault, remark } = model;
     const { error } = await fetchUpdateDictData({
       dictCode,
       dictSort,

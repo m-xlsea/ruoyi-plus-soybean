@@ -1,9 +1,10 @@
 <script setup lang="tsx">
+import { ref } from 'vue';
 import dayjs from 'dayjs';
 import { fetchForceLogout, fetchGetOnlineUserList } from '@/service/api/monitor/online';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
-import { useTable } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { getBrowserIcon, getOsIcon } from '@/utils/icon-tag-format';
 import ButtonIcon from '@/components/custom/button-icon.vue';
@@ -22,14 +23,15 @@ const { hasAuth } = useAuth();
 useDict('sys_common_status');
 useDict('sys_device_type');
 
-const { columns, columnChecks, data, getData, loading, searchParams, resetSearchParams } = useTable({
-  apiFn: fetchGetOnlineUserList,
-  apiParams: {
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    userName: null,
-    ipaddr: null
-  },
+const searchParams = ref<Api.Monitor.OnlineUserSearchParams>({
+  userName: null,
+  ipaddr: null,
+  params: {}
+});
+
+const { columns, columnChecks, data, getData, loading, scrollX } = useNaivePaginatedTable({
+  api: () => fetchGetOnlineUserList(searchParams.value),
+  transform: response => defaultTransform(response),
   columns: () => [
     {
       key: 'userName',
@@ -140,7 +142,7 @@ async function handleForceLogout(tokenId: string) {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <OnlineSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getData" />
+    <OnlineSearch v-model:model="searchParams" @search="getData" />
     <NCard title="在线用户列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
@@ -157,7 +159,7 @@ async function handleForceLogout(tokenId: string) {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="scrollX"
         :loading="loading"
         remote
         :row-key="row => row.tokenId"

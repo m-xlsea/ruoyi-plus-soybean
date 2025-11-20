@@ -53,19 +53,6 @@ declare module "@elegant-router/types" {
     "tool": "/tool";
     "tool_gen": "/tool/gen";
     "user-center": "/user-center";
-    "workflow": "/workflow";
-    "workflow_category": "/workflow/category";
-    "workflow_design": "/workflow/design";
-    "workflow_leave": "/workflow/leave";
-    "workflow_process-definition": "/workflow/process-definition";
-    "workflow_process-instance": "/workflow/process-instance";
-    "workflow_spel": "/workflow/spel";
-    "workflow_task": "/workflow/task";
-    "workflow_task_all-task-waiting": "/workflow/task/all-task-waiting";
-    "workflow_task_my-document": "/workflow/task/my-document";
-    "workflow_task_task-copy": "/workflow/task/task-copy";
-    "workflow_task_task-finish": "/workflow/task/task-finish";
-    "workflow_task_task-waiting": "/workflow/task/task-waiting";
   };
 
   /**
@@ -113,7 +100,6 @@ declare module "@elegant-router/types" {
     | "system"
     | "tool"
     | "user-center"
-    | "workflow"
   >;
 
   /**
@@ -159,17 +145,6 @@ declare module "@elegant-router/types" {
     | "system_tenant"
     | "system_user"
     | "tool_gen"
-    | "workflow_category"
-    | "workflow_design"
-    | "workflow_leave"
-    | "workflow_process-definition"
-    | "workflow_process-instance"
-    | "workflow_spel"
-    | "workflow_task_all-task-waiting"
-    | "workflow_task_my-document"
-    | "workflow_task_task-copy"
-    | "workflow_task_task-finish"
-    | "workflow_task_task-waiting"
   >;
 
   /**

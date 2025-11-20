@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { fetchCreate${BusinessName}, fetchUpdate${BusinessName} } from '@/service/api/${moduleName}/${business__name}';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 #if($dictList && $dictList.size() > 0)import { useDict } from '@/hooks/business/dict';#end
@@ -14,6 +15,10 @@ interface Props {
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
   rowData?: Api.$ModuleName.${BusinessName} | null;
+#if($tplCategory == 'tree')
+  /** the tree data */
+  treeList?: Api.$ModuleName.${BusinessName}[] | null;
+#end
 }
 
 const props = defineProps<Props>();
@@ -46,13 +51,13 @@ const title = computed(() => {
 
 type Model = Api.$ModuleName.${BusinessName}OperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
 #foreach($column in $columns)
-  #if($column.insert)
-      ${column.javaField}:#if($column.javaType == 'String' || ($!column.dictType && $column.dictType != '')) ''#else undefined#end#if($foreach.hasNext),#end
+  #if($column.insert || $column.isEdit)
+      ${column.javaField}:#if($column.javaType == 'String' || ($!column.dictType && $column.dictType != '')) ''#else null#end#if($foreach.hasNext),#end
   #end
 #end
   };
@@ -74,13 +79,13 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-    return;
-  }
+  model.value = createDefaultModel();
+#if($tplCategory == 'tree')
+  model.value.$treeParentCode = props.rowData?.$treeCode || 0;
+#end
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
   }
 }
 
@@ -93,7 +98,7 @@ async function handleSubmit() {
 
   #set($operateColumns = [])
   #foreach($column in $columns)#if($column.insert || $column.edit)#set($dummy = $operateColumns.add($column))#end#end
-  const { #foreach($column in $operateColumns)$column.javaField#if($foreach.hasNext), #end#end } = model;
+  const { #foreach($column in $operateColumns)$column.javaField#if($foreach.hasNext), #end#end } = model.value;
 
   // request
   if (props.operateType === 'add') {
@@ -121,6 +126,18 @@ watch(visible, () => {
     restoreValidation();
   }
 });
+
+#if($tplCategory == 'tree')
+const treeOptions = computed(() => {
+  return [
+    {
+      id: 0,
+      treeName: '顶级节点',
+      children: props.treeList!
+    }
+  ];
+});
+#end
 </script>
 
 <template>
@@ -138,7 +155,17 @@ watch(visible, () => {
 #end
 #set($dictType=$!StrUtil.toCamelCase($column.dictType))
         <NFormItem label="$column.columnComment" path="$column.javaField">
-        #if($column.htmlType == "textarea" || $column.htmlType == "editor")
+        #if($tplCategory == 'tree' && $column.javaField == $treeParentCode)
+          <NTreeSelect
+            v-model:value="model.$treeParentCode"
+            filterable
+            class="h-full"
+            key-field="$treeCode"
+            label-field="$treeName"
+            :options="treeOptions"
+            :default-expanded-keys="[0]"
+          />
+        #elseif($column.htmlType == "textarea" || $column.htmlType == "editor")
           <NInput
             v-model:value="model.$column.javaField"
             :rows="3"

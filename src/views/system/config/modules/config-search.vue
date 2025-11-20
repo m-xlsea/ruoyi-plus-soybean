@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -8,7 +9,6 @@ defineOptions({
 });
 
 interface Emits {
-  (e: 'reset'): void;
   (e: 'search'): void;
 }
 
@@ -20,6 +20,8 @@ const dateRangeCreateTime = ref<[string, string] | null>(null);
 
 const model = defineModel<Api.System.ConfigSearchParams>('model', { required: true });
 
+const defaultModel = jsonClone(toRaw(model.value));
+
 function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
   const params = model.value.params!;
   if (value && value.length === 2) {
@@ -30,10 +32,15 @@ function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
   }
 }
 
-async function reset() {
+function resetModel() {
   dateRangeCreateTime.value = null;
+  Object.assign(model.value, defaultModel);
+}
+
+async function reset() {
   await restoreValidation();
-  emit('reset');
+  resetModel();
+  emit('search');
 }
 
 async function search() {

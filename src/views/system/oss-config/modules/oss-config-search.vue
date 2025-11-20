@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 import type { SelectOption } from 'naive-ui';
+import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -9,7 +10,6 @@ defineOptions({
 });
 
 interface Emits {
-  (e: 'reset'): void;
   (e: 'search'): void;
 }
 
@@ -17,7 +17,6 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const model = defineModel<Api.System.OssConfigSearchParams>('model', { required: true });
 const isDefaltOptions = ref<SelectOption[]>([
   {
     label: '是',
@@ -28,9 +27,19 @@ const isDefaltOptions = ref<SelectOption[]>([
     value: '1'
   }
 ]);
+
+const model = defineModel<Api.System.OssConfigSearchParams>('model', { required: true });
+
+const defaultModel = jsonClone(toRaw(model.value));
+
+function resetModel() {
+  Object.assign(model.value, defaultModel);
+}
+
 async function reset() {
   await restoreValidation();
-  emit('reset');
+  resetModel();
+  emit('search');
 }
 
 async function search() {

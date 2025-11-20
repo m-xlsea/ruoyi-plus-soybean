@@ -6,7 +6,7 @@ import { fetchBatchDeletePost, fetchGetPostDeptSelect, fetchGetPostList } from '
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
@@ -23,140 +23,137 @@ const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
 
-const {
-  columns,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  mobilePagination,
-  searchParams,
-  resetSearchParams
-} = useTable({
-  apiFn: fetchGetPostList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    postCode: null,
-    postName: null,
-    status: null,
-    belongDeptId: null
-  },
-  columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64
-    },
-    {
-      key: 'postCode',
-      title: '岗位编码',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'postCategory',
-      title: '类别编码',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'postName',
-      title: '岗位名称',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'postSort',
-      title: '显示顺序',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'status',
-      title: '状态',
-      align: 'center',
-      minWidth: 120,
-      render(row) {
-        return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
-      }
-    },
-    {
-      key: 'createTime',
-      title: '创建时间',
-      align: 'center',
-      minWidth: 120,
-      ellipsis: {
-        tooltip: true
-      }
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 130,
-      render: row => {
-        const divider = () => {
-          if (!hasAuth('system:post:edit') || !hasAuth('system:post:remove')) {
-            return null;
-          }
-          return <NDivider vertical />;
-        };
-
-        const editBtn = () => {
-          if (!hasAuth('system:post:edit')) {
-            return null;
-          }
-          return (
-            <ButtonIcon
-              type="primary"
-              text
-              icon="material-symbols:drive-file-rename-outline-outline"
-              tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.postId!)}
-            />
-          );
-        };
-
-        const deleteBtn = () => {
-          if (!hasAuth('system:post:remove')) {
-            return null;
-          }
-          return (
-            <ButtonIcon
-              text
-              type="error"
-              icon="material-symbols:delete-outline"
-              tooltipContent={$t('common.delete')}
-              popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.postId!)}
-            />
-          );
-        };
-
-        return (
-          <div class="flex-center gap-8px">
-            {editBtn()}
-            {divider()}
-            {deleteBtn()}
-          </div>
-        );
-      }
-    }
-  ]
+const searchParams = ref<Api.System.PostSearchParams>({
+  pageNum: 1,
+  pageSize: 10,
+  postCode: null,
+  postName: null,
+  status: null,
+  belongDeptId: null,
+  params: {}
 });
 
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, scrollX } =
+  useNaivePaginatedTable({
+    api: () => fetchGetPostList(searchParams.value),
+    transform: response => defaultTransform(response),
+    onPaginationParamsChange: params => {
+      searchParams.value.pageNum = params.page;
+      searchParams.value.pageSize = params.pageSize;
+    },
+    columns: () => [
+      {
+        type: 'selection',
+        align: 'center',
+        width: 48
+      },
+      {
+        key: 'index',
+        title: $t('common.index'),
+        align: 'center',
+        width: 64,
+        render: (_, index) => index + 1
+      },
+      {
+        key: 'postCode',
+        title: '岗位编码',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'postCategory',
+        title: '类别编码',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'postName',
+        title: '岗位名称',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'postSort',
+        title: '显示顺序',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'status',
+        title: '状态',
+        align: 'center',
+        minWidth: 120,
+        render(row) {
+          return <DictTag size="small" value={row.status} dictCode="sys_normal_disable" />;
+        }
+      },
+      {
+        key: 'createTime',
+        title: '创建时间',
+        align: 'center',
+        minWidth: 120,
+        ellipsis: {
+          tooltip: true
+        }
+      },
+      {
+        key: 'operate',
+        title: $t('common.operate'),
+        align: 'center',
+        width: 130,
+        render: row => {
+          const divider = () => {
+            if (!hasAuth('system:post:edit') || !hasAuth('system:post:remove')) {
+              return null;
+            }
+            return <NDivider vertical />;
+          };
+
+          const editBtn = () => {
+            if (!hasAuth('system:post:edit')) {
+              return null;
+            }
+            return (
+              <ButtonIcon
+                type="primary"
+                text
+                icon="material-symbols:drive-file-rename-outline-outline"
+                tooltipContent={$t('common.edit')}
+                onClick={() => edit(row.postId!)}
+              />
+            );
+          };
+
+          const deleteBtn = () => {
+            if (!hasAuth('system:post:remove')) {
+              return null;
+            }
+            return (
+              <ButtonIcon
+                text
+                type="error"
+                icon="material-symbols:delete-outline"
+                tooltipContent={$t('common.delete')}
+                popconfirmContent={$t('common.confirmDelete')}
+                onPositiveClick={() => handleDelete(row.postId!)}
+              />
+            );
+          };
+
+          return (
+            <div class="flex-center gap-8px">
+              {editBtn()}
+              {divider()}
+              {deleteBtn()}
+            </div>
+          );
+        }
+      }
+    ]
+  });
+
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
-  useTableOperate(data, getData);
+  useTableOperate(data, 'postId', getData);
 
 async function handleBatchDelete() {
   // request
@@ -173,7 +170,7 @@ async function handleDelete(postId: CommonType.IdType) {
 }
 
 async function edit(postId: CommonType.IdType) {
-  handleEdit('postId', postId);
+  handleEdit(postId);
 }
 
 async function handleExport() {
@@ -203,7 +200,7 @@ async function getDeptOptions() {
 getDeptOptions();
 
 function handleClickTree(keys: string[]) {
-  searchParams.belongDeptId = keys.length ? keys[0] : null;
+  searchParams.value.belongDeptId = keys.length ? keys[0] : null;
   checkedRowKeys.value = [];
   getDataByPage();
 }
@@ -214,8 +211,8 @@ function handleResetTreeData() {
 }
 
 function handleResetSearch() {
-  resetSearchParams();
   selectedKeys.value = [];
+  getDataByPage();
 }
 </script>
 
@@ -276,7 +273,7 @@ function handleResetSearch() {
           :data="data"
           size="small"
           :flex-height="!appStore.isMobile"
-          :scroll-x="962"
+          :scroll-x="scrollX"
           :loading="loading"
           remote
           :row-key="row => row.postId"

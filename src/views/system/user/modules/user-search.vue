@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, toRaw } from 'vue';
 import { NDatePicker } from 'naive-ui';
+import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -23,6 +24,8 @@ const datePickerRef = ref<InstanceType<typeof NDatePicker>>();
 
 const model = defineModel<Api.System.UserSearchParams>('model', { required: true });
 
+const defaultModel = jsonClone(toRaw(model.value));
+
 function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
   const params = model.value.params!;
   if (value && value.length === 2) {
@@ -33,9 +36,14 @@ function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
   }
 }
 
-async function reset() {
+function resetModel() {
   dateRangeCreateTime.value = null;
+  Object.assign(model.value, defaultModel);
+}
+
+async function reset() {
   await restoreValidation();
+  resetModel();
   emit('reset');
 }
 
