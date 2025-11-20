@@ -177,6 +177,7 @@ const selectable = computed(() => {
 
 function handleResetSearch() {
   selectedKeys.value = [];
+  getDataByPage();
 }
 
 function closeModal() {

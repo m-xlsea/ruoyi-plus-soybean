@@ -126,7 +126,7 @@ watch(visible, async () => {
           @click="handleReduceSignature(checkedRowKeys)"
         >
           <template #icon>
-            <icon-material-symbols:delete-outline class="text-icon" />
+            <icon-material-symbols-delete-outline class="text-icon" />
           </template>
           批量减签
         </NButton>

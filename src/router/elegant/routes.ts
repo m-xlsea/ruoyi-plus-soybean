@@ -331,5 +331,125 @@ export const generatedRoutes: GeneratedRoute[] = [
       icon: 'material-symbols:account-circle-full',
       hideInMenu: true
     }
+  },
+  {
+    name: 'workflow',
+    path: '/workflow',
+    component: 'layout.base',
+    meta: {
+      title: 'workflow',
+      i18nKey: 'route.workflow'
+    },
+    children: [
+      {
+        name: 'workflow_category',
+        path: '/workflow/category',
+        component: 'view.workflow_category',
+        meta: {
+          title: 'workflow_category',
+          i18nKey: 'route.workflow_category'
+        }
+      },
+      {
+        name: 'workflow_design',
+        path: '/workflow/design',
+        component: 'view.workflow_design',
+        meta: {
+          title: 'workflow_design',
+          i18nKey: 'route.workflow_design'
+        }
+      },
+      {
+        name: 'workflow_leave',
+        path: '/workflow/leave',
+        component: 'view.workflow_leave',
+        meta: {
+          title: 'workflow_leave',
+          i18nKey: 'route.workflow_leave'
+        }
+      },
+      {
+        name: 'workflow_process-definition',
+        path: '/workflow/process-definition',
+        component: 'view.workflow_process-definition',
+        meta: {
+          title: 'workflow_process-definition',
+          i18nKey: 'route.workflow_process-definition'
+        }
+      },
+      {
+        name: 'workflow_process-instance',
+        path: '/workflow/process-instance',
+        component: 'view.workflow_process-instance',
+        meta: {
+          title: 'workflow_process-instance',
+          i18nKey: 'route.workflow_process-instance'
+        }
+      },
+      {
+        name: 'workflow_spel',
+        path: '/workflow/spel',
+        component: 'view.workflow_spel',
+        meta: {
+          title: 'workflow_spel',
+          i18nKey: 'route.workflow_spel'
+        }
+      },
+      {
+        name: 'workflow_task',
+        path: '/workflow/task',
+        meta: {
+          title: 'workflow_task',
+          i18nKey: 'route.workflow_task'
+        },
+        children: [
+          {
+            name: 'workflow_task_all-task-waiting',
+            path: '/workflow/task/all-task-waiting',
+            component: 'view.workflow_task_all-task-waiting',
+            meta: {
+              title: 'workflow_task_all-task-waiting',
+              i18nKey: 'route.workflow_task_all-task-waiting'
+            }
+          },
+          {
+            name: 'workflow_task_my-document',
+            path: '/workflow/task/my-document',
+            component: 'view.workflow_task_my-document',
+            meta: {
+              title: 'workflow_task_my-document',
+              i18nKey: 'route.workflow_task_my-document'
+            }
+          },
+          {
+            name: 'workflow_task_task-copy',
+            path: '/workflow/task/task-copy',
+            component: 'view.workflow_task_task-copy',
+            meta: {
+              title: 'workflow_task_task-copy',
+              i18nKey: 'route.workflow_task_task-copy'
+            }
+          },
+          {
+            name: 'workflow_task_task-finish',
+            path: '/workflow/task/task-finish',
+            component: 'view.workflow_task_task-finish',
+            meta: {
+              title: 'workflow_task_task-finish',
+              i18nKey: 'route.workflow_task_task-finish'
+            }
+          },
+          {
+            name: 'workflow_task_task-waiting',
+            path: '/workflow/task/task-waiting',
+            component: 'view.workflow_task_task-waiting',
+            meta: {
+              title: 'workflow_task_task-waiting',
+              i18nKey: 'route.workflow_task_task-waiting'
+            }
+          }
+        ]
+      }
+    ]
   }
 ];

@@ -1,0 +1,261 @@
+<script setup lang="tsx">
+import { computed, ref, shallowRef } from 'vue';
+import { NButton, NEmpty, NInput, NTag } from 'naive-ui';
+import { useBoolean, useLoading } from '@sa/hooks';
+import { fetchGetCategoryTree } from '@/service/api/workflow/category';
+import { fetchGetTaskWaitList } from '@/service/api/workflow/task';
+import { useAppStore } from '@/store/modules/app';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
+import { useDict } from '@/hooks/business/dict';
+import { loadDynamicComponent } from '@/utils/common';
+import TagGroup from '@/components/custom/tag-group.vue';
+import DictTag from '@/components/custom/dict-tag.vue';
+import ButtonIcon from '@/components/custom/button-icon.vue';
+import { $t } from '@/locales';
+import TaskWaitingSearch from './modules/task-waiting-search.vue';
+
+defineOptions({
+  name: 'TaskWaitingList'
+});
+
+useDict('wf_business_status');
+const appStore = useAppStore();
+const { bool: viewVisible, setTrue: showViewDrawer } = useBoolean();
+const dynamicComponent = shallowRef();
+
+const searchParams = ref<Api.Workflow.TaskSearchParams>({
+  pageNum: 1,
+  pageSize: 10,
+  category: null,
+  flowName: null,
+  flowCode: null,
+  nodeName: null,
+  createByIds: null,
+  params: {}
+});
+
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, scrollX } =
+  useNaivePaginatedTable({
+    api: () => fetchGetTaskWaitList(searchParams.value),
+    transform: response => defaultTransform(response),
+    onPaginationParamsChange: params => {
+      searchParams.value.pageNum = params.page;
+      searchParams.value.pageSize = params.pageSize;
+    },
+    columns: () => [
+      {
+        key: 'index',
+        title: $t('common.index'),
+        align: 'center',
+        width: 64,
+        render: (_, index) => index + 1
+      },
+      {
+        title: '业务编码',
+        key: 'businessCode',
+        align: 'center',
+        width: 120
+      },
+      {
+        title: '业务名称',
+        key: 'businessTitle',
+        align: 'center',
+        width: 120
+      },
+      {
+        title: '流程定义名称',
+        key: 'flowName',
+        align: 'center',
+        width: 120
+      },
+      {
+        title: '流程定义编码',
+        key: 'flowCode',
+        align: 'center',
+        width: 100
+      },
+      {
+        title: '流程分类',
+        key: 'categoryName',
+        align: 'center',
+        width: 80,
+        render: row => {
+          return <NTag>{row.categoryName}</NTag>;
+        }
+      },
+      {
+        title: '任务名称',
+        key: 'nodeName',
+        align: 'center',
+        width: 100
+      },
+      {
+        title: '申请人',
+        key: 'createByName',
+        align: 'center',
+        width: 100
+      },
+      {
+        title: '办理人',
+        key: 'assigneeNames',
+        align: 'center',
+        width: 100,
+        render: row => <TagGroup value={row.assigneeNames} />
+      },
+      {
+        title: '流程状态',
+        key: 'flowStatus',
+        align: 'center',
+        width: 80,
+        render(row) {
+          return <DictTag value={row.flowStatus} dict-code="wf_business_status" />;
+        }
+      },
+      {
+        title: '操作',
+        key: 'operate',
+        align: 'center',
+        fixed: 'right',
+        width: 50,
+        render(row) {
+          return (
+            <ButtonIcon
+              text
+              type="primary"
+              icon="ph:check-circle-bold"
+              tooltipContent="办理"
+              onClick={() => handleApproval(row)}
+            />
+          );
+        }
+      }
+    ]
+  });
+
+const { checkedRowKeys } = useTableOperate(data, 'id', getData);
+
+const { loading: treeLoading, startLoading: startTreeLoading, endLoading: endTreeLoading } = useLoading();
+const categoryPattern = ref<string>();
+const categoryData = ref<Api.Common.CommonTreeRecord>([]);
+const selectedKeys = ref<string[]>([]);
+const expandedKeys = ref<CommonType.IdType[]>(['100']);
+
+const selectable = computed(() => !loading.value);
+
+async function getTreeData() {
+  startTreeLoading();
+  const { data: tree, error } = await fetchGetCategoryTree();
+  if (!error) {
+    categoryData.value = tree;
+  }
+  endTreeLoading();
+}
+
+getTreeData();
+
+function handleClickTree(keys: string[]) {
+  searchParams.value.category = keys.length ? keys[0] : null;
+  checkedRowKeys.value = [];
+  getDataByPage();
+}
+
+function handleResetTreeData() {
+  categoryPattern.value = undefined;
+  getTreeData();
+}
+
+function handleResetSearch() {
+  selectedKeys.value = [];
+  getDataByPage();
+}
+
+const modules = import.meta.glob('@/components/workflow/**/*.vue');
+const businessId = ref<CommonType.IdType>();
+const taskId = ref<CommonType.IdType>();
+
+async function handleApproval(row: Api.Workflow.Task) {
+  dynamicComponent.value = null;
+  viewVisible.value = false;
+  businessId.value = row.businessId;
+  taskId.value = row.id;
+  const formPath = row.formPath;
+  if (!formPath) return;
+  dynamicComponent.value = await loadDynamicComponent(modules, formPath);
+  setTimeout(() => {
+    showViewDrawer();
+  }, 300);
+}
+</script>
+
+<template>
+  <TableSiderLayout sider-title="流程分类列表">
+    <template #header-extra>
+      <NButton size="small" text class="h-18px" @click.stop="() => handleResetTreeData()">
+        <template #icon>
+          <SvgIcon icon="ic:round-refresh" />
+        </template>
+      </NButton>
+    </template>
+    <template #sider>
+      <NInput v-model:value="categoryPattern" clearable :placeholder="$t('common.keywordSearch')" />
+      <NSpin class="category-tree" :show="treeLoading">
+        <NTree
+          v-model:selected-keys="selectedKeys"
+          v-model:expanded-keys="expandedKeys"
+          block-node
+          show-line
+          :data="categoryData as []"
+          :show-irrelevant-nodes="false"
+          :pattern="categoryPattern"
+          class="infinite-scroll h-full min-h-200px py-3"
+          key-field="id"
+          label-field="label"
+          virtual-scroll
+          :selectable="selectable"
+          @update:selected-keys="handleClickTree"
+        >
+          <template #empty>
+            <NEmpty description="暂无分类信息" class="h-full min-h-200px justify-center" />
+          </template>
+        </NTree>
+      </NSpin>
+    </template>
+    <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
+      <TaskWaitingSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
+      <NCard title="我的待办" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
+        <template #header-extra>
+          <TableHeaderOperation
+            v-model:columns="columnChecks"
+            :disabled-delete="checkedRowKeys.length === 0"
+            :loading="loading"
+            :show-add="false"
+            :show-delete="false"
+            :show-export="false"
+            @refresh="getData"
+          ></TableHeaderOperation>
+        </template>
+        <NDataTable
+          v-model:checked-row-keys="checkedRowKeys"
+          :columns="columns"
+          :data="data"
+          size="small"
+          :flex-height="!appStore.isMobile"
+          :scroll-x="scrollX"
+          :loading="loading"
+          remote
+          :row-key="row => row.id"
+          :pagination="mobilePagination"
+          class="sm:h-full"
+        />
+        <component
+          :is="dynamicComponent"
+          :visible="viewVisible"
+          operate-type="approval"
+          :business-id="businessId"
+          :task-id="taskId"
+          @submitted="getData"
+        />
+      </NCard>
+    </div>
+  </TableSiderLayout>
+</template>

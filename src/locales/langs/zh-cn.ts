@@ -294,7 +294,20 @@ const local: App.I18n.Schema = {
     exception_404: '404',
     exception_500: '500',
     tool: '系统工具',
-    tool_gen: '代码生成'
+    tool_gen: '代码生成',
+    workflow: '流程管理',
+    workflow_category: '流程分类',
+    workflow_design: '流程设计',
+    workflow_spel: '流程表达式',
+    'workflow_process-definition': '流程定义',
+    'workflow_process-instance': '流程实例',
+    workflow_task: '任务',
+    'workflow_task_all-task-waiting': '待办任务',
+    workflow_leave: '请假申请',
+    'workflow_task_my-document': '我发起的',
+    'workflow_task_task-waiting': '我的待办',
+    'workflow_task_task-finish': '我的已办',
+    'workflow_task_task-copy': '我的抄送'
   },
   menu: {
     system_tenant: '租户管理',

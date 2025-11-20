@@ -37,7 +37,7 @@ export function fetchCompleteTask(data: Api.Workflow.CompleteTaskOperateParams) 
 
 /** 获取所有待办任务 */
 export function fetchGetAllWaitingTask(data: Api.Workflow.TaskSearchParams) {
-  return request<Api.Workflow.TaskList>({
+  return request<Api.Workflow.AllTaskList>({
     url: '/workflow/task/pageByAllTaskWait',
     method: 'get',
     params: data
@@ -46,7 +46,7 @@ export function fetchGetAllWaitingTask(data: Api.Workflow.TaskSearchParams) {
 
 /** 获取所有已办任务 */
 export function fetchGetAllFinishedTask(data: Api.Workflow.TaskSearchParams) {
-  return request<Api.Workflow.HisTaskList>({
+  return request<Api.Workflow.AllTaskList>({
     url: '/workflow/task/pageByAllTaskFinish',
     method: 'get',
     params: data

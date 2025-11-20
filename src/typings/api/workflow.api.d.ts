@@ -491,6 +491,8 @@ declare namespace Api {
     /** 历史任务列表 */
     type HisTaskList = Common.PaginatingQueryRecord<HisTask>;
 
+    type AllTaskList = Common.PaginatingQueryRecord<Task | HisTask>;
+
     /** 流程实例ID与历史任务 */
     type InstanceIdWithHisTask = Common.CommonRecord<{
       /** 流程实例ID */
