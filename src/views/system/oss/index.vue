@@ -301,19 +301,19 @@ function handleToOssConfig() {
 
             <NButton size="small" ghost @click="handleUpload('file')">
               <template #icon>
-                <icon-material-symbols:upload-rounded />
+                <icon-material-symbols-upload-rounded />
               </template>
               上传文件
             </NButton>
             <NButton size="small" ghost @click="handleUpload('image')">
               <template #icon>
-                <icon-material-symbols:image-outline />
+                <icon-material-symbols-image-outline />
               </template>
               上传图片
             </NButton>
             <NButton type="primary" size="small" ghost @click="handleToOssConfig">
               <template #icon>
-                <icon-hugeicons:configuration-01 />
+                <icon-hugeicons-configuration-01 />
               </template>
               配置管理
             </NButton>

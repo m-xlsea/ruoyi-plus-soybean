@@ -207,7 +207,7 @@ async function handleRefreshCache() {
           <template #prefix>
             <NButton v-if="hasAuth('system:config:remove')" ghost size="small" @click="handleRefreshCache">
               <template #icon>
-                <icon-material-symbols:sync-outline />
+                <icon-material-symbols-sync-outline />
               </template>
               {{ $t('page.system.config.refreshCache') }}
             </NButton>

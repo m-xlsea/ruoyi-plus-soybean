@@ -411,7 +411,7 @@ const tableTitle = computed(() => {
             <template #prefix>
               <NButton ghost size="small" @click="handleRefreshCache">
                 <template #icon>
-                  <icon-material-symbols:refresh-rounded class="text-icon" />
+                  <icon-material-symbols-refresh-rounded class="text-icon" />
                 </template>
                 {{ $t('page.system.dict.refreshCache') }}
               </NButton>

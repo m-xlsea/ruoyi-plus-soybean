@@ -341,7 +341,7 @@ function handleResetSearch() {
             <template #after>
               <NButton v-if="hasAuth('system:user:import')" size="small" ghost @click="handleImport">
                 <template #icon>
-                  <icon-material-symbols:upload-rounded class="text-icon" />
+                  <icon-material-symbols-upload-rounded class="text-icon" />
                 </template>
                 {{ $t('common.import') }}
               </NButton>

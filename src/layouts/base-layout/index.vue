@@ -20,7 +20,7 @@ defineOptions({
 
 const appStore = useAppStore();
 const themeStore = useThemeStore();
-const { childLevelMenus, isActiveFirstLevelMenuHasChildren } = provideMixMenuContext();
+const { secondLevelMenus, childLevelMenus, isActiveFirstLevelMenuHasChildren } = provideMixMenuContext();
 
 const GlobalMenu = defineAsyncComponent(() => import('../modules/global-menu/index.vue'));
 
@@ -79,9 +79,9 @@ const isTopHybridSidebarFirst = computed(() => themeStore.layout.mode === 'top-h
 
 const isTopHybridHeaderFirst = computed(() => themeStore.layout.mode === 'top-hybrid-header-first');
 
-const siderWidth = computed(() => getSiderWidth());
+const siderWidth = computed(() => getSiderAndCollapsedWidth(false));
 
-const siderCollapsedWidth = computed(() => getSiderCollapsedWidth());
+const siderCollapsedWidth = computed(() => getSiderAndCollapsedWidth(true));
 
 function getSiderAndCollapsedWidth(isCollapsed: boolean) {
   const {
@@ -106,7 +106,7 @@ function getSiderAndCollapsedWidth(isCollapsed: boolean) {
   const isMixMode = isVerticalMix.value || isTopHybridSidebarFirst.value || isVerticalHybridHeaderFirst.value;
   let finalWidth = isMixMode ? mixWidth : width;
 
-  if (isVerticalMix.value && appStore.mixSiderFixed && childLevelMenus.value.length) {
+  if (isVerticalMix.value && appStore.mixSiderFixed && secondLevelMenus.value.length) {
     finalWidth += mixChildMenuWidth;
   }
 
@@ -115,14 +115,6 @@ function getSiderAndCollapsedWidth(isCollapsed: boolean) {
   }
 
   return finalWidth;
-}
-
-function getSiderWidth() {
-  return getSiderAndCollapsedWidth(false);
-}
-
-function getSiderCollapsedWidth() {
-  return getSiderAndCollapsedWidth(true);
 }
 
 onMounted(() => {

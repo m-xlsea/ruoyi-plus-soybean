@@ -43,7 +43,7 @@
     "cache": true,
     "height": 44,
     "mode": "chrome",
-    "closeTabByMiddleClick": true
+    "closeTabByMiddleClick": false
   },
   "fixedHeaderAndTab": true,
   "sider": {

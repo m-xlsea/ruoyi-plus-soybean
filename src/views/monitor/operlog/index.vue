@@ -197,7 +197,7 @@ async function handleCleanOperLog() {
               @click="handleCleanOperLog"
             >
               <template #icon>
-                <icon-material-symbols:warning-outline-rounded />
+                <icon-material-symbols-warning-outline-rounded />
               </template>
               清空
             </NButton>

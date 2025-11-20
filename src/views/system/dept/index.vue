@@ -180,13 +180,13 @@ function addInRow(row: Api.System.Dept) {
           <template #prefix>
             <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
               <template #icon>
-                <icon-quill:expand />
+                <icon-quill-expand />
               </template>
               {{ $t('page.system.dept.expandAll') }}
             </NButton>
             <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
-                <icon-quill:collapse />
+                <icon-quill-collapse />
               </template>
               {{ $t('page.system.dept.collapseAll') }}
             </NButton>

@@ -259,13 +259,13 @@ async function handleExport() {
           <template #prefix>
             <NButton v-if="isSuperAdmin" ghost size="small" @click="handleSyncTenantDict">
               <template #icon>
-                <icon-material-symbols:sync-outline />
+                <icon-material-symbols-sync-outline />
               </template>
               同步租户字典
             </NButton>
             <NButton v-if="isSuperAdmin" ghost size="small" @click="handleSyncTenantConfig">
               <template #icon>
-                <icon-material-symbols:sync-outline />
+                <icon-material-symbols-sync-outline />
               </template>
               同步租户参数配置
             </NButton>
