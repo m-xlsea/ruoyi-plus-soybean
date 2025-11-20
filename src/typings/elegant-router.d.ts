@@ -32,6 +32,8 @@ declare module "@elegant-router/types" {
     "login": "/login/:module(pwd-login|code-login|register|reset-pwd|bind-wechat)?";
     "monitor": "/monitor";
     "monitor_cache": "/monitor/cache";
+    "monitor_logininfor": "/monitor/logininfor";
+    "monitor_operlog": "/monitor/operlog";
     "social-callback": "/social-callback";
     "system": "/system";
     "system_client": "/system/client";
@@ -123,6 +125,8 @@ declare module "@elegant-router/types" {
     | "demo_tree"
     | "home"
     | "monitor_cache"
+    | "monitor_logininfor"
+    | "monitor_operlog"
     | "system_client"
     | "system_config"
     | "system_dept"

@@ -121,6 +121,24 @@ export const generatedRoutes: GeneratedRoute[] = [
           title: 'monitor_cache',
           i18nKey: 'route.monitor_cache'
         }
+      },
+      {
+        name: 'monitor_logininfor',
+        path: '/monitor/logininfor',
+        component: 'view.monitor_logininfor',
+        meta: {
+          title: 'monitor_logininfor',
+          i18nKey: 'route.monitor_logininfor'
+        }
+      },
+      {
+        name: 'monitor_operlog',
+        path: '/monitor/operlog',
+        component: 'view.monitor_operlog',
+        meta: {
+          title: 'monitor_operlog',
+          i18nKey: 'route.monitor_operlog'
+        }
       }
     ]
   },

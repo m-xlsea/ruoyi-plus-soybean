@@ -51,7 +51,8 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
         key: 'index',
         title: $t('common.index'),
         align: 'center',
-        width: 64
+        width: 64,
+        render: (_, index) => index + 1
       },
       {
         key: 'postCode',
