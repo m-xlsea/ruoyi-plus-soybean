@@ -269,6 +269,24 @@ export const generatedRoutes: GeneratedRoute[] = [
         }
       },
       {
+        name: 'system_tenant',
+        path: '/system/tenant',
+        component: 'view.system_tenant',
+        meta: {
+          title: 'system_tenant',
+          i18nKey: 'route.system_tenant'
+        }
+      },
+      {
+        name: 'system_tenant-package',
+        path: '/system/tenant-package',
+        component: 'view.system_tenant-package',
+        meta: {
+          title: 'system_tenant-package',
+          i18nKey: 'route.system_tenant-package'
+        }
+      },
+      {
         name: 'system_user',
         path: '/system/user',
         component: 'view.system_user',

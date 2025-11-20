@@ -280,6 +280,8 @@ const local: App.I18n.Schema = {
     system_oss: 'File Management',
     'system_oss-config': 'OSS Config',
     system_client: 'Client Management',
+    system_tenant: 'Tenant Management',
+    'system_tenant-package': 'Tenant Package Management',
     monitor: 'Monitor',
     monitor_logininfor: 'Login Log',
     monitor_operlog: 'Operate Log',
