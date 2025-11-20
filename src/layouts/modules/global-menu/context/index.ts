@@ -30,9 +30,40 @@ function useMixMenu() {
   }
 
   function getActiveFirstLevelMenuKey() {
-    const [firstLevelRouteName] = selectedKey.value.split('_');
+    const currentKey = selectedKey.value;
 
-    setActiveFirstLevelMenuKey(firstLevelRouteName);
+    const firstLevelMenu = allMenus.value.find(menu => {
+      if (menu.key === currentKey) {
+        return true;
+      }
+
+      if (menu.children && menu.children.length > 0) {
+        return findMenuByKey(menu.children, currentKey);
+      }
+
+      return false;
+    });
+
+    if (firstLevelMenu) {
+      setActiveFirstLevelMenuKey(firstLevelMenu.key);
+    } else {
+      const [firstLevelRouteName] = currentKey.split('_');
+      setActiveFirstLevelMenuKey(firstLevelRouteName);
+    }
+  }
+
+  function findMenuByKey(menus: App.Global.Menu[], key: string): boolean {
+    return menus.some(menu => {
+      if (menu.key === key) {
+        return true;
+      }
+
+      if (menu.children && menu.children.length > 0) {
+        return findMenuByKey(menu.children, key);
+      }
+
+      return false;
+    });
   }
 
   const isActiveFirstLevelMenuHasChildren = computed(() => {
