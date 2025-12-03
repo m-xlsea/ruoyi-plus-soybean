@@ -47,7 +47,7 @@
   "fixedHeaderAndTab": true,
   "sider": {
     "inverted": false,
-    "width": 220,
+    "width": 230,
     "collapsedWidth": 64,
     "mixWidth": 90,
     "mixCollapsedWidth": 64,
@@ -65,14 +65,6 @@
     "enableUserName": false,
     "enableTime": false,
     "timeFormat": "YYYY-MM-DD HH:mm"
-  },
-  "table": {
-    "bordered": true,
-    "bottomBordered": true,
-    "singleColumn": false,
-    "singleLine": true,
-    "size": "small",
-    "striped": false
   },
   "tokens": {
     "light": {

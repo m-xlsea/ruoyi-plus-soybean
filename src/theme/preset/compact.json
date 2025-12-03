@@ -3,6 +3,7 @@
   "desc": "Compact layout preset for small screens",
   "i18nkey": "theme.appearance.preset.compact",
   "version": "1.0.1",
+  "sort": 30,
   "themeRadius": 6,
   "header": {
     "height": 48,
@@ -33,5 +34,8 @@
   },
   "footer": {
     "visible": false
+  },
+  "table": {
+    "size": "small"
   }
 }
