@@ -361,6 +361,8 @@ console.log(t('common.confirm'));
 - **邮箱**: xlsea@linux.do
 - **作者主页**: https://gitee.com/xlsea
 
+更多周边生态请翻阅 [周边生态](https://docs.soybeanjs.cn/zh/awesome) 文档。
+
 
 - **作者**: Elio
 - **邮箱**: 1983933789@qq.com
