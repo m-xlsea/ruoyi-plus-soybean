@@ -1007,6 +1007,20 @@ declare namespace App {
             statusChangeSuccess: string;
           };
         };
+        about: {
+          title: string;
+          introduction: string;
+          projectInfo: {
+            title: string;
+            version: string;
+            latestBuildTime: string;
+            documentLink: string;
+            previewLink: string;
+            repositoryLink: string;
+          };
+          prdDep: string;
+          devDep: string;
+        };
       };
       form: {
         required: string;

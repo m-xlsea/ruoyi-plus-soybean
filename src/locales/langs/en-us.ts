@@ -297,7 +297,8 @@ const local: App.I18n.Schema = {
     exception_404: '404',
     exception_500: '500',
     tool: 'System Tools',
-    tool_gen: 'Code Generation'
+    tool_gen: 'Code Generation',
+    about: 'About'
   },
   menu: {
     system_tenant: 'Tenant Management',
@@ -1200,6 +1201,20 @@ const local: App.I18n.Schema = {
         importSuccess: 'Import successful',
         statusChangeSuccess: 'Status modified successfully'
       }
+    },
+    about: {
+      title: 'About',
+      introduction: `RuoYi-Plus-Soybean is a modern, enterprise-level multi-tenant management system. It combines the powerful backend capabilities of RuoYi-Vue-Plus with the modern frontend features of Soybean Admin, providing developers with a complete enterprise management solution.`,
+      projectInfo: {
+        title: 'Project Info',
+        version: 'Version',
+        latestBuildTime: 'Latest Build Time',
+        documentLink: 'Document Link',
+        previewLink: 'Preview Link',
+        repositoryLink: 'Repository Link'
+      },
+      prdDep: 'Production Dependency',
+      devDep: 'Development Dependency'
     }
   },
   form: {

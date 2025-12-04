@@ -294,7 +294,8 @@ const local: App.I18n.Schema = {
     exception_404: '404',
     exception_500: '500',
     tool: '系统工具',
-    tool_gen: '代码生成'
+    tool_gen: '代码生成',
+    about: '关于'
   },
   menu: {
     system_tenant: '租户管理',
@@ -1195,6 +1196,20 @@ const local: App.I18n.Schema = {
         importSuccess: '导入成功',
         statusChangeSuccess: '状态修改成功'
       }
+    },
+    about: {
+      title: '关于',
+      introduction: `RuoYi-Plus-Soybean 是一个现代化的企业级多租户管理系统，它结合了 RuoYi-Vue-Plus 的强大后端功能和 Soybean Admin 的现代化前端特性，为开发者提供了完整的企业管理解决方案。`,
+      projectInfo: {
+        title: '项目信息',
+        version: '版本',
+        latestBuildTime: '最新构建时间',
+        documentLink: '文档地址',
+        previewLink: '预览地址',
+        repositoryLink: '仓库地址'
+      },
+      prdDep: '生产依赖',
+      devDep: '开发依赖'
     }
   },
   form: {
