@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { toRaw } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -17,8 +19,15 @@ const { formRef, validate, restoreValidation } = useNaiveForm();
 
 const model = defineModel<Api.System.DictDataSearchParams>('model', { required: true });
 
+const defaultModel = jsonClone(toRaw(model.value));
+
+function resetModel() {
+  Object.assign(model.value, defaultModel);
+}
+
 async function reset() {
   await restoreValidation();
+  resetModel();
   emit('reset');
 }
 

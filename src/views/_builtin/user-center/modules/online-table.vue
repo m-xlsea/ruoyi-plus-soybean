@@ -3,7 +3,7 @@ import { NTime } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchGetOnlineDeviceList, fetchKickOutCurrentDevice } from '@/service/api/monitor';
 import { useAppStore } from '@/store/modules/app';
-import { useTable } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { getBrowserIcon, getOsIcon } from '@/utils/icon-tag-format';
 import { $t } from '@/locales';
@@ -20,8 +20,9 @@ useDict('sys_device_type');
 const appStore = useAppStore();
 const { loading: btnLoading, startLoading: startBtnLoading, endLoading: endBtnLoading } = useLoading(false);
 
-const { columns, data, loading, getData } = useTable({
-  apiFn: fetchGetOnlineDeviceList,
+const { columns, data, getData, loading, scrollX } = useNaivePaginatedTable({
+  api: () => fetchGetOnlineDeviceList(),
+  transform: response => defaultTransform(response),
   columns: () => [
     {
       title: '设备类型',
@@ -113,7 +114,7 @@ async function forceLogout(tokenId: string) {
     :data="data"
     size="small"
     :flex-height="!appStore.isMobile"
-    :scroll-x="962"
+    :scroll-x="scrollX"
     :loading="loading"
     remote
     :row-key="row => row.noticeId"

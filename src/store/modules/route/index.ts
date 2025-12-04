@@ -127,6 +127,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     }
     // @ts-expect-error no hidden field
     route.meta.hideInMenu = route.hidden;
+    // @ts-expect-error route.meta.activeMenu is activeMenu type
+    route.meta.activeMenu = route.meta?.activeMenu?.substring(1);
     if (route.meta.hideInMenu && parent && !route.meta.activeMenu) {
       // @ts-expect-error parent.name is activeMenu type
       route.meta.activeMenu = parent.name;
@@ -391,7 +393,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
   }
 
   async function onRouteSwitchWhenLoggedIn() {
-    // await authStore.initUserInfo();
+    // some global init logic when logged in and switch route
   }
 
   async function onRouteSwitchWhenNotLoggedIn() {

@@ -4,7 +4,6 @@ import { NConfigProvider, darkTheme } from 'naive-ui';
 import type { WatermarkProps } from 'naive-ui';
 import { useAppStore } from './store/modules/app';
 import { useThemeStore } from './store/modules/theme';
-import { useAuthStore } from './store/modules/auth';
 import { naiveDateLocales, naiveLocales } from './locales/naive';
 
 defineOptions({
@@ -13,7 +12,6 @@ defineOptions({
 
 const appStore = useAppStore();
 const themeStore = useThemeStore();
-const { userInfo } = useAuthStore();
 
 const naiveDarkTheme = computed(() => (themeStore.darkMode ? darkTheme : undefined));
 
@@ -26,24 +24,19 @@ const naiveDateLocale = computed(() => {
 });
 
 const watermarkProps = computed<WatermarkProps>(() => {
-  const appTitle = import.meta.env.VITE_APP_TITLE || 'RuoYi-Vue-Plus';
-  const content =
-    themeStore.watermark.enableUserName && userInfo.user?.userName
-      ? `${userInfo.user?.nickName}@${appTitle} ${userInfo.user?.userName}`
-      : appTitle;
   return {
-    content,
+    content: themeStore.watermarkContent,
     cross: true,
     fullscreen: true,
     fontSize: 14,
-    fontColor: themeStore.darkMode ? 'rgba(200, 200, 200, 0.03)' : 'rgba(200, 200, 200, 0.2)',
     lineHeight: 14,
-    width: 200,
-    height: 300,
+    width: 384,
+    height: 384,
     xOffset: 12,
     yOffset: 60,
-    rotate: -18,
-    zIndex: 9999
+    rotate: -13,
+    zIndex: 9999,
+    fontColor: themeStore.darkMode ? 'rgba(200, 200, 200, 0.03)' : 'rgba(200, 200, 200, 0.2)'
   };
 });
 </script>

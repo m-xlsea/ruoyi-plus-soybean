@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { ref } from 'vue';
 import { NDivider } from 'naive-ui';
 import {
   fetchBatchDeleteLoginInfor,
@@ -9,7 +10,7 @@ import {
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { getBrowserIcon, getOsIcon } from '@/utils/icon-tag-format';
 import DictTag from '@/components/custom/dict-tag.vue';
@@ -30,162 +31,162 @@ const { hasAuth } = useAuth();
 useDict('sys_common_status');
 useDict('sys_device_type');
 
-const {
-  columns,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  mobilePagination,
-  searchParams,
-  resetSearchParams
-} = useTable({
-  apiFn: fetchGetLoginInforList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    userName: null,
-    ipaddr: null,
-    status: null,
-    params: {}
-  },
-  columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64
-    },
-    {
-      key: 'userName',
-      title: '用户账号',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'deviceType',
-      title: '设备类型',
-      align: 'center',
-      minWidth: 120,
-      render: row => {
-        return <DictTag size="small" value={row.deviceType} dict-code="sys_device_type" />;
-      }
-    },
-    {
-      key: 'ipaddr',
-      title: '登录IP地址',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'loginLocation',
-      title: '登录地点',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'browser',
-      title: '浏览器类型',
-      align: 'center',
-      minWidth: 120,
-      render: row => {
-        return (
-          <div class="flex items-center justify-center gap-2">
-            <SvgIcon icon={getBrowserIcon(row.browser)} />
-            {row.browser}
-          </div>
-        );
-      }
-    },
-    {
-      key: 'os',
-      title: '操作系统',
-      align: 'center',
-      ellipsis: {
-        tooltip: true
-      },
-      minWidth: 120,
-      render: row => {
-        const osName = row.os?.split(' or ')[0] ?? '';
-        return (
-          <div class="flex items-center justify-center gap-2">
-            <SvgIcon icon={getOsIcon(osName)} />
-            {osName}
-          </div>
-        );
-      }
-    },
-    {
-      key: 'status',
-      title: '登录状态',
-      align: 'center',
-      minWidth: 120,
-      render: row => {
-        return <DictTag size="small" value={row.status} dict-code="sys_common_status" />;
-      }
-    },
-    {
-      key: 'loginTime',
-      title: '访问时间',
-      align: 'center',
-      ellipsis: {
-        tooltip: true
-      },
-      minWidth: 120
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 130,
-      render: row => {
-        const viewBtn = () => {
-          return (
-            <ButtonIcon
-              type="primary"
-              text
-              icon="material-symbols:visibility-outline"
-              tooltipContent="详情"
-              onClick={() => view(row.infoId!)}
-            />
-          );
-        };
+const searchParams = ref<Api.Monitor.LoginInforSearchParams>({
+  pageNum: 1,
+  pageSize: 10,
+  userName: null,
+  ipaddr: null,
+  status: null,
+  params: {}
+});
 
-        const unlockBtn = () => {
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, scrollX } =
+  useNaivePaginatedTable({
+    api: () => fetchGetLoginInforList(searchParams.value),
+    transform: response => defaultTransform(response),
+    onPaginationParamsChange: params => {
+      searchParams.value.pageNum = params.page;
+      searchParams.value.pageSize = params.pageSize;
+    },
+    columns: () => [
+      {
+        type: 'selection',
+        align: 'center',
+        width: 48
+      },
+      {
+        key: 'index',
+        title: $t('common.index'),
+        align: 'center',
+        width: 64,
+        render: (_, index) => index + 1
+      },
+      {
+        key: 'userName',
+        title: '用户账号',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'deviceType',
+        title: '设备类型',
+        align: 'center',
+        minWidth: 120,
+        render: row => {
+          return <DictTag size="small" value={row.deviceType} dict-code="sys_device_type" />;
+        }
+      },
+      {
+        key: 'ipaddr',
+        title: '登录IP地址',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'loginLocation',
+        title: '登录地点',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'browser',
+        title: '浏览器类型',
+        align: 'center',
+        minWidth: 120,
+        render: row => {
           return (
-            <>
-              <NDivider vertical />
+            <div class="flex items-center justify-center gap-2">
+              <SvgIcon icon={getBrowserIcon(row.browser)} />
+              {row.browser}
+            </div>
+          );
+        }
+      },
+      {
+        key: 'os',
+        title: '操作系统',
+        align: 'center',
+        ellipsis: {
+          tooltip: true
+        },
+        minWidth: 120,
+        render: row => {
+          const osName = row.os?.split(' or ')[0] ?? '';
+          return (
+            <div class="flex items-center justify-center gap-2">
+              <SvgIcon icon={getOsIcon(osName)} />
+              {osName}
+            </div>
+          );
+        }
+      },
+      {
+        key: 'status',
+        title: '登录状态',
+        align: 'center',
+        minWidth: 120,
+        render: row => {
+          return <DictTag size="small" value={row.status} dict-code="sys_common_status" />;
+        }
+      },
+      {
+        key: 'loginTime',
+        title: '访问时间',
+        align: 'center',
+        ellipsis: {
+          tooltip: true
+        },
+        minWidth: 120
+      },
+      {
+        key: 'operate',
+        title: $t('common.operate'),
+        align: 'center',
+        width: 130,
+        render: row => {
+          const viewBtn = () => {
+            return (
               <ButtonIcon
                 type="primary"
                 text
-                icon="material-symbols:lock-open-outline"
-                tooltipContent="解锁"
-                popconfirmContent={`确认解锁用户 ${row.userName} 吗？`}
-                onPositiveClick={() => handleUnlockLoginInfor(row.userName!)}
+                icon="material-symbols:visibility-outline"
+                tooltipContent="详情"
+                onClick={() => view(row.infoId!)}
               />
-            </>
-          );
-        };
-        return (
-          <div class="flex-center gap-8px">
-            {viewBtn()}
-            {unlockBtn()}
-          </div>
-        );
-      }
-    }
-  ]
-});
+            );
+          };
 
-const { drawerVisible, editingData, handleEdit, checkedRowKeys, onBatchDeleted } = useTableOperate(data, getData);
+          const unlockBtn = () => {
+            return (
+              <>
+                <NDivider vertical />
+                <ButtonIcon
+                  type="primary"
+                  text
+                  icon="material-symbols:lock-open-outline"
+                  tooltipContent="解锁"
+                  popconfirmContent={`确认解锁用户 ${row.userName} 吗？`}
+                  onPositiveClick={() => handleUnlockLoginInfor(row.userName!)}
+                />
+              </>
+            );
+          };
+          return (
+            <div class="flex-center gap-8px">
+              {viewBtn()}
+              {unlockBtn()}
+            </div>
+          );
+        }
+      }
+    ]
+  });
+
+const { drawerVisible, editingData, handleEdit, checkedRowKeys, onBatchDeleted } = useTableOperate(
+  data,
+  'infoId',
+  getData
+);
 
 async function handleBatchDelete() {
   // request
@@ -195,7 +196,7 @@ async function handleBatchDelete() {
 }
 
 async function view(infoId: CommonType.IdType) {
-  handleEdit('infoId', infoId);
+  handleEdit(infoId);
 }
 
 async function handleExport() {
@@ -227,7 +228,7 @@ async function handleUnlockLoginInfor(username: string) {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <LoginInforSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <LoginInforSearch v-model:model="searchParams" @search="getDataByPage" />
     <NCard title="登录日志列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
@@ -250,7 +251,7 @@ async function handleUnlockLoginInfor(username: string) {
               @click="handleCleanLoginInfor"
             >
               <template #icon>
-                <icon-material-symbols:warning-outline-rounded />
+                <icon-material-symbols-warning-outline-rounded />
               </template>
               清空
             </NButton>
@@ -263,7 +264,7 @@ async function handleUnlockLoginInfor(username: string) {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="scrollX"
         :loading="loading"
         remote
         :row-key="row => row.infoId"

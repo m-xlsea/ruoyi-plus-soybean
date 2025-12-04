@@ -1,11 +1,11 @@
 <script setup lang="tsx">
+import { ref } from 'vue';
 import { NDivider } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
-import { type TableDataWithIndex } from '@sa/hooks';
 import { fetchBatchDeleteTree, fetchGetTreeList } from '@/service/api/demo/tree';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
-import { useTreeTable, useTreeTableOperate } from '@/hooks/common/tree-table';
+import { treeTransform, useNaiveTreeTable, useTableOperate } from '@/hooks/common/table';
 import { useDownload } from '@/hooks/business/download';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
@@ -20,32 +20,30 @@ const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
 
+const searchParams = ref<Api.Demo.TreeSearchParams>({
+  parentId: null,
+  deptId: null,
+  userId: null,
+  treeName: null,
+  params: {}
+});
+
 const {
   columns,
   columnChecks,
   data,
+  rows,
   getData,
   loading,
-  searchParams,
-  resetSearchParams,
   expandedRowKeys,
   isCollapse,
   expandAll,
-  collapseAll
-} = useTreeTable({
-  apiFn: fetchGetTreeList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    parentId: null,
-    deptId: null,
-    userId: null,
-    treeName: null,
-    params: {}
-  },
-  idField: 'id',
+  collapseAll,
+  scrollX
+} = useNaiveTreeTable({
+  keyField: 'id',
+  api: () => fetchGetTreeList(searchParams.value),
+  transform: response => treeTransform(response, { idField: 'id' }),
   columns: () => [
     {
       type: 'selection',
@@ -107,7 +105,7 @@ const {
               type="primary"
               icon="material-symbols:drive-file-rename-outline-outline"
               tooltipContent={$t('common.edit')}
-              onClick={() => edit(row)}
+              onClick={() => edit(row.id)}
             />
           );
         };
@@ -120,7 +118,7 @@ const {
               icon="material-symbols:delete-outline"
               tooltipContent={$t('common.delete')}
               popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.id!)}
+              onPositiveClick={() => handleDelete(row.id)}
             />
           );
         };
@@ -146,7 +144,7 @@ const {
 });
 
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
-  useTreeTableOperate(data, getData);
+  useTableOperate(rows, 'id', getData);
 
 async function handleBatchDelete() {
   // request
@@ -162,24 +160,24 @@ async function handleDelete(id: CommonType.IdType) {
   onDeleted();
 }
 
-async function edit(row: TableDataWithIndex<Api.Demo.Tree>) {
-  handleEdit(row);
+function edit(id: CommonType.IdType) {
+  handleEdit(id);
 }
 
-function addInRow(row: TableDataWithIndex<Api.Demo.Tree>) {
+function addInRow(row: Api.Demo.Tree) {
   editingData.value = jsonClone(row);
   handleAdd();
 }
 
 function handleExport() {
-  download('/demo/tree/export', searchParams, `demo_tree_#[[${new Date().getTime()}]]#.xlsx`);
+  download('/demo/tree/export', searchParams, `测试树表_${new Date().getTime()}.xlsx`);
 }
 </script>
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <TreeSearch v-model:model="searchParams" :tree-list="data" @reset="resetSearchParams" @search="getData" />
-    <NCard title="测试树列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
+    <TreeSearch v-model:model="searchParams" @search="getData" />
+    <NCard title="测试树表列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
           v-model:columns="columnChecks"
@@ -196,13 +194,13 @@ function handleExport() {
           <template #prefix>
             <NButton v-if="!isCollapse" :disabled="!data.length" size="small" @click="expandAll">
               <template #icon>
-                <icon-quill:expand />
+                <icon-quill-expand />
               </template>
               全部展开
             </NButton>
             <NButton v-if="isCollapse" :disabled="!data.length" size="small" @click="collapseAll">
               <template #icon>
-                <icon-quill:collapse />
+                <icon-quill-collapse />
               </template>
               全部收起
             </NButton>
@@ -214,8 +212,9 @@ function handleExport() {
         v-model:expanded-row-keys="expandedRowKeys"
         :columns="columns"
         :data="data"
+        :indent="64"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="scrollX"
         :loading="loading"
         remote
         :row-key="row => row.id"

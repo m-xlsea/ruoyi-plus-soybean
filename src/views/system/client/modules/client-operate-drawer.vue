@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { fetchCreateClient, fetchUpdateClient } from '@/service/api/system/client';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
@@ -40,7 +41,7 @@ const title = computed(() => {
 
 type Model = Api.System.ClientOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
@@ -70,13 +71,10 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-    return;
-  }
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
   }
 }
 
@@ -87,7 +85,8 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
-  const { id, clientId, clientKey, clientSecret, grantTypeList, deviceType, activeTimeout, timeout, status } = model;
+  const { id, clientId, clientKey, clientSecret, grantTypeList, deviceType, activeTimeout, timeout, status } =
+    model.value;
 
   // request
   if (props.operateType === 'add') {

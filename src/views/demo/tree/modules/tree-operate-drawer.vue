@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { fetchCreateTree, fetchUpdateTree } from '@/service/api/demo/tree';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
@@ -34,18 +35,19 @@ const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
   const titles: Record<NaiveUI.TableOperateType, string> = {
-    add: '新增测试树',
-    edit: '编辑测试树'
+    add: '新增测试树表',
+    edit: '编辑测试树表'
   };
   return titles[props.operateType];
 });
 
 type Model = Api.Demo.TreeOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
+    id: null,
     parentId: null,
     deptId: null,
     userId: null,
@@ -64,14 +66,11 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-    model.parentId = props.rowData?.id || 0;
-    return;
-  }
+  model.value = createDefaultModel();
+  model.value.parentId = props.rowData?.id || 0;
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
   }
 }
 
@@ -82,15 +81,15 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const { id, parentId, deptId, userId, treeName } = model.value;
+
   // request
   if (props.operateType === 'add') {
-    const { parentId, deptId, userId, treeName } = model;
     const { error } = await fetchCreateTree({ parentId, deptId, userId, treeName });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { id, parentId, deptId, userId, treeName } = model;
     const { error } = await fetchUpdateTree({ id, parentId, deptId, userId, treeName });
     if (error) return;
   }

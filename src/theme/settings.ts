@@ -1,10 +1,11 @@
 /** Default theme settings */
 export const themeSettings: App.Theme.ThemeSetting = {
-  themeScheme: 'light',
+  themeScheme: 'auto',
   grayscale: false,
   colourWeakness: false,
   recommendColor: false,
   themeColor: '#0E42D2',
+  themeRadius: 6,
   otherColor: {
     info: '#0E42D2',
     success: '#009A29',
@@ -12,11 +13,9 @@ export const themeSettings: App.Theme.ThemeSetting = {
     error: '#CB2634'
   },
   isInfoFollowPrimary: true,
-  resetCacheStrategy: 'close',
   layout: {
     mode: 'vertical',
-    scrollMode: 'content',
-    reverseHorizontalMix: false
+    scrollMode: 'content'
   },
   page: {
     animate: true,
@@ -39,7 +38,8 @@ export const themeSettings: App.Theme.ThemeSetting = {
     visible: true,
     cache: true,
     height: 44,
-    mode: 'chrome'
+    mode: 'chrome',
+    closeTabByMiddleClick: true
   },
   fixedHeaderAndTab: true,
   sider: {
@@ -58,8 +58,10 @@ export const themeSettings: App.Theme.ThemeSetting = {
   },
   watermark: {
     visible: import.meta.env.VITE_WATERMARK === 'Y',
-    text: 'RuoYi-Vue-Plus',
-    enableUserName: false
+    text: 'RuoYi-Plus-Soybean',
+    enableUserName: true,
+    enableTime: false,
+    timeFormat: 'YYYY-MM-DD HH:mm'
   },
   table: {
     bordered: true,

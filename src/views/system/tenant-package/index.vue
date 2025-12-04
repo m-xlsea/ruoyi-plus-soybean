@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { defineOptions } from 'vue';
+import { defineOptions, ref } from 'vue';
 import { NDivider } from 'naive-ui';
 import {
   fetchBatchDeleteTenantPackage,
@@ -9,7 +9,7 @@ import {
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
@@ -28,124 +28,119 @@ const { hasAuth } = useAuth();
 
 useDict('sys_normal_disable', false);
 
-const {
-  columns,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  mobilePagination,
-  searchParams,
-  resetSearchParams
-} = useTable({
-  apiFn: fetchGetTenantPackageList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    packageName: null,
-    status: null,
-    params: {}
-  },
-  columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64
-    },
-    {
-      key: 'packageName',
-      title: $t('page.system.tenantPackage.packageName'),
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'status',
-      title: $t('page.system.tenantPackage.status'),
-      align: 'center',
-      minWidth: 120,
-      render: row => {
-        return (
-          <StatusSwitch
-            v-model:value={row.status}
-            info={row.packageName}
-            onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
-          />
-        );
-      }
-    },
-    {
-      key: 'remark',
-      title: $t('page.system.tenantPackage.remark'),
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 130,
-      render: row => {
-        const divider = () => {
-          if (!hasAuth('system:tenantPackage:edit') || !hasAuth('system:tenantPackage:remove')) {
-            return null;
-          }
-          return <NDivider vertical />;
-        };
-
-        const editBtn = () => {
-          if (!hasAuth('system:tenantPackage:edit')) {
-            return null;
-          }
-          return (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:drive-file-rename-outline-outline"
-              tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.packageId!)}
-            />
-          );
-        };
-
-        const deleteBtn = () => {
-          if (!hasAuth('system:tenantPackage:remove')) {
-            return null;
-          }
-          return (
-            <ButtonIcon
-              text
-              type="error"
-              icon="material-symbols:delete-outline"
-              tooltipContent={$t('common.delete')}
-              popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.packageId!)}
-            />
-          );
-        };
-
-        return (
-          <div class="flex-center gap-8px">
-            {editBtn()}
-            {divider()}
-            {deleteBtn()}
-          </div>
-        );
-      }
-    }
-  ]
+const searchParams = ref<Api.System.TenantPackageSearchParams>({
+  pageNum: 1,
+  pageSize: 10,
+  packageName: null,
+  status: null,
+  params: {}
 });
 
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, scrollX } =
+  useNaivePaginatedTable({
+    api: () => fetchGetTenantPackageList(searchParams.value),
+    transform: response => defaultTransform(response),
+    onPaginationParamsChange: params => {
+      searchParams.value.pageNum = params.page;
+      searchParams.value.pageSize = params.pageSize;
+    },
+    columns: () => [
+      {
+        type: 'selection',
+        align: 'center',
+        width: 48
+      },
+      {
+        key: 'index',
+        title: $t('common.index'),
+        align: 'center',
+        width: 64
+      },
+      {
+        key: 'packageName',
+        title: $t('page.system.tenantPackage.packageName'),
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'status',
+        title: $t('page.system.tenantPackage.status'),
+        align: 'center',
+        minWidth: 120,
+        render: row => {
+          return (
+            <StatusSwitch
+              v-model:value={row.status}
+              info={row.packageName}
+              onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
+            />
+          );
+        }
+      },
+      {
+        key: 'remark',
+        title: $t('page.system.tenantPackage.remark'),
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'operate',
+        title: $t('common.operate'),
+        align: 'center',
+        width: 130,
+        render: row => {
+          const divider = () => {
+            if (!hasAuth('system:tenantPackage:edit') || !hasAuth('system:tenantPackage:remove')) {
+              return null;
+            }
+            return <NDivider vertical />;
+          };
+
+          const editBtn = () => {
+            if (!hasAuth('system:tenantPackage:edit')) {
+              return null;
+            }
+            return (
+              <ButtonIcon
+                text
+                type="primary"
+                icon="material-symbols:drive-file-rename-outline-outline"
+                tooltipContent={$t('common.edit')}
+                onClick={() => edit(row.packageId!)}
+              />
+            );
+          };
+
+          const deleteBtn = () => {
+            if (!hasAuth('system:tenantPackage:remove')) {
+              return null;
+            }
+            return (
+              <ButtonIcon
+                text
+                type="error"
+                icon="material-symbols:delete-outline"
+                tooltipContent={$t('common.delete')}
+                popconfirmContent={$t('common.confirmDelete')}
+                onPositiveClick={() => handleDelete(row.packageId!)}
+              />
+            );
+          };
+
+          return (
+            <div class="flex-center gap-8px">
+              {editBtn()}
+              {divider()}
+              {deleteBtn()}
+            </div>
+          );
+        }
+      }
+    ]
+  });
+
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
-  useTableOperate(data, getData);
+  useTableOperate(data, 'packageId', getData);
 
 async function handleBatchDelete() {
   // request
@@ -162,7 +157,7 @@ async function handleDelete(packageId: CommonType.IdType) {
 }
 
 function edit(packageId: CommonType.IdType) {
-  handleEdit('packageId', packageId);
+  handleEdit(packageId);
 }
 
 function handleExport() {
@@ -195,7 +190,7 @@ async function handleStatusChange(
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <TenantPackageSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <TenantPackageSearch v-model:model="searchParams" @search="getDataByPage" />
     <NCard
       :title="$t('page.system.tenantPackage.title')"
       :bordered="false"
@@ -222,7 +217,7 @@ async function handleStatusChange(
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="scrollX"
         :loading="loading"
         remote
         :row-key="row => row.packageId"

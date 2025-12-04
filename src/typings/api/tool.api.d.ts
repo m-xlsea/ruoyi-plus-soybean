@@ -158,13 +158,7 @@ declare namespace Api {
 
     /** gen table search params */
     type GenTableSearchParams = CommonType.RecordNullable<
-      Pick<GenTable, 'dataName' | 'tableName' | 'tableComment'> &
-        Common.CommonSearchParams & {
-          params: {
-            beginTime?: string;
-            endTime?: string;
-          };
-        }
+      Pick<GenTable, 'dataName' | 'tableName' | 'tableComment'> & Common.CommonSearchParams
     >;
 
     /** gen table list */
