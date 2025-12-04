@@ -103,8 +103,6 @@ async function updatePassword() {
 }
 </script>
 
-<script setup lang="ts"></script>
-
 <template>
   <div class="flex gap-16px">
     <!-- 个人信息卡片 -->
@@ -244,5 +242,3 @@ async function updatePassword() {
   height: 100% !important;
 }
 </style>
-
-<style scoped></style>
