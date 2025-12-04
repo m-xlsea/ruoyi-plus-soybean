@@ -1,5 +1,66 @@
 # 更新日志
 
+## [v2.0.0-beta.1](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.2.1...v2.0.0-beta.1) (2025-12-04)
+
+### &nbsp;&nbsp;&nbsp;🚀 新功能
+
+- **projects**:
+  - 项目适配 Soybean 2.0 &nbsp;-&nbsp; by @m-xlsea
+- **components**:
+  - 新增预设主题支持 &nbsp;-&nbsp; by @m-xlsea [<samp>(c1063)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/c1063e3e)
+- **hooks**:
+  - 完成表格 Hooks 改造 &nbsp;-&nbsp; by @m-xlsea [<samp>(46996)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4699654f)
+  - 优化树形表格 hooks 封装 &nbsp;-&nbsp; by @m-xlsea [<samp>(ccbb7)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/ccbb72c0)
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug 修复
+
+- **projects**:
+  - 修复登录页面 logo 颜色问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(27cae)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/27cae756)
+  - 修复路由 name 与 path 不一致激活菜单异常问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(789a6)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/789a6bb9)
+
+### &nbsp;&nbsp;&nbsp;❤️ 贡献者
+
+[![m-xlsea](https://github.com/m-xlsea.png?size=48)](https://github.com/m-xlsea)&nbsp;&nbsp;[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;[![wenyuanw](https://github.com/wenyuanw.png?size=48)](https://github.com/wenyuanw)&nbsp;&nbsp;[![CyberShen](https://github.com/CyberShen.png?size=48)](https://github.com/CyberShen)&nbsp;&nbsp;[![Lruihao](https://github.com/Lruihao.png?size=48)](https://github.com/Lruihao)&nbsp;&nbsp;
+[Azir-11](mailto:2075125282@qq.com),&nbsp;[刘璐](mailto:hi.alue@qq.com),&nbsp;[CyberShen123](mailto:s.lijun@qq.com),&nbsp;[whyang](mailto:whyang9701@gmail.com),&nbsp;[HongxuanG](mailto:1359774872@qq.com),&nbsp;[NicholasLD](mailto:878639947@qq.com),&nbsp;
+
+## [v1.2.1](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.2.0...v1.2.1) (2025-10-29)
+
+### &nbsp;&nbsp;&nbsp;🚀 新功能
+
+- **components**:
+  - 菜单树选择组件新增隐藏禁用标识 &nbsp;-&nbsp; by @m-xlsea [<samp>(08cfa)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/08cfa167)
+  - 列设置新增滚动条处理 &nbsp;-&nbsp; by @m-xlsea [<samp>(6696d)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/6696da52)
+- **docs**:
+  - 新增 GitCode star 徽章 &nbsp;-&nbsp; by @m-xlsea [<samp>(5310d)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/5310d352)
+- **projects**:
+  - 优化字典操作 &nbsp;-&nbsp; by @m-xlsea [<samp>(2400b)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/2400bf8c)
+  - 客户端管理新增状态修改开关 &nbsp;-&nbsp; by @m-xlsea [<samp>(ea6a9)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/ea6a92cd)
+  - Iframe 类型菜单传参更改 &nbsp;-&nbsp; by @m-xlsea [<samp>(bf3d5)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/bf3d5cb3)
+  - 新增同步租户参数配置功能 &nbsp;-&nbsp; by @m-xlsea [<samp>(901a6)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/901a65ad)
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug 修复
+
+- **projects**: 修复代码生成树模板问题 &nbsp;-&nbsp; by **AN** [<samp>(fa7bc)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/fa7bc434)
+
+### &nbsp;&nbsp;&nbsp;🛠 优化
+
+- **projects**:
+  - 优化代码内容 &nbsp;-&nbsp; by @m-xlsea [<samp>(9edbd)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/9edbd8e6)
+  - 修复菜单代码质量问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(6f349)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/6f34956e)
+
+### &nbsp;&nbsp;&nbsp;📖 文档
+
+- **other**: 更新 cursor 规则 &nbsp;-&nbsp; by @m-xlsea [<samp>(1d6af)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/1d6af984)
+- **projects**: 更新 cursor 规则 &nbsp;-&nbsp; by @m-xlsea [<samp>(e63fe)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/e63fee59)
+
+### &nbsp;&nbsp;&nbsp;🎨 样式
+
+- **projects**: 优化注释规范 &nbsp;-&nbsp; by @m-xlsea [<samp>(4139a)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4139a729)
+
+### &nbsp;&nbsp;&nbsp;❤️ 贡献值
+
+[![m-xlsea](https://github.com/m-xlsea.png?size=48)](https://gitee.com/xlsea)&nbsp;&nbsp;[![Elio-An](https://github.com/Elio-An.png?size=48)](https://gitee.com/elio-an)
+
 ## [v1.2.0](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.1.3...v1.2.0) (2025-09-26)
 
 ### &nbsp;&nbsp;&nbsp;🚀 新功能
