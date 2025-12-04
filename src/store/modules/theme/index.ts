@@ -1,10 +1,11 @@
 import { computed, effectScope, onScopeDispose, ref, toRefs, watch } from 'vue';
 import type { Ref } from 'vue';
-import { useEventListener, usePreferredColorScheme } from '@vueuse/core';
+import { useDateFormat, useEventListener, useNow, usePreferredColorScheme } from '@vueuse/core';
 import { defineStore } from 'pinia';
 import { getPaletteColorByNumber } from '@sa/color';
 import { localStg } from '@/utils/storage';
 import { SetupStoreId } from '@/enum';
+import { useAuthStore } from '../auth';
 import {
   addThemeVarsToGlobal,
   createThemeToken,
@@ -18,9 +19,16 @@ import {
 export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
   const scope = effectScope();
   const osTheme = usePreferredColorScheme();
+  const authStore = useAuthStore();
 
   /** Theme settings */
   const settings: Ref<App.Theme.ThemeSetting> = ref(initThemeSettings());
+
+  /** Optional NaiveUI theme overrides from preset */
+  const naiveThemeOverrides: Ref<App.Theme.NaiveUIThemeOverride | undefined> = ref(undefined);
+
+  /** Watermark time instance with controls */
+  const { now: watermarkTime, pause: pauseWatermarkTime, resume: resumeWatermarkTime } = useNow({ controls: true });
 
   /** Dark mode */
   const darkMode = computed(() => {
@@ -48,7 +56,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
   });
 
   /** Naive theme */
-  const naiveTheme = computed(() => getNaiveTheme(themeColors.value, settings.value.recommendColor));
+  const naiveTheme = computed(() => getNaiveTheme(themeColors.value, settings.value, naiveThemeOverrides.value));
 
   /**
    * Settings json
@@ -56,6 +64,29 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
    * It is for copy settings
    */
   const settingsJson = computed(() => JSON.stringify(settings.value));
+
+  /** Watermark time date formatter */
+  const formattedWatermarkTime = computed(() => {
+    const { watermark } = settings.value;
+    const date = useDateFormat(watermarkTime, watermark.timeFormat);
+    return date.value;
+  });
+
+  /** Watermark content */
+  const watermarkContent = computed(() => {
+    const { watermark } = settings.value;
+    let content = watermark.text;
+
+    if (watermark.enableUserName && authStore.userInfo.user?.userName) {
+      content = `${authStore.userInfo.user.userName}@${content}`;
+    }
+
+    if (watermark.enableTime) {
+      content = `${content} ${formattedWatermarkTime.value}`;
+    }
+
+    return content;
+  });
 
   /** Reset store */
   function resetStore() {
@@ -144,13 +175,52 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
     );
     addThemeVarsToGlobal(themeTokens, darkThemeTokens);
   }
+
   /**
-   * Set layout reverse horizontal mix
+   * Set watermark enable user name
    *
-   * @param reverse Reverse horizontal mix
+   * @param enable Whether to enable user name watermark
    */
-  function setLayoutReverseHorizontalMix(reverse: boolean) {
-    settings.value.layout.reverseHorizontalMix = reverse;
+  function setWatermarkEnableUserName(enable: boolean) {
+    settings.value.watermark.enableUserName = enable;
+
+    if (enable) {
+      // settings.value.watermark.enableTime = false;
+    }
+  }
+
+  /**
+   * Set watermark enable time
+   *
+   * @param enable Whether to enable time watermark
+   */
+  function setWatermarkEnableTime(enable: boolean) {
+    settings.value.watermark.enableTime = enable;
+
+    if (enable) {
+      // settings.value.watermark.enableUserName = false;
+    }
+  }
+
+  /**
+   * Set NaiveUI theme overrides
+   *
+   * @param overrides NaiveUI theme overrides or undefined to clear
+   */
+  function setNaiveThemeOverrides(overrides?: App.Theme.NaiveUIThemeOverride) {
+    naiveThemeOverrides.value = overrides;
+  }
+
+  /** Only run timer when watermark is visible and time display is enabled */
+  function updateWatermarkTimer() {
+    const { watermark } = settings.value;
+    const shouldRunTimer = watermark.visible && watermark.enableTime;
+
+    if (shouldRunTimer) {
+      resumeWatermarkTime();
+    } else {
+      pauseWatermarkTime();
+    }
   }
 
   /** Cache theme settings */
@@ -196,6 +266,15 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
       },
       { immediate: true }
     );
+
+    // watch watermark settings to control timer
+    watch(
+      () => [settings.value.watermark.visible, settings.value.watermark.enableTime],
+      () => {
+        updateWatermarkTimer();
+      },
+      { immediate: true }
+    );
   });
 
   /** On scope dispose */
@@ -209,6 +288,7 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
     themeColors,
     naiveTheme,
     settingsJson,
+    watermarkContent,
     setGrayscale,
     setColourWeakness,
     resetStore,
@@ -216,6 +296,8 @@ export const useThemeStore = defineStore(SetupStoreId.Theme, () => {
     toggleThemeScheme,
     updateThemeColors,
     setThemeLayout,
-    setLayoutReverseHorizontalMix
+    setWatermarkEnableUserName,
+    setWatermarkEnableTime,
+    setNaiveThemeOverrides
   };
 });

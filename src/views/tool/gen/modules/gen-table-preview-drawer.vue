@@ -3,6 +3,7 @@ import { ref, watch } from 'vue';
 import { useClipboard } from '@vueuse/core';
 import { useLoading } from '@sa/hooks';
 import { fetchGetGenPreview } from '@/service/api/tool';
+import { $t } from '@/locales';
 import MonacoEditor from '@/components/common/monaco-editor.vue';
 
 defineOptions({

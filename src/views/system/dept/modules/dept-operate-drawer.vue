@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { NInputNumber } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
+import { jsonClone } from '@sa/utils';
 import { fetchCreateDept, fetchGetDeptList, fetchGetExcludeDeptList, fetchUpdateDept } from '@/service/api/system/dept';
 import { fetchGetDeptUserList } from '@/service/api/system/user';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -52,7 +53,7 @@ const title = computed(() => {
 
 type Model = Api.System.DeptOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
@@ -79,12 +80,10 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-  }
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
   }
 }
 
@@ -95,9 +94,10 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const { deptId, parentId, deptName, deptCategory, orderNum, leader, phone, email, status } = model.value;
+
   // request
   if (props.operateType === 'add') {
-    const { parentId, deptName, deptCategory, orderNum, leader, phone, email, status } = model;
     const { error } = await fetchCreateDept({
       parentId,
       deptName,
@@ -112,7 +112,6 @@ async function handleSubmit() {
   }
 
   if (props.operateType === 'edit') {
-    const { deptId, parentId, deptName, deptCategory, orderNum, leader, phone, email, status } = model;
     const { error } = await fetchUpdateDept({
       deptId,
       parentId,
@@ -144,7 +143,9 @@ async function getDeptData() {
 
   if (data) {
     deptData.value = handleTree(data, { idField: 'deptId' });
-    expandedKeys.value = [deptData.value[0].deptId];
+    if (deptData.value?.length) {
+      expandedKeys.value = [deptData.value[0].deptId];
+    }
   }
   endDeptLoading();
 }

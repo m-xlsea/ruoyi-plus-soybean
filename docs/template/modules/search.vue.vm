@@ -1,6 +1,7 @@
 #set($ModuleName=$moduleName.substring(0, 1).toUpperCase() + $moduleName.substring(1))
 <script setup lang="ts">
-import { ref } from 'vue';
+import { toRaw } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 #if($dictList && $dictList.size() > 0)import { useDict } from '@/hooks/business/dict';#end
@@ -9,8 +10,16 @@ defineOptions({
   name: '${BusinessName}Search'
 });
 
+#if($tplCategory == 'tree')
+interface Props {
+  /** the tree list */
+  treeList?: Api.$ModuleName.${BusinessName}[] | null;
+}
+#end
+
+defineProps<Props>();
+
 interface Emits {
-  (e: 'reset'): void;
   (e: 'search'): void;
 }
 
@@ -23,24 +32,28 @@ const { formRef, validate, restoreValidation } = useNaiveForm();
         #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
 const dateRange${AttrName} = ref<[string, string] | null>(null);
 #end#end
-
 const model = defineModel<Api.$ModuleName.${BusinessName}SearchParams>('model', { required: true });
-
 #if($dictList && $dictList.size() > 0)
 #foreach($dict in $dictList)
 const { options: ${dict.name}Options } = useDict('${dict.type}'#if($dict.immediate), false#end);
 #end#end
 
-async function reset() {
-#foreach ($column in $columns)
+const defaultModel = jsonClone(toRaw(model.value));
+
+function resetModel() {
+  #foreach ($column in $columns)
     #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
         #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
   dateRange${AttrName}.value = null;
     #end
 #end
-  Object.assign(model.value.params!, {});
+  Object.assign(model.value, defaultModel);
+}
+
+async function reset() {
   await restoreValidation();
-  emit('reset');
+  resetModel();
+  emit('search');
 }
 
 async function search() {
@@ -56,12 +69,24 @@ async function search() {
 #end
   emit('search');
 }
+
+#if($tplCategory == 'tree')
+const treeOptions = computed(() => {
+  return [
+    {
+      id: 0,
+      treeName: '顶级节点',
+      children: props.treeList!
+    }
+  ];
+});
+#end
 </script>
 
 <template>
   <NCard :bordered="false" size="small" class="card-wrapper">
     <NCollapse>
-      <NCollapseItem :title="$t('common.search')" name="user-search">
+      <NCollapseItem :title="$t('common.search')" name="$moduleName-${business__name}-search">
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
 #foreach($column in $columns)
@@ -74,8 +99,18 @@ async function search() {
 #else
 #set($comment=$column.columnComment)
 #end
-            <NFormItemGi span="24 s:12 m:6" label="$column.columnComment" path="$column.javaField" class="pr-24px">
-            #if($!StrUtil.contains("select, radio, checkbox", $column.htmlType) && $dictType && "" != $dictType)
+            <NFormItemGi span="24 s:12 m:6" label="$column.columnComment" label-width="auto" path="$column.javaField" class="pr-24px">
+            #if($tplCategory == 'tree' && $column.javaField == $treeParentCode)
+              <NTreeSelect
+                v-model:value="model.$treeParentCode"
+                filterable
+                class="h-full"
+                key-field="$treeCode"
+                label-field="$treeName"
+                :options="treeOptions"
+                :default-expanded-keys="[0]"
+              />
+            #elseif($!StrUtil.contains("select, radio, checkbox", $column.htmlType) && $dictType && "" != $dictType)
               <NSelect
                 v-model:value="model.$column.javaField"
                 placeholder="请选择$column.columnComment"
@@ -108,7 +143,7 @@ async function search() {
             </NFormItemGi>
   #end
 #end
-            <NFormItemGi span="24" class="pr-24px">
+            <NFormItemGi :show-feedback="false" span="24" class="pr-24px">
               <NSpace class="w-full" justify="end">
                 <NButton @click="reset">
                   <template #icon>

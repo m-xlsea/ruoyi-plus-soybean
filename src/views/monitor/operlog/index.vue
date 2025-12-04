@@ -1,10 +1,11 @@
 <script setup lang="tsx">
+import { ref } from 'vue';
 import { NButton } from 'naive-ui';
 import { fetchBatchDeleteOperLog, fetchCleanOperLog, fetchGetOperLogList } from '@/service/api/monitor/oper-log';
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import DictTag from '@/components/custom/dict-tag.vue';
 import { $t } from '@/locales';
@@ -23,123 +24,123 @@ const appStore = useAppStore();
 const { download } = useDownload();
 const { hasAuth } = useAuth();
 
-const {
-  columns,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  mobilePagination,
-  searchParams,
-  resetSearchParams
-} = useTable({
-  apiFn: fetchGetOperLogList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    title: null,
-    businessType: null,
-    operName: null,
-    operIp: null,
-    status: null,
-    params: {}
-  },
-  columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64
-    },
-    {
-      key: 'title',
-      title: '系统模块',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'businessType',
-      title: '操作类型',
-      align: 'center',
-      minWidth: 120,
-      render(row) {
-        return <DictTag size="small" value={row.businessType} dictCode="sys_oper_type" />;
-      }
-    },
-    {
-      key: 'operName',
-      title: '操作人员',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'operIp',
-      title: '操作IP',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'operLocation',
-      title: '操作地点',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'status',
-      title: '操作状态',
-      align: 'center',
-      minWidth: 120,
-      render(row) {
-        return <DictTag size="small" value={row.status} dictCode="sys_common_status" />;
-      }
-    },
-    {
-      key: 'operTime',
-      title: '操作时间',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'costTime',
-      title: '消耗时间',
-      align: 'center',
-      minWidth: 120,
-      render(row) {
-        return `${row.costTime} ms`;
-      }
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 130,
-      render: row => {
-        const viewBtn = () => {
-          return (
-            <ButtonIcon
-              type="primary"
-              text
-              icon="material-symbols:visibility-outline"
-              tooltipContent="详情"
-              onClick={() => view(row.operId!)}
-            />
-          );
-        };
-        return <div class="flex-center gap-8px">{viewBtn()}</div>;
-      }
-    }
-  ]
+const searchParams = ref<Api.Monitor.OperLogSearchParams>({
+  pageNum: 1,
+  pageSize: 10,
+  title: null,
+  businessType: null,
+  operName: null,
+  operIp: null,
+  status: null,
+  params: {}
 });
 
-const { drawerVisible, editingData, handleEdit, checkedRowKeys, onBatchDeleted } = useTableOperate(data, getData);
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, scrollX } =
+  useNaivePaginatedTable({
+    api: () => fetchGetOperLogList(searchParams.value),
+    transform: response => defaultTransform(response),
+    onPaginationParamsChange: params => {
+      searchParams.value.pageNum = params.page;
+      searchParams.value.pageSize = params.pageSize;
+    },
+    columns: () => [
+      {
+        type: 'selection',
+        align: 'center',
+        width: 48
+      },
+      {
+        key: 'index',
+        title: $t('common.index'),
+        align: 'center',
+        width: 64,
+        render: (_, index) => index + 1
+      },
+      {
+        key: 'title',
+        title: '系统模块',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'businessType',
+        title: '操作类型',
+        align: 'center',
+        minWidth: 120,
+        render(row) {
+          return <DictTag size="small" value={row.businessType} dictCode="sys_oper_type" />;
+        }
+      },
+      {
+        key: 'operName',
+        title: '操作人员',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'operIp',
+        title: '操作IP',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'operLocation',
+        title: '操作地点',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'status',
+        title: '操作状态',
+        align: 'center',
+        minWidth: 120,
+        render(row) {
+          return <DictTag size="small" value={row.status} dictCode="sys_common_status" />;
+        }
+      },
+      {
+        key: 'operTime',
+        title: '操作时间',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'costTime',
+        title: '消耗时间',
+        align: 'center',
+        minWidth: 120,
+        render(row) {
+          return `${row.costTime} ms`;
+        }
+      },
+      {
+        key: 'operate',
+        title: $t('common.operate'),
+        align: 'center',
+        width: 130,
+        render: row => {
+          const viewBtn = () => {
+            return (
+              <ButtonIcon
+                type="primary"
+                text
+                icon="material-symbols:visibility-outline"
+                tooltipContent="详情"
+                onClick={() => view(row.operId!)}
+              />
+            );
+          };
+          return <div class="flex-center gap-8px">{viewBtn()}</div>;
+        }
+      }
+    ]
+  });
+
+const { drawerVisible, editingData, handleEdit, checkedRowKeys, onBatchDeleted } = useTableOperate(
+  data,
+  'operId',
+  getData
+);
 
 async function handleBatchDelete() {
   // request
@@ -148,7 +149,7 @@ async function handleBatchDelete() {
   onBatchDeleted();
 }
 async function view(operId: CommonType.IdType) {
-  handleEdit('operId', operId);
+  handleEdit(operId);
 }
 
 async function handleExport() {
@@ -173,7 +174,7 @@ async function handleCleanOperLog() {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <OperLogSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <OperLogSearch v-model:model="searchParams" @search="getDataByPage" />
     <NCard title="操作日志列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
@@ -196,7 +197,7 @@ async function handleCleanOperLog() {
               @click="handleCleanOperLog"
             >
               <template #icon>
-                <icon-material-symbols:warning-outline-rounded />
+                <icon-material-symbols-warning-outline-rounded />
               </template>
               清空
             </NButton>
@@ -209,7 +210,7 @@ async function handleCleanOperLog() {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="962"
+        :scroll-x="scrollX"
         :loading="loading"
         remote
         :row-key="row => row.operId"

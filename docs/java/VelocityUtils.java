@@ -74,6 +74,7 @@ public class VelocityUtils {
         velocityContext.put("permissionPrefix", getPermissionPrefix(moduleName, businessName));
         velocityContext.put("dicts", getDicts(genTable));
         velocityContext.put("dictList", getDictList(genTable));
+        velocityContext.put("pkColumn", genTable.getPkColumn());
         velocityContext.put("columns", genTable.getColumns());
         velocityContext.put("table", genTable);
         velocityContext.put("StrUtil", new StrUtil());

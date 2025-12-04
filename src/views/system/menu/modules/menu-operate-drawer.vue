@@ -1,6 +1,7 @@
 <script setup lang="tsx">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
+import { jsonClone } from '@sa/utils';
 import { menuIconTypeOptions, menuIsFrameOptions, menuTypeOptions } from '@/constants/business';
 import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api/system';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -55,7 +56,7 @@ const drawerTitle = computed(() => {
 
 type Model = Api.System.MenuOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
@@ -86,22 +87,22 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 // 是否为目录类型
-const isCatalog = computed(() => model.menuType === 'M');
+const isCatalog = computed(() => model.value.menuType === 'M');
 
 // 是否为菜单类型
-const isMenu = computed(() => model.menuType === 'C');
+const isMenu = computed(() => model.value.menuType === 'C');
 
 // 是否为按钮类型
-const isBtn = computed(() => model.menuType === 'F');
+const isBtn = computed(() => model.value.menuType === 'F');
 
 // 外链类型
-const isExternalType = computed(() => model.isFrame === '0');
+const isExternalType = computed(() => model.value.isFrame === '0');
 
 // 内部类型
-const isInternalType = computed(() => model.isFrame === '1');
+const isInternalType = computed(() => model.value.isFrame === '1');
 
 // iframe类型
-const isIframeType = computed(() => model.isFrame === '2');
+const isIframeType = computed(() => model.value.isFrame === '2');
 
 // 本地图标类型
 const isLocalIcon = computed(() => iconType.value === '2');
@@ -121,24 +122,24 @@ const localIconOptions = localIcons.map<SelectOption>(item => ({
 function handleInitModel() {
   queryList.value = [];
   iconType.value = '1';
-  Object.assign(model, createDefaultModel());
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
     if (isMenu.value && isInternalType.value) {
-      model.component = model.component?.slice(0, -6);
+      model.value.component = model.value.component?.slice(0, -6);
     }
-    iconType.value = model.icon?.startsWith('local-icon-') ? '2' : '1';
+    iconType.value = model.value.icon?.startsWith('local-icon-') ? '2' : '1';
 
-    if (model.isFrame === '1') {
-      const queryObj: { [key: string]: string } = JSON.parse(model.queryParam || '{}');
+    if (model.value.isFrame === '1') {
+      const queryObj: { [key: string]: string } = JSON.parse(model.value.queryParam || '{}');
       queryList.value = Object.keys(queryObj).map(item => ({ key: item, value: queryObj[item] }));
       return;
     }
 
     try {
-      if (model.isFrame === '2') {
-        model.queryParam = JSON.parse(model.queryParam || '{}')?.url || '';
+      if (model.value.isFrame === '2') {
+        model.value.queryParam = JSON.parse(model.value.queryParam || '{}')?.url || '';
       }
     } catch {}
   }
@@ -204,11 +205,11 @@ async function handleSubmit() {
     remark,
     component,
     queryParam
-  } = model;
+  } = model.value;
 
   const payload = {
     menuName,
-    path: processPath(model.path),
+    path: processPath(model.value.path),
     parentId,
     orderNum,
     queryParam: processQueryParam(queryParam),
@@ -236,10 +237,10 @@ async function handleSubmit() {
 }
 
 watch(
-  () => model.menuType,
+  () => model.value.menuType,
   newType => {
     if (newType === 'M') {
-      model.isFrame = '1';
+      model.value.isFrame = '1';
     }
   }
 );

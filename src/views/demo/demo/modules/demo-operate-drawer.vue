@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { fetchCreateDemo, fetchUpdateDemo } from '@/service/api/demo/demo';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
@@ -40,13 +41,14 @@ const title = computed(() => {
 
 type Model = Api.Demo.DemoOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
+    id: null,
     deptId: null,
     userId: null,
-    orderNum: null,
+    orderNum: 0,
     testKey: '',
     value: '',
     remark: ''
@@ -65,13 +67,10 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
 };
 
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-    return;
-  }
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
   }
 }
 
@@ -82,15 +81,15 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const { id, deptId, userId, orderNum, testKey, value } = model.value;
+
   // request
   if (props.operateType === 'add') {
-    const { deptId, userId, orderNum, testKey, value } = model;
     const { error } = await fetchCreateDemo({ deptId, userId, orderNum, testKey, value });
     if (error) return;
   }
 
   if (props.operateType === 'edit') {
-    const { id, deptId, userId, orderNum, testKey, value } = model;
     const { error } = await fetchUpdateDemo({ id, deptId, userId, orderNum, testKey, value });
     if (error) return;
   }
@@ -126,9 +125,6 @@ watch(visible, () => {
         </NFormItem>
         <NFormItem label="值" path="value">
           <NInput v-model:value="model.value" placeholder="请输入值" />
-        </NFormItem>
-        <NFormItem label="备注" path="remark">
-          <NInput v-model:value="model.remark" type="textarea" placeholder="请输入备注" />
         </NFormItem>
       </NForm>
       <template #footer>

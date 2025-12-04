@@ -17,7 +17,7 @@ export function fetchBatchDeleteOss(ossIds: CommonType.IdType[]) {
   });
 }
 
-/** 查询OSS对象基于id串 */
+/**  查询OSS对象基于id串 */
 export function fetchGetOssListByIds(ossIds: CommonType.IdType[]) {
   return request<Api.System.Oss[]>({
     url: `/resource/oss/listByIds/${ossIds.join(',')}`,

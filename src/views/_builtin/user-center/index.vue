@@ -8,6 +8,7 @@ import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import OnlineTable from './modules/online-table.vue';
 import SocialCard from './modules/social-card.vue';
 import UserAvatar from './modules/user-avatar.vue';
+
 defineOptions({
   name: 'UserCenter'
 });
@@ -139,7 +140,7 @@ async function updatePassword() {
     </NCard>
 
     <!-- 基本资料卡片 -->
-    <NCard title="基本资料" class="shadow-sm">
+    <NCard title="基本资料" class="w-full overflow-x-auto shadow-sm">
       <NTabs type="line" animated class="h-full" s>
         <NTabPane name="userInfo" tab="基本资料">
           <NForm

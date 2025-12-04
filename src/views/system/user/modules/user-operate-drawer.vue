@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { useLoading } from '@sa/hooks';
 import { fetchCreateUser, fetchGetUserInfo, fetchUpdateUser } from '@/service/api/system';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -47,7 +48,7 @@ const title = computed(() => {
 
 type Model = Api.System.UserOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 const roleOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
 
@@ -82,8 +83,8 @@ async function getUserInfo(id: CommonType.IdType = '') {
   startLoading();
   const { error, data } = await fetchGetUserInfo(id);
   if (!error) {
-    model.roleIds = data.roleIds;
-    model.postIds = data.postIds;
+    model.value.roleIds = data.roleIds;
+    model.value.postIds = data.postIds;
     roleOptions.value = data.roles.map(role => ({
       label: role.roleName,
       value: role.roleId
@@ -93,17 +94,18 @@ async function getUserInfo(id: CommonType.IdType = '') {
 }
 
 function handleUpdateModelWhenEdit() {
+  model.value = createDefaultModel();
+
   if (props.operateType === 'add') {
     getUserInfo();
-    Object.assign(model, createDefaultModel());
-    model.deptId = props.deptId;
+    model.value.deptId = props.deptId;
     return;
   }
 
   if (props.operateType === 'edit' && props.rowData) {
     startDeptLoading();
-    Object.assign(model, props.rowData);
-    model.password = '';
+    Object.assign(model.value, jsonClone(props.rowData));
+    model.value.password = '';
     getUserInfo(props.rowData.userId);
     endDeptLoading();
   }
@@ -117,7 +119,7 @@ async function handleSubmit() {
   await validate();
 
   const { userId, deptId, userName, nickName, email, phonenumber, sex, password, status, roleIds, postIds, remark } =
-    model;
+    model.value;
 
   // request
   if (props.operateType === 'add') {

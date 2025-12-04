@@ -1,4 +1,5 @@
 <script setup lang="tsx">
+import { ref } from 'vue';
 import { NDivider, NTag } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
 import { useBoolean } from '@sa/hooks';
@@ -7,7 +8,7 @@ import { fetchBatchDeleteRole, fetchGetRoleList, fetchUpdateRoleStatus } from '@
 import { useAppStore } from '@/store/modules/app';
 import { useAuth } from '@/hooks/business/auth';
 import { useDownload } from '@/hooks/business/download';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
@@ -29,171 +30,168 @@ useDict('sys_normal_disable');
 
 const { bool: dataScopeDrawerVisible, setTrue: openDataScopeDrawer } = useBoolean(false);
 const { bool: authUserDrawerVisible, setTrue: openAuthUserDrawer } = useBoolean(false);
-const {
-  columns,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  mobilePagination,
-  searchParams,
-  resetSearchParams
-} = useTable({
-  apiFn: fetchGetRoleList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    roleName: null,
-    roleKey: null,
-    status: null,
-    params: {}
-  },
-  columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64
-    },
-    {
-      key: 'roleName',
-      title: '角色名称',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'roleKey',
-      title: '角色权限字符串',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'roleSort',
-      title: '显示顺序',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'dataScope',
-      title: '数据范围',
-      align: 'center',
-      minWidth: 180,
-      render: row => {
-        return <NTag type="info">{dataScopeRecord[row.dataScope]}</NTag>;
-      }
-    },
-    {
-      key: 'status',
-      title: '角色状态',
-      align: 'center',
-      minWidth: 120,
-      render(row) {
-        return (
-          <StatusSwitch
-            v-model:value={row.status}
-            disabled={row.roleId === 1}
-            info={row.roleKey}
-            onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
-          />
-        );
-      }
-    },
-    {
-      key: 'createTime',
-      title: '创建时间',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 230,
-      render: row => {
-        if (row.roleId === 1) return null;
 
-        const editBtn = () => {
-          return (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:drive-file-rename-outline-outline"
-              tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.roleId!)}
-            />
-          );
-        };
-
-        const dataScopeBtn = () => {
-          return (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:database"
-              tooltipContent="数据范围权限"
-              onClick={() => handleDataScope(row)}
-            />
-          );
-        };
-
-        const authUserBtn = () => {
-          return (
-            <ButtonIcon
-              text
-              type="primary"
-              icon="material-symbols:assignment-ind-outline"
-              tooltipContent="分配用户"
-              onClick={() => handleAuthUser(row)}
-            />
-          );
-        };
-
-        const deleteBtn = () => {
-          return (
-            <ButtonIcon
-              text
-              type="error"
-              icon="material-symbols:delete-outline"
-              tooltipContent={$t('common.delete')}
-              popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.roleId!)}
-            />
-          );
-        };
-
-        const buttons = [];
-        if (hasAuth('system:role:edit')) {
-          buttons.push(editBtn());
-          buttons.push(dataScopeBtn());
-          buttons.push(authUserBtn());
-        }
-        if (hasAuth('system:role:remove')) buttons.push(deleteBtn());
-
-        return (
-          <div class="flex-center gap-8px">
-            {buttons.map((btn, index) => (
-              <>
-                {index !== 0 && <NDivider vertical />}
-                {btn}
-              </>
-            ))}
-          </div>
-        );
-      }
-    }
-  ]
+const searchParams = ref<Api.System.RoleSearchParams>({
+  pageNum: 1,
+  pageSize: 10,
+  roleName: null,
+  roleKey: null,
+  status: null,
+  params: {}
 });
 
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, scrollX } =
+  useNaivePaginatedTable({
+    api: () => fetchGetRoleList(searchParams.value),
+    transform: response => defaultTransform(response),
+    onPaginationParamsChange: params => {
+      searchParams.value.pageNum = params.page;
+      searchParams.value.pageSize = params.pageSize;
+    },
+    columns: () => [
+      {
+        type: 'selection',
+        align: 'center',
+        width: 48
+      },
+      {
+        key: 'index',
+        title: $t('common.index'),
+        align: 'center',
+        width: 64,
+        render: (_, index) => index + 1
+      },
+      {
+        key: 'roleName',
+        title: '角色名称',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'roleKey',
+        title: '角色权限字符串',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'roleSort',
+        title: '显示顺序',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'dataScope',
+        title: '数据范围',
+        align: 'center',
+        minWidth: 180,
+        render: row => {
+          return <NTag type="info">{dataScopeRecord[row.dataScope]}</NTag>;
+        }
+      },
+      {
+        key: 'status',
+        title: '角色状态',
+        align: 'center',
+        minWidth: 120,
+        render(row) {
+          return (
+            <StatusSwitch
+              v-model:value={row.status}
+              disabled={row.roleId === 1}
+              info={row.roleKey}
+              onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
+            />
+          );
+        }
+      },
+      {
+        key: 'createTime',
+        title: '创建时间',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'operate',
+        title: $t('common.operate'),
+        align: 'center',
+        width: 230,
+        render: row => {
+          if (row.roleId === 1) return null;
+
+          const editBtn = () => {
+            return (
+              <ButtonIcon
+                text
+                type="primary"
+                icon="material-symbols:drive-file-rename-outline-outline"
+                tooltipContent={$t('common.edit')}
+                onClick={() => edit(row.roleId)}
+              />
+            );
+          };
+
+          const dataScopeBtn = () => {
+            return (
+              <ButtonIcon
+                text
+                type="primary"
+                icon="material-symbols:database"
+                tooltipContent="数据范围权限"
+                onClick={() => handleDataScope(row)}
+              />
+            );
+          };
+
+          const authUserBtn = () => {
+            return (
+              <ButtonIcon
+                text
+                type="primary"
+                icon="material-symbols:assignment-ind-outline"
+                tooltipContent="分配用户"
+                onClick={() => handleAuthUser(row)}
+              />
+            );
+          };
+
+          const deleteBtn = () => {
+            return (
+              <ButtonIcon
+                text
+                type="error"
+                icon="material-symbols:delete-outline"
+                tooltipContent={$t('common.delete')}
+                popconfirmContent={$t('common.confirmDelete')}
+                onPositiveClick={() => handleDelete(row.roleId)}
+              />
+            );
+          };
+
+          const buttons = [];
+          if (hasAuth('system:role:edit')) {
+            buttons.push(editBtn());
+            buttons.push(dataScopeBtn());
+            buttons.push(authUserBtn());
+          }
+          if (hasAuth('system:role:remove')) buttons.push(deleteBtn());
+
+          return (
+            <div class="flex-center gap-8px">
+              {buttons.map((btn, index) => (
+                <>
+                  {index !== 0 && <NDivider vertical />}
+                  {btn}
+                </>
+              ))}
+            </div>
+          );
+        }
+      }
+    ]
+  });
+
 const { drawerVisible, operateType, editingData, handleAdd, handleEdit, checkedRowKeys, onBatchDeleted, onDeleted } =
-  useTableOperate(data, getData);
+  useTableOperate(data, 'roleId', getData);
 
 async function handleBatchDelete() {
   // request
@@ -210,7 +208,7 @@ async function handleDelete(roleId: CommonType.IdType) {
 }
 
 async function edit(roleId: CommonType.IdType) {
-  handleEdit('roleId', roleId);
+  handleEdit(roleId);
 }
 
 async function handleExport() {
@@ -251,7 +249,7 @@ function handleAuthUser(row: Api.System.Role) {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <RoleSearch v-model:model="searchParams" @reset="resetSearchParams" @search="getDataByPage" />
+    <RoleSearch v-model:model="searchParams" @search="getDataByPage" />
     <NCard title="角色列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
@@ -273,7 +271,7 @@ function handleAuthUser(row: Api.System.Role) {
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="1200"
+        :scroll-x="scrollX"
         :loading="loading"
         remote
         :row-key="row => row.roleId"

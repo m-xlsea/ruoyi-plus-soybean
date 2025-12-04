@@ -187,13 +187,13 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
     <div class="w-full flex-y-center gap-16px">
       <NButton class="flex-1" @click="handleSocialLogin('gitee')">
         <template #icon>
-          <icon-simple-icons:gitee class="color-#c71d23" />
+          <icon-simple-icons-gitee class="color-#c71d23" />
         </template>
         <span class="ml-6px">Gitee</span>
       </NButton>
       <NButton class="flex-1" @click="handleSocialLogin('github')">
         <template #icon>
-          <icon-mdi:github class="color-#010409" />
+          <icon-mdi-github class="color-#010409" />
         </template>
         <span class="ml-6px">GitHub</span>
       </NButton>

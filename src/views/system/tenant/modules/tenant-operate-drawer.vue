@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useLoading } from '@sa/hooks';
+import { jsonClone } from '@sa/utils';
 import { fetchCreateTenant, fetchUpdateTenant } from '@/service/api/system/tenant';
 import { fetchGetTenantPackageSelectList } from '@/service/api/system/tenant-package';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
@@ -42,7 +43,7 @@ const title = computed(() => {
 
 type Model = Api.System.TenantOperateParams;
 
-const model: Model = reactive(createDefaultModel());
+const model = ref<Model>(createDefaultModel());
 
 function createDefaultModel(): Model {
   return {
@@ -95,6 +96,7 @@ const rules: Record<RuleKey, App.Global.FormRule | App.Global.FormRule[]> = {
     }
   ]
 };
+
 /** the enabled package options */
 const packageOptions = ref<CommonType.Option<CommonType.IdType>[]>([]);
 async function getPackageOptions() {
@@ -108,14 +110,12 @@ async function getPackageOptions() {
   }
   endPackageLoading();
 }
+
 function handleUpdateModelWhenEdit() {
-  if (props.operateType === 'add') {
-    Object.assign(model, createDefaultModel());
-    return;
-  }
+  model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
-    Object.assign(model, props.rowData);
+    Object.assign(model.value, jsonClone(props.rowData));
   }
 }
 
@@ -126,24 +126,27 @@ function closeDrawer() {
 async function handleSubmit() {
   await validate();
 
+  const {
+    id,
+    tenantId,
+    contactUserName,
+    contactPhone,
+    companyName,
+    username,
+    password,
+    licenseNumber,
+    address,
+    intro,
+    domain,
+    remark,
+    packageId,
+    expireTime,
+    accountCount,
+    status
+  } = model.value;
+
   // request
   if (props.operateType === 'add') {
-    const {
-      contactUserName,
-      contactPhone,
-      companyName,
-      licenseNumber,
-      address,
-      intro,
-      domain,
-      remark,
-      packageId,
-      expireTime,
-      accountCount,
-      status,
-      username,
-      password
-    } = model;
     const { error } = await fetchCreateTenant({
       contactUserName,
       contactPhone,
@@ -164,22 +167,6 @@ async function handleSubmit() {
   }
 
   if (props.operateType === 'edit') {
-    const {
-      id,
-      tenantId,
-      contactUserName,
-      contactPhone,
-      companyName,
-      licenseNumber,
-      address,
-      intro,
-      domain,
-      remark,
-      packageId,
-      expireTime,
-      accountCount,
-      status
-    } = model;
     const { error } = await fetchUpdateTenant({
       id,
       tenantId,

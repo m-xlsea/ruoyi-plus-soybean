@@ -1,6 +1,7 @@
 <script setup lang="tsx">
-import { computed, ref, watch } from 'vue';
+import { computed, ref, toRaw, watch } from 'vue';
 import { NDatePicker } from 'naive-ui';
+import { jsonClone } from '@sa/utils';
 import {
   fetchGetRoleUserList,
   fetchGetUserList,
@@ -9,7 +10,7 @@ import {
 } from '@/service/api/system';
 import { useAppStore } from '@/store/modules/app';
 import { useDict } from '@/hooks/business/dict';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { arraysEqualSet } from '@/utils/common';
 import { $t } from '@/locales';
 import DictTag from '@/components/custom/dict-tag.vue';
@@ -41,20 +42,26 @@ const title = computed(() => '分配用户权限');
 
 useDict('sys_normal_disable', false);
 
-const { columns, data, getData, getDataByPage, loading, mobilePagination, searchParams, resetSearchParams } = useTable({
+const searchParams = ref<Api.System.UserSearchParams>({
+  pageNum: 1,
+  pageSize: 20,
+  deptId: null,
+  userName: null,
+  nickName: null,
+  phonenumber: null,
+  status: null,
+  params: {}
+});
+
+const defaultModel = jsonClone(toRaw(searchParams.value));
+
+const { columns, data, getData, getDataByPage, loading, mobilePagination, scrollX } = useNaivePaginatedTable({
   immediate: false,
-  apiFn: fetchGetUserList,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 20,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    deptId: null,
-    userName: null,
-    nickName: null,
-    phonenumber: null,
-    status: null,
-    params: {}
+  api: () => fetchGetUserList(searchParams.value),
+  transform: response => defaultTransform(response),
+  onPaginationParamsChange: params => {
+    searchParams.value.pageNum = params.page;
+    searchParams.value.pageSize = params.pageSize;
   },
   columns: () => [
     {
@@ -114,7 +121,7 @@ const { columns, data, getData, getDataByPage, loading, mobilePagination, search
   ]
 });
 
-const { checkedRowKeys } = useTableOperate(data, getData);
+const { checkedRowKeys } = useTableOperate(data, 'userId', getData);
 
 const checkedUserIds = ref<CommonType.IdType[]>([]);
 
@@ -159,6 +166,7 @@ async function handleSubmit() {
 
 watch(visible, () => {
   if (visible.value) {
+    reset();
     handleUpdateModelWhenEdit();
   }
 });
@@ -168,7 +176,7 @@ const dateRangeCreateTime = ref<[string, string] | null>(null);
 const datePickerRef = ref<InstanceType<typeof NDatePicker>>();
 
 function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
-  const params = searchParams.params!;
+  const params = searchParams.value.params!;
   if (value && value.length === 2) {
     [params.beginTime, params.endTime] = value;
   } else {
@@ -179,7 +187,7 @@ function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
 
 function reset() {
   dateRangeCreateTime.value = null;
-  resetSearchParams();
+  Object.assign(searchParams.value, defaultModel);
 }
 </script>
 
@@ -245,7 +253,7 @@ function reset() {
             :data="data"
             size="small"
             :flex-height="!appStore.isMobile"
-            :scroll-x="962"
+            :scroll-x="scrollX"
             :loading="loading"
             remote
             :row-key="row => row.userId"

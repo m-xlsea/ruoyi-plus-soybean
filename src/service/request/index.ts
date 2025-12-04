@@ -1,5 +1,5 @@
 import type { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { BACKEND_ERROR_CODE, REQUEST_CANCELED_CODE, createFlatRequest } from '@sa/axios';
+import { BACKEND_ERROR_CODE, createFlatRequest } from '@sa/axios';
 import { useAuthStore } from '@/store/modules/auth';
 import { localStg, sessionStg } from '@/utils/storage';
 import { getServiceBaseURL } from '@/utils/service';
@@ -12,7 +12,7 @@ const encryptHeader = import.meta.env.VITE_HEADER_FLAG || 'encrypt-key';
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
 const { baseURL } = getServiceBaseURL(import.meta.env, isHttpProxy);
 
-export const request = createFlatRequest<App.Service.Response, RequestInstanceState>(
+export const request = createFlatRequest(
   {
     baseURL,
     'axios-retry': {
@@ -20,6 +20,22 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
     }
   },
   {
+    defaultState: {
+      errMsgStack: [],
+      refreshTokenPromise: null
+    } as RequestInstanceState,
+    transform(response: AxiosResponse<App.Service.Response<any>>) {
+      // 二进制数据则直接返回
+      if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
+        return response.data;
+      }
+
+      if (response.data.rows) {
+        return response.data;
+      }
+
+      return response.data.data;
+    },
     async onRequest(config) {
       const isToken = config.headers?.isToken === false;
       // set token
@@ -132,27 +148,10 @@ export const request = createFlatRequest<App.Service.Response, RequestInstanceSt
 
       return null;
     },
-    transformBackendResponse(response) {
-      // 二进制数据则直接返回
-      if (response.request.responseType === 'blob' || response.request.responseType === 'arraybuffer') {
-        return response.data;
-      }
-
-      if (response.data.rows) {
-        return response.data;
-      }
-
-      return response.data.data;
-    },
     onError(error) {
       // when the request is fail, you can show error message
 
-      if (error.code === REQUEST_CANCELED_CODE) {
-        return;
-      }
-
       let message = error.message;
-
       let backendErrorCode = '';
 
       // get backend error message and code

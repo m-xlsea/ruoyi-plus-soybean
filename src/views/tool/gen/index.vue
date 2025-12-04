@@ -11,7 +11,7 @@ import {
   fetchSynchGenDbList
 } from '@/service/api/tool';
 import { useAppStore } from '@/store/modules/app';
-import { useTable, useTableOperate } from '@/hooks/common/table';
+import { defaultTransform, useNaivePaginatedTable, useTableOperate } from '@/hooks/common/table';
 import { useDownload } from '@/hooks/business/download';
 import { useAuth } from '@/hooks/business/auth';
 import { $t } from '@/locales';
@@ -27,165 +27,160 @@ const { zip } = useDownload();
 const { bool: importVisible, setTrue: openImportVisible } = useBoolean();
 const { bool: previewVisible, setTrue: openPreviewVisible } = useBoolean();
 
-const {
-  columns,
-  columnChecks,
-  data,
-  getData,
-  getDataByPage,
-  loading,
-  mobilePagination,
-  searchParams,
-  resetSearchParams
-} = useTable({
-  apiFn: fetchGetGenTableList,
-  showTotal: true,
-  apiParams: {
-    pageNum: 1,
-    pageSize: 10,
-    // if you want to use the searchParams in Form, you need to define the following properties, and the value is null
-    // the value can not be undefined, otherwise the property in Form will not be reactive
-    dataName: null,
-    tableName: null,
-    tableComment: null,
-    params: {}
-  },
-  columns: () => [
-    {
-      type: 'selection',
-      align: 'center',
-      width: 48
-    },
-    {
-      key: 'index',
-      title: $t('common.index'),
-      align: 'center',
-      width: 64
-    },
-    {
-      key: 'dataName',
-      title: '数据源',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'tableName',
-      title: '表名称',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'tableComment',
-      title: '表描述',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'className',
-      title: '实体',
-      align: 'center',
-      minWidth: 120
-    },
-    {
-      key: 'createTime',
-      title: '创建时间',
-      align: 'center',
-      minWidth: 150
-    },
-    {
-      key: 'updateTime',
-      title: '更新时间',
-      align: 'center',
-      minWidth: 150
-    },
-    {
-      key: 'operate',
-      title: $t('common.operate'),
-      align: 'center',
-      width: 300,
-      render: row => {
-        const previewBtn = () => {
-          return (
-            <ButtonIcon
-              type="primary"
-              text
-              icon="material-symbols:visibility-outline"
-              tooltipContent="预览"
-              onClick={() => handlePreview(row.tableId!)}
-            />
-          );
-        };
-
-        const editBtn = () => {
-          return (
-            <ButtonIcon
-              type="primary"
-              text
-              icon="material-symbols:drive-file-rename-outline-outline"
-              tooltipContent={$t('common.edit')}
-              onClick={() => edit(row.tableId!)}
-            />
-          );
-        };
-
-        const refreshBtn = () => {
-          return (
-            <ButtonIcon
-              type="primary"
-              text
-              icon="material-symbols:sync-outline"
-              tooltipContent="同步"
-              onClick={() => refresh(row.tableId!)}
-            />
-          );
-        };
-
-        const genCodeBtn = () => {
-          return (
-            <ButtonIcon
-              type="primary"
-              text
-              icon="material-symbols:download-rounded"
-              tooltipContent="生成代码"
-              onClick={() => handleGenCode(row)}
-            />
-          );
-        };
-
-        const deleteBtn = () => {
-          return (
-            <ButtonIcon
-              type="error"
-              text
-              icon="material-symbols:delete-outline"
-              tooltipContent={$t('common.delete')}
-              popconfirmContent={$t('common.confirmDelete')}
-              onPositiveClick={() => handleDelete(row.tableId!)}
-            />
-          );
-        };
-
-        const buttons = [];
-        if (hasAuth('tool:gen:preview')) buttons.push(previewBtn());
-        if (hasAuth('tool:gen:edit')) buttons.push(editBtn());
-        if (hasAuth('tool:gen:refresh')) buttons.push(refreshBtn());
-        if (hasAuth('tool:gen:genCode')) buttons.push(genCodeBtn());
-        if (hasAuth('tool:gen:delete')) buttons.push(deleteBtn());
-
-        return (
-          <div class="flex-center gap-8px">
-            {buttons.map((btn, index) => (
-              <>
-                {index !== 0 && <NDivider vertical />}
-                {btn}
-              </>
-            ))}
-          </div>
-        );
-      }
-    }
-  ]
+const searchParams = ref<Api.Tool.GenTableSearchParams>({
+  pageNum: 1,
+  pageSize: 10,
+  dataName: null,
+  tableName: null,
+  tableComment: null,
+  params: {}
 });
+
+const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagination, scrollX } =
+  useNaivePaginatedTable({
+    api: () => fetchGetGenTableList(searchParams.value),
+    transform: response => defaultTransform(response),
+    onPaginationParamsChange: params => {
+      searchParams.value.pageNum = params.page;
+      searchParams.value.pageSize = params.pageSize;
+    },
+    columns: () => [
+      {
+        type: 'selection',
+        align: 'center',
+        width: 48
+      },
+      {
+        key: 'index',
+        title: $t('common.index'),
+        align: 'center',
+        width: 64,
+        render: (_, index) => index + 1
+      },
+      {
+        key: 'dataName',
+        title: '数据源',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'tableName',
+        title: '表名称',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'tableComment',
+        title: '表描述',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'className',
+        title: '实体',
+        align: 'center',
+        minWidth: 120
+      },
+      {
+        key: 'createTime',
+        title: '创建时间',
+        align: 'center',
+        minWidth: 150
+      },
+      {
+        key: 'updateTime',
+        title: '更新时间',
+        align: 'center',
+        minWidth: 150
+      },
+      {
+        key: 'operate',
+        title: $t('common.operate'),
+        align: 'center',
+        width: 300,
+        render: row => {
+          const previewBtn = () => {
+            return (
+              <ButtonIcon
+                type="primary"
+                text
+                icon="material-symbols:visibility-outline"
+                tooltipContent="预览"
+                onClick={() => handlePreview(row.tableId!)}
+              />
+            );
+          };
+
+          const editBtn = () => {
+            return (
+              <ButtonIcon
+                type="primary"
+                text
+                icon="material-symbols:drive-file-rename-outline-outline"
+                tooltipContent={$t('common.edit')}
+                onClick={() => edit(row.tableId!)}
+              />
+            );
+          };
+
+          const refreshBtn = () => {
+            return (
+              <ButtonIcon
+                type="primary"
+                text
+                icon="material-symbols:sync-outline"
+                tooltipContent="同步"
+                onClick={() => refresh(row.tableId!)}
+              />
+            );
+          };
+
+          const genCodeBtn = () => {
+            return (
+              <ButtonIcon
+                type="primary"
+                text
+                icon="material-symbols:download-rounded"
+                tooltipContent="生成代码"
+                onClick={() => handleGenCode(row)}
+              />
+            );
+          };
+
+          const deleteBtn = () => {
+            return (
+              <ButtonIcon
+                type="error"
+                text
+                icon="material-symbols:delete-outline"
+                tooltipContent={$t('common.delete')}
+                popconfirmContent={$t('common.confirmDelete')}
+                onPositiveClick={() => handleDelete(row.tableId!)}
+              />
+            );
+          };
+
+          const buttons = [];
+          if (hasAuth('tool:gen:preview')) buttons.push(previewBtn());
+          if (hasAuth('tool:gen:edit')) buttons.push(editBtn());
+          if (hasAuth('tool:gen:refresh')) buttons.push(refreshBtn());
+          if (hasAuth('tool:gen:genCode')) buttons.push(genCodeBtn());
+          if (hasAuth('tool:gen:delete')) buttons.push(deleteBtn());
+
+          return (
+            <div class="flex-center gap-8px">
+              {buttons.map((btn, index) => (
+                <>
+                  {index !== 0 && <NDivider vertical />}
+                  {btn}
+                </>
+              ))}
+            </div>
+          );
+        }
+      }
+    ]
+  });
 
 const {
   drawerVisible,
@@ -195,7 +190,7 @@ const {
   onBatchDeleted,
   onDeleted
   // closeDrawer
-} = useTableOperate(data, getData);
+} = useTableOperate(data, 'tableId', getData);
 
 async function handleBatchDelete() {
   // request
@@ -212,7 +207,7 @@ async function handleDelete(id: CommonType.IdType) {
 }
 
 function edit(id: CommonType.IdType) {
-  handleEdit('tableId', id);
+  handleEdit(id);
 }
 
 async function refresh(id: CommonType.IdType) {
@@ -261,12 +256,7 @@ getDataNames();
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-12px overflow-hidden lt-sm:overflow-auto">
-    <GenTableSearch
-      v-model:model="searchParams"
-      :options="dataNameOptions"
-      @reset="resetSearchParams"
-      @search="getDataByPage"
-    />
+    <GenTableSearch v-model:model="searchParams" :options="dataNameOptions" @search="getDataByPage" />
     <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
     <NCard title="代码生成" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
@@ -287,13 +277,13 @@ getDataNames();
               @click="() => handleGenCode()"
             >
               <template #icon>
-                <icon-material-symbols:download-rounded class="text-icon" />
+                <icon-material-symbols-download-rounded class="text-icon" />
               </template>
               生成代码
             </NButton>
             <NButton size="small" ghost type="primary" @click="handleImport">
               <template #icon>
-                <icon-material-symbols:upload-rounded class="text-icon" />
+                <icon-material-symbols-upload-rounded class="text-icon" />
               </template>
               导入
             </NButton>
@@ -306,7 +296,7 @@ getDataNames();
         :data="data"
         size="small"
         :flex-height="!appStore.isMobile"
-        :scroll-x="1200"
+        :scroll-x="scrollX"
         :loading="loading"
         remote
         :row-key="row => row.tableId"

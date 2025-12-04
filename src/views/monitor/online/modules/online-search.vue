@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { toRaw } from 'vue';
+import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
 
@@ -7,7 +9,6 @@ defineOptions({
 });
 
 interface Emits {
-  (e: 'reset'): void;
   (e: 'search'): void;
 }
 
@@ -17,9 +18,16 @@ const { formRef, validate, restoreValidation } = useNaiveForm();
 
 const model = defineModel<Api.Monitor.OnlineUserSearchParams>('model', { required: true });
 
+const defaultModel = jsonClone(toRaw(model.value));
+
+function resetModel() {
+  Object.assign(model.value, defaultModel);
+}
+
 async function reset() {
   await restoreValidation();
-  emit('reset');
+  resetModel();
+  emit('search');
 }
 
 async function search() {
