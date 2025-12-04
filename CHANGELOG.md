@@ -1,5 +1,28 @@
 # 更新日志
 
+## [v2.0.0-beta.1](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.2.1...v2.0.0-beta.1) (2025-12-04)
+
+### &nbsp;&nbsp;&nbsp;🚀 新功能
+
+- **projects**:
+  - 项目适配 Soybean 2.0 &nbsp;-&nbsp; by @m-xlsea
+- **components**:
+  - 新增预设主题支持 &nbsp;-&nbsp; by @m-xlsea [<samp>(c1063)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/c1063e3e)
+- **hooks**:
+  - 完成表格 Hooks 改造 &nbsp;-&nbsp; by @m-xlsea [<samp>(46996)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4699654f)
+  - 优化树形表格 hooks 封装 &nbsp;-&nbsp; by @m-xlsea [<samp>(ccbb7)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/ccbb72c0)
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug 修复
+
+- **projects**:
+  - 修复登录页面 logo 颜色问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(27cae)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/27cae756)
+  - 修复路由 name 与 path 不一致激活菜单异常问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(789a6)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/789a6bb9)
+
+### &nbsp;&nbsp;&nbsp;❤️ 贡献者
+
+[![m-xlsea](https://github.com/m-xlsea.png?size=48)](https://github.com/m-xlsea)&nbsp;&nbsp;[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;[![wenyuanw](https://github.com/wenyuanw.png?size=48)](https://github.com/wenyuanw)&nbsp;&nbsp;[![CyberShen](https://github.com/CyberShen.png?size=48)](https://github.com/CyberShen)&nbsp;&nbsp;[![Lruihao](https://github.com/Lruihao.png?size=48)](https://github.com/Lruihao)&nbsp;&nbsp;
+[Azir-11](mailto:2075125282@qq.com),&nbsp;[刘璐](mailto:hi.alue@qq.com),&nbsp;[CyberShen123](mailto:s.lijun@qq.com),&nbsp;[whyang](mailto:whyang9701@gmail.com),&nbsp;[HongxuanG](mailto:1359774872@qq.com),&nbsp;[NicholasLD](mailto:878639947@qq.com),&nbsp;
+
 ## [v1.2.1](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v1.2.0...v1.2.1) (2025-10-29)
 
 ### &nbsp;&nbsp;&nbsp;🚀 新功能
@@ -34,7 +57,7 @@
 
 - **projects**: 优化注释规范 &nbsp;-&nbsp; by @m-xlsea [<samp>(4139a)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4139a729)
 
-### &nbsp;&nbsp;&nbsp;❤️ 贡献者
+### &nbsp;&nbsp;&nbsp;❤️ 贡献值
 
 [![m-xlsea](https://github.com/m-xlsea.png?size=48)](https://gitee.com/xlsea)&nbsp;&nbsp;[![Elio-An](https://github.com/Elio-An.png?size=48)](https://gitee.com/elio-an)
 
