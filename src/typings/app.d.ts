@@ -754,6 +754,7 @@ declare namespace App {
             perms: string;
             component: string;
             path: string;
+            layout: string;
             externalPath: string;
             query: string;
             iframeQuery: string;
@@ -778,6 +779,7 @@ declare namespace App {
             permsTip: string;
             componentTip: string;
             pathTip: string;
+            layoutTip: string;
             form: {
               parentId: FormMsg;
               menuType: FormMsg;

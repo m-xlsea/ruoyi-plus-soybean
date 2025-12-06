@@ -733,6 +733,7 @@ const local: App.I18n.Schema = {
         perms: 'Permission Code',
         component: 'Component Path',
         path: 'Route Path',
+        layout: 'Layout',
         externalPath: 'External Path',
         query: 'Route Parameters',
         iframeQuery: 'Iframe Address',
@@ -760,6 +761,8 @@ const local: App.I18n.Schema = {
           'The component path to access, such as: `system/user/index`, which is in the `views` directory by default',
         pathTip:
           'Router path，Example：`user`，If the external network address needs to be accessed in the internal link,then  `http(s)://` beginning',
+        layoutTip:
+          'Default Layout: A layout that includes common sections such as the global header, sidebar, footer, etc;\nBlank Layout: A layout without any common sections, typically used for pages like the login page',
         form: {
           parentId: {
             required: 'Please select Parent Menu',

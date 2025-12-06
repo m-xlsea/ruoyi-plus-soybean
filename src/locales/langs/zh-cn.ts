@@ -730,6 +730,7 @@ const local: App.I18n.Schema = {
         perms: '权限字符',
         component: '组件路径',
         path: '路由地址',
+        layout: '布局方式',
         externalPath: '外链地址',
         query: '路由参数',
         iframeQuery: 'iframe 地址',
@@ -753,8 +754,8 @@ const local: App.I18n.Schema = {
         statusTip: '选择停用则路由将不会出现在侧边栏，也不能被访问',
         permsTip: "控制器中定义的权限字符，如：`{'@'}SaCheckPermission('system:user:list')`",
         componentTip: '访问的组件路径，如：`system/user/index`，默认在`views`目录下',
-        pathTip:
-          'Router path，Example：`user`，If the external network address needs to be accessed in the internal link,then  `http(s)://` beginning',
+        pathTip: '访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头',
+        layoutTip: '默认布局：具有公共部分的布局，如全局头部、侧边栏、底部等\n空白布局：无公共部分的布局，如登录页',
         form: {
           parentId: {
             required: '请选择上级菜单',

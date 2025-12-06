@@ -2,7 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { jsonClone } from '@sa/utils';
-import { menuIconTypeOptions, menuIsFrameOptions, menuTypeOptions } from '@/constants/business';
+import { menuIconTypeOptions, menuIsFrameOptions, menuLayoutOptions, menuTypeOptions } from '@/constants/business';
 import { fetchCreateMenu, fetchUpdateMenu } from '@/service/api/system';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { getLocalMenuIcons } from '@/utils/icon';
@@ -41,6 +41,7 @@ const visible = defineModel<boolean>('visible', {
 
 const defaultIcon = import.meta.env.VITE_MENU_ICON;
 
+const layoutType = ref<string>('0');
 const iconType = ref<Api.System.IconType>('1');
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule, createNumberRequiredRule } = useFormRules();
@@ -101,6 +102,9 @@ const isExternalType = computed(() => model.value.isFrame === '0');
 // 内部类型
 const isInternalType = computed(() => model.value.isFrame === '1');
 
+// 空白布局
+const isBlankLayout = computed(() => layoutType.value === '1');
+
 // iframe类型
 const isIframeType = computed(() => model.value.isFrame === '2');
 
@@ -122,12 +126,17 @@ const localIconOptions = localIcons.map<SelectOption>(item => ({
 function handleInitModel() {
   queryList.value = [];
   iconType.value = '1';
+  layoutType.value = '0';
   model.value = createDefaultModel();
 
   if (props.operateType === 'edit' && props.rowData) {
     Object.assign(model.value, jsonClone(props.rowData));
-    if (isMenu.value && isInternalType.value) {
-      model.value.component = model.value.component?.slice(0, -6);
+    const component = model.value.component;
+    if (component?.startsWith('layout.blank$view.')) {
+      layoutType.value = '1';
+      model.value.component = component?.slice(18, component.length)?.replaceAll('_', '/');
+    } else if (isMenu.value && isInternalType.value) {
+      model.value.component = component?.slice(0, -6);
     }
     iconType.value = model.value.icon?.startsWith('local-icon-') ? '2' : '1';
 
@@ -161,6 +170,9 @@ function processComponent(component: string | null | undefined): string {
   }
   if (isIframeType.value || isExternalType.value) {
     return 'FrameView';
+  }
+  if (isMenu.value && isBlankLayout) {
+    return `layout.blank$view.${component?.replaceAll('/', '_')}`;
   }
   if (isMenu.value && isInternalType.value) {
     return component?.endsWith('/index') ? component : `${component || ''}/index`;
@@ -252,6 +264,17 @@ watch(visible, () => {
   }
 });
 
+function handleLayoutChange(value: string) {
+  model.value.visible = value as Api.Common.VisibleStatus;
+}
+
+function handleParentIdChange(value?: CommonType.IdType | null) {
+  if (value !== 0 && isBlankLayout) {
+    layoutType.value = '0';
+    model.value.visible = '0';
+  }
+}
+
 function onCreate() {
   return {
     key: '',
@@ -271,9 +294,10 @@ function onCreate() {
               :immediate="false"
               :options="treeData as []"
               :placeholder="$t('page.system.menu.form.parentId.required')"
+              @update:value="handleParentIdChange"
             />
           </NFormItemGi>
-          <NFormItemGi v-if="!isBtn" :span="24" :label="$t('page.system.menu.menuType')" path="menuType">
+          <NFormItemGi v-if="!isBtn" :span="12" :label="$t('page.system.menu.menuType')" path="menuType">
             <NRadioGroup v-model:value="model.menuType">
               <NRadioButton
                 v-for="item in menuTypeOptions.filter(item => item.value !== 'F')"
@@ -281,6 +305,17 @@ function onCreate() {
                 :value="item.value"
                 :label="item.label"
               />
+            </NRadioGroup>
+          </NFormItemGi>
+          <NFormItemGi v-if="isMenu && model.parentId === 0" :span="12" path="layout">
+            <template #label>
+              <div class="flex-center">
+                <FormTip :content="$t('page.system.menu.layoutTip')" />
+                <span>{{ $t('page.system.menu.layout') }}</span>
+              </div>
+            </template>
+            <NRadioGroup v-model:value="layoutType" @update:value="handleLayoutChange">
+              <NRadio v-for="item in menuLayoutOptions" :key="item.value" :value="item.value" :label="item.label" />
             </NRadioGroup>
           </NFormItemGi>
           <NFormItemGi span="24" :label="$t('page.system.menu.menuName')" path="menuName">
@@ -346,8 +381,8 @@ function onCreate() {
             </template>
             <NRadioGroup v-model:value="model.isCache">
               <NSpace>
-                <NRadio value="0" label="是" />
-                <NRadio value="1" label="否" />
+                <NRadio value="0" :label="$t('common.yesOrNo.yes')" />
+                <NRadio value="1" :label="$t('common.yesOrNo.no')" />
               </NSpace>
             </NRadioGroup>
           </NFormItemGi>
@@ -440,7 +475,7 @@ function onCreate() {
                 <span>{{ $t('page.system.menu.visible') }}</span>
               </div>
             </template>
-            <DictRadio v-model:value="model.visible" dict-code="sys_show_hide" />
+            <DictRadio v-model:value="model.visible" dict-code="sys_show_hide" :disabled="isBlankLayout" />
           </NFormItemGi>
           <NFormItemGi :span="12" path="status">
             <template #label>

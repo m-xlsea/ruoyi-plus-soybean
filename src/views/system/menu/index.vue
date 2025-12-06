@@ -462,7 +462,11 @@ const renderIframeQuery = (queryParam: string) => {
               {{ renderMenuName(currentMenu.menuName) }}
             </NDescriptionsItem>
             <NDescriptionsItem v-if="isMenu" :label="$t('page.system.menu.component')">
-              {{ currentMenu.component }}
+              {{
+                currentMenu.component?.startsWith('layout.blank$view.')
+                  ? `${currentMenu.component?.slice(18, currentMenu.component.length)?.replaceAll('_', '/')}/index`
+                  : currentMenu.component
+              }}
             </NDescriptionsItem>
             <NDescriptionsItem
               :label="!isExternalType ? $t('page.system.menu.path') : $t('page.system.menu.externalPath')"

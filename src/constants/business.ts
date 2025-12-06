@@ -42,6 +42,14 @@ export const menuIconTypeRecord: Record<Api.System.IconType, string> = {
 
 export const menuIconTypeOptions = transformRecordToOption(menuIconTypeRecord);
 
+/** menu layout */
+export const menuLayoutRecord: Record<Api.System.MenuLayout, string> = {
+  '0': '默认布局',
+  '1': '空白布局'
+};
+
+export const menuLayoutOptions = transformRecordToOption(menuLayoutRecord);
+
 /** gen java type */
 export const genJavaTypeRecord: Record<Api.Tool.JavaType, string> = {
   Long: 'Long',
