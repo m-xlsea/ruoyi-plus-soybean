@@ -188,7 +188,10 @@ const local: App.I18n.Schema = {
         collapsedWidth: 'Sider Collapsed Width',
         mixWidth: 'Mix Sider Width',
         mixCollapsedWidth: 'Mix Sider Collapse Width',
-        mixChildMenuWidth: 'Mix Child Menu Width'
+        mixChildMenuWidth: 'Mix Child Menu Width',
+        autoSelectFirstMenu: 'Auto Select First Submenu',
+        autoSelectFirstMenuTip:
+          'When a first-level menu is clicked, the first submenu is automatically selected and navigated to the deepest level'
       },
       footer: {
         title: 'Footer Settings',
@@ -298,6 +301,7 @@ const local: App.I18n.Schema = {
     exception_500: '500',
     tool: 'System Tools',
     tool_gen: 'Code Generation',
+    about: 'About',
     workflow: 'Workflow',
     workflow_category: 'Workflow Category',
     workflow_design: 'Process Design',
@@ -745,6 +749,7 @@ const local: App.I18n.Schema = {
         perms: 'Permission Code',
         component: 'Component Path',
         path: 'Route Path',
+        layout: 'Layout',
         externalPath: 'External Path',
         query: 'Route Parameters',
         iframeQuery: 'Iframe Address',
@@ -772,6 +777,8 @@ const local: App.I18n.Schema = {
           'The component path to access, such as: `system/user/index`, which is in the `views` directory by default',
         pathTip:
           'Router path，Example：`user`，If the external network address needs to be accessed in the internal link,then  `http(s)://` beginning',
+        layoutTip:
+          'Default Layout: A layout that includes common sections such as the global header, sidebar, footer, etc;\nBlank Layout: A layout without any common sections, typically used for pages like the login page',
         form: {
           parentId: {
             required: 'Please select Parent Menu',
@@ -1213,6 +1220,20 @@ const local: App.I18n.Schema = {
         importSuccess: 'Import successful',
         statusChangeSuccess: 'Status modified successfully'
       }
+    },
+    about: {
+      title: 'About',
+      introduction: `RuoYi-Plus-Soybean is a modern, enterprise-level multi-tenant management system. It combines the powerful backend capabilities of RuoYi-Vue-Plus with the modern frontend features of Soybean Admin, providing developers with a complete enterprise management solution.`,
+      projectInfo: {
+        title: 'Project Info',
+        version: 'Version',
+        latestBuildTime: 'Latest Build Time',
+        documentLink: 'Document Link',
+        previewLink: 'Preview Link',
+        repositoryLink: 'Repository Link'
+      },
+      prdDep: 'Production Dependency',
+      devDep: 'Development Dependency'
     }
   },
   form: {
@@ -1247,7 +1268,9 @@ const local: App.I18n.Schema = {
     closeOther: 'Close Other',
     closeLeft: 'Close Left',
     closeRight: 'Close Right',
-    closeAll: 'Close All'
+    closeAll: 'Close All',
+    pin: 'Pin Tab',
+    unpin: 'Unpin Tab'
   },
   icon: {
     themeConfig: 'Theme Configuration',

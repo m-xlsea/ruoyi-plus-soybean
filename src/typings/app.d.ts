@@ -96,6 +96,8 @@ declare namespace App {
         mixCollapsedWidth: number;
         /** Child menu width when the layout is 'vertical-mix', 'top-hybrid-sidebar-first', or 'top-hybrid-header-first' */
         mixChildMenuWidth: number;
+        /** Whether to auto select the first submenu */
+        autoSelectFirstMenu: boolean;
       };
       /** Footer */
       footer: {
@@ -296,7 +298,7 @@ declare namespace App {
     type FormRule = import('naive-ui').FormItemRule;
 
     /** The global dropdown key */
-    type DropdownKey = 'closeCurrent' | 'closeOther' | 'closeLeft' | 'closeRight' | 'closeAll';
+    type DropdownKey = 'closeCurrent' | 'closeOther' | 'closeLeft' | 'closeRight' | 'closeAll' | 'pin' | 'unpin';
   }
 
   /**
@@ -468,6 +470,8 @@ declare namespace App {
             mixWidth: string;
             mixCollapsedWidth: string;
             mixChildMenuWidth: string;
+            autoSelectFirstMenu: string;
+            autoSelectFirstMenuTip: string;
           };
           footer: {
             title: string;
@@ -754,6 +758,7 @@ declare namespace App {
             perms: string;
             component: string;
             path: string;
+            layout: string;
             externalPath: string;
             query: string;
             iframeQuery: string;
@@ -778,6 +783,7 @@ declare namespace App {
             permsTip: string;
             componentTip: string;
             pathTip: string;
+            layoutTip: string;
             form: {
               parentId: FormMsg;
               menuType: FormMsg;
@@ -1006,6 +1012,20 @@ declare namespace App {
             importSuccess: string;
             statusChangeSuccess: string;
           };
+        };
+        about: {
+          title: string;
+          introduction: string;
+          projectInfo: {
+            title: string;
+            version: string;
+            latestBuildTime: string;
+            documentLink: string;
+            previewLink: string;
+            repositoryLink: string;
+          };
+          prdDep: string;
+          devDep: string;
         };
       };
       form: {

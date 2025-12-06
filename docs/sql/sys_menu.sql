@@ -27,12 +27,15 @@ UPDATE `sys_menu` SET `icon` = 'tabler:login-2', `menu_name` = 'route.monitor_lo
 UPDATE `sys_menu` SET `icon` = 'gg:debug', `menu_name` = 'route.demo_demo' WHERE `menu_id` = 1500;
 UPDATE `sys_menu` SET `icon` = 'gg:debug', `menu_name` = 'route.demo_tree' WHERE `menu_id` = 1506;
 UPDATE `sys_menu` SET `path` = 'oss/config', `component` = 'system/oss-config/index', `icon` = 'hugeicons:configuration-01', `menu_name` = 'route.system_oss-config' WHERE `menu_id` = 133;
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query_param`, `is_frame`, `is_cache`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_dept`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (9, 'route.about', 0, 99, 'about', 'about/index', '', 1, 1, 'C', '0', '0', '', 'fluent:book-information-24-regular', 103, 1, sysdate(), null, null, '关于页面');
 
 -- IFrame 类型
 UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = '{"url": "https://ruoyi.xlsea.cn/admin/"}', `is_frame` = 2, `icon` = 'bx:bxl-spring-boot', `menu_name` = 'menu.monitor_admin' WHERE `menu_id` = 117;
 UPDATE `sys_menu` SET `component` = 'FrameView', `query_param` = '{"url": "https://preview.snailjob.opensnail.com/"}', `is_frame` = 2, `icon` = 'gridicons:scheduled', `menu_name` = 'menu.monitor_snail-job' WHERE `menu_id` = 120;
 -- 外链类型
-UPDATE `sys_menu` SET `path` = 'https://gitee.com/xlsea/ruoyi-plus-soybean', `component` = 'FrameView', `icon` = 'local-icon-gitee', `menu_name` = 'RuoYi-Plus-Soybean' WHERE `menu_id` = 4;
+UPDATE `sys_menu` SET `menu_name` = 'RuoYi-Vue-Plus', `order_num` = 100, `path` = 'https://gitee.com/dromara/RuoYi-Vue-Plus', `component` = 'FrameView', `remark` = 'RuoYi-Vue-Plus 仓库地址' WHERE `menu_id` = 4;
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query_param`, `is_frame`, `is_cache`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_dept`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (7, 'Soybean Admin', 0, 100, 'https://github.com/soybeanjs', 'FrameView', '', 0, 0, 'M', '0', '0', '', 'mdi:github', 103, 1, sysdate(), null, null, 'Soybean Admin 仓库地址');
+INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`, `component`, `query_param`, `is_frame`, `is_cache`, `menu_type`, `visible`, `status`, `perms`, `icon`, `create_dept`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES (8, 'RuoYi-Plus-Soybean', 0, 100, 'https://gitee.com/xlsea/ruoyi-plus-soybean', 'FrameView', '', 0, 0, 'M', '0', '0', '', 'local-icon-gitee', 103, 1, sysdate(), null, null, 'RuoYi-Plus-Soybean 仓库地址');
 
 -- plus-ui 需要禁用的页面
 UPDATE `sys_menu` SET `status` = '1' WHERE `menu_id` IN ( '116', '130', '131', '132' );

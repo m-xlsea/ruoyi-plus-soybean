@@ -236,6 +236,14 @@ declare namespace Api {
     type IconType = '1' | '2';
 
     /**
+     * menu layout
+     *
+     * - "0": "默认布局"
+     * - "1": "空白布局"
+     */
+    type MenuLayout = '0' | '1';
+
+    /**
      * menu type
      *
      * - "M": "目录"

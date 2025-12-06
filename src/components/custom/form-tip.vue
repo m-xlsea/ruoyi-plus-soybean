@@ -15,7 +15,7 @@ defineProps<Props>();
 <template>
   <NTooltip trigger="hover">
     <template #default>
-      <span>{{ content }}</span>
+      <span class="whitespace-pre-wrap">{{ content }}</span>
     </template>
     <template #trigger>
       <div class="cursor-pointer pr-3px">
