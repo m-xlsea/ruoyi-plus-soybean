@@ -111,6 +111,9 @@ const isIframeType = computed(() => model.value.isFrame === '2');
 // 本地图标类型
 const isLocalIcon = computed(() => iconType.value === '2');
 
+// 布局类型禁用
+const layoutDisabled = computed(() => !(isMenu.value && model.value.parentId === 0));
+
 // 本地图标
 const localIcons = getLocalMenuIcons();
 const localIconOptions = localIcons.map<SelectOption>(item => ({
@@ -171,7 +174,7 @@ function processComponent(component: string | null | undefined): string {
   if (isIframeType.value || isExternalType.value) {
     return 'FrameView';
   }
-  if (isMenu.value && isBlankLayout) {
+  if (isMenu.value && isBlankLayout.value) {
     return `layout.blank$view.${component?.replaceAll('/', '_')}`;
   }
   if (isMenu.value && isInternalType.value) {
@@ -257,6 +260,18 @@ watch(
   }
 );
 
+watch(
+  layoutDisabled,
+  () => {
+    if (!layoutDisabled.value) {
+      return;
+    }
+    layoutType.value = '0';
+    model.value.visible = '0';
+  },
+  { immediate: true }
+);
+
 watch(visible, () => {
   if (visible.value) {
     handleInitModel();
@@ -266,13 +281,6 @@ watch(visible, () => {
 
 function handleLayoutChange(value: string) {
   model.value.visible = value as Api.Common.VisibleStatus;
-}
-
-function handleParentIdChange(value?: CommonType.IdType | null) {
-  if (value !== 0 && isBlankLayout) {
-    layoutType.value = '0';
-    model.value.visible = '0';
-  }
 }
 
 function onCreate() {
@@ -294,7 +302,6 @@ function onCreate() {
               :immediate="false"
               :options="treeData as []"
               :placeholder="$t('page.system.menu.form.parentId.required')"
-              @update:value="handleParentIdChange"
             />
           </NFormItemGi>
           <NFormItemGi v-if="!isBtn" :span="12" :label="$t('page.system.menu.menuType')" path="menuType">
@@ -307,14 +314,14 @@ function onCreate() {
               />
             </NRadioGroup>
           </NFormItemGi>
-          <NFormItemGi v-if="isMenu && model.parentId === 0" :span="12" path="layout">
+          <NFormItemGi :span="12" path="layout">
             <template #label>
               <div class="flex-center">
                 <FormTip :content="$t('page.system.menu.layoutTip')" />
                 <span>{{ $t('page.system.menu.layout') }}</span>
               </div>
             </template>
-            <NRadioGroup v-model:value="layoutType" @update:value="handleLayoutChange">
+            <NRadioGroup v-model:value="layoutType" :disabled="layoutDisabled" @update:value="handleLayoutChange">
               <NRadio v-for="item in menuLayoutOptions" :key="item.value" :value="item.value" :label="item.label" />
             </NRadioGroup>
           </NFormItemGi>
