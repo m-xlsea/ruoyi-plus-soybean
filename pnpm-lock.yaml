@@ -33,8 +33,8 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5
       '@umoteam/editor':
-        specifier: ^8.1.0
-        version: 8.1.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
+        specifier: ^9.0.1
+        version: 9.0.1(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       '@vueuse/core':
         specifier: 14.1.0
         version: 14.1.0(vue@3.5.25(typescript@5.9.3))
@@ -1897,12 +1897,22 @@ packages:
   '@umoteam/editor-external@8.1.0':
     resolution: {integrity: sha512-YySP20GgOl9bqDu5F7fekSBGAZnR6O2I5omC140jB38uvswTVIMRE4fGL1E5fAI3rOocQqW5UbJvKIZYjAkoGQ==}
 
+  '@umoteam/editor-external@9.0.0':
+    resolution: {integrity: sha512-cAioi0SK3qPrIm9c7eqJimSBGztxd+la6OLihVCVoH6dawA9KCuZ62SHQ7lsl/rdRHp0VL0aYbW5NxFlEUpbJA==}
+
   '@umoteam/editor@8.1.0':
     resolution: {integrity: sha512-yvHXn5lOgeplS39lpjNh5nhCMYEq35jY4qyymQF5eavqtD5uLBLxZ7QWTvbPyAHtAiMCpNLXoRdOVeeZ4Oht3w==}
     engines: {node: '>=18.0.0'}
 
+  '@umoteam/editor@9.0.1':
+    resolution: {integrity: sha512-KReeYw6g9/BpwZXlJPr8+fZd4IuG1jS9a9dFTqgjRp/tx4q6A9gMod8RKqc3dZScpuaRb61vN6PO7300rbv35w==}
+    engines: {node: '>=18.0.0'}
+
   '@umoteam/viewer@0.1.9':
     resolution: {integrity: sha512-aQ3DDbWm/V/wC3SFhCanqKl1XTW2xMzdSbEmS2vE8y1dwI18bgIeiKZnyWcj2aXXsxVmWuQMcnJ367DDengozg==}
+
+  '@umoteam/viewer@0.3.0':
+    resolution: {integrity: sha512-0YJMnzN86AdXWbHUWluHmfQZpzUNcxHIDfwr/Qw+OTwkeQsTHLicabqm4t66MdCIAtgMeybAejQawRwBxbrknQ==}
 
   '@unocss/config@66.5.10':
     resolution: {integrity: sha512-udBhfMe+2MU70ZdjnRLnwLQ+0EHYJ4f5JjjvHsfmQ0If4KeYmSStWBuX+/LHNQidhl487JiwW1lBDQ8pKHmbiw==}
@@ -2833,6 +2843,9 @@ packages:
   default-browser@5.4.0:
     resolution: {integrity: sha512-XDuvSq38Hr1MdN47EDvYtx3U0MTqpCEn+F6ft8z2vYDzMrvQhVp0ui9oQdqW3MvK3vqUETglt1tVGgjLuJ5izg==}
     engines: {node: '>=18'}
+
+  default-passive-events@4.0.0:
+    resolution: {integrity: sha512-0whk/GqfDOjc0AJIpacXUSqX6kV9TjL3GFSXIxFvuXQYcK+bEdJ6rpJnAEfP4YYMYWibM+jhlwmdlVrlifoepg==}
 
   define-data-property@1.1.4:
     resolution: {integrity: sha512-rBMvIzlpA8v6E+SJZoo++HAYqsLrkg7MSfIinMPFhmkorw7X+dOXVJQs+QT69zGkzMyfDnIMN2Wid1+NbL3T+A==}
@@ -4459,6 +4472,9 @@ packages:
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
+
+  pure-svg-code@1.0.6:
+    resolution: {integrity: sha512-uxq2BMTdnKW7jDghpLJrczCd9KDOdyghFtEEpfomqMJkUM83/N+W7sFJPJ3AxBf0mJ3xtxAycl6NW8p6F53jEw==}
 
   qrcode-svg@1.1.0:
     resolution: {integrity: sha512-XyQCIXux1zEIA3NPb0AeR8UMYvXZzWEhgdBgBjH9gO7M48H9uoHzviNz8pXw3UzrAcxRRRn9gxHewAVK7bn9qw==}
@@ -6854,6 +6870,18 @@ snapshots:
       - typescript
       - vue
 
+  '@umoteam/editor-external@9.0.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))':
+    dependencies:
+      '@umoteam/editor': 9.0.1(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
+      '@umoteam/viewer': 0.3.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - prosemirror-model
+      - prosemirror-state
+      - prosemirror-view
+      - typescript
+      - vue
+
   '@umoteam/editor@8.1.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))':
     dependencies:
       '@eslint/object-schema': 2.1.7
@@ -6934,11 +6962,108 @@ snapshots:
       - typescript
       - vue
 
+  '@umoteam/editor@9.0.1(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))':
+    dependencies:
+      '@eslint/object-schema': 2.1.7
+      '@imgly/background-removal': 1.5.5
+      '@tiptap-extend/columns': 2.1.6(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)
+      '@tiptap/core': 2.11.5(@tiptap/pm@2.11.5)
+      '@tiptap/extension-bold': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-bubble-menu': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-bullet-list': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-character-count': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-code-block': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-code-block-lowlight': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/extension-code-block@2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)(highlight.js@11.11.1)(lowlight@3.3.0)
+      '@tiptap/extension-collaboration': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)(y-prosemirror@1.3.7(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27))
+      '@tiptap/extension-color': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/extension-text-style@2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5)))
+      '@tiptap/extension-document': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-dropcursor': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-focus': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-font-family': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/extension-text-style@2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5)))
+      '@tiptap/extension-heading': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-highlight': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-history': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-horizontal-rule': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-image': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-link': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-mention': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)(@tiptap/suggestion@2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5))
+      '@tiptap/extension-ordered-list': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-placeholder': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-subscript': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-superscript': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-table': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-table-cell': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-table-header': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-table-row': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-task-item': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/extension-task-list': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-text-align': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-text-style': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-typography': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/extension-underline': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))
+      '@tiptap/pm': 2.11.5
+      '@tiptap/starter-kit': 2.11.5
+      '@tiptap/suggestion': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)
+      '@tiptap/vue-3': 2.11.5(@tiptap/core@2.11.5(@tiptap/pm@2.11.5))(@tiptap/pm@2.11.5)(vue@3.5.25(typescript@5.9.3))
+      '@tool-belt/type-predicates': 1.4.0
+      '@types/svg64': 1.1.2
+      '@umoteam/editor-external': 9.0.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
+      '@umoteam/viewer': 0.3.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
+      '@vueuse/core': 11.3.0(vue@3.5.25(typescript@5.9.3))
+      buffer-image-size: 0.6.4
+      dom-to-image-more: 3.7.2
+      es-drager: 1.2.11(vue@3.5.25(typescript@5.9.3))
+      file-saver: 2.0.5
+      file64: 1.0.5
+      highlight.js: 11.11.1
+      hotkeys-js: 3.13.15
+      jsbarcode: 3.12.1
+      katex: 0.16.25
+      lowlight: 3.3.0
+      mermaid: 11.12.2
+      nzh: 1.0.14
+      plyr: 3.8.3
+      pretty-bytes: 6.1.1
+      prosemirror-transform: 1.10.5
+      pure-svg-code: 1.0.6
+      sign-canvas-plus: 2.0.3(typescript@5.9.3)
+      smooth-signature: 1.1.0
+      svg64: 2.0.0
+      tippy.js: 6.3.7
+      vue-i18n: 10.0.8(vue@3.5.25(typescript@5.9.3))
+      y-prosemirror: 1.3.7(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(y-protocols@1.0.6(yjs@13.6.27))(yjs@13.6.27)
+      y-protocols: 1.0.6(yjs@13.6.27)
+      yjs: 13.6.27
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - prosemirror-model
+      - prosemirror-state
+      - prosemirror-view
+      - typescript
+      - vue
+
   '@umoteam/viewer@0.1.9(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))':
     dependencies:
       '@tato30/vue-pdf': 1.11.5(vue@3.5.25(typescript@5.9.3))
       '@umoteam/editor': 8.1.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
       '@vueuse/core': 13.9.0(vue@3.5.25(typescript@5.9.3))
+      echarts: 5.6.0
+      plyr: 3.8.3
+      zod: 4.1.13
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - prosemirror-model
+      - prosemirror-state
+      - prosemirror-view
+      - typescript
+      - vue
+
+  '@umoteam/viewer@0.3.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))':
+    dependencies:
+      '@tato30/vue-pdf': 1.11.5(vue@3.5.25(typescript@5.9.3))
+      '@umoteam/editor': 8.1.0(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)(typescript@5.9.3)(vue@3.5.25(typescript@5.9.3))
+      '@vueuse/core': 13.9.0(vue@3.5.25(typescript@5.9.3))
+      default-passive-events: 4.0.0
       echarts: 5.6.0
       plyr: 3.8.3
       zod: 4.1.13
@@ -8014,6 +8139,8 @@ snapshots:
     dependencies:
       bundle-name: 4.1.0
       default-browser-id: 5.0.1
+
+  default-passive-events@4.0.0: {}
 
   define-data-property@1.1.4:
     dependencies:
@@ -9841,6 +9968,8 @@ snapshots:
   punycode.js@2.3.1: {}
 
   punycode@2.3.1: {}
+
+  pure-svg-code@1.0.6: {}
 
   qrcode-svg@1.1.0: {}
 

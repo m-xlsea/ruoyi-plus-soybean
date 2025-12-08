@@ -66,7 +66,7 @@
     "@sa/materials": "workspace:*",
     "@sa/utils": "workspace:*",
     "@types/streamsaver": "^2.0.5",
-    "@umoteam/editor": "^8.1.0",
+    "@umoteam/editor": "^9.0.1",
     "@vueuse/core": "14.1.0",
     "clipboard": "2.0.11",
     "dayjs": "1.11.19",
