@@ -113,6 +113,7 @@ declare namespace Env {
     /** The launch editor */
     readonly VITE_DEVTOOLS_LAUNCH_EDITOR?: import('vite-plugin-vue-devtools').VitePluginVueDevToolsOptions['launchEditor'];
     readonly VITE_APP_CLIENT_ID?: string;
+    readonly VITE_REMEMBER_ME_AES_KEY?: string;
     readonly VITE_APP_ENCRYPT?: CommonType.YesOrNo;
     readonly VITE_HEADER_FLAG?: string;
     readonly VITE_APP_RSA_PUBLIC_KEY?: string;

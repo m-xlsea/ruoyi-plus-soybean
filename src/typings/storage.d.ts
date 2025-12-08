@@ -45,7 +45,7 @@ declare namespace StorageType {
     /** The last login user id */
     lastLoginUserId: CommonType.IdType;
     /** The login form rember */
-    loginRember: Api.Auth.PwdLoginForm;
+    loginRember: string;
     /** The tenant id */
     tenantId: CommonType.IdType;
   }
