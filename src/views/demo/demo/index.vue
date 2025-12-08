@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import { ref } from 'vue';
+import type { DataTableSortState } from 'naive-ui';
 import { NDivider } from 'naive-ui';
 import { fetchBatchDeleteDemo, fetchGetDemoList } from '@/service/api/demo/demo';
 import { useAppStore } from '@/store/modules/app';
@@ -26,6 +27,8 @@ const searchParams = ref<Api.Demo.DemoSearchParams>({
   userId: null,
   testKey: null,
   value: null,
+  orderByColumn: null,
+  isAsc: null,
   params: {}
 });
 
@@ -54,31 +57,36 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
         key: 'deptId',
         title: '部门 ID',
         align: 'center',
-        minWidth: 120
+        minWidth: 120,
+        sorter: true
       },
       {
         key: 'userId',
         title: '用户 ID',
         align: 'center',
-        minWidth: 120
+        minWidth: 120,
+        sorter: true
       },
       {
         key: 'orderNum',
         title: '排序号',
         align: 'center',
-        minWidth: 120
+        minWidth: 120,
+        sorter: true
       },
       {
         key: 'testKey',
         title: 'Key 键',
         align: 'center',
-        minWidth: 120
+        minWidth: 120,
+        sorter: true
       },
       {
         key: 'value',
         title: '值',
         align: 'center',
-        minWidth: 120
+        minWidth: 120,
+        sorter: true
       },
       {
         key: 'operate',
@@ -160,6 +168,17 @@ function edit(id: CommonType.IdType) {
 function handleExport() {
   download('/demo/demo/export', searchParams, `测试单表_${new Date().getTime()}.xlsx`);
 }
+
+function handleUpdateSorter(sorters: DataTableSortState) {
+  if (!sorters.order) {
+    searchParams.value.orderByColumn = null;
+    searchParams.value.isAsc = null;
+  } else {
+    searchParams.value.orderByColumn = sorters.columnKey as keyof Api.System.Oss;
+    searchParams.value.isAsc = sorters.order === 'ascend' ? 'asc' : 'desc';
+  }
+  getDataByPage();
+}
 </script>
 
 <template>
@@ -191,6 +210,7 @@ function handleExport() {
         :row-key="row => row.id"
         :pagination="mobilePagination"
         class="sm:h-full"
+        @update:sorter="handleUpdateSorter"
       />
       <DemoOperateDrawer
         v-model:visible="drawerVisible"
