@@ -39,3 +39,5 @@ INSERT INTO `sys_menu` (`menu_id`, `menu_name`, `parent_id`, `order_num`, `path`
 
 -- plus-ui 需要禁用的页面
 UPDATE `sys_menu` SET `status` = '1' WHERE `menu_id` IN ( '116', '130', '131', '132', '11700', '11701' );
+-- 工作流需要禁用的页面
+UPDATE `sys_menu` SET `status` = '1' WHERE `menu_id` IN ( '11616', '11618', '11638');
