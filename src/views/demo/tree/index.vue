@@ -170,7 +170,7 @@ function addInRow(row: Api.Demo.Tree) {
 }
 
 function handleExport() {
-  download('/demo/tree/export', searchParams, `测试树表_${new Date().getTime()}.xlsx`);
+  download('/demo/tree/export', searchParams.value, `测试树表_${new Date().getTime()}.xlsx`);
 }
 </script>
 

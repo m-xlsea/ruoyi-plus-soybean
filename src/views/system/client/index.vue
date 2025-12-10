@@ -208,7 +208,7 @@ async function edit(id: CommonType.IdType) {
 }
 
 async function handleExport() {
-  download('/system/client/export', searchParams, `客户端_${new Date().getTime()}.xlsx`);
+  download('/system/client/export', searchParams.value, `客户端_${new Date().getTime()}.xlsx`);
 }
 
 /** 处理状态切换 */

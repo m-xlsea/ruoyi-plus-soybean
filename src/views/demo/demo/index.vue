@@ -166,7 +166,7 @@ function edit(id: CommonType.IdType) {
 }
 
 function handleExport() {
-  download('/demo/demo/export', searchParams, `测试单表_${new Date().getTime()}.xlsx`);
+  download('/demo/demo/export', searchParams.value, `测试单表_${new Date().getTime()}.xlsx`);
 }
 
 function handleUpdateSorter(sorters: DataTableSortState) {
