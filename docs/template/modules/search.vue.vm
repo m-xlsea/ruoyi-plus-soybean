@@ -15,9 +15,9 @@ interface Props {
   /** the tree list */
   treeList?: Api.$ModuleName.${BusinessName}[] | null;
 }
-#end
 
 defineProps<Props>();
+#end
 
 interface Emits {
   (e: 'search'): void;
@@ -69,8 +69,8 @@ async function search() {
 #end
   emit('search');
 }
-
 #if($tplCategory == 'tree')
+
 const treeOptions = computed(() => {
   return [
     {

@@ -2,13 +2,18 @@
 import { computed, reactive, ref } from 'vue';
 import type { SelectOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
+import CryptoJS from 'crypto-js';
 import { fetchCaptchaCode, fetchTenantList } from '@/service/api';
 import { fetchSocialAuthBinding } from '@/service/api/system';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { localStg } from '@/utils/storage';
+import { decryptWithAes, encryptWithAes } from '@/utils/crypto';
 import { $t } from '@/locales';
+
+const aesKey = CryptoJS.enc.Utf8.parse(import.meta.env.VITE_REMEMBER_ME_AES_KEY || 'pC4aO6cD2uU7hA0bK6iD4vE1mV8sU8xG');
+
 defineOptions({
   name: 'PwdLogin'
 });
@@ -33,6 +38,7 @@ const model: Api.Auth.PwdLoginForm = reactive({
   username: 'admin',
   password: 'admin123'
 });
+
 type RuleKey = Extract<keyof Api.Auth.PwdLoginForm, 'username' | 'password' | 'code' | 'tenantId'>;
 
 const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
@@ -48,6 +54,7 @@ const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
 
   return loginRules;
 });
+
 async function handleFetchTenantList() {
   startTenantLoading();
   const { data, error } = await fetchTenantList();
@@ -71,7 +78,7 @@ async function handleSubmit() {
   // 勾选了需要记住密码设置在 localStorage 中设置记住用户名和密码
   if (remberMe.value) {
     const { tenantId, username, password } = model;
-    localStg.set('loginRember', { tenantId, username, password });
+    localStg.set('loginRember', encryptWithAes(JSON.stringify({ tenantId, username, password }), aesKey));
   } else {
     // 否则移除
     localStg.remove('loginRember');
@@ -101,8 +108,10 @@ handleFetchCaptchaCode();
 function handleLoginRember() {
   const loginRember = localStg.get('loginRember');
   if (!loginRember) return;
-  remberMe.value = true;
-  Object.assign(model, loginRember);
+  try {
+    remberMe.value = true;
+    Object.assign(model, JSON.parse(decryptWithAes(loginRember, aesKey)));
+  } catch {}
 }
 
 handleLoginRember();

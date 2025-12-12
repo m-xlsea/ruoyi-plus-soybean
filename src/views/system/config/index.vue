@@ -176,7 +176,7 @@ async function edit(configId: CommonType.IdType) {
 }
 
 async function handleExport() {
-  download('/system/config/export', searchParams, `参数配置_${new Date().getTime()}.xlsx`);
+  download('/system/config/export', searchParams.value, `参数配置_${new Date().getTime()}.xlsx`);
 }
 
 async function handleRefreshCache() {

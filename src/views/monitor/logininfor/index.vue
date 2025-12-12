@@ -200,7 +200,7 @@ async function view(infoId: CommonType.IdType) {
 }
 
 async function handleExport() {
-  download('/monitor/logininfor/export', searchParams, `登录日志记录_${new Date().getTime()}.xlsx`);
+  download('/monitor/logininfor/export', searchParams.value, `登录日志记录_${new Date().getTime()}.xlsx`);
 }
 
 async function handleCleanLoginInfor() {

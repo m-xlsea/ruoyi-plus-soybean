@@ -235,7 +235,7 @@ async function handleSyncTenantPackage(row: Api.System.Tenant) {
 }
 
 async function handleExport() {
-  download('/system/tenant/export', searchParams, `租户列表_${new Date().getTime()}.xlsx`);
+  download('/system/tenant/export', searchParams.value, `租户列表_${new Date().getTime()}.xlsx`);
 }
 </script>
 

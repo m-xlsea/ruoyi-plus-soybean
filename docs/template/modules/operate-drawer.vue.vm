@@ -126,8 +126,8 @@ watch(visible, () => {
     restoreValidation();
   }
 });
-
 #if($tplCategory == 'tree')
+
 const treeOptions = computed(() => {
   return [
     {
