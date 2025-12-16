@@ -290,11 +290,11 @@ public class VelocityUtils {
         for (GenTableColumn column : columns) {
             if (!column.isSuperColumn() && StringUtils.isNotEmpty(column.getDictType()) && StringUtils.equalsAny(
                 column.getHtmlType(),
-                new String[]{GenConstants.HTML_SELECT, GenConstants.HTML_RADIO, GenConstants.HTML_CHECKBOX})) {
+                GenConstants.HTML_SELECT, GenConstants.HTML_RADIO, GenConstants.HTML_CHECKBOX)) {
                 Map<String, Object> dict = new HashMap<>();
                 dict.put("type", column.getDictType());
                 dict.put("name", StringUtils.toCamelCase(column.getDictType()));
-                dict.put("immediate", !column.isList());
+                dict.put("immediate", column.isList());
                 dicts.add(dict);
             }
         }

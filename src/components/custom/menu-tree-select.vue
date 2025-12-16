@@ -28,12 +28,13 @@ async function getMenuList() {
   startLoading();
   const { error, data } = await fetchGetMenuList();
   if (error) return;
+  const { tree } = handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' });
   options.value = [
     {
       menuId: 0,
       menuName: '根目录',
       icon: 'material-symbols:home-outline-rounded',
-      children: handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' })
+      children: tree
     }
   ] as Api.System.MenuList;
   endLoading();

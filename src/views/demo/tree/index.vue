@@ -43,7 +43,7 @@ const {
 } = useNaiveTreeTable({
   keyField: 'id',
   api: () => fetchGetTreeList(searchParams.value),
-  transform: response => treeTransform(response, { idField: 'id' }),
+  transform: response => treeTransform(response),
   columns: () => [
     {
       type: 'selection',
@@ -76,7 +76,7 @@ const {
     },
     {
       key: 'treeName',
-      title: '值',
+      title: '树节点名',
       align: 'center',
       minWidth: 120
     },
@@ -84,7 +84,7 @@ const {
       key: 'operate',
       title: $t('common.operate'),
       align: 'center',
-      width: 130,
+      width: 150,
       render: row => {
         const addBtn = () => {
           return (
@@ -176,7 +176,7 @@ function handleExport() {
 
 <template>
   <div class="min-h-500px flex-col-stretch gap-16px overflow-hidden lt-sm:overflow-auto">
-    <TreeSearch v-model:model="searchParams" @search="getData" />
+    <TreeSearch v-model:model="searchParams" :tree-list="data" @search="getData" />
     <NCard title="测试树表列表" :bordered="false" size="small" class="card-wrapper sm:flex-1-hidden">
       <template #header-extra>
         <TableHeaderOperation
