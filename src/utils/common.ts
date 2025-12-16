@@ -124,50 +124,54 @@ export function isImage(suffix: string) {
  * @param {TreeConfig} config 配置选项
  * @returns {T[]} 树形结构数据
  */
-export const handleTree = <T extends Record<string, any>>(data: T[], config: CommonType.TreeConfig): T[] => {
+export const handleTree = <T>(data: T[], config: CommonType.TreeConfig<T> = {}): { tree: T[]; flatData: T[] } => {
   if (!data?.length) {
-    return [];
+    return {
+      tree: [],
+      flatData: []
+    };
   }
 
   const {
-    idField,
+    idField = 'id',
     parentIdField = 'parentId',
     childrenField = 'children',
-    filterFn = () => true // 添加过滤函数，默认为不过滤
+    // 添加过滤函数，默认为不过滤
+    filterFn = () => true
   } = config;
 
+  // filter flat data
+  const flatData = data.filter(filterFn) || [];
+
   // 使用 Map 替代普通对象，提高性能
-  const childrenMap = new Map<string | number, T[]>();
-  const nodeMap = new Map<string | number, T>();
+  const childrenMap = new Map<T[keyof T], T[]>();
+  const nodeMap = new Map<T[keyof T], T>();
   const tree: T[] = [];
 
   // 第一遍遍历：构建节点映射
-  for (const item of data) {
-    const id = item[idField];
-    const parentId = item[parentIdField];
+  for (const item of flatData) {
+    const id = item[idField as keyof T];
+    const parentId = item[parentIdField as keyof T];
 
     nodeMap.set(id, item);
 
     if (!childrenMap.has(parentId)) {
       childrenMap.set(parentId, []);
     }
-    // 应用过滤函数
-    if (filterFn(item)) {
-      childrenMap.get(parentId)!.push(item);
-    }
+    childrenMap.get(parentId)!.push(item);
   }
 
   // 第二遍遍历：找出根节点
-  for (const item of data) {
-    const parentId = item[parentIdField];
-    if (!nodeMap.has(parentId) && filterFn(item)) {
+  for (const item of flatData) {
+    const parentId = item[parentIdField as keyof T];
+    if (!nodeMap.has(parentId)) {
       tree.push(item);
     }
   }
 
   // 递归构建树形结构
   const buildTree = (node: T) => {
-    const id = node[idField];
+    const id = node[idField as keyof T];
     const children = childrenMap.get(id);
 
     if (children?.length) {
@@ -187,7 +191,10 @@ export const handleTree = <T extends Record<string, any>>(data: T[], config: Com
     buildTree(root);
   }
 
-  return tree;
+  return {
+    tree: tree || [],
+    flatData
+  };
 };
 
 /**

@@ -10,7 +10,7 @@ defineOptions({
 });
 
 const { toggleLoginModule } = useRouterPush();
-const { formRef, validate } = useNaiveForm();
+const { validate } = useNaiveForm();
 const { label, isCounting, loading, getCaptcha } = useCaptcha();
 
 interface FormModel {
@@ -44,7 +44,7 @@ async function handleSubmit() {
     {{ $t('page.login.codeLogin.title') }}
   </div>
   <div class="pb-18px text-16px text-#858585">请输入您的手机号，我们将发送验证码到您的手机</div>
-  <NForm ref="formRef" :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
+  <NForm :model="model" :rules="rules" size="large" :show-label="false" @keyup.enter="handleSubmit">
     <NFormItem path="phone">
       <NInput v-model:value="model.phone" :placeholder="$t('page.login.common.phonePlaceholder')" />
     </NFormItem>

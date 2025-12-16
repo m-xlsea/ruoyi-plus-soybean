@@ -33,13 +33,13 @@ declare namespace CommonType {
   type ErrorCode = '401' | '403' | '404' | 'default';
 
   /** The configuration options for constructing tree structure data */
-  type TreeConfig = {
+  type TreeConfig<T> = {
     /** id field name */
-    idField: string;
+    idField?: keyof T;
     /** parent id field name */
-    parentIdField?: string;
+    parentIdField?: keyof T;
     /** children field name */
-    childrenField?: string;
+    childrenField?: keyof T;
     /** filter function */
     filterFn?: (node: any) => boolean;
   };

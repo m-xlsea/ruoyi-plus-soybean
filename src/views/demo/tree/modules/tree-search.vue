@@ -8,20 +8,13 @@ defineOptions({
   name: 'TreeSearch'
 });
 
-interface Props {
-  /** the tree list */
-  treeList?: Api.Demo.Tree[] | null;
-}
-
-defineProps<Props>();
-
 interface Emits {
   (e: 'search'): void;
 }
 
 const emit = defineEmits<Emits>();
 
-const { formRef, validate, restoreValidation } = useNaiveForm();
+const { validate, restoreValidation } = useNaiveForm();
 
 const model = defineModel<Api.Demo.TreeSearchParams>('model', { required: true });
 
@@ -47,27 +40,16 @@ async function search() {
   <NCard :bordered="false" size="small" class="card-wrapper">
     <NCollapse>
       <NCollapseItem :title="$t('common.search')" name="demo-tree-search">
-        <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
+        <NForm :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
-            <NFormItemGi span="24 s:12 m:6" label="父 ID" label-width="auto" path="parentId" class="pr-24px">
-              <NTreeSelect
-                v-model:value="model.parentId"
-                filterable
-                class="h-full"
-                key-field="id"
-                label-field="treeName"
-                :options="treeList!"
-                :default-expanded-keys="[0]"
-              />
+            <NFormItemGi span="24 s:12 m:6" label="树节点名" label-width="auto" path="treeName" class="pr-24px">
+              <NInput v-model:value="model.treeName" placeholder="请输入树节点名" />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" label="部门" label-width="auto" path="deptId" class="pr-24px">
               <DeptTreeSelect v-model:value="model.deptId" placeholder="请选择部门" />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" label="用户" label-width="auto" path="userId" class="pr-24px">
               <UserSelect v-model:value="model.userId" placeholder="请选择用户" />
-            </NFormItemGi>
-            <NFormItemGi span="24 s:12 m:6" label="值" label-width="auto" path="treeName" class="pr-24px">
-              <NInput v-model:value="model.treeName" placeholder="请输入值" />
             </NFormItemGi>
             <NFormItemGi :show-feedback="false" span="24" class="pr-24px">
               <NSpace class="w-full" justify="end">

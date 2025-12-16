@@ -43,7 +43,7 @@ const defaultIcon = import.meta.env.VITE_MENU_ICON;
 
 const layoutType = ref<string>('0');
 const iconType = ref<Api.System.IconType>('1');
-const { formRef, validate, restoreValidation } = useNaiveForm();
+const { validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule, createNumberRequiredRule } = useFormRules();
 const queryList = ref<{ key: string; value: string }[]>([]);
 
@@ -294,7 +294,7 @@ function onCreate() {
 <template>
   <NDrawer v-model:show="visible" display-directive="show" :width="600" class="max-w-90%">
     <NDrawerContent :title="drawerTitle" :native-scrollbar="false" closable>
-      <NForm ref="formRef" :model="model" :rules="rules">
+      <NForm :model="model" :rules="rules">
         <NGrid responsive="screen" item-responsive>
           <NFormItemGi :span="24" :label="$t('page.system.menu.parentId')" path="pid">
             <MenuTreeSelect

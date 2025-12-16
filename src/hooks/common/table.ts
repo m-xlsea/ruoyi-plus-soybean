@@ -6,6 +6,7 @@ import type { PaginationData, TableColumnCheck, UseTableOptions } from '@sa/hook
 import type { FlatResponseData } from '@sa/axios';
 import { jsonClone } from '@sa/utils';
 import { useAppStore } from '@/store/modules/app';
+import { handleTree } from '@/utils/common';
 import { $t } from '@/locales';
 
 export type UseNaiveTableOptions<ResponseData, ApiData, Pagination extends boolean> = Omit<
@@ -399,86 +400,19 @@ export function useTreeTableOperate<ApiData>(data: Ref<ApiData[]>, idKey: keyof 
   };
 }
 
-type TreeTableOptions<ApiData> = {
-  /** id field name */
-  idField?: keyof ApiData;
-  /** parent id field name */
-  parentIdField?: keyof ApiData;
-  /** children field name */
-  childrenField?: keyof ApiData;
-  /** filter function */
-  filterFn?: (node: ApiData) => boolean;
-};
-
 export function treeTransform<ApiData>(
   response: FlatResponseData<any, ApiData[]>,
-  options: TreeTableOptions<ApiData>
+  options: CommonType.TreeConfig<ApiData> = {}
 ): TreeTableTransformResult<ApiData> {
   const { data, error } = response;
 
-  if (error || !data.length) {
-    return {
-      tree: [],
-      flatData: []
-    };
-  }
-
-  const { idField = 'id', parentIdField = 'parentId', childrenField = 'children', filterFn = () => true } = options;
-
-  // filter flat data
-  const flatData = data.filter(filterFn);
-
-  // 使用 Map 替代普通对象，提高性能
-  const childrenMap = new Map<ApiData[keyof ApiData], ApiData[]>();
-  const nodeMap = new Map<ApiData[keyof ApiData], ApiData>();
-  const tree: ApiData[] = [];
-
-  // 第一遍遍历：构建节点映射
-  for (const item of flatData) {
-    const id = item[idField as keyof ApiData];
-    const parentId = item[parentIdField as keyof ApiData];
-
-    nodeMap.set(id, item);
-
-    if (!childrenMap.has(parentId)) {
-      childrenMap.set(parentId, []);
-    }
-    childrenMap.get(parentId)!.push(item);
-  }
-
-  // 第二遍遍历：找出根节点
-  for (const item of flatData) {
-    const parentId = item[parentIdField as keyof ApiData];
-    if (!nodeMap.has(parentId)) {
-      tree.push(item);
-    }
-  }
-
-  // 递归构建树形结构
-  const buildTree = (node: ApiData) => {
-    const id = node[idField as keyof ApiData];
-    const children = childrenMap.get(id);
-
-    if (children?.length) {
-      // 使用类型断言确保类型安全
-      (node as any)[childrenField] = children;
-      for (const child of children) {
-        buildTree(child);
-      }
-    } else {
-      // 如果没有子节点，设置为 undefined
-      (node as any)[childrenField] = undefined;
-    }
-  };
-
-  // 从根节点开始构建树
-  for (const root of tree) {
-    buildTree(root);
+  if (!error) {
+    return handleTree(data, options);
   }
 
   return {
-    tree,
-    flatData
+    tree: [],
+    flatData: []
   };
 }
 
