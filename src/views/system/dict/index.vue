@@ -193,7 +193,7 @@ async function edit(dictCode: CommonType.IdType) {
 }
 
 async function handleExport() {
-  download('/system/dict/data/export', searchParams, `字典数据_${new Date().getTime()}.xlsx`);
+  download('/system/dict/data/export', searchParams.value, `字典数据_${new Date().getTime()}.xlsx`);
 }
 
 async function handleResetSearch() {
@@ -315,7 +315,11 @@ async function handleDeleteType(dictType: Api.System.DictType) {
 }
 
 async function handleExportType() {
-  download('/system/dict/type/export', searchParams, `${$t('page.system.dict.dictType')}_${new Date().getTime()}.xlsx`);
+  download(
+    '/system/dict/type/export',
+    searchParams.value,
+    `${$t('page.system.dict.dictType')}_${new Date().getTime()}.xlsx`
+  );
 }
 
 const selectable = computed(() => {

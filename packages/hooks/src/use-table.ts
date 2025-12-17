@@ -6,7 +6,6 @@ import useLoading from './use-loading';
 export interface PaginationData<T> {
   data: T[];
   pageNum: number;
-  pageSize: number;
   total: number;
 }
 

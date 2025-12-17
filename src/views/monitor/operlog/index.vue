@@ -153,7 +153,7 @@ async function view(operId: CommonType.IdType) {
 }
 
 async function handleExport() {
-  download('/monitor/operlog/export', searchParams, `操作日志_${new Date().getTime()}.xlsx`);
+  download('/monitor/operlog/export', searchParams.value, `操作日志_${new Date().getTime()}.xlsx`);
 }
 
 async function handleCleanOperLog() {

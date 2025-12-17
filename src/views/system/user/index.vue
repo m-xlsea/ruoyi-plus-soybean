@@ -273,7 +273,7 @@ async function handleStatusChange(
 }
 
 function handleExport() {
-  download('/system/user/export', searchParams, `${$t('page.system.user.title')}_${new Date().getTime()}.xlsx`);
+  download('/system/user/export', searchParams.value, `${$t('page.system.user.title')}_${new Date().getTime()}.xlsx`);
 }
 
 const expandedKeys = ref<CommonType.IdType[]>([100]);

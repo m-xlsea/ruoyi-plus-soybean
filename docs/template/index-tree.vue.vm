@@ -11,10 +11,18 @@ import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import ${BusinessName}OperateDrawer from './modules/${business__name}-operate-drawer.vue';
 import ${BusinessName}Search from './modules/${business__name}-search.vue';
+#if($dictList && $dictList.size() > 0)
+import { useDict } from '@/hooks/business/dict';
+#end
 
 defineOptions({
   name: '${BusinessName}List'
 });
+
+#if($dictList && $dictList.size() > 0)
+#foreach($dict in $dictList)
+useDict('${dict.type}'#if(!$dict.immediate), false#end);
+#end#end
 
 const appStore = useAppStore();
 const { download } = useDownload();
@@ -64,7 +72,10 @@ const {
       key: '$column.javaField',
       title: '$column.columnComment',
       align: 'center',
-      minWidth: 120
+      minWidth: 120#if($column.dictType),
+      render(row) {
+        return <DictTag value={row.$column.javaField} dictCode="$column.dictType" />;
+      }#end
     },
   #end
 #end
@@ -158,7 +169,7 @@ function addInRow(row: Api.$ModuleName.${BusinessName}) {
 }
 
 function handleExport() {
-  download('/${moduleName}/${businessName}/export', searchParams, `${functionName}_#[[${new Date().getTime()}]]#.xlsx`);
+  download('/${moduleName}/${businessName}/export', searchParams.value, `${functionName}_#[[${new Date().getTime()}]]#.xlsx`);
 }
 </script>
 
@@ -213,7 +224,6 @@ function handleExport() {
         v-model:visible="drawerVisible"
         :operate-type="operateType"
         :row-data="editingData"
-        :tree-list="data"
         @submitted="getData"
       />
     </NCard>

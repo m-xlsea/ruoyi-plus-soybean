@@ -185,7 +185,9 @@ const local: App.I18n.Schema = {
         collapsedWidth: '侧边栏折叠宽度',
         mixWidth: '混合布局侧边栏宽度',
         mixCollapsedWidth: '混合布局侧边栏折叠宽度',
-        mixChildMenuWidth: '混合布局子菜单宽度'
+        mixChildMenuWidth: '混合布局子菜单宽度',
+        autoSelectFirstMenu: '自动选择第一个子菜单',
+        autoSelectFirstMenuTip: '点击一级菜单时，自动选择并导航到第一个子菜单的最深层级'
       },
       footer: {
         title: '底部设置',
@@ -294,7 +296,8 @@ const local: App.I18n.Schema = {
     exception_404: '404',
     exception_500: '500',
     tool: '系统工具',
-    tool_gen: '代码生成'
+    tool_gen: '代码生成',
+    about: '关于'
   },
   menu: {
     system_tenant: '租户管理',
@@ -729,6 +732,7 @@ const local: App.I18n.Schema = {
         perms: '权限字符',
         component: '组件路径',
         path: '路由地址',
+        layout: '布局方式',
         externalPath: '外链地址',
         query: '路由参数',
         iframeQuery: 'iframe 地址',
@@ -752,8 +756,8 @@ const local: App.I18n.Schema = {
         statusTip: '选择停用则路由将不会出现在侧边栏，也不能被访问',
         permsTip: "控制器中定义的权限字符，如：`{'@'}SaCheckPermission('system:user:list')`",
         componentTip: '访问的组件路径，如：`system/user/index`，默认在`views`目录下',
-        pathTip:
-          'Router path，Example：`user`，If the external network address needs to be accessed in the internal link,then  `http(s)://` beginning',
+        pathTip: '访问的路由地址，如：`user`，如外网地址需内链访问则以`http(s)://`开头',
+        layoutTip: '默认布局：具有公共部分的布局，如全局头部、侧边栏、底部等\n空白布局：无公共部分的布局，如登录页',
         form: {
           parentId: {
             required: '请选择上级菜单',
@@ -1195,6 +1199,20 @@ const local: App.I18n.Schema = {
         importSuccess: '导入成功',
         statusChangeSuccess: '状态修改成功'
       }
+    },
+    about: {
+      title: '关于',
+      introduction: `RuoYi-Plus-Soybean 是一个现代化的企业级多租户管理系统，它结合了 RuoYi-Vue-Plus 的强大后端功能和 Soybean Admin 的现代化前端特性，为开发者提供了完整的企业管理解决方案。`,
+      projectInfo: {
+        title: '项目信息',
+        version: '版本',
+        latestBuildTime: '最新构建时间',
+        documentLink: '文档地址',
+        previewLink: '预览地址',
+        repositoryLink: '仓库地址'
+      },
+      prdDep: '生产依赖',
+      devDep: '开发依赖'
     }
   },
   form: {
@@ -1229,7 +1247,9 @@ const local: App.I18n.Schema = {
     closeOther: '关闭其它',
     closeLeft: '关闭左侧',
     closeRight: '关闭右侧',
-    closeAll: '关闭所有'
+    closeAll: '关闭所有',
+    pin: '固定标签',
+    unpin: '取消固定'
   },
   icon: {
     themeConfig: '主题配置',

@@ -32,7 +32,7 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const { formRef, validate, restoreValidation } = useNaiveForm();
+const { validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule, patternRules } = useFormRules();
 
 const { loading: deptLoading, startLoading: startDeptLoading, endLoading: endDeptLoading } = useLoading();
@@ -142,7 +142,8 @@ async function getDeptData() {
   }
 
   if (data) {
-    deptData.value = handleTree(data, { idField: 'deptId' });
+    const { tree } = handleTree(data, { idField: 'deptId' });
+    deptData.value = tree;
     if (deptData.value?.length) {
       expandedKeys.value = [deptData.value[0].deptId];
     }
@@ -187,7 +188,7 @@ watch(visible, () => {
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <NForm ref="formRef" :model="model" :rules="rules">
+      <NForm :model="model" :rules="rules">
         <NFormItem v-if="model.parentId !== 0" :label="$t('page.system.dept.parentId')" path="parentId">
           <NTreeSelect
             v-model:value="model.parentId"

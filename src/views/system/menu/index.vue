@@ -57,12 +57,13 @@ const getMeunTree = async () => {
   startLoading();
   const { data, error } = await fetchGetMenuList();
   if (error) return;
+  const { tree } = handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' });
   treeData.value = [
     {
       menuId: 0,
       menuName: $t('page.system.menu.rootName'),
       icon: 'material-symbols:home-outline-rounded',
-      children: handleTree(data, { idField: 'menuId', filterFn: item => item.menuType !== 'F' })
+      children: tree
     }
   ] as Api.System.Menu[];
   endLoading();
@@ -462,7 +463,11 @@ const renderIframeQuery = (queryParam: string) => {
               {{ renderMenuName(currentMenu.menuName) }}
             </NDescriptionsItem>
             <NDescriptionsItem v-if="isMenu" :label="$t('page.system.menu.component')">
-              {{ currentMenu.component }}
+              {{
+                currentMenu.component?.startsWith('layout.blank$view.')
+                  ? `${currentMenu.component?.slice(18, currentMenu.component.length)?.replaceAll('_', '/')}/index`
+                  : currentMenu.component
+              }}
             </NDescriptionsItem>
             <NDescriptionsItem
               :label="!isExternalType ? $t('page.system.menu.path') : $t('page.system.menu.externalPath')"
