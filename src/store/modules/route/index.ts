@@ -5,7 +5,7 @@ import { useBoolean } from '@sa/hooks';
 import type { CustomRoute, ElegantConstRoute, LastLevelRouteKey, RouteKey, RouteMap } from '@elegant-router/types';
 import { router } from '@/router';
 import { fetchGetRoutes } from '@/service/api';
-import { humpToLine, isNotNull } from '@/utils/common';
+import { isNotNull } from '@/utils/common';
 import { SetupStoreId } from '@/enum';
 import { createDynamicRoutes, createStaticRoutes, getAuthVueRoutes } from '@/router/routes';
 import { ROOT_ROUTE } from '@/router/routes/builtin';
@@ -104,6 +104,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
     const isLayout = route.component === 'Layout';
     const isFramePage = route.component === 'FrameView';
     const isParentLayout = route.component === 'ParentView';
+    const isBlankLayout = route.component?.startsWith('layout.blank$view.');
     const isExternalLink = isNotNull(route.meta.link);
 
     route.path = route.path.startsWith('/') ? route.path : `/${route.path}`;
@@ -115,7 +116,7 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
       .replace(/([A-Z])/g, '-$1')
       .toLowerCase();
     if (isLayout || isFramePage || isParentLayout) {
-      const name = humpToLine(route.path.substring(1).replace('/', '_'));
+      const name = route.path.substring(1).replaceAll('/', '_');
       route.name = parent ? `${parent.name}_${name}` : name;
     }
 
@@ -140,8 +141,8 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
       if (isExternalLink) {
         route.meta.href = String(route.meta.link);
         const random = Math.random().toString(36).slice(2, 12);
-        route.path = `/${random}`;
         route.name = random;
+        route.path = `/${random}`;
         route.component = 'layout.base$view.iframe-page';
       } else {
         try {
@@ -152,9 +153,9 @@ export const useRouteStore = defineStore(SetupStoreId.Route, () => {
         } catch {}
       }
       route.component = parent && !isExternalLink ? 'view.iframe-page' : 'layout.base$view.iframe-page';
-    } else if (!isLayout && !isParentLayout) {
+    } else if (!isLayout && !isParentLayout && !isBlankLayout) {
       route.component = parent ? `view.${route.name}` : `layout.base$view.${route.name}`;
-    } else {
+    } else if (!isBlankLayout) {
       route.component = isParentLayout ? undefined : 'layout.base';
     }
 

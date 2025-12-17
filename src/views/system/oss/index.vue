@@ -1,5 +1,6 @@
 <script setup lang="tsx">
 import { onMounted, ref } from 'vue';
+import type { DataTableSortState } from 'naive-ui';
 import { NButton, NDivider, NEllipsis, NImage, NTag, NTooltip } from 'naive-ui';
 import { useBoolean, useLoading } from '@sa/hooks';
 import { fetchBatchDeleteOss, fetchGetOssList } from '@/service/api/system/oss';
@@ -124,7 +125,9 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
         key: 'createTime',
         title: '创建时间',
         align: 'center',
-        minWidth: 120
+        minWidth: 120,
+        sorter: true,
+        defaultSortOrder: 'descend'
       },
       {
         key: 'createByName',
@@ -217,6 +220,17 @@ async function handleDelete(ossId: CommonType.IdType) {
 
 function download(ossId: CommonType.IdType) {
   oss(ossId);
+}
+
+function handleUpdateSorter(sorters: DataTableSortState) {
+  if (!sorters.order) {
+    searchParams.value.orderByColumn = null;
+    searchParams.value.isAsc = null;
+  } else {
+    searchParams.value.orderByColumn = sorters.columnKey as keyof Api.System.Oss;
+    searchParams.value.isAsc = sorters.order === 'ascend' ? 'asc' : 'desc';
+  }
+  getDataByPage();
 }
 
 function handleUpload(type: 'file' | 'image') {
@@ -332,6 +346,7 @@ function handleToOssConfig() {
         :row-key="row => row.ossId"
         :pagination="mobilePagination"
         class="sm:h-full"
+        @update:sorter="handleUpdateSorter"
       />
       <OssUploadModal v-model:visible="uploadVisible" :upload-type="fileUploadType" @close="getDataByPage" />
     </NCard>

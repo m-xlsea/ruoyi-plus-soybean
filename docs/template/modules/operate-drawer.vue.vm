@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { jsonClone } from '@sa/utils';
-import { fetchCreate${BusinessName}, fetchUpdate${BusinessName} } from '@/service/api/${moduleName}/${business__name}';
+import { fetchCreate${BusinessName}, fetchUpdate${BusinessName}#if($tplCategory == 'tree'), fetchGet${BusinessName}List#end } from '@/service/api/${moduleName}/${business__name}';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
-#if($dictList && $dictList.size() > 0)import { useDict } from '@/hooks/business/dict';#end
+#if($tplCategory == 'tree')
+import { handleTree } from '@/utils/common';
+#end
 import { $t } from '@/locales';
 
 defineOptions({
@@ -15,10 +17,6 @@ interface Props {
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
   rowData?: Api.$ModuleName.${BusinessName} | null;
-#if($tplCategory == 'tree')
-  /** the tree data */
-  treeList?: Api.$ModuleName.${BusinessName}[] | null;
-#end
 }
 
 const props = defineProps<Props>();
@@ -32,13 +30,12 @@ const emit = defineEmits<Emits>();
 const visible = defineModel<boolean>('visible', {
   default: false
 });
+#if($tplCategory == 'tree')
 
-#if($dictList && $dictList.size() > 0)
-#foreach($dict in $dictList)
-const { options: ${dict.name}Options } = useDict('${dict.type}'#if($dict.immediate), false#end);
-#end#end
+const treeList = ref<Api.Demo.Tree[]>([]);
+#end
 
-const { formRef, validate, restoreValidation } = useNaiveForm();
+const { validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
@@ -56,7 +53,7 @@ const model = ref<Model>(createDefaultModel());
 function createDefaultModel(): Model {
   return {
 #foreach($column in $columns)
-  #if($column.insert || $column.isEdit)
+  #if($column.insert() || $column.isEdit())
       ${column.javaField}:#if($column.javaType == 'String' || ($!column.dictType && $column.dictType != '')) ''#else null#end#if($foreach.hasNext),#end
   #end
 #end
@@ -119,21 +116,33 @@ async function handleSubmit() {
   closeDrawer();
   emit('submitted');
 }
+#if($tplCategory == 'tree')
+
+async function getTreeList() {
+  const { data, error } = await fetchGet${BusinessName}List();
+  if (error) {
+    return;
+  }
+  const { tree } = handleTree(data);
+  treeList.value = tree;
+}
+#end
 
 watch(visible, () => {
   if (visible.value) {
     handleUpdateModelWhenEdit();
     restoreValidation();
+    getTreeList();
   }
 });
-
 #if($tplCategory == 'tree')
+
 const treeOptions = computed(() => {
   return [
     {
       id: 0,
       treeName: '顶级节点',
-      children: props.treeList!
+      children: treeList.value
     }
   ];
 });
@@ -143,17 +152,12 @@ const treeOptions = computed(() => {
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <NForm ref="formRef" :model="model" :rules="rules">
+      <NForm :model="model" :rules="rules">
+#set($immediateDictList = [])
 #foreach($column in $columns)
 #set($field=$column.javaField)
 #if(($column.insert || $column.edit) && !$column.pk)
-#set($parentheseIndex=$column.columnComment.indexOf("（"))
-#if($parentheseIndex != -1)
-#set($comment=$column.columnComment.substring(0, $parentheseIndex))
-#else
-#set($comment=$column.columnComment)
-#end
-#set($dictType=$!StrUtil.toCamelCase($column.dictType))
+#set($isImmediate = !$column.isList() && !$column.isQuery() && !$immediateDictList.contains($column.dictType))
         <NFormItem label="$column.columnComment" path="$column.javaField">
         #if($tplCategory == 'tree' && $column.javaField == $treeParentCode)
           <NTreeSelect
@@ -172,49 +176,50 @@ const treeOptions = computed(() => {
             type="textarea"
             placeholder="请输入$column.columnComment"
           />
-        #elseif($column.htmlType == "select" && "" != $dictType)
+        #elseif($column.htmlType == "select" && $column.dictType)
+          <DictSelect
+            v-model:value="model.$column.javaField"
+            placeholder="请选择$column.columnComment"
+            dict-code="$column.dictType"
+            clearable
+#if($isImmediate)#set($void = $immediateDictList.add($column.dictType))
+            immediate
+#end
+          />
+        #elseif($column.htmlType == "select" && !$column.dictType)
           <NSelect
             v-model:value="model.$column.javaField"
             placeholder="请选择$column.columnComment"
-            :options="${dictType}Options"
+            :options="[{ value: '0', label: '请选择字典生成' }]"
             clearable
           />
-        #elseif($column.htmlType == "select" && $dictType)
-          <NSelect
+        #elseif($column.htmlType == "radio" && $column.dictType)
+          <DictRadio
             v-model:value="model.$column.javaField"
             placeholder="请选择$column.columnComment"
-            :options="[]"
+            dict-code="$column.dictType"
             clearable
+#if($isImmediate)#set($void = $immediateDictList.add($column.dictType))
+            immediate
+#end
           />
-        #elseif($column.htmlType == "radio" && "" != $dictType)
-          <NRadioGroup v-model:value="model.$column.javaField">
-            <NSpace>
-              <NRadio
-                v-for="option in ${dictType}Options"
-                :key="option.value"
-                :value="option.value"
-                :label="option.label"
-              />
-            </NSpace>
-          </NRadioGroup>
-        #elseif($column.htmlType == "radio" && $dictType)
+        #elseif($column.htmlType == "radio" && !$column.dictType)
           <NRadioGroup v-model:value="model.$column.javaField">
             <NSpace>
               <NRadio value="0" label="请选择字典生成" />
             </NSpace>
           </NRadioGroup>
-        #elseif($column.htmlType == "checkbox" && "" != $dictType)
-          <NCheckboxGroup v-model:value="model.$column.javaField">
-            <NSpace>
-              <NCheckbox
-                v-for="option in ${dictType}Options"
-                :key="option.value"
-                :value="option.value"
-                :label="option.label"
-              />
-            </NSpace>
-          </NCheckboxGroup>
-        #elseif($column.htmlType == "checkbox" && $dictType)
+        #elseif($column.htmlType == "checkbox" && $column.dictType)
+          <DictCheckbox
+            v-model:value="model.$column.javaField"
+            placeholder="请选择$column.columnComment"
+            dict-code="$column.dictType"
+            clearable
+#if($isImmediate)#set($void = $immediateDictList.add($column.dictType))
+            immediate
+#end
+          />
+        #elseif($column.htmlType == "checkbox" && $column.dictType)
           <NCheckboxGroup v-model:value="model.$column.javaField">
             <NSpace>
               <NCheckbox value="0" label="请选择字典生成" />

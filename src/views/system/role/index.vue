@@ -212,7 +212,7 @@ async function edit(roleId: CommonType.IdType) {
 }
 
 async function handleExport() {
-  download('/system/role/export', searchParams, `角色_${new Date().getTime()}.xlsx`);
+  download('/system/role/export', searchParams.value, `角色_${new Date().getTime()}.xlsx`);
 }
 
 /** 处理状态切换 */

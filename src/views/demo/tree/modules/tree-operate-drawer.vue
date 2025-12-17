@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { jsonClone } from '@sa/utils';
-import { fetchCreateTree, fetchUpdateTree } from '@/service/api/demo/tree';
+import { fetchCreateTree, fetchGetTreeList, fetchUpdateTree } from '@/service/api/demo/tree';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
+import { handleTree } from '@/utils/common';
 import { $t } from '@/locales';
 
 defineOptions({
@@ -14,8 +15,6 @@ interface Props {
   operateType: NaiveUI.TableOperateType;
   /** the edit row data */
   rowData?: Api.Demo.Tree | null;
-  /** the tree data */
-  treeList?: Api.Demo.Tree[] | null;
 }
 
 const props = defineProps<Props>();
@@ -30,7 +29,9 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const { formRef, validate, restoreValidation } = useNaiveForm();
+const treeList = ref<Api.Demo.Tree[]>([]);
+
+const { validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
@@ -62,7 +63,7 @@ const rules: Record<RuleKey, App.Global.FormRule> = {
   parentId: createRequiredRule('父 ID 不能为空'),
   deptId: createRequiredRule('部门不能为空'),
   userId: createRequiredRule('用户不能为空'),
-  treeName: createRequiredRule('值不能为空')
+  treeName: createRequiredRule('树节点名不能为空')
 };
 
 function handleUpdateModelWhenEdit() {
@@ -99,10 +100,20 @@ async function handleSubmit() {
   emit('submitted');
 }
 
+async function getTreeList() {
+  const { data, error } = await fetchGetTreeList();
+  if (error) {
+    return;
+  }
+  const { tree } = handleTree(data);
+  treeList.value = tree;
+}
+
 watch(visible, () => {
   if (visible.value) {
     handleUpdateModelWhenEdit();
     restoreValidation();
+    getTreeList();
   }
 });
 
@@ -111,7 +122,7 @@ const treeOptions = computed(() => {
     {
       id: 0,
       treeName: '顶级节点',
-      children: props.treeList!
+      children: treeList.value
     }
   ];
 });
@@ -120,7 +131,7 @@ const treeOptions = computed(() => {
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <NForm ref="formRef" :model="model" :rules="rules">
+      <NForm :model="model" :rules="rules">
         <NFormItem label="父 ID" path="parentId">
           <NTreeSelect
             v-model:value="model.parentId"
@@ -138,7 +149,7 @@ const treeOptions = computed(() => {
         <NFormItem label="用户" path="userId">
           <UserSelect v-model:value="model.userId" placeholder="请选择用户" />
         </NFormItem>
-        <NFormItem label="值" path="treeName">
+        <NFormItem label="树节点名" path="treeName">
           <NInput v-model:value="model.treeName" placeholder="请输入值" />
         </NFormItem>
       </NForm>

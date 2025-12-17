@@ -174,7 +174,7 @@ async function edit(postId: CommonType.IdType) {
 }
 
 async function handleExport() {
-  download('/system/post/export', searchParams, `岗位信息_${new Date().getTime()}.xlsx`);
+  download('/system/post/export', searchParams.value, `岗位信息_${new Date().getTime()}.xlsx`);
 }
 
 const expandedKeys = ref<CommonType.IdType[]>([100]);

@@ -30,7 +30,7 @@ const visible = defineModel<boolean>('visible', {
 });
 
 const umoEditorRef = ref<InstanceType<typeof UmoEditor>>();
-const { formRef, validate, restoreValidation } = useNaiveForm();
+const { validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
@@ -116,7 +116,7 @@ watch(visible, () => {
     class="max-w-90%"
   >
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <NForm ref="formRef" :model="model" :rules="rules">
+      <NForm :model="model" :rules="rules">
         <div class="grid grid-cols-1 gap-16px md:grid-cols-4">
           <NFormItem class="col-span-2" label="公告标题" path="noticeTitle">
             <NInput v-model:value="model.noticeTitle" placeholder="请输入公告标题" />

@@ -35,7 +35,7 @@ const visible = defineModel<boolean>('visible', {
 
 const { loading, startLoading, endLoading } = useLoading();
 const { loading: deptLoading, startLoading: startDeptLoading, endLoading: endDeptLoading } = useLoading();
-const { formRef, validate, restoreValidation } = useNaiveForm();
+const { validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule, patternRules } = useFormRules();
 
 const title = computed(() => {
@@ -173,7 +173,7 @@ watch(visible, () => {
   <NDrawer v-model:show="visible" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
       <NSpin :show="loading">
-        <NForm ref="formRef" :model="model" :rules="rules">
+        <NForm :model="model" :rules="rules">
           <NFormItem :label="$t('page.system.user.nickName')" path="nickName">
             <NInput v-model:value="model.nickName" :placeholder="$t('page.system.user.form.nickName.required')" />
           </NFormItem>
