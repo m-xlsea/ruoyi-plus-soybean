@@ -150,7 +150,7 @@ function edit($pkColumn.javaField: CommonType.IdType) {
 }
 
 function handleExport() {
-  download('/${moduleName}/${businessName}/export', searchParams, `${functionName}_#[[${new Date().getTime()}]]#.xlsx`);
+  download('/${moduleName}/${businessName}/export', searchParams.value, `${functionName}_#[[${new Date().getTime()}]]#.xlsx`);
 }
 </script>
 
