@@ -49,7 +49,8 @@ const {
       key: 'deptName',
       title: $t('page.system.dept.deptName'),
       align: 'center',
-      minWidth: 180
+      width: 230,
+      ellipsis: true
     },
     {
       key: 'deptCategory',
@@ -198,7 +199,6 @@ function addInRow(row: Api.System.Dept) {
         :columns="columns"
         :data="data"
         size="small"
-        :indent="64"
         :flex-height="!appStore.isMobile"
         :scroll-x="scrollX"
         :loading="loading"
