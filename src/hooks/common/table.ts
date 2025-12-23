@@ -463,7 +463,11 @@ function getColumns<Column extends NaiveUI.TableColumn<any>>(cols: Column[], che
     }
   });
 
-  const filteredColumns = checks.filter(item => item.checked).map(check => columnMap.get(check.key) as Column);
+  // Filter out any checks that do not have a corresponding column (can happen when column definitions change).
+  const filteredColumns = checks
+    .filter(item => item.checked)
+    .map(check => columnMap.get(check.key))
+    .filter((col): col is Column => Boolean(col));
 
   return filteredColumns;
 }
