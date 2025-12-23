@@ -20,7 +20,7 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
-const { validate, restoreValidation } = useNaiveForm();
+const { formRef, validate, restoreValidation } = useNaiveForm();
 
 const model = defineModel<Api.Tool.GenTableDbSearchParams>('model', { required: true });
 
@@ -42,7 +42,7 @@ async function search() {
 </script>
 
 <template>
-  <NForm :model="model" label-placement="left" :label-width="80">
+  <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
     <NGrid responsive="screen" item-responsive>
       <NFormItemGi span="24 s:12" label="数据源" label-width="auto" path="dataName" class="pr-24px">
         <NSelect v-model:value="model.dataName" :options="options" placeholder="请选择数据源" />

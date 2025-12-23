@@ -34,7 +34,7 @@ const deptOptions = ref<Api.System.Dept[]>([]);
 
 const { loading: deptLoading, startLoading: startDeptLoading, endLoading: endDeptLoading } = useLoading();
 
-const { validate, restoreValidation } = useNaiveForm();
+const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
 
 const title = computed(() => '分配数据权限');
@@ -113,7 +113,7 @@ watch(visible, () => {
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <NForm :model="model" :rules="rules">
+      <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem label="角色名称" path="roleName">
           <NInput v-model:value="model.roleName" disabled placeholder="请输入角色名称" />
         </NFormItem>
