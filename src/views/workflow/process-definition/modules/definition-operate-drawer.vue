@@ -47,7 +47,7 @@ const formPaths = ref<SelectOption[]>([]);
 const modules = import.meta.glob('@/components/workflow/form/**/*.vue');
 Object.keys(modules).forEach(key => {
   const label = key.replace('/src/components/workflow/form/', '');
-  const value = key.replace('/src/components/workflow/form', '/workflow');
+  const value = key.replace('/src/components/workflow/form', '/workflow').replace('.vue', '');
   formPaths.value.push({ label, value });
 });
 
