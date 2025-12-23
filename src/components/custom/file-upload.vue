@@ -1,6 +1,7 @@
-<script setup lang="ts">
-import { computed, useAttrs } from 'vue';
+<script setup lang="tsx">
+import { computed, defineComponent, useAttrs } from 'vue';
 import type { UploadFileInfo, UploadProps } from 'naive-ui';
+import type { JSX } from 'vue/jsx-runtime';
 import { fetchBatchDeleteOss } from '@/service/api/system/oss';
 import { getToken } from '@/store/modules/auth/shared';
 import { getServiceBaseURL } from '@/utils/service';
@@ -44,6 +45,53 @@ const attrs: UploadProps = useAttrs();
 let fileNum = 0;
 const fileList = defineModel<UploadFileInfo[]>('fileList', {
   default: () => []
+});
+
+const TooltipContent = defineComponent({
+  setup() {
+    const startTip = <>请上传</>;
+
+    const maxTip = (
+      <>
+        数量不超过
+        <b class="text-info"> {props.max}个</b>，
+      </>
+    );
+
+    const fileSizeTip = (
+      <>
+        大小不超过
+        <b class="text-info"> {props.fileSize}MB</b>，
+      </>
+    );
+
+    const acceptTip = (
+      <>
+        格式为
+        <b class="text-info"> {props.accept?.replaceAll(',', ', ')} </b>
+      </>
+    );
+
+    const tips: JSX.Element[] = [];
+    if (props.max) tips.push(maxTip);
+    if (props.fileSize) tips.push(fileSizeTip);
+    if (props.accept) tips.push(acceptTip);
+
+    const endTip = (
+      <>
+        {tips.length ? '的' : ''}
+        {props.uploadType === 'file' ? '文件' : '图片'}
+      </>
+    );
+
+    return () => (
+      <NP depth={3}>
+        {startTip}
+        {tips.map(tip => tip)}
+        {endTip}
+      </NP>
+    );
+  }
 });
 
 const isHttpProxy = import.meta.env.DEV && import.meta.env.VITE_HTTP_PROXY === 'Y';
@@ -151,32 +199,13 @@ async function handleRemove(file: UploadFileInfo) {
           <SvgIcon icon="material-symbols:unarchive-outline" class="text-58px color-#d8d8db dark:color-#a1a1a2" />
         </div>
         <NText class="text-16px">点击或者拖动文件到该区域来上传</NText>
-        <NP v-if="showTip" depth="3" class="mt-8px text-center">
-          请上传
-          <template v-if="fileSize">
-            大小不超过
-            <b class="text-red-500">{{ fileSize }}MB</b>
-          </template>
-          <template v-if="accept">
-            ，且格式为
-            <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
-          </template>
-          的文件
-        </NP>
+        <TooltipContent v-if="showTip" class="mt-8px text-center" />
+      </NUploadDragger>
+      <NUploadDragger v-else>
+        <SvgIcon icon="material-symbols:image-arrow-up-outline" class="text-58px color-#d8d8db dark:color-#a1a1a2" />
       </NUploadDragger>
     </NUpload>
-    <NP v-if="showTip && uploadType === 'image'" depth="3" class="mt-12px">
-      请上传
-      <template v-if="fileSize">
-        大小不超过
-        <b class="text-red-500">{{ fileSize }}MB</b>
-      </template>
-      <template v-if="accept">
-        ，且格式为
-        <b class="text-red-500">{{ accept.replaceAll(',', '/') }}</b>
-      </template>
-      的文件
-    </NP>
+    <TooltipContent v-if="showTip && uploadType === 'image'" class="mt-12px" />
   </div>
 </template>
 

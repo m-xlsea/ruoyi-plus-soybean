@@ -212,7 +212,6 @@ function handleExport() {
         v-model:expanded-row-keys="expandedRowKeys"
         :columns="columns"
         :data="data"
-        :indent="64"
         :flex-height="!appStore.isMobile"
         :scroll-x="scrollX"
         :loading="loading"
