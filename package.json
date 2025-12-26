@@ -1,7 +1,7 @@
 {
   "name": "ruoyi-vue-plus",
   "type": "module",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0",
   "description": "结合了 RuoYi-Vue-Plus 的强大后端功能和 Soybean Admin 的现代化前端特性，为开发者提供了完整的企业管理解决方案。",
   "author": {
     "name": "xlsea",
