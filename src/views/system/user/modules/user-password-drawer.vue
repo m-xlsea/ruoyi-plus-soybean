@@ -25,7 +25,7 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const { validate, restoreValidation } = useNaiveForm();
+const { formRef, validate, restoreValidation } = useNaiveForm();
 const { patternRules } = useFormRules();
 
 type Model = Api.System.UserOperateParams & { deptName: string };
@@ -82,7 +82,7 @@ watch(visible, () => {
 <template>
   <NDrawer v-model:show="visible" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent title="重置密码" :native-scrollbar="false" closable>
-      <NForm :model="model" :rules="rules">
+      <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem :label="$t('page.system.user.nickName')" path="nickName">
           <NInput v-model:value="model.nickName" disabled />
         </NFormItem>

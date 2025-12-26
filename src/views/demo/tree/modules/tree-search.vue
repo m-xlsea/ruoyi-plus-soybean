@@ -14,7 +14,7 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
-const { validate, restoreValidation } = useNaiveForm();
+const { formRef, validate, restoreValidation } = useNaiveForm();
 
 const model = defineModel<Api.Demo.TreeSearchParams>('model', { required: true });
 
@@ -40,7 +40,7 @@ async function search() {
   <NCard :bordered="false" size="small" class="card-wrapper">
     <NCollapse>
       <NCollapseItem :title="$t('common.search')" name="demo-tree-search">
-        <NForm :model="model" label-placement="left" :label-width="80">
+        <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
             <NFormItemGi span="24 s:12 m:6" label="树节点名" label-width="auto" path="treeName" class="pr-24px">
               <NInput v-model:value="model.treeName" placeholder="请输入树节点名" />

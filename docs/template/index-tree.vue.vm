@@ -212,7 +212,6 @@ function handleExport() {
         :columns="columns"
         :data="data"
         size="small"
-        :indent="64"
         :flex-height="!appStore.isMobile"
         :scroll-x="scrollX"
         :loading="loading"

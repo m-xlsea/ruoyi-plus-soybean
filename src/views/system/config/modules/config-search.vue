@@ -14,7 +14,7 @@ interface Emits {
 
 const emit = defineEmits<Emits>();
 
-const { validate, restoreValidation } = useNaiveForm();
+const { formRef, validate, restoreValidation } = useNaiveForm();
 
 const dateRangeCreateTime = ref<[string, string] | null>(null);
 
@@ -53,7 +53,7 @@ async function search() {
   <NCard :bordered="false" size="small" class="card-wrapper">
     <NCollapse>
       <NCollapseItem :title="$t('common.search')" name="user-search">
-        <NForm :model="model" label-placement="left" :label-width="80">
+        <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
             <NFormItemGi
               span="24 s:12 m:6"

@@ -24,7 +24,7 @@ const menuTreeRef = ref<InstanceType<typeof MenuTree> | null>(null);
 const menuOptions = ref<Api.System.MenuList>([]);
 const { loading: menuLoading } = useLoading();
 
-const { validate, restoreValidation } = useNaiveForm();
+const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
 
 type Model = {
@@ -92,7 +92,7 @@ watch(visible, () => {
     class="max-w-90% w-500px"
     @close="closeDrawer"
   >
-    <NForm :model="model" :rules="rules">
+    <NForm ref="formRef" :model="model" :rules="rules">
       <NFormItem :show-label="false" path="menuIds">
         <MenuTree
           v-if="visible"
