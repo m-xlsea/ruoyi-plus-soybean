@@ -30,7 +30,7 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const { validate, restoreValidation } = useNaiveForm();
+const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule, patternRules } = useFormRules();
 const { loading: packageLoading, startLoading: startPackageLoading, endLoading: endPackageLoading } = useLoading();
 const title = computed(() => {
@@ -203,7 +203,7 @@ watch(visible, () => {
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <NForm :model="model" :rules="rules">
+      <NForm ref="formRef" :model="model" :rules="rules">
         <NDivider>基本信息</NDivider>
         <NFormItem label="企业名称" path="companyName">
           <NInput v-model:value="model.companyName" placeholder="请输入企业名称" />

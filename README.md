@@ -21,7 +21,7 @@
 
 # 📢 重要通知
 
-2.0.0-beta2 版本已经正式发布（工作流版本请切换 [flow](https://gitee.com/xlsea/ruoyi-plus-soybean/tree/flow/) 分支查看），但仍然建议：
+2.0.0 版本已经正式发布（工作流版本请切换 [flow](https://gitee.com/xlsea/ruoyi-plus-soybean/tree/flow/) 分支查看），但仍然建议：
 - 在生产环境使用前进行充分测试
 - 关注项目更新，及时获取最新版本
 - 积极反馈问题，帮助我们快速迭代

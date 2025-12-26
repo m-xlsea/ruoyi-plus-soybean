@@ -31,7 +31,7 @@ const visible = defineModel<boolean>('visible', {
 
 const treeList = ref<Api.Demo.Tree[]>([]);
 
-const { validate, restoreValidation } = useNaiveForm();
+const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
 
 const title = computed(() => {
@@ -131,7 +131,7 @@ const treeOptions = computed(() => {
 <template>
   <NDrawer v-model:show="visible" :title="title" display-directive="show" :width="800" class="max-w-90%">
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
-      <NForm :model="model" :rules="rules">
+      <NForm ref="formRef" :model="model" :rules="rules">
         <NFormItem label="父 ID" path="parentId">
           <NTreeSelect
             v-model:value="model.parentId"

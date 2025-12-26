@@ -1,5 +1,5 @@
 <script setup lang="tsx">
-import { defineOptions, ref } from 'vue';
+import { ref } from 'vue';
 import { NDivider } from 'naive-ui';
 import {
   fetchBatchDeleteTenantPackage,
