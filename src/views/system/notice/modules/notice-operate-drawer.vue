@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import { jsonClone } from '@sa/utils';
-import type { UmoEditor } from '@umoteam/editor';
 import { fetchCreateNotice, fetchUpdateNotice } from '@/service/api/system/notice';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
@@ -29,7 +28,6 @@ const visible = defineModel<boolean>('visible', {
   default: false
 });
 
-const umoEditorRef = ref<InstanceType<typeof UmoEditor>>();
 const { formRef, validate, restoreValidation } = useNaiveForm();
 const { createRequiredRule } = useFormRules();
 
@@ -77,7 +75,7 @@ function closeDrawer() {
 }
 
 async function handleSubmit() {
-  umoEditorRef.value?.saveContent();
+  // umoEditorRef.value?.saveContent();
   await validate();
 
   const { noticeId, noticeTitle, noticeType, noticeContent, status } = model.value;
@@ -112,7 +110,7 @@ watch(visible, () => {
     :trap-focus="false"
     :title="title"
     display-directive="show"
-    :width="1000"
+    :width="1500"
     class="max-w-90%"
   >
     <NDrawerContent :title="title" :native-scrollbar="false" closable>
@@ -129,7 +127,7 @@ watch(visible, () => {
           </NFormItem>
         </div>
         <NFormItem :show-label="false" path="noticeContent">
-          <UmoDocEditor ref="umoEditorRef" v-model:value="model.noticeContent!" />
+          <WangEditor v-model:value="model.noticeContent!" />
         </NFormItem>
       </NForm>
       <template #footer>
