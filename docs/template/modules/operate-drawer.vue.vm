@@ -132,7 +132,9 @@ watch(visible, () => {
   if (visible.value) {
     handleUpdateModelWhenEdit();
     restoreValidation();
+    #if($tplCategory == 'tree')
     getTreeList();
+    #end
   }
 });
 #if($tplCategory == 'tree')
