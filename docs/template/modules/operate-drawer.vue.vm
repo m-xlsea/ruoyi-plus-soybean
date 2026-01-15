@@ -103,6 +103,7 @@ async function handleSubmit() {
     #foreach($column in $columns)#if($column.insert)#set($dummy = $addFields.add($column.javaField))#end#end
     const { error } = await fetchCreate${BusinessName}({ #foreach($field in $addFields)$field#if($foreach.hasNext), #end#end });
     if (error) return;
+    window.$message?.success($t('common.addSuccess'));
   }
 
   if (props.operateType === 'edit') {
@@ -110,9 +111,9 @@ async function handleSubmit() {
     #foreach($column in $columns)#if($column.edit)#set($dummy = $editFields.add($column.javaField))#end#end
     const { error } = await fetchUpdate${BusinessName}({ #foreach($field in $editFields)$field#if($foreach.hasNext), #end#end });
     if (error) return;
+    window.$message?.success($t('common.updateSuccess'));
   }
 
-  window.$message?.success($t(props.operateType === 'add' ? 'common.addSuccess' : 'common.updateSuccess'));
   closeDrawer();
   emit('submitted');
 }

@@ -88,14 +88,15 @@ async function handleSubmit() {
   if (props.operateType === 'add') {
     const { error } = await fetchCreateTree({ parentId, deptId, userId, treeName });
     if (error) return;
+    window.$message?.success($t('common.addSuccess'));
   }
 
   if (props.operateType === 'edit') {
     const { error } = await fetchUpdateTree({ id, parentId, deptId, userId, treeName });
     if (error) return;
+    window.$message?.success($t('common.updateSuccess'));
   }
 
-  window.$message?.success($t(props.operateType === 'add' ? 'common.addSuccess' : 'common.updateSuccess'));
   closeDrawer();
   emit('submitted');
 }
