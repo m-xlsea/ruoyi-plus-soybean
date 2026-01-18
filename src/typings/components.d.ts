@@ -18,7 +18,6 @@ declare module 'vue' {
     BetterScroll: typeof import('./../components/custom/better-scroll.vue')['default']
     BooleanTag: typeof import('./../components/custom/boolean-tag.vue')['default']
     ButtonIcon: typeof import('./../components/custom/button-icon.vue')['default']
-    copy: typeof import('./../components/custom/dict-radio copy.vue')['default']
     CountTo: typeof import('./../components/custom/count-to.vue')['default']
     DarkModeContainer: typeof import('./../components/common/dark-mode-container.vue')['default']
     DataTable: typeof import('./../components/common/data-table.vue')['default']
@@ -167,9 +166,9 @@ declare module 'vue' {
     TagGroup: typeof import('./../components/custom/tag-group.vue')['default']
     TenantSelect: typeof import('./../components/custom/tenant-select.vue')['default']
     ThemeSchemaSwitch: typeof import('./../components/common/theme-schema-switch.vue')['default']
-    UmoDocEditor: typeof import('./../components/custom/umo-doc-editor.vue')['default']
     UserSelect: typeof import('./../components/custom/user-select.vue')['default']
     UserSelectModal: typeof import('./../components/custom/user-select-modal.vue')['default']
+    WangEditor: typeof import('./../components/custom/wang-editor.vue')['default']
     WaveBg: typeof import('./../components/custom/wave-bg.vue')['default']
   }
 }
@@ -182,7 +181,6 @@ declare global {
   const BetterScroll: typeof import('./../components/custom/better-scroll.vue')['default']
   const BooleanTag: typeof import('./../components/custom/boolean-tag.vue')['default']
   const ButtonIcon: typeof import('./../components/custom/button-icon.vue')['default']
-  const copy: typeof import('./../components/custom/dict-radio copy.vue')['default']
   const CountTo: typeof import('./../components/custom/count-to.vue')['default']
   const DarkModeContainer: typeof import('./../components/common/dark-mode-container.vue')['default']
   const DataTable: typeof import('./../components/common/data-table.vue')['default']
@@ -331,8 +329,8 @@ declare global {
   const TagGroup: typeof import('./../components/custom/tag-group.vue')['default']
   const TenantSelect: typeof import('./../components/custom/tenant-select.vue')['default']
   const ThemeSchemaSwitch: typeof import('./../components/common/theme-schema-switch.vue')['default']
-  const UmoDocEditor: typeof import('./../components/custom/umo-doc-editor.vue')['default']
   const UserSelect: typeof import('./../components/custom/user-select.vue')['default']
   const UserSelectModal: typeof import('./../components/custom/user-select-modal.vue')['default']
+  const WangEditor: typeof import('./../components/custom/wang-editor.vue')['default']
   const WaveBg: typeof import('./../components/custom/wave-bg.vue')['default']
 }

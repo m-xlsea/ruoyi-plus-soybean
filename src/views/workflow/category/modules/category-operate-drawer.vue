@@ -84,14 +84,15 @@ async function handleSubmit() {
   if (props.operateType === 'add') {
     const { error } = await fetchCreateCategory({ parentId, categoryName, orderNum });
     if (error) return;
+    window.$message?.success($t('common.addSuccess'));
   }
 
   if (props.operateType === 'edit') {
     const { error } = await fetchUpdateCategory({ categoryId, parentId, categoryName, orderNum });
     if (error) return;
+    window.$message?.success($t('common.updateSuccess'));
   }
 
-  window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');
 }

@@ -116,14 +116,15 @@ async function handleSubmit() {
   if (props.operateType === 'add') {
     const { error } = await fetchCreateSpel({ componentName, methodName, methodParams, viewSpel, remark, status });
     if (error) return;
+    window.$message?.success($t('common.addSuccess'));
   }
 
   if (props.operateType === 'edit') {
     const { error } = await fetchUpdateSpel({ id, componentName, methodName, methodParams, viewSpel, remark, status });
     if (error) return;
+    window.$message?.success($t('common.updateSuccess'));
   }
 
-  window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');
 }

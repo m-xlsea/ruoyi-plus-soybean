@@ -121,6 +121,7 @@ async function handleSubmit() {
       remark
     });
     if (error) return;
+    window.$message?.success($t('common.addSuccess'));
   }
 
   if (props.operateType === 'edit') {
@@ -139,9 +140,9 @@ async function handleSubmit() {
       remark
     });
     if (error) return;
+    window.$message?.success($t('common.updateSuccess'));
   }
 
-  window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');
 }

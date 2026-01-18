@@ -239,14 +239,18 @@ async function handleSubmit() {
     remark
   };
 
-  const { error } =
-    props.operateType === 'add' ? await fetchCreateMenu(payload) : await fetchUpdateMenu({ ...payload, menuId });
-
-  if (error) {
-    return;
+  if (props.operateType === 'add') {
+    const { error } = await fetchCreateMenu(payload);
+    if (error) return;
+    window.$message?.success($t('common.addSuccess'));
   }
 
-  window.$message?.success($t(props.operateType === 'add' ? 'common.addSuccess' : 'common.updateSuccess'));
+  if (props.operateType === 'edit') {
+    const { error } = await fetchUpdateMenu({ ...payload, menuId });
+    if (error) return;
+    window.$message?.success($t('common.updateSuccess'));
+  }
+
   closeDrawer();
   emit('submitted', menuType!);
 }
