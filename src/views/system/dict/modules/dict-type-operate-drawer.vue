@@ -19,7 +19,7 @@ interface Props {
 const props = defineProps<Props>();
 
 interface Emits {
-  (e: 'submitted'): void;
+  (e: 'submitted', dictType: string): void;
 }
 
 const emit = defineEmits<Emits>();
@@ -89,7 +89,7 @@ async function handleSubmit() {
 
   window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
-  emit('submitted');
+  emit('submitted', dictType!);
 }
 
 watch(visible, () => {
