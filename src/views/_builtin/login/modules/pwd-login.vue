@@ -166,7 +166,7 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
         <div class="w-full flex-y-center gap-16px">
           <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
           <NSpin :show="codeLoading" :size="28" class="h-42px">
-            <NButton :focusable="false" class="login-code h-42px w-136px" @click="handleFetchCaptchaCode">
+            <NButton :focusable="false" class="login-code h-42px w-114px" @click="handleFetchCaptchaCode">
               <img v-if="codeUrl" :src="codeUrl" />
               <NEmpty v-else :show-icon="false" description="暂无验证码" />
             </NButton>
@@ -220,12 +220,12 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
 <style scoped>
 .login-code {
   &.n-button {
-    --n-padding: 0 8px !important;
-    background-color: #c0c0c0;
+    --n-padding: 0 !important;
   }
 
   img {
     height: 42px;
+    border-radius: 8px;
   }
 }
 
