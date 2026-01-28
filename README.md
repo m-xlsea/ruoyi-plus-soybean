@@ -15,7 +15,8 @@
     <a href="https://www.typescriptlang.org" target="_blank"><img src="https://img.shields.io/badge/TypeScript-5.8-blue" alt="typescript"></a>
     <a href="https://vite.dev" target="_blank"><img src="https://img.shields.io/badge/Vite-6.2-orange" alt="vite"></a>
     <a href="https://www.naiveui.com" target="_blank"><img src="https://img.shields.io/badge/NaiveUI-2.41-purple" alt="naive-ui"></a>
-        <a href="./LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-MIT-yellow" alt="license"></a>
+    <a href="./LICENSE" target="_blank"><img src="https://img.shields.io/badge/License-MIT-yellow" alt="license"></a>
+    <a href="https://qm.qq.com/q/jNMKfdCL8Q" target="_blank"><img src="https://img.shields.io/badge/QQ%E7%BE%A4-451067199-EB1923?logo=qq&logoColor=white" alt="license"></a>
   </p>
 </div>
 
@@ -374,11 +375,20 @@ console.log(t('common.confirm'));
 
 - 禁止内容：黄腔、暴力言论、政治话题，违者直接飞机票（踢出群）
 - 遇到问题请先阅读 [项目文档](https://docs.ruoyi.xlsea.cn) 和 [Soybean 文档](https://docs.soybeanjs.cn/)，某些简单问题不予理睬
-- 蜡笔小新头像为机器人助手，私聊不保证回复，问题请在群内讨论
+
+### 微信交流群
+
+蜡笔小新头像为机器人助手，私聊不保证回复，问题请在群内讨论
 
 <img src="https://foruda.gitee.com/images/1749174520085305975/ad1b54fe_5601833.png" width="300px" />
 
 添加作者微信备注：加群
+
+### QQ 交流群
+
+<a href="https://qm.qq.com/q/jNMKfdCL8Q" target="_blank"><img src="https://img.shields.io/badge/%E7%82%B9%E5%87%BB%E5%8A%A0%E5%85%A5%20QQ%20%E4%BA%A4%E6%B5%81%E7%BE%A4-451067199-EB1923?logo=qq&logoColor=white" alt="license"></a>
+
+<img src="https://foruda.gitee.com/images/1769569918127494786/c6e5b6af_5601833.jpg" width="300px" />
 
 ## 🧧 捐献作者
 
