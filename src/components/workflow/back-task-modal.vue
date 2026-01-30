@@ -54,7 +54,7 @@ async function initDefault() {
   startBackFormLoading();
   startBackBtnLoading();
   Object.assign(backModel, createBackModel());
-  const { error, data } = await fetchGetBackNode(props.task.definitionId, props.task.nodeCode);
+  const { error, data } = await fetchGetBackNode(props.task.id, props.task.nodeCode);
   endBackFormLoading();
   endBackBtnLoading();
   if (error) return;

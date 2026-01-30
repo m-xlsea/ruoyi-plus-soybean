@@ -89,9 +89,9 @@ export function fetchGetTaskWaitList(data: Api.Workflow.TaskSearchParams) {
 }
 
 /** 获取可驳回节点 */
-export function fetchGetBackNode(definitionId: CommonType.IdType, nodeCode: string) {
+export function fetchGetBackNode(taskId: CommonType.IdType, nodeCode: string) {
   return request<Api.Workflow.FlowNodeList>({
-    url: `/workflow/task/getBackTaskNode/${definitionId}/${nodeCode}`,
+    url: `/workflow/task/getBackTaskNode/${taskId}/${nodeCode}`,
     method: 'get'
   });
 }
