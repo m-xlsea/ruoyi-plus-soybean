@@ -54,7 +54,7 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
       </div>
       <WaveBg />
     </div>
-    <div class="relative h-full flex-1 xl:m-auto sm:!w-full">
+    <div class="relative min-h-screen flex flex-col flex-1 xl:m-auto xl:min-h-full sm:!w-full">
       <header class="flex-y-center justify-between px-30px pt-30px xl:justify-end">
         <div class="relative z-100 flex items-center xl:hidden">
           <SystemLogo class="fill-primary text-32px" />
@@ -78,12 +78,24 @@ const activeModule = computed(() => moduleMap[props.module || 'pwd-login']);
         </div>
       </header>
       <main
-        class="m-auto mt-10% h-630px max-w-450px w-full rounded-5px bg-cover px-24px xl:absolute xl:inset-0 lg:mt-15% xl:mt-auto"
+        class="m-auto mt-10% max-w-450px min-h-0 w-full flex flex-col flex-1 justify-center rounded-5px bg-cover px-24px xl:absolute xl:inset-0 lg:mt-15% xl:mt-auto xl:h-auto xl:flex-none"
       >
         <Transition :name="themeStore.page.animateMode" mode="out-in" appear>
           <component :is="activeModule.component" />
         </Transition>
       </main>
+      <footer
+        class="w-full shrink-0 py-12px text-center text-12px color-gray-500 xl:absolute xl:bottom-16px xl:left-0 xl:right-0"
+      >
+        <a
+          href="https://github.com/m-xlsea/ruoyi-plus-soybean/blob/master/LICENSE"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="color-gray-500 hover:color-primary"
+        >
+          Copyright MIT © 2024 马铃薯头
+        </a>
+      </footer>
     </div>
   </div>
 </template>

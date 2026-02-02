@@ -140,7 +140,7 @@ handleFetchCaptchaCode();
         <div class="w-full flex-y-center gap-16px">
           <NInput v-model:value="model.code" :placeholder="$t('page.login.common.codePlaceholder')" />
           <NSpin :show="codeLoading" :size="28" class="h-52px">
-            <NButton :focusable="false" class="login-code h-52px w-136px" @click="handleFetchCaptchaCode">
+            <NButton :focusable="false" class="login-code h-42px w-114px" @click="handleFetchCaptchaCode">
               <img v-if="codeUrl" :src="codeUrl" />
               <NEmpty v-else :show-icon="false" description="暂无验证码" />
             </NButton>
@@ -166,12 +166,12 @@ handleFetchCaptchaCode();
 <style scoped lang="scss">
 .login-code {
   &.n-button {
-    --n-padding: 0 8px !important;
-    background-color: #c0c0c0;
+    --n-padding: 0 !important;
   }
 
   img {
-    height: 40px;
+    height: 42px;
+    border-radius: 8px;
   }
 }
 
