@@ -46,7 +46,7 @@ const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
   const { formRules, createRequiredRule } = useFormRules();
 
   const loginRules: Record<RuleKey, App.Global.FormRule[]> = {
-    username: [...formRules.userName, { required: true }],
+    username: [createRequiredRule($t('form.userName.required'))],
     password: [createRequiredRule($t('form.pwd.required'))],
     code: captchaEnabled.value ? [createRequiredRule($t('form.code.required'))] : [],
     tenantId: tenantEnabled.value ? formRules.tenantId : []
