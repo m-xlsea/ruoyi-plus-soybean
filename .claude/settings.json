@@ -1,0 +1,149 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(node *)",
+      "Bash(pnpm *)",
+      "Bash(yarn *)",
+      "Bash(bun *)",
+      "Bash(cat *)",
+      "Bash(ls *)",
+      "Bash(find *)",
+      "Bash(grep *)",
+      "Bash(mkdir *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(rm *)",
+      "Bash(touch *)",
+      "Bash(echo *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(sed *)",
+      "Bash(awk *)",
+      "Bash(sort *)",
+      "Bash(diff *)",
+      "Bash(curl *)",
+      "Bash(which *)",
+      "Bash(pwd)",
+      "Bash(tsc *)",
+      "Bash(eslint *)",
+      "Bash(prettier *)",
+      "Bash(jest *)",
+      "Bash(vitest *)",
+      "Bash(playwright *)",
+      "Read(*)",
+      "Write(*)",
+      "Edit(*)",
+      "mcp__cunzhi__*",
+      "mcp__augment-context-engine__*",
+      "mcp__mcp-deepwiki__*"
+    ],
+    "deny": ["Bash(rm -rf /)", "Bash(rm -rf ~)", "Bash(chmod 777 *)"]
+  },
+  "plugins": {
+    "enabled": [
+      "code-review",
+      "commit-commands",
+      "feature-dev",
+      "frontend-design",
+      "hookify",
+      "plugin-dev",
+      "pr-review-toolkit",
+      "security-guidance",
+      "superpowers@superpowers-marketplace"
+    ],
+    "marketplaces": [
+      {
+        "name": "claude-official",
+        "url": "registry:claude-plugins-official"
+      },
+      {
+        "name": "claude-community",
+        "url": "registry:claude-plugins-community"
+      },
+      {
+        "name": "claude-local",
+        "url": "local:.claude/plugins"
+      },
+      {
+        "name": "superpowers-marketplace",
+        "url": "github:obra/superpowers-marketplace"
+      }
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/context-loader.cjs",
+            "timeout": 10000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\.md$/i.test(p)&&!/^(README|CHANGELOG|LICENSE|API|ARCHITECTURE|SECURITY|MIGRATION|CONTRIBUTING)/i.test(require('path').basename(p))&&!/(docs|src|plans|scripts|templates|.claude|.codex|.ai_state|.knowledge)[\\\\/]/.test(p)){process.stderr.write('Block: AI 不应随意创建 .md 文件: '+p);process.exit(2)}process.exit(0)}catch{process.exit(0)}})\"",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\.(ts|tsx)$/.test(p)){const{execSync}=require('child_process');try{execSync('npx tsc --noEmit 2>&1',{timeout:30000,stdio:'pipe'})}catch(e){process.stdout.write('⚠️ TypeScript 类型错误:\\n'+e.stdout?.toString().slice(0,500))}}process.exit(0)}catch{process.exit(0)}})\"",
+            "timeout": 35000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/delivery-gate.cjs",
+            "timeout": 120000
+          }
+        ]
+      }
+    ],
+    "WorktreeCreate": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/worktree-init.cjs",
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  },
+  "env": {
+    "LANGUAGE": "zh-Hans",
+    "LC_ALL": "zh-Hans",
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": 1,
+    "API_TIMEOUT_MS": "3000000",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-sonnet-4-6",
+    "ANTHROPIC_API_KEY": "",
+    "ANTHROPIC_BASE_URL": "",
+    "VIBECODING_VERSION": "8.9",
+    "VIBECODING_HOOKS_DISABLED": "0"
+  }
+}
