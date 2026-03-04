@@ -210,6 +210,7 @@ declare namespace App {
     type RouterPushOptions = {
       query?: Record<string, string>;
       params?: Record<string, string>;
+      force?: boolean;
     };
 
     /** The global header props */

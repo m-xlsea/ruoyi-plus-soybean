@@ -20,7 +20,7 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   const { toLogin, redirectFromLogin } = useRouterPush(false);
   const { loading: loginLoading, startLoading, endLoading } = useLoading();
 
-  const token = ref(getToken());
+  const token = ref('');
 
   const userInfo: Api.Auth.UserInfo = reactive({
     user: undefined,
@@ -174,9 +174,10 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
   }
 
   async function initUserInfo() {
-    const hasToken = getToken();
+    const maybeToken = getToken();
 
-    if (hasToken) {
+    if (maybeToken) {
+      token.value = maybeToken;
       const pass = await getUserInfo();
 
       if (!pass) {
