@@ -321,7 +321,7 @@ function updateCharts() {
 
           // 设置自定义颜色
           const newItemStyle = {
-            ...(opts.series[0].itemStyle || {}),
+            ...opts.series[0].itemStyle,
             color(param: { dataIndex: number }) {
               const index = param.dataIndex % colorPalette.length;
               return colorPalette[index >= 0 ? index : 0];
@@ -332,7 +332,7 @@ function updateCharts() {
 
           // 增强tooltip展示
           opts.tooltip = {
-            ...(opts.tooltip || {}),
+            ...opts.tooltip,
             formatter: function tooltipFormatter(params: any) {
               if (!params || typeof params !== 'object') return '';
 

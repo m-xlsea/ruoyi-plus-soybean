@@ -8,7 +8,7 @@ import { localStg } from '@/utils/storage';
 import { SetupStoreId } from '@/enum';
 import { useRouteStore } from '../route';
 import { useTabStore } from '../tab';
-import useNoticeStore from '../notice';
+import { useNoticeStore } from '../notice';
 import { clearAuthStorage, getToken } from './shared';
 
 export const useAuthStore = defineStore(SetupStoreId.Auth, () => {

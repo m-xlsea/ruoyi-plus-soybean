@@ -487,7 +487,6 @@
 [![xlsea](https://github.com/m-xlsea.png?size=48)](https://gitee.com/xlsea)&nbsp;&nbsp;[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;[![wenyuanw](https://github.com/wenyuanw.png?size=48)](https://github.com/wenyuanw)&nbsp;&nbsp;[![Elio-An](https://github.com/Elio-An.png?size=48)](https://gitee.com/elio-an)&nbsp;&nbsp;[![chen-ziwen](https://github.com/chen-ziwen.png?size=48)](https://github.com/chen-ziwen)&nbsp;&nbsp;
 [![wangzhongqi0917](https://gitee.com/wangzhongqi0917.png?width=48)](https://gitee.com/wangzhongqi0917)&nbsp;&nbsp;[![qq1822213252](https://gitee.com/qq1822213252.png?width=48)](https://gitee.com/qq1822213252)&nbsp;&nbsp;[![tangzc](https://gitee.com/tangzc.png?width=48)](https://gitee.com/tangzc),&nbsp;[metabytes](https://gitee.com/metabytes)
 
-
 ## [v1.0.0](https://gitee.com/xlsea/ruoyi-plus-soybean/releases/tag/v1.0.0) (2025-06-05)
 
 ### &nbsp;&nbsp;&nbsp;🚀 新功能

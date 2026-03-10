@@ -1,0 +1,5 @@
+.ai_state/
+.claude/
+.codex/
+docs
+public/streamsaver/
