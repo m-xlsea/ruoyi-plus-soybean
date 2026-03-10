@@ -1,112 +1,58 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git *)",
-      "Bash(npm *)",
-      "Bash(npx *)",
+      "Read",
+      "Write",
+      "Edit",
+      "MultiEdit",
+      "Task",
+      "WebSearch",
+      "WebFetch",
       "Bash(node *)",
-      "Bash(pnpm *)",
-      "Bash(yarn *)",
-      "Bash(bun *)",
+      "Bash(npm test)",
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npx eslint *)",
+      "Bash(npx prettier *)",
+      "Bash(npx playwright *)",
+      "Bash(npx vitest *)",
+      "Bash(npx jest *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Bash(grep *)",
+      "Bash(find *)",
       "Bash(cat *)",
       "Bash(ls *)",
-      "Bash(find *)",
-      "Bash(grep *)",
       "Bash(mkdir *)",
       "Bash(cp *)",
       "Bash(mv *)",
-      "Bash(rm *)",
-      "Bash(touch *)",
-      "Bash(echo *)",
-      "Bash(head *)",
-      "Bash(tail *)",
-      "Bash(wc *)",
-      "Bash(sed *)",
-      "Bash(awk *)",
-      "Bash(sort *)",
-      "Bash(diff *)",
-      "Bash(curl *)",
-      "Bash(which *)",
-      "Bash(pwd)",
-      "Bash(tsc *)",
-      "Bash(eslint *)",
-      "Bash(prettier *)",
-      "Bash(jest *)",
-      "Bash(vitest *)",
-      "Bash(playwright *)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "mcp__cunzhi__*",
-      "mcp__augment-context-engine__*",
-      "mcp__mcp-deepwiki__*"
+      "Bash(python *)",
+      "Bash(pip install *)",
+      "Bash(cargo *)",
+      "Bash(go *)",
+      "Bash(make *)"
     ],
-    "deny": ["Bash(rm -rf /)", "Bash(rm -rf ~)", "Bash(chmod 777 *)"]
-  },
-  "plugins": {
-    "enabled": [
-      "code-review",
-      "commit-commands",
-      "feature-dev",
-      "frontend-design",
-      "hookify",
-      "plugin-dev",
-      "pr-review-toolkit",
-      "security-guidance",
-      "superpowers@superpowers-marketplace"
-    ],
-    "marketplaces": [
-      {
-        "name": "claude-official",
-        "url": "registry:claude-plugins-official"
-      },
-      {
-        "name": "claude-community",
-        "url": "registry:claude-plugins-community"
-      },
-      {
-        "name": "claude-local",
-        "url": "local:.claude/plugins"
-      },
-      {
-        "name": "superpowers-marketplace",
-        "url": "github:obra/superpowers-marketplace"
-      }
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(sudo *)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
     ]
   },
   "hooks": {
     "SessionStart": [
       {
-        "matcher": "",
         "hooks": [
           {
             "type": "command",
             "command": "node .claude/hooks/context-loader.cjs",
-            "timeout": 10000
-          }
-        ]
-      }
-    ],
-    "PreToolUse": [
-      {
-        "matcher": "Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\.md$/i.test(p)&&!/^(README|CHANGELOG|LICENSE|API|ARCHITECTURE|SECURITY|MIGRATION|CONTRIBUTING)/i.test(require('path').basename(p))&&!/(docs|src|plans|scripts|templates|.claude|.codex|.ai_state|.knowledge)[\\\\/]/.test(p)){process.stderr.write('Block: AI 不应随意创建 .md 文件: '+p);process.exit(2)}process.exit(0)}catch{process.exit(0)}})\"",
-            "timeout": 5000
-          }
-        ]
-      }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Write|Edit",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node -e \"let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const i=JSON.parse(d);const p=i.tool_input?.file_path||'';if(/\\.(ts|tsx)$/.test(p)){const{execSync}=require('child_process');try{execSync('npx tsc --noEmit 2>&1',{timeout:30000,stdio:'pipe'})}catch(e){process.stdout.write('⚠️ TypeScript 类型错误:\\n'+e.stdout?.toString().slice(0,500))}}process.exit(0)}catch{process.exit(0)}})\"",
-            "timeout": 35000
+            "timeout": 15
           }
         ]
       }
@@ -117,33 +63,73 @@
           {
             "type": "command",
             "command": "node .claude/hooks/delivery-gate.cjs",
-            "timeout": 120000
+            "timeout": 60
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "你是交付质量审查员。检查 assistant 的最终回复:\n1. 所有 plan.md 任务已完成? (无未勾选 checkbox)\n2. 代码变更有对应测试? (新功能/修复必须有测试)\n3. 无 TODO/FIXME/HACK 残留?\n4. commit message 符合 conventional commits?\n5. 无硬编码密钥/凭据?\n全部通过→回复 {\"ok\": true}\n任一不通过→回复 {\"ok\": false, \"reason\": \"具体问题\"}",
+            "timeout": 30
           }
         ]
       }
     ],
-    "WorktreeCreate": [
+    "PostToolUse": [
       {
+        "matcher": "Write|Edit|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/worktree-init.cjs",
-            "timeout": 10000
+            "command": "node .claude/hooks/post-edit.cjs",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "TDD 检查: 刚写入/修改的文件是源代码(非测试)吗?\n如果是源代码且当前 RIPER 阶段是 E(执行):\n- 检查是否有对应的测试文件已存在或刚创建\n- 如果写了功能代码但没有先写测试 → 提醒 RED-GREEN-REFACTOR\n回复 {\"ok\": true} 或 {\"ok\": false, \"reason\": \"先写测试再写实现\"}",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/pre-bash.cjs",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "子代理完成。检查 last_assistant_message:\n1) 所有子任务完成? 2) 无未解决错误? 3) 符合 conventions.md?\n通过→accept, 有问题→continue。\n回复 JSON {\"ok\": true} 或 {\"ok\": false, \"reason\": \"...\"}",
+            "timeout": 30
           }
         ]
       }
     ]
   },
   "env": {
+    "VIBECODING_VERSION": "9.1.0",
     "LANGUAGE": "zh-Hans",
     "LC_ALL": "zh-Hans",
-    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": 1,
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
     "API_TIMEOUT_MS": "3000000",
     "CLAUDE_CODE_SUBAGENT_MODEL": "claude-sonnet-4-6",
-    "ANTHROPIC_API_KEY": "",
-    "ANTHROPIC_BASE_URL": "",
-    "VIBECODING_VERSION": "8.9",
     "VIBECODING_HOOKS_DISABLED": "0"
   }
 }

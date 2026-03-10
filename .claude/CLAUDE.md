@@ -1,97 +1,46 @@
-# VibeCoding Kernel v8.9
+# VibeCoding Kernel v9.1.0
 
-> Talk is cheap. Show me the code. — Linus Torvalds
+## 铁律 (违反即失败)
 
-## 身份
+1. **先搜后写**: augment-context-engine 搜现有实现 → 不可用时 grep -r
+2. **先规后码**: Path B+ 任务必须先 plan.md → cunzhi [PLAN_CONFIRMED] 后才能写代码
+3. **先测后码**: E 阶段写功能代码前必须先写/更新测试 (RED→GREEN→REFACTOR)
+4. **不确定就问**: 歧义/架构决策 → cunzhi 向用户确认, 不猜
+5. **不破坏已有**: 改代码前读测试, 改后跑测试, 红了就修
+6. **compact 前存档**: /compact 前把关键决策写入 .ai_state/knowledge.md
+7. **只改需要改的**: 不重构任务范围外的代码, 不加未要求的功能
+8. **避免过度工程**: 用最简方案解决问题, YAGNI 优先
+9. **commit 粒度**: 每个逻辑变更独立 commit, message 用 conventional commits
+10. **交付必复盘**: V 阶段完成后必须 diff 分析→提炼 lessons→写入 knowledge.md
 
-你是一个工程化 AI 编程协作系统。你不只是写代码——你按工程流程交付软件。
+## 系统入口
 
-## 铁律 (5 条, 无例外)
+- `/vibe-dev {需求}` — 自动 P.A.C.E. 路由, 开始开发
+- `/vibe-init` — 初始化 .ai_state/, 新项目用
+- `/vibe-resume` — 中断恢复 (读 .ai_state/ 断点)
+- `/vibe-status` — 查看当前进度
 
-1. **先理解再动手** — 任何任务开始前, 用 augment-context-engine 扫描现有代码
-2. **先规划再编码** — Path B+ 必须输出 plan.md, cunzhi 确认后才能写代码
-3. **先测试再交付** — 改了什么就测什么, delivery-gate hook 自动拦截未测试的交付
-4. **每步可追溯** — .ai_state/ 实时更新, kanban TODO→DOING→DONE
-5. **人确认再推进** — 关键节点调用 cunzhi MCP 等待用户确认 (降级: 对话确认)
+## 子代理 (5 个, sonnet 模型)
 
-## 三层分工
-
-| 层 | 负责 | 不做 |
-|:---|:---|:---|
-| **Superpowers + Plugins** | 方法论 (怎么做 TDD/Debug/Review) | 编排 |
-| **MCP 工具** | 执行 (搜索/确认/文档查询) | 决策 |
-| **VibeCoding** | 编排 (什么时候/用什么/做多少) | 重复教 AI 已知的事 |
-
-## 工具注册表
-
-### MCP (编排层)
-
-| MCP | 用途 | 降级 |
-|:---|:---|:---|
-| augment-context-engine | 语义代码搜索, R/D/E 阶段 | grep + find |
-| cunzhi | 人工确认检查点, 全阶段 | 对话问答 (不可跳过确认本身) |
-| mcp-deepwiki | 开源库文档查询, R/D 阶段 | web search |
-
-### Plugins (触发层, 开机预装)
-
-code-review · commit-commands · feature-dev · frontend-design · hookify · pr-review-toolkit · security-guidance · superpowers@superpowers-marketplace
-
-> VibeCoding 编排 WHEN/WHERE, Plugins 提供 HOW。用户不需要知道 Superpowers 存在。
-
-### 降级通则
-
-MCP 不可用 → 用 CLI 替代 (见各 skill 降级字段)。
-Plugin 不可用 → 用 VibeCoding skill 内联逻辑。
-全不可用 → 回退到 AI 内置能力, 保持流程不中断。
+builder (background) / validator / explorer / e2e-runner / security-auditor
 
 ## 工作流
 
-1. **P.A.C.E. 路由** → 读 `workflows/pace.md` 判断复杂度 (A/B/C/D)
-2. **RIPER-7 编排** → 读 `workflows/riper-7.md` 按阶段执行
-3. **Skills 按需加载** → 只在对应阶段读取对应 skill
+P.A.C.E. 路由 → RIPER-7 阶段 → Skills **自动触发** (非手动调用)
+每个 RIPER 阶段绑定必须执行的 skills, 详见 .claude/workflows/
 
-### 分级加载 (核心优化)
+## 质量门 (hooks 自动执行)
 
-| Path | 加载内容 | 约行数 | 约 tokens |
-|:---|:---|:---|:---|
-| A | CLAUDE.md + rules.md | ~130L | ~250 |
-| B | + pace.md + riper-7.md + 相关 skills (6个) | ~540L | ~900 |
-| C/D | + agent-teams + security-review + 全量 skills | ~700L | ~1200 |
+- PostToolUse: TDD 检查 (写源码前是否有测试)
+- Stop: LLM-as-Judge 交付审查 + delivery-gate 机械检查
+- SubagentStop: 子代理产出审查
 
-## 状态管理
+## 状态持久化
 
-```
-.ai_state/          ← 当前任务状态 (每次会话)
-├── session.md      ← 当前阶段/Path/进度
-├── doing.md        ← 正在做的 TODO
-├── design.md       ← brainstorm 输出
-├── plan.md         ← plan-first 输出
-├── verified.md     ← 验证结果
-├── review.md       ← 审查结果
-├── conventions.md  ← 项目约定
-└── archive/        ← 历史归档
+.ai_state/ 目录: session → design → plan → doing → verified → review → archive
+/memory 管理跨会话记忆 (官方 auto-memory)
 
-.knowledge/         ← 跨会话经验 (持久)
-├── patterns.md     ← 成功模式
-├── pitfalls.md     ← 已知陷阱
-├── decisions.md    ← ADR 记录
-└── tools.md        ← 工具使用经验
-```
+## MCP (配置于 .mcp.json)
 
-## Agent Teams (Path C+)
-
-5 个子代理, 全部 Sonnet 4.6, worktree 隔离:
-- **builder**: 构建实现 (isolation: worktree)
-- **validator**: 测试验证 (isolation: worktree)
-- **explorer**: 代码探索 (background: true, 只读)
-- **e2e-runner**: E2E 测试 (isolation: worktree)
-- **security-auditor**: 安全扫描 (background: true)
-
-## 新手指引
-
-不知道怎么开始？说 "我想做 XXX" 即可。系统自动:
-1. 分析任务复杂度 → 选择 Path
-2. 展示执行计划预览
-3. 等你确认后开始
-
-或运行 `/vibe-init` 初始化项目结构。
+augment-context-engine / cunzhi / mcp-deepwiki
+降级: augment→grep | cunzhi→对话确认 | deepwiki→WebSearch

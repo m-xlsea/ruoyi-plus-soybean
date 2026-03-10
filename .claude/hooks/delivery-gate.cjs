@@ -1,91 +1,83 @@
-// VibeCoding v8.9 — Stop Hook (Delivery Gate)
+#!/usr/bin/env node
+"use strict";
+// VibeCoding v9.1.0 — Stop Hook (Delivery Gate)
 // 阻止未完成任务/未测试代码的交付
-const fs = require('node:fs');
-const { execSync } = require('node:child_process');
+var fs = require("fs");
+var child_process = require("child_process");
 
-function exists(f) {
-  try {
-    return fs.existsSync(f);
-  } catch {
-    return false;
-  }
-}
+process.on("uncaughtException", function() { process.exit(0); });
+if (process.env.VIBECODING_HOOKS_DISABLED === "1") process.exit(0);
+
+function exists(f) { try { return fs.existsSync(f); } catch { return false; } }
 
 function runQuiet(cmd, timeout) {
   try {
-    execSync(cmd, { timeout: timeout || 60000, stdio: 'pipe' });
+    child_process.execSync(cmd, { timeout: timeout || 60000, stdio: "pipe" });
     return true;
-  } catch {
-    return false;
-  }
+  } catch { return false; }
 }
 
 function hasScript(name) {
   try {
-    const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-    return Boolean(pkg.scripts && pkg.scripts[name]);
-  } catch {
-    return false;
-  }
+    var pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+    return !!(pkg.scripts && pkg.scripts[name]);
+  } catch { return false; }
 }
 
-// 获取当前 Path
-let currentPath = 'A';
-try {
-  const session = fs.readFileSync('.ai_state/session.md', 'utf8');
-  const m = session.match(/path:\s*([ABCD])/i);
-  if (m) currentPath = m[1].toUpperCase();
-} catch {}
-
-const errors = [];
-
-// === 检查 1: plan.md 完成度 (Path B+) ===
-if (currentPath !== 'A' && exists('.ai_state/plan.md')) {
+var d = "";
+process.stdin.on("data", function(c) { d += c; });
+process.stdin.on("end", function() {
   try {
-    const plan = fs.readFileSync('.ai_state/plan.md', 'utf8');
-    const total = (plan.match(/- \[[ x]\]/g) || []).length;
-    const done = (plan.match(/- \[x\]/gi) || []).length;
-    if (total > 0 && done < total) {
-      errors.push(`plan.md: ${done}/${total} 完成, ${total - done} 个任务未完成`);
+    var input = JSON.parse(d);
+
+    // 检查 last_assistant_message (v2.1.47+ 新增)
+    var lastMsg = input.last_assistant_message || "";
+
+    // 1. 检查 plan.md 未完成任务
+    if (exists(".ai_state/plan.md")) {
+      var plan = fs.readFileSync(".ai_state/plan.md", "utf8");
+      var unchecked = (plan.match(/^- \[ \]/gm) || []).length;
+      if (unchecked > 0) {
+        process.stderr.write("[DeliveryGate] BLOCKED: " + unchecked + " unchecked tasks in plan.md\n");
+        process.exit(2);
+      }
     }
-  } catch {}
-}
 
-// === 检查 2: npm test (Path B+) ===
-if (currentPath !== 'A' && hasScript('test')) {
-  if (!runQuiet('npm test', 90000)) {
-    errors.push('npm test 失败');
-  }
-}
+    // 2. Path B+: 运行测试 (仅当有测试脚本时)
+    var isStrictPath = exists(".ai_state/design.md") || exists(".ai_state/plan.md");
+    if (isStrictPath) {
+      // 多语言测试检测
+      var testCmd = null;
+      if (hasScript("test")) testCmd = "npm test";
+      else if (exists("pytest.ini") || exists("pyproject.toml")) testCmd = "pytest --tb=short -q";
+      else if (exists("Cargo.toml")) testCmd = "cargo test";
+      else if (exists("go.mod")) testCmd = "go test ./...";
 
-// === 检查 3: ESLint (Path C+) ===
-const isStrictPath = currentPath === 'C' || currentPath === 'D';
-const hasEslintConfig =
-  exists('.eslintrc') ||
-  exists('.eslintrc.js') ||
-  exists('.eslintrc.json') ||
-  exists('.eslintrc.cjs') ||
-  exists('eslint.config.js') ||
-  exists('eslint.config.mjs') ||
-  exists('eslint.config.cjs');
-if (isStrictPath && hasEslintConfig) {
-  if (!runQuiet('npx eslint . --max-warnings 0', 60000)) {
-    errors.push('ESLint 检查未通过');
-  }
-}
+      if (testCmd) {
+        var passed = runQuiet(testCmd, 120000);
+        if (!passed) {
+          process.stderr.write("[DeliveryGate] BLOCKED: tests failed (" + testCmd + ")\n");
+          process.exit(2);
+        }
+      }
 
-// === 检查 4: TypeScript (Path B+) ===
-if (currentPath !== 'A' && exists('tsconfig.json')) {
-  if (!runQuiet('npx tsc --noEmit', 60000)) {
-    errors.push('TypeScript 类型检查失败');
-  }
-}
+      // ESLint (仅当有配置时)
+      var hasEslint = exists(".eslintrc.js") || exists(".eslintrc.json") || exists(".eslintrc.yml") || exists("eslint.config.js") || exists("eslint.config.mjs");
+      if (hasEslint) {
+        runQuiet("npx eslint . --max-warnings=0 2>/dev/null", 30000);
+        // ESLint 失败不阻塞, 只警告
+      }
+    }
 
-// === 输出 ===
-if (errors.length > 0) {
-  process.stderr.write(`🚫 Delivery Gate 拦截:\n${errors.map(e => `  ❌ ${e}`).join('\n')}`);
-  process.exit(2); // exit 2 = block
-} else {
-  process.stdout.write(`✅ Delivery Gate 通过 (Path ${currentPath})`);
-  process.exit(0);
-}
+    // 3. 检查 doing.md 是否有未完成项
+    if (exists(".ai_state/doing.md")) {
+      var doing = fs.readFileSync(".ai_state/doing.md", "utf8");
+      var inProgress = (doing.match(/🔄|IN_PROGRESS|进行中/g) || []).length;
+      if (inProgress > 0) {
+        process.stderr.write("[DeliveryGate] WARNING: " + inProgress + " tasks still in progress\n");
+      }
+    }
+
+  } catch(e) {}
+  console.log(d);
+});

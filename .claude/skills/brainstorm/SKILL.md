@@ -1,33 +1,36 @@
 ---
 name: brainstorm
-description: 苏格拉底式需求精炼 — R₀b 阶段
+description: 需求头脑风暴 — R₀b 阶段, 探索方案空间
 context: main
 ---
+## 触发: Path B+ 任务开始时 (自动加载)
 
-## 触发
-Path B+ 任务启动时, RIPER R₀b 阶段。
+## 步骤
+1. augment-context-engine 搜索相关代码和依赖
+2. 读 .ai_state/knowledge.md 了解历史经验和项目规范
+3. 生成 Spec 需求模板 (写入 design.md 顶部):
+   - 功能需求 (MUST/SHOULD/COULD)
+   - 非功能需求 (性能/安全/兼容性)
+   - 约束条件 (技术栈/时间/依赖)
+   - 验收标准 (可测试的完成条件)
+4. 生成 2-3 个候选方案, 每个包含:
+   方案描述 / 优劣势 / 预估工作量 / 技术风险
+5. 输出到 .ai_state/design.md
+6. cunzhi [DESIGN_DIRECTION] 让用户选择方向
 
-## 工具
+## Spec 模板格式
+```markdown
+## Spec: {需求标题}
+### 功能需求
+- [MUST] ...
+- [SHOULD] ...
+### 非功能需求
+- 性能: ...
+- 安全: ...
+### 约束
+- ...
+### 验收标准
+- [ ] ...
+```
 
-| 工具 | 类型 | 调用方式 |
-|:---|:---|:---|
-| augment-context-engine | MCP | 搜索现有代码理解项目结构 |
-| mcp-deepwiki | MCP | 查候选库文档验证方案 |
-| cunzhi | MCP | [DESIGN_DIRECTION] 确认方向 |
-| superpowers brainstorming | Plugin | 自动: 苏格拉底提问方法论 |
-
-## 流程
-
-1. augment-context-engine 搜索项目关键文件, 建立上下文
-2. 读 .ai_state/conventions.md 和 .knowledge/pitfalls.md
-3. **逐个提问** (一次一问, 优先选择题, YAGNI 原则)
-4. 提出 2-3 方案, deepwiki 验证候选技术可行性
-5. **分段呈现** (每段 ≤200 字, 逐段确认)
-6. 输出到 .ai_state/design.md
-7. cunzhi [DESIGN_DIRECTION] 确认
-
-## 输出
-`.ai_state/design.md` — 下游被 R/D 阶段和 plan-first 消费。
-
-## 降级
-MCP 不可用 → 直接对话提问, 手动记录到 design.md。
+不可用时: 直接基于需求分析, 跳过代码搜索

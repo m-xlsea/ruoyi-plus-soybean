@@ -1,6 +1,3 @@
-# Review
-
-## 代码审查结果
-
-## 交付确认
-- [ ] cunzhi [DELIVERY_CONFIRMED]
+# review
+<!-- VibeCoding v9.1.0 模板 — 由 /vibe-init 创建 -->
+<!-- 使用说明在注释中, 填充后删除注释 -->

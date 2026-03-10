@@ -1,23 +1,26 @@
-# VibeCoding 项目硬规则
+# 编码规范 (rules.md)
 
-## 代码规则 (从 skills 提取的强制规则)
+## 通用
 
-1. 修 bug 必须写回归测试 (Path B+)
-2. 新增 API 必须有入参验证
-3. 数据库查询必须参数化, 禁止字符串拼接 SQL
-4. 不提交 console.log/print 调试语句到生产代码
-5. 环境变量不硬编码, 用 .env + process.env
+- 函数: 单一职责, <50 行, 清晰命名
+- 错误处理: 不吞异常, 有意义的错误消息
+- 注释: 解释 WHY 不解释 WHAT
+- 不使用 any/as any (TS), 不使用 # type: ignore (Python)
 
-## 工作流规则
+## Git
 
-6. 不在 E 阶段修改 design.md (设计已锁定)
-7. plan.md 中未完成的任务不能标记为 DONE
-8. .knowledge/ 文件不可删除, 只追加
-9. conventions.md 变更需 cunzhi 确认
-10. 每次 commit 必须关联 plan.md 任务编号 (Path B+)
+- 分支: feature/{描述}, fix/{描述}, refactor/{描述}
+- Commit: conventional commits (feat/fix/refactor/docs/test/chore)
+- 每个逻辑变更独立 commit, 不混杂
 
-## Git 规则
+## 测试
 
-11. commit message 格式: `type(scope): description [T-XXX]`
-12. Path B: squash merge 到主分支
-13. Path C+: 按功能分 commit, 保留历史
+- 新功能必须有测试
+- 修 bug 先写回归测试
+- 覆盖率: 关键路径 100%, 整体 >80%
+
+## 安全
+
+- 不硬编码密钥/凭据
+- 使用环境变量或 secret manager
+- 所有用户输入必须验证/转义

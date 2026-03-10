@@ -1,35 +1,28 @@
 ---
 name: agent-teams
-description: 并行分工 + worktree 隔离 — Path C+
+description: 多代理并行协作 — Path C/D 的 E 阶段
 context: main
 ---
+## 触发: Path C/D 的 E(执行) 阶段
 
-## 触发
-P.A.C.E. 路由为 Path C/D 时激活。
+## 前提
+- .claude/agents/ 目录下定义了 builder/validator/explorer 等子代理
+- plan.md 中任务已标注可并行/有依赖
 
-## 子代理
+## 编排策略
+1. 读 plan.md → 识别无依赖的任务组
+2. 为每组分配 builder 子代理 (background: true)
+3. 每个 builder 使用 isolation: worktree 隔离
+4. validator 定期检查各 builder 产出
+5. explorer 负责跨模块调研
 
-| Agent | 文件 | 模型 | 隔离 | 角色 |
-|:---|:---|:---|:---|:---|
-| builder | agents/builder.md | sonnet-4-6 | worktree | 实现代码 |
-| validator | agents/validator.md | sonnet-4-6 | worktree | 运行测试 |
-| explorer | agents/explorer.md | sonnet-4-6 | background | 探索依赖 (只读) |
-| e2e-runner | agents/e2e-runner.md | sonnet-4-6 | worktree | E2E 测试 |
-| security-auditor | agents/security-auditor.md | sonnet-4-6 | background | 安全扫描 |
+## 并行规则
+- 无依赖任务: 并行执行
+- 有依赖任务: 串行, 前置完成后触发
+- 冲突检测: 同文件不并行修改
 
-## Hooks 集成
-
-- **TeammateIdle**: teammate 空闲时自动分配下一个 plan.md 任务
-- **TaskCompleted**: teammate 完成后自动触发 validator 跑测试
-- **WorktreeCreate**: worktree-init.cjs 初始化 .ai_state/
-
-## 并行工作协议
-
-1. 从 plan.md 读取任务列表, 标注依赖关系
-2. 无依赖任务可并行分配给不同 builder
-3. builder 完成 → TaskCompleted hook → validator 自动验证
-4. validator 不通过 → 退回 builder 修复
-5. 全部任务完成 → explorer 扫描集成点 → 主代理合并
-
-## 降级
-Agent Teams 不可用 → 顺序执行, 不并行。
+## 子代理调用
+- Task(builder): 开发任务
+- Task(validator): 验证任务
+- Task(explorer): 调研任务
+- `claude agents` 查看运行状态

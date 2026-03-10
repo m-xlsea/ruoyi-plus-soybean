@@ -1,21 +1,14 @@
 ---
 name: vibe-init
-description: 初始化 VibeCoding 项目结构
-allowed-tools: Read, Write, Bash
+description: 初始化项目 .ai_state 状态目录
 ---
 
-# /vibe-init — 项目初始化
+## 执行步骤
 
-1. 检查项目根目录是否已有 .ai_state/
-2. 如果没有:
-   ```bash
-   mkdir -p .ai_state/archive
-   mkdir -p .knowledge
-   ```
-3. 从 `.claude/templates/ai-state/` 复制模板到 `.ai_state/`
-4. 从 `.claude/templates/knowledge/` 复制模板到 `.knowledge/`
-5. 检测项目类型 (package.json/requirements.txt/go.mod)
-6. 初始化 conventions.md 中的项目信息
-7. 触发 quickstart 引导
+1. 创建 .ai_state/ 目录
+2. 从 .claude/templates/ai-state/ 复制模板文件
+3. 读项目 README/package.json 填充 conventions.md 基础信息
+4. 添加 .ai_state/ 到 .gitignore
+5. 输出: 初始化完成, 使用 /vibe-dev {需求} 开始
 
-如果 .ai_state/ 已存在, 检查完整性并补全缺失文件。
+模板位置: .claude/templates/ai-state/
