@@ -1,4 +1,5 @@
 {
+  "ignorePatterns": [".ai_state", ".claude", ".codex", "doc", "public/streamsaver"],
   "categories": {
     "correctness": "error",
     "suspicious": "error"
