@@ -82,7 +82,12 @@ function toggleSelectAll(checked: boolean) {
         </NCheckbox>
       </div>
       <NDivider class="!my-4px" />
-      <VueDraggable v-model="columns" :animation="150" filter=".none_draggable" class="max-h-[200px] overflow-y-auto">
+      <VueDraggable
+        v-model="columns"
+        :animation="150"
+        filter=".none_draggable"
+        class="column-setting-scroll overflow-y-auto max-h-[200px]"
+      >
         <div
           v-for="item in columns"
           :key="item.key"
@@ -115,14 +120,7 @@ function toggleSelectAll(checked: boolean) {
 </template>
 
 <style scoped lang="scss">
-.table-column-setting-list {
-  max-height: 60vh;
-  overflow-y: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.table-column-setting-list::-webkit-scrollbar {
-  display: none;
+.column-setting-scroll {
+  @include scrollbar();
 }
 </style>
