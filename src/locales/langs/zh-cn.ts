@@ -29,6 +29,7 @@ const local: App.I18n.Schema = {
     cancel: '取消',
     close: '关闭',
     check: '勾选',
+    selectAll: '全选',
     expandColumn: '展开列',
     columnSetting: '列设置',
     config: '配置',
@@ -159,7 +160,7 @@ const local: App.I18n.Schema = {
         title: '标签栏设置',
         visible: '显示标签栏',
         cache: '标签栏信息缓存',
-        cacheTip: '一键开启/关闭全局 keepalive',
+        cacheTip: '离开页面后仍然保留标签栏信息',
         height: '标签栏高度',
         mode: {
           title: '标签栏风格',
@@ -1277,7 +1278,12 @@ const local: App.I18n.Schema = {
     unpin: '取消固定'
   },
   datatable: {
-    itemCount: '共 {total} 条'
+    itemCount: '共 {total} 条',
+    fixed: {
+      left: '左固定',
+      right: '右固定',
+      unFixed: '取消固定'
+    }
   }
 };
 

@@ -1,22 +1,15 @@
 ---
 name: context7
-description: 库文档按需拉取 — 贯穿 R₀b/R/D/E
-context: main
+description: 库文档按需拉取
 ---
+# Context7 (库文档查询)
 
-## 调用
+需要查询依赖库文档时:
+1. 优先: `npx ctx7 resolve {库名}` CLI 查询
+2. 备选: web search 查最新 API
+3. 缓存: 查过的 API 结论写入当前阶段笔记, 避免重复查询
 
-```
-优先: mcp-deepwiki 查询 (MCP)
-备选: npx ctx7 resolve {库名} (CLI)
-降级: web search 搜索官方文档
-```
-
-## 使用时机
-
-- **R₀b**: 方案对比时拉取候选库文档, 验证 API 满足需求
-- **R**: 深入调研已选技术栈的具体用法和限制
-- **D**: 查 API 细节确认接口设计可行
-- **E**: 不确定 API 用法时即时查询
-
-不预加载, 按需拉取, 仅取所需章节。
+## 触发时机
+- R 阶段: 验证技术方案可行性
+- E 阶段: 实现时遇到不确定的 API
+- T 阶段: 验证 API 用法正确性

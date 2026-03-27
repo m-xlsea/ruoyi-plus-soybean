@@ -1,7 +1,7 @@
-# Task Progress
+# Doing
 
-## TODO
+## 当前执行
+- [ ] {当前步骤描述}
 
-## DOING
-
-## DONE
+## 执行历史
+{自动追加完成的步骤}

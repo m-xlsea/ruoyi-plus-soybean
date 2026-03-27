@@ -1,24 +1,26 @@
 ---
 name: plan-first
-description: 强制先规划后执行 — P 阶段
-context: main
+description: P 阶段计划生成 — design.md 确认后激活
 ---
-
-## 触发
-Path B+ 任务, D 阶段完成后。
+# Plan-First (P 阶段)
 
 ## 流程
+1. 读 .ai_state/design.md 全文
+2. 分解为可执行任务, 每个任务:
+   ```
+   - [ ] T-001: {动作动词} + {目标} + {验收条件}
+         文件: {涉及文件}
+         依赖: {前置任务}
+   ```
+3. 任务排序: 依赖拓扑 → 风险高的先做
+4. 写入 .ai_state/plan.md
 
-1. 读 .ai_state/design.md (brainstorm/R/D 阶段输出)
-2. 使用 /plan 进入规划模式
-3. context7 查询任务涉及的库文档, 确保技术细节准确
-4. 输出 .ai_state/plan.md:
-   - 任务列表 (编号 T-001, T-002...)
-   - 依赖关系 (T-003 depends on T-001)
-   - 时间预估
-   - Path C+: 子代理分配
-5. cunzhi [PLAN_CONFIRMED] 确认后才能写代码
-6. plan.md 中未完成任务不能关闭 session (delivery-gate 检查)
+## 计划质量检查
+- 每个任务有明确的"完成"定义
+- 没有模糊词 ("优化", "改进" → 改为具体指标)
+- 估算总任务数, 超过 15 个考虑拆分 milestone
 
-## 管道
-design.md (上游) → plan-first → plan.md (下游) → E 阶段消费
+## 双 Agent 对抗审查
+如果 Codex 可用 → 触发 codex-review skill 做对抗式审查
+如果 Codex 不可用 → CC 用 validator agent 自审:
+  "作为审查者, 这个计划有哪些漏洞/模糊/不可执行的部分?"

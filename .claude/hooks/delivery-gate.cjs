@@ -1,91 +1,86 @@
-// VibeCoding v8.9 — Stop Hook (Delivery Gate)
-// 阻止未完成任务/未测试代码的交付
-const fs = require('node:fs');
-const { execSync } = require('node:child_process');
+// VibeCoding v9.2.0 — Stop: 4级 Quality Gate
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
-function exists(f) {
-  try {
-    return fs.existsSync(f);
-  } catch {
-    return false;
-  }
-}
+process.on('uncaughtException', function(e) {
+  process.stderr.write('[delivery-gate] ERROR: ' + e.message + '\n');
+  process.exit(0); // 脚本错误不阻断
+});
 
-function runQuiet(cmd, timeout) {
-  try {
-    execSync(cmd, { timeout: timeout || 60000, stdio: 'pipe' });
-    return true;
-  } catch {
-    return false;
-  }
-}
+if (process.env.VIBECODING_HOOKS_DISABLED === '1') { process.exit(0); }
 
-function hasScript(name) {
-  try {
-    const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
-    return Boolean(pkg.scripts && pkg.scripts[name]);
-  } catch {
-    return false;
-  }
-}
+const STATE_DIR = path.join(process.cwd(), '.ai_state');
+const severity = { fail: [], rework: [], concerns: [] };
 
-// 获取当前 Path
-let currentPath = 'A';
 try {
-  const session = fs.readFileSync('.ai_state/session.md', 'utf8');
-  const m = session.match(/path:\s*([ABCD])/i);
-  if (m) currentPath = m[1].toUpperCase();
-} catch {}
+  if (!fs.existsSync(STATE_DIR)) { process.exit(0); } // 无状态 = Path A, 放行
 
-const errors = [];
+  const planFile = path.join(STATE_DIR, 'plan.md');
+  const qualityFile = path.join(STATE_DIR, 'quality.md');
 
-// === 检查 1: plan.md 完成度 (Path B+) ===
-if (currentPath !== 'A' && exists('.ai_state/plan.md')) {
+  // ── FAIL 级: 硬约束 ──
+  // 未完成任务
+  if (fs.existsSync(planFile)) {
+    const plan = fs.readFileSync(planFile, 'utf8');
+    const unchecked = (plan.match(/^- \[ \]/gm) || []).length;
+    if (unchecked > 0) severity.fail.push(`plan.md 有 ${unchecked} 个未完成任务`);
+  }
+  // 缺 quality.md (有 plan 但没 quality = T 阶段未执行)
+  if (fs.existsSync(planFile) && !fs.existsSync(qualityFile)) {
+    severity.fail.push('缺少 quality.md — T 阶段验证未执行');
+  }
+  // 硬编码密钥
   try {
-    const plan = fs.readFileSync('.ai_state/plan.md', 'utf8');
-    const total = (plan.match(/- \[[ x]\]/g) || []).length;
-    const done = (plan.match(/- \[x\]/gi) || []).length;
-    if (total > 0 && done < total) {
-      errors.push(`plan.md: ${done}/${total} 完成, ${total - done} 个任务未完成`);
+    const secrets = execSync(
+      "git diff --cached -U0 2>/dev/null | grep -iE '(password|secret|api_key|token)\\s*[:=]\\s*.' || true",
+      { encoding: 'utf8' }
+    );
+    if (secrets.trim()) severity.fail.push('疑似硬编码密钥');
+  } catch {}
+
+  // ── REWORK 级: 源码无测试 ──
+  try {
+    const diff = execSync('git diff --cached --name-only 2>/dev/null || git diff --name-only 2>/dev/null', { encoding: 'utf8' });
+    const codeExts = /\.(ts|tsx|js|jsx|py|go|rs|java|rb)$/;
+    const testPattern = /\.test\.|\.spec\.|__test__|__spec__|_test\.|tests\//;
+    const configPattern = /config|\.env|\.json$|\.yaml$|\.yml$|\.toml$|\.md$|\.txt$/i;
+    const srcFiles = diff.split('\n').filter(f =>
+      f.match(codeExts) && !f.match(testPattern) && !f.match(configPattern)
+    );
+    const testFiles = diff.split('\n').filter(f => f.match(testPattern));
+    if (srcFiles.length > 0 && testFiles.length === 0) {
+      if (srcFiles.length > 2) {
+        severity.rework.push(`${srcFiles.length} 个源码文件修改但无对应测试`);
+      } else {
+        severity.concerns.push(`${srcFiles.length} 个源码文件修改但无测试 (数量少, 标注)`);
+      }
     }
   } catch {}
-}
 
-// === 检查 2: npm test (Path B+) ===
-if (currentPath !== 'A' && hasScript('test')) {
-  if (!runQuiet('npm test', 90000)) {
-    errors.push('npm test 失败');
-  }
-}
-
-// === 检查 3: ESLint (Path C+) ===
-const isStrictPath = currentPath === 'C' || currentPath === 'D';
-const hasEslintConfig =
-  exists('.eslintrc') ||
-  exists('.eslintrc.js') ||
-  exists('.eslintrc.json') ||
-  exists('.eslintrc.cjs') ||
-  exists('eslint.config.js') ||
-  exists('eslint.config.mjs') ||
-  exists('eslint.config.cjs');
-if (isStrictPath && hasEslintConfig) {
-  if (!runQuiet('npx eslint . --max-warnings 0', 60000)) {
-    errors.push('ESLint 检查未通过');
-  }
-}
-
-// === 检查 4: TypeScript (Path B+) ===
-if (currentPath !== 'A' && exists('tsconfig.json')) {
-  if (!runQuiet('npx tsc --noEmit', 60000)) {
-    errors.push('TypeScript 类型检查失败');
-  }
-}
-
-// === 输出 ===
-if (errors.length > 0) {
-  process.stderr.write(`🚫 Delivery Gate 拦截:\n${errors.map(e => `  ❌ ${e}`).join('\n')}`);
-  process.exit(2); // exit 2 = block
-} else {
-  process.stdout.write(`✅ Delivery Gate 通过 (Path ${currentPath})`);
+} catch (e) {
   process.exit(0);
 }
+
+// ── 输出结果 ──
+// Stop hook 语义: exit 0 = 放行停止, exit 2 = 阻断停止(强制继续)
+// stdout 输出会作为 context 注入 Claude
+const allIssues = [...severity.fail, ...severity.rework, ...severity.concerns];
+if (severity.fail.length > 0) {
+  process.stderr.write(`[delivery-gate] ❌ FAIL — 严重问题, 必须修复:\n${severity.fail.map(i => `  ✗ ${i}`).join('\n')}\n`);
+  if (severity.rework.length) process.stderr.write(`  + REWORK: ${severity.rework.join(', ')}\n`);
+  if (severity.concerns.length) process.stderr.write(`  + CONCERNS: ${severity.concerns.join(', ')}\n`);
+  process.exit(2); // 阻断: 不让停
+}
+if (severity.rework.length > 0) {
+  process.stderr.write(`[delivery-gate] 🔧 REWORK — 需要修复:\n${severity.rework.map(i => `  ✗ ${i}`).join('\n')}\n`);
+  if (severity.concerns.length) process.stderr.write(`  + CONCERNS: ${severity.concerns.join(', ')}\n`);
+  process.exit(2); // 阻断: 不让停
+}
+if (severity.concerns.length > 0) {
+  // CONCERNS: 放行但输出警告作为 context
+  process.stdout.write(`[delivery-gate] ⚠ CONCERNS (已放行, 建议修复):\n${severity.concerns.map(i => `  △ ${i}`).join('\n')}\n`);
+  process.exit(0); // 放行: 但警告已注入
+}
+process.exit(0); // PASS

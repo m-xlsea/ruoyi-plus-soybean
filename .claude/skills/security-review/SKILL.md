@@ -1,27 +1,16 @@
 ---
 name: security-review
-description: 安全审查清单 — T 阶段 (Path C+)
-context: main
+description: 安全审查 — Path C+ 或显式触发
 ---
+# Security Review
 
-## 触发
-Path C+ 的 T 阶段。
+## 检查项
+1. **认证/授权**: 每个端点是否有权限检查?
+2. **输入验证**: 所有外部输入是否已验证和消毒?
+3. **密钥管理**: 无硬编码, 用环境变量或密钥管理服务
+4. **依赖**: `npm audit` / `pip audit` 无高危漏洞
+5. **日志**: 不记录敏感信息 (密码/token/PII)
+6. **CORS/CSP**: 如有 Web 接口, 是否配置正确?
 
-## 工具
-
-| 工具 | 调用方式 |
-|:---|:---|
-| security-guidance | Plugin, 自然语言: "安全审查当前变更" |
-| security-auditor agent | 子代理 (background), Path C+ 自动启动 |
-
-## 检查项 (VibeCoding 补充)
-
-- [ ] 无硬编码密钥/Token/密码
-- [ ] SQL 查询使用参数化 (无字符串拼接)
-- [ ] 用户输入已做 XSS 防护
-- [ ] API 端点有认证/授权检查
-- [ ] 敏感数据不出现在日志中
-- [ ] 依赖无已知漏洞 (`npm audit`)
-
-## 输出
-cunzhi [SECURITY_PASSED] 确认后写入 verified.md。
+## 产出
+- 安全审查结果追加到 quality.md

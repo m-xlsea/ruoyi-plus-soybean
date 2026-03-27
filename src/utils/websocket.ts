@@ -1,5 +1,5 @@
 import { useWebSocket } from '@vueuse/core';
-import useNoticeStore from '@/store/modules/notice';
+import { useNoticeStore } from '@/store/modules/notice';
 import { localStg } from './storage';
 
 /**

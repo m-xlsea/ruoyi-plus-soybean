@@ -59,10 +59,10 @@ async function handleFileSelect(data: { file: UploadFileInfo }) {
   }
 
   const reader = new FileReader();
-  reader.onload = () => {
+  reader.addEventListener('load', () => {
     options.img = reader.result as string;
     options.fileName = file.name;
-  };
+  });
   reader.readAsDataURL(file);
 
   return false;

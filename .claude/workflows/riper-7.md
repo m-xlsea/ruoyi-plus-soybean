@@ -1,157 +1,71 @@
-# RIPER-7 工程编排 v8.9
+# RIPER-7 阶段编排 v9.2.0
 
-## 统一工具调度表
-
-| 阶段 | VibeCoding Skill | Plugin | MCP | 状态文件 |
-|:---|:---|:---|:---|:---|
-| R₀b 头脑风暴 | brainstorm | superpowers (brainstorming) | augment-context, deepwiki | design.md |
-| R 研究 | context7 | superpowers (research) | augment-context, deepwiki | design.md (更新) |
-| D 设计 | context7 | superpowers (writing-plans) | deepwiki | design.md (终稿) |
-| P 规划 | plan-first | superpowers (writing-plans) | — | plan.md |
-| E 开发 | tdd, code-quality, agent-teams | feature-dev, frontend-design, hookify | augment-context | doing.md |
-| T 测试 | verification, e2e-testing | code-review, security-guidance | — | verified.md |
-| V 验收 | smart-archive, knowledge | pr-review-toolkit, commit-commands | cunzhi | review.md |
-
-## 阶段详情
+## 每阶段进入前 (通用)
+1. 这一步要解决的核心问题是什么?
+2. 项目里有没有类似实现? → 搜索 (Grep/Glob, 或 augment-context-engine 如已安装)
+3. 用到的库 API 确定吗? → context7 skill 查文档
+4. .ai_state/lessons.md + conventions.md 有相关经验吗?
 
 ---
 
-### R₀b — 头脑风暴 (Path B+ only)
+## R₀ 需求精炼 (Path B+)
+**技能**: brainstorm skill (含步骤0自主调研)
+**产出**: .ai_state/design.md (Spec: MUST/SHOULD/COULD + 验收标准)
+**门控**: cunzhi `DESIGN_READY` (cunzhi 不可用时: 直接输出 "[DESIGN_READY] 请确认" 等用户回复)
 
-💡 **本阶段做什么**: 理解需求, 探索方案, 不写代码
-🔧 **自动使用**: augment-context 扫描 → deepwiki 查库 → cunzhi 确认
-⏭️ **下一阶段**: R (研究)
+## R 技术调研 (Path B+)
+**读**: design.md
+**动手**: 搜索相关代码 + 查库版本和 API
+**产出**: design.md 追加技术方案
+**要回答**: 有没有可复用的现有代码? 需要新依赖吗?
 
-```
-步骤:
-1. augment-context-engine 搜索现有代码, 理解项目结构
-2. 读 .knowledge/pitfalls.md — 避免重复犯错
-3. 加载 skills/brainstorm — 苏格拉底式逐个提问
-4. deepwiki 查候选技术库文档
-5. 输出 2-3 方案到 .ai_state/design.md
-6. cunzhi [DESIGN_DIRECTION] — 用户选择方向
-```
+## D 方案定稿 (Path B+)
+**读**: design.md
+**检查**: 接口最小化? 错误处理完整? 有没有更简单的方案?
+**产出**: design.md 最终版 (含验收标准)
+**门控**: cunzhi `DESIGN_FINALIZED` (cunzhi 不可用时: 直接输出确认提示)
 
----
+## P 计划 (Path B+)
+**技能**: plan-first skill → 生成 plan.md (T-001/T-002... 格式)
+**双 Agent**: 如果 Codex 可用 → codex-review skill 对抗审查
+  - CC 提交 plan.md → Codex 质疑 → CC 评估采纳/驳回 → 循环
+  - 终止: VERDICT: APPROVED / 连续2轮全驳 / 超5轮
+  - 审查结果持久化到 reviews/review-{uuid}.md
+**如果 Codex 不可用**: CC 用 validator agent 做 Plan Review
+**门控**: cunzhi `PLAN_CONFIRMED` (cunzhi 不可用时: 直接输出确认提示)
 
-### R — 研究
+## E 执行 (Path B+) — Sisyphus 循环
+对 plan.md 每个 Task:
+  1. 读 Task 文本 + 相关文件 + conventions.md
+  2. **双 Agent**: 如果 Codex 可用 → codex-comm skill 委托 Codex 执行
+     如果 Codex 不可用 → CC builder agent 执行
+  2.5. **Reflexion** (自我反思 → reflexion skill):
+       "这个实现有没有: 走捷径/忽略边界/硬编码/过度工程/偏离 spec?"
+       发现问题 → 立即修复
+       值得记录 → lessons.md
+  3. **Micro-review**: 对标 design.md spec + conventions.md 标准
+     通过 → [x] Task + commit
+     不通过 → 反馈修复
+  **铁律**: plan.md 有任何 [ ] 未完成, 不停止。这就是 Sisyphus。
 
-💡 **本阶段做什么**: 深入调研已选方案, 确认技术可行性
-🔧 **自动使用**: context7 拉取库文档 → 对照 design.md 验证
+## T 测试/审查 (Path B+)
+  1. verification skill: 跑测试 + 覆盖率
+  1.5. **验收标准确认**:
+       读 design.md "## 验收标准" → 逐条确认是否满足
+       未满足 → 标注到 quality.md "## 未满足验收标准"
+  2. code-review skill: 代码审查
+  3. **双 Agent 互审**: 如果 Codex 可用 → CC 审查 Codex 产出 + Codex 反审 CC 修改
+     如果 Codex 不可用 → CC 单方审查
+  4. 综合 → quality.md
+  5. **4 级 Quality Gate** (delivery-gate.cjs):
+     PASS (exit 0) → 允许停止
+     CONCERNS (exit 0 + stdout 警告) → 允许停止, 警告注入 context
+     REWORK (exit 2) → 阻断停止, 强制修复
+     FAIL (exit 2) → 阻断停止, 必须大幅修复
 
-```
-步骤:
-1. 加载 skills/context7 — 按需拉取相关库文档
-2. 对照 design.md 验证方案可行性
-3. 识别技术风险和依赖
-4. 更新 design.md 中的技术细节
-```
-
-Path A 简化: 只做 augment-context 快速扫描, 不输出 design.md。
-
----
-
-### D — 设计
-
-💡 **本阶段做什么**: 确定技术方案, 输出架构决策
-🔧 **自动使用**: context7 查 API 细节 → design.md 终稿 → cunzhi 确认
-
-```
-步骤:
-1. context7 查 API 细节, 确认接口设计可行
-2. 写入 .knowledge/decisions.md — ADR 记录
-3. 完成 design.md 终稿
-4. cunzhi [DESIGN_READY] — 用户确认设计
-```
-
-Path A 跳过。
-
----
-
-### P — 规划
-
-💡 **本阶段做什么**: 将设计拆解为可执行的任务列表
-🔧 **自动使用**: plan-first 读 design.md → 生成 plan.md → cunzhi 确认
-
-```
-步骤:
-1. 加载 skills/plan-first
-2. 读 design.md 作为输入
-3. 生成 .ai_state/plan.md: 任务列表 + 依赖 + 预估 + 分工
-4. Path C+: 分配子代理 (builder/validator/e2e-runner)
-5. cunzhi [PLAN_CONFIRMED] — 用户确认计划
-```
-
-Path A 跳过。Path B: /plan 生成轻量计划。
-
----
-
-### E — 执行
-
-💡 **本阶段做什么**: 按计划写代码, TDD 驱动
-🔧 **自动使用**: tdd 分级 → code-quality 审查 → agent-teams 并行
-
-```
-步骤:
-1. 加载 skills/tdd — 按 Path 分级:
-   - Path A: 改了什么手动验证
-   - Path B: 关键路径写测试
-   - Path C+: 全覆盖 TDD
-2. 逐个执行任务:
-   - Path A: 直接开始开发 (无 plan.md)
-   - Path B+: 按 plan.md 中的任务列表逐个执行
-3. 每完成一个: doing.md 更新 TODO→DOING→DONE
-4. Path C+: agent-teams 并行
-   - builder 在 worktree 中实现
-   - validator 在 worktree 中测试
-   - explorer (background) 持续扫描依赖
-5. 阶段性 cunzhi 确认 (每 3-5 个任务或关键里程碑)
-```
-
----
-
-### T — 测试
-
-💡 **本阶段做什么**: 验证代码质量, 跑测试, 安全检查
-🔧 **自动使用**: verification 分级清单 → e2e-testing → code-review plugin
-
-```
-步骤:
-1. 加载 skills/verification — 按 Path 分级:
-   - Path A: 功能验证 + lint
-   - Path B: + 单测通过 + 类型检查
-   - Path C+: + E2E + 安全审查 + 性能
-2. Path B+: 触发 code-review plugin 自动审查
-3. Path C+: 加载 skills/e2e-testing (Playwright)
-4. Path C+: 加载 skills/security-review
-5. 输出 .ai_state/verified.md
-```
-
----
-
-### V — 验收
-
-💡 **本阶段做什么**: 最终确认, 提交, 归档经验
-🔧 **自动使用**: delivery-gate hook → cunzhi 确认 → smart-archive
-
-```
-步骤:
-1. delivery-gate.cjs 自动检查 (Stop hook):
-   - plan.md 所有任务 DONE? (Path B+)
-   - 测试通过?
-   - lint 无错?
-2. 加载 skills/code-quality — 最终审查
-3. cunzhi [DELIVERY_CONFIRMED] — 用户确认交付
-4. 触发 commit-commands plugin — 提交:
-   - Path A: 单次 commit
-   - Path B: squash merge
-   - Path C+: 按功能分 commit
-5. 加载 skills/knowledge — 沉淀经验到 .knowledge/
-6. 加载 skills/smart-archive — 归档 .ai_state/ 到 archive/
-```
-
-## RIPER 阶段流转规则
-
-- 只能前进, 不能跳过 (Path A 的"跳过"是路由决定, 不是运行时跳过)
-- 每个阶段完成时更新 session.md 中的 `current_phase` 字段
-- 中断恢复: context-loader.cjs 读 session.md 自动恢复到中断阶段
+## V 归档 (Path B+)
+  1. kaizen skill: 回顾 + lessons.md
+  1.5. **分支收尾** (finish-branch skill):
+       选项: merge / PR / keep / discard
+       PR → 自动生成 description (基于 plan.md + quality.md)
+  2. cunzhi `DELIVERY_COMPLETE` (cunzhi 不可用时: 直接输出确认提示)

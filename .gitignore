@@ -33,3 +33,6 @@ package-lock.json
 yarn.lock
 
 .VSCodeCounter
+
+# VibeCoding state
+.ai_state/

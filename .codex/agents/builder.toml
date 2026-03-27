@@ -1,0 +1,4 @@
+[agent]
+name = "builder"
+model = "gpt-5.4"
+description = "实现代码 + 测试 (TDD: RED→GREEN→REFACTOR)"
