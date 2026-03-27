@@ -1,4 +1,7 @@
-# Lessons
-<!-- 错误教训, 由 lessons-loop 写入 -->
-<!-- 格式: [日期] [模块] — [类别] -->
-<!-- 类别: SCOPE/TECH/ARCH/IMPL/TEST/STYLE -->
+# Lessons Learned
+
+## 技术陷阱
+{发现的问题}
+
+## 有效模式
+{有效的解决方案}

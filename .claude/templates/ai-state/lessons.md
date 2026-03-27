@@ -1,4 +1,10 @@
-# Lessons
-<!-- 错误教训, 由 lessons-loop 写入 -->
-<!-- 格式: [日期] [模块] — [类别] -->
-<!-- 类别: SCOPE/TECH/ARCH/IMPL/TEST/STYLE -->
+# Lessons Learned
+
+## 技术陷阱
+{Reflexion/Kaizen 发现的技术问题}
+
+## 有效模式
+{本项目中验证有效的解决方案}
+
+## 项目特有知识
+{不在文档中但很重要的隐性知识}

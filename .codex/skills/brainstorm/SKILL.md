@@ -1,21 +1,25 @@
 ---
 name: brainstorm
-description: 需求头脑风暴 — R₀b 阶段, 探索方案空间
-context: main
+description: R₀ 苏格拉底式需求精炼
 ---
-## 触发: Path B+ 任务开始时 (自动加载)
+# Brainstorm (R₀ 需求精炼)
 
-## 步骤
-1. augment-context-engine 搜索相关代码和依赖
-2. 读 .ai_state/knowledge.md 了解历史经验
-3. 生成 Spec 需求模板 (写入 design.md 顶部):
-   - 功能需求 (MUST/SHOULD/COULD)
-   - 非功能需求 (性能/安全/兼容性)
-   - 约束条件 (技术栈/时间/依赖)
-   - 验收标准 (可测试的完成条件)
-4. 生成 2-3 个候选方案, 每个包含:
-   方案描述 / 优劣势 / 预估工作量 / 技术风险
-5. 输出到 .ai_state/design.md
-6. cunzhi [DESIGN_DIRECTION] 让用户选择方向
+Path B+ 任务在写代码前**必须**激活。
 
-不可用时: 直接基于需求分析, 跳过代码搜索
+## 流程
+### 0. 自主调研 (提问前)
+- 搜索项目中与需求相关的现有代码
+- 读 .ai_state/lessons.md + conventions.md
+→ 基于调研结果准备更有深度的问题
+
+### 1. 访谈 (苏格拉底式)
+- 一次只问一个问题, 优先选择题
+- 覆盖: 目标、场景、边界、非功能需求
+- YAGNI: 主动砍不必要的功能
+
+### 2. 提出 2-3 方案
+- 每方案: 架构 + 优劣 + 复杂度
+- context7 验证可行性
+
+### 3. 确认 → .ai_state/design.md
+铁律: 设计未确认前不写代码

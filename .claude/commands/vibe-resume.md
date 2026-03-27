@@ -1,11 +1,10 @@
 ---
 name: vibe-resume
-description: 从中断处恢复开发
+description: 从断点恢复
 ---
-## 执行步骤
-1. 读 .ai_state/session.md → 恢复上下文
-2. 检测断点阶段 (context-loader.cjs 已处理)
-3. 告知用户当前状态和下一步
-4. 继续执行
+# /vibe-resume
 
-等效于: 读取 SessionStart hook 输出 + 提示恢复
+1. 读 .ai_state/session.md 确定断点
+2. 读 .ai_state/doing.md 确定当前步骤
+3. 从断点继续 RIPER-7 流程
+4. 如果是 E 阶段 → 从未完成的 Task 继续 Sisyphus

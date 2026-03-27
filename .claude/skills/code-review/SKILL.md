@@ -1,18 +1,23 @@
 ---
 name: code-review
-description: 代码审查 — T 阶段辅助
-context: main
+description: T 阶段代码审查 — 含 LLM-as-Judge 模式
 ---
-## 触发: T 阶段, verification 之后
+# Code Review (T 阶段)
 
-## 审查维度
-1. 逻辑正确性: 边界条件、错误处理、并发安全
-2. 可读性: 命名清晰、函数职责单一、注释合理
-3. 性能: 无 N+1 查询、无不必要的循环
-4. 安全: 无注入、无硬编码密钥
-5. 测试: 测试有意义, 不只是刷覆盖率
-6. 优雅: "如果重新实现, 我会这样写吗?"
+## 审查清单
+1. **Spec 合规**: 每个 MUST 需求是否实现? (对照 design.md)
+2. **TDD**: 每个源码文件有对应测试?
+3. **边界**: 空输入/超长/并发/错误路径 是否处理?
+4. **安全**: 无硬编码密钥, 无 SQL 注入, 输入已验证
+5. **可读**: 函数 < 50 行, 注释说明 WHY 不是 WHAT, 严格类型
+6. **简洁**: 无过度工程, 无重复代码, 无空 catch
 
-## 输出格式
-每个问题: 文件+行号 / MUST-FIX|SHOULD-FIX|NIT / 问题描述 / 修复建议
-无问题: "APPROVED — no issues found"
+## LLM-as-Judge 模式 (delivery-gate 触发)
+输出格式:
+```json
+{"level": "PASS|CONCERNS|REWORK|FAIL", "issues": [...], "summary": "..."}
+```
+- FAIL: 未完成任务 / 硬编码密钥 / 缺 quality.md
+- REWORK: 源码无测试 (TDD 违规)
+- CONCERNS: 非关键文件无测试 (1-2 个警告)
+- PASS: 全部通过

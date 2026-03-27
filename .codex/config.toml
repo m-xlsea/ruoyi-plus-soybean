@@ -1,6 +1,6 @@
-# VibeCoding Kernel v9.1.0 — Codex CLI 配置
+# VibeCoding Kernel v9.2.0 — Codex CLI Config
 model_provider = "custom"
-model = "gpt-5.4"                      
+model = "gpt-5.4"
 model_reasoning_effort = "xhigh"
 suppress_unstable_features_warning = true
 
@@ -8,14 +8,14 @@ suppress_unstable_features_warning = true
 # approval_policy = "never"            # untrusted|on-request|never
 # sandbox_mode = "danger-full-access"  # read-only|workspace-write|danger-full-access
 
-approval_policy = "never"  
-sandbox_mode    = "workspace-write"  
+approval_policy = "never"
+sandbox_mode    = "workspace-write"
 
 [sandbox_workspace_write]
 network_access = true                  # npm install / pip install 需要网络
 
 # Web Search
-web_search = "live"   
+web_search = "live"
 
 [features]
 multi_agent = true                     # stable; 多代理编排
@@ -30,49 +30,38 @@ undo = true                            # 回滚 Codex 改动;
 notifications = true
 animations = true
 
-[profiles.dev]
-# 日常开发: 高推理, 交互审批
-model = "gpt-5.4"
-model_reasoning_effort = "high"
-approval_policy = "on-request"
-sandbox_mode = "workspace-write"
-
 [profiles.ci]
-# CI/CD: 全自动, 无审批
-model = "gpt-5.3-codex"
-model_reasoning_effort = "medium"
 approval_policy = "never"
 sandbox_mode = "workspace-write"
 
 [profiles.review]
-# 代码审查: 高推理, 只读
 model = "gpt-5.4"
-model_reasoning_effort = "xhigh"
-approval_policy = "untrusted"
-sandbox_mode = "read-only"
+approval_policy = "on-request"
+
+[profiles.dev]
+model = "gpt-5.4"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
 
 [agents]
-max_threads = 6
-max_depth = 2
-job_max_runtime_seconds = 1800
+max_threads = 3
 
 [agents.builder]
-description = "实现功能代码。先写测试再写实现, 每个子任务完成后 commit。"
+description = "实现代码 + 测试 (TDD: RED→GREEN→REFACTOR)"
 config_file = "./agents/builder.toml"
 
-[agents.reviewer]
-description = "代码审查: 安全、正确性、测试风险。"
-config_file = "./agents/reviewer.toml"
+[agents.validator]
+description = "代码审查 + Plan Review"
+config_file = "./agents/validator.toml"
 
 [agents.explorer]
-description = "只读搜索分析: 搜索代码库、分析依赖、查找模式。"
+description = "代码库调研 + 文档查询 (只读)"
 config_file = "./agents/explorer.toml"
 
 [model_providers.custom]
 name = "custom"
 wire_api = "responses"
 requires_openai_auth = true
-base_url = ""
 
 [mcp_servers]
 

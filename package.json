@@ -44,6 +44,7 @@
     "commit:zh": "sa git-commit -l=zh-cn",
     "dev": "vite --mode dev",
     "dev:prod": "vite --mode prod",
+    "dev:test": "vite --mode test",
     "fmt": "oxfmt",
     "gen-route": "sa gen-route",
     "lint": "oxlint --fix && eslint --fix .",

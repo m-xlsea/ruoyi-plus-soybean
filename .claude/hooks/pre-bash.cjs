@@ -1,45 +1,26 @@
-#!/usr/bin/env node
-"use strict";
-// VibeCoding v9.1.0 — PreToolUse Hook (Bash Safety Guard)
-// 拦截危险命令, 使用 hookSpecificOutput.permissionDecision
-var d = "";
-process.on("uncaughtException", function() { process.exit(0); });
-process.stdin.on("data", function(c) { d += c; });
-process.stdin.on("end", function() {
-  try {
-    var input = JSON.parse(d);
-    var cmd = (input.tool_input && input.tool_input.command) || "";
+// VibeCoding v9.2.0 — PreToolUse(Bash): 安全守卫 (JSON decision output)
+'use strict';
+const input = JSON.parse(require('fs').readFileSync('/dev/stdin', 'utf8'));
+const cmd = input?.tool_input?.command || '';
 
-    // DENY: rm -rf / 或 根目录危险操作
-    if (/\brm\s+(-[a-zA-Z]*r[a-zA-Z]*f|--recursive)/.test(cmd) && /\s\/(\s|$)/.test(cmd)) {
-      process.stderr.write("[SECURITY] Blocked: rm -rf /\n");
-      process.exit(2);
-    }
+const BLOCKED = [
+  /rm\s+-rf\s+[\/~]/, /chmod\s+777/, /curl\s+.*\|\s*(?:bash|sh)/,
+  /wget\s+.*\|\s*(?:bash|sh)/, />\s*\/etc\//, /mkfs\./, /dd\s+if=/,
+  /:(){ :\|:& };:/, /fork\s*bomb/i
+];
 
-    // DENY: sudo
-    if (/\bsudo\b/.test(cmd)) {
-      process.stderr.write("[SECURITY] Blocked: sudo\n");
-      process.exit(2);
-    }
-
-    // DENY: eval (精确匹配, 排除 node eval.js 类误报)
-    if (/(^|[;&|])\s*eval\b/.test(cmd)) {
-      process.stderr.write("[SECURITY] Blocked: eval\n");
-      process.exit(2);
-    }
-
-    // DENY: curl pipe bash
-    if (/\bcurl\b.*\|\s*(ba)?sh/.test(cmd) || /\bwget\b.*\|\s*(ba)?sh/.test(cmd)) {
-      process.stderr.write("[SECURITY] Blocked: curl|bash\n");
-      process.exit(2);
-    }
-
-    // WARN: 敏感文件访问 (不阻塞)
-    if (/\.(env|pem|key|cert|p12|pfx|jks)\b/.test(cmd)
-      && !/\.gitignore/.test(cmd) && !/grep/.test(cmd)) {
-      process.stderr.write("[SECURITY] WARNING: sensitive file access — " + cmd.slice(0, 80) + "\n");
-    }
-
-  } catch {}
-  console.log(d);
-});
+for (const pattern of BLOCKED) {
+  if (pattern.test(cmd)) {
+    // 使用 JSON decision output (官方推荐方式)
+    const output = JSON.stringify({
+      hookSpecificOutput: {
+        hookEventName: "PreToolUse",
+        permissionDecision: "deny",
+        permissionDecisionReason: `[pre-bash] 危险命令被阻断: ${cmd.slice(0, 80)}`
+      }
+    });
+    process.stdout.write(output);
+    process.exit(0);
+  }
+}
+process.exit(0);

@@ -1,66 +1,57 @@
-# RIPER-7 阶段编排 (v9.1.0)
+# RIPER-7 阶段编排 v9.2.0
 
-## 阶段流: R₀ → R → D → P → E → T → V
+## 每阶段进入前 (通用)
+1. 这一步要解决的核心问题是什么?
+2. 项目里有没有类似实现? → 搜索相关代码
+3. 用到的库 API 确定吗? → context7 skill 查文档
+4. .ai_state/lessons.md + conventions.md 有相关经验吗?
 
-### R₀ (预研/头脑风暴, Path B+ 独有)
-触发: 用户提交需求且 PACE≥B
-**自动加载**: brainstorm skill
-工具: augment-context + cunzhi
-输入: 用户需求
-输出: .ai_state/design.md (含 spec 需求模板 + 方案草案)
-检查点: cunzhi [DESIGN_DIRECTION]
+---
 
-### R (研究)
-触发: R₀ 确认后 或 Path A 直接进入
-**自动加载**: context7 skill
-工具: augment-context + deepwiki + web search
-输入: design.md 或 用户需求
-输出: 更新 design.md (技术细节)
+## R₀ 需求精炼 (Path B+)
+**技能**: brainstorm skill (含步骤0自主调研)
+**产出**: .ai_state/design.md (Spec: MUST/SHOULD/COULD + 验收标准)
+**门控**: cunzhi `DESIGN_READY` (cunzhi 不可用时: 直接输出 "[DESIGN_READY] 请确认" 等用户回复)
 
-### D (设计, Path B+ 独有)
-触发: R 完成
-**自动加载**: context7 skill
-输入: design.md
-输出: design.md 终稿
-检查点: cunzhi [DESIGN_READY]
+## R 技术调研 (Path B+)
+读 design.md → 搜索相关代码 + 查库文档
+产出: design.md 追加技术方案
 
-### P (规划, Path B+ 独有)
-触发: D 确认后
-**自动加载**: plan-first skill + /plan 原生规划
-输入: design.md
-输出: .ai_state/plan.md
-检查点: cunzhi [PLAN_CONFIRMED]
+## D 方案定稿 (Path B+)
+读 design.md → 检查接口最小化? 错误处理完整? 更简单的方案?
+产出: design.md 最终版
+门控: cunzhi `DESIGN_FINALIZED` (cunzhi 不可用时: 直接输出确认提示)
 
-### E (执行)
-触发: P 确认后 或 Path A R 完成
-**自动加载**: tdd skill (强制模式) + agent-teams (Path C+)
-铁律: **先写测试, 再写实现**
-过程:
-  - Path A: 直接开发, 功能验证
-  - Path B: tdd L2 (RED→GREEN→REFACTOR), doing.md 看板
-  - Path C/D: agent-teams 多代理并行
-输出: .ai_state/doing.md, 代码变更
+## P 计划 (Path B+)
+技能: plan-first skill → 生成 plan.md
+**计划审查**: 用 /review 内置功能审查, 或用 validator agent
+门控: cunzhi `PLAN_CONFIRMED` (cunzhi 不可用时: 直接输出确认提示)
 
-### T (测试/验证)
-触发: E 完成
-**自动加载**: verification + code-review skills
-工具: /review 原生代码审查
-过程:
-  - Path A: 功能验证 + lint
-  - Path B: verification + code-review → verified.md
-  - Path C/D: + e2e-testing + security-review
-输出: .ai_state/verified.md
-检查点: cunzhi [TESTS_PASSED]
+## E 执行 (Path B+) — Sisyphus 循环
+对 plan.md 每个 Task:
+  1. 读 Task + 相关文件 + conventions.md
+  2. TDD: 先写测试 → 实现 → 重构
+  2.5. **Reflexion** (自我反思 → reflexion skill):
+       "这个实现有没有: 走捷径/忽略边界/硬编码/过度工程/偏离 spec?"
+       发现问题 → 立即修复
+       值得记录 → lessons.md
+  3. **Micro-review**: 对标 design.md spec + conventions.md
+     通过 → [x] Task + commit
+     不通过 → 修复
+  **铁律**: plan.md 有任何 [ ] 未完成, 不停止。
 
-### V (验收/交付)
-触发: T 通过
-过程:
-  1. 验证: plan 无未完成项 + 测试通过
-  2. cunzhi [DELIVERY_CONFIRMED] 用户确认
-  3. **Kaizen 复盘** (必须):
-     a. git diff --stat 分析变更范围
-     b. 提炼经验 → .ai_state/knowledge.md
-     c. 记录陷阱 → .ai_state/lessons.md
-     d. 更新 conventions.md (如有新规范)
-  4. 归档 → .ai_state/archive.md
-输出: 交付完成 + 经验沉淀
+## T 测试/审查 (Path B+)
+  1. verification skill: 跑测试 + 覆盖率
+  1.5. **验收标准确认**:
+       读 design.md "## 验收标准" → 逐条确认是否满足
+       未满足 → 标注到 quality.md
+  2. code-review skill: 代码审查
+  3. 用 /review 内置审查功能 做代码审查
+  4. 综合 → quality.md
+  5. Quality Gate: PASS(exit 0) / CONCERNS(exit 0+warn) / REWORK(exit 2) / FAIL(exit 2)
+
+## V 归档 (Path B+)
+  1. kaizen skill: 回顾 + lessons.md
+  1.5. **分支收尾** (finish-branch skill):
+       选项: PR description / keep / discard (Codex 不直接 merge)
+  2. cunzhi `DELIVERY_COMPLETE` (cunzhi 不可用时: 直接输出确认提示)

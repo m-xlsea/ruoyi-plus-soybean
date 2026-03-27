@@ -1,27 +1,19 @@
-#!/usr/bin/env node
-"use strict";
-// VibeCoding v9.1.0 — PostToolUse Hook (Post-Edit)
-// 非阻塞: 格式化提醒 (Block-at-Commit 策略)
-var d = "";
-process.on("uncaughtException", function() { process.exit(0); });
-process.stdin.on("data", function(c) { d += c; });
-process.stdin.on("end", function() {
-  try {
-    var input = JSON.parse(d);
-    var p = input.tool_input && input.tool_input.file_path || "";
+// VibeCoding v9.2.0 — PostToolUse(Write|Edit): 格式化
+'use strict';
+const { execSync } = require('child_process');
+const fs = require('fs');
+const input = JSON.parse(fs.readFileSync('/dev/stdin', 'utf8'));
+const file = input?.tool_input?.file_path || input?.tool_input?.path || '';
 
-    // 阻止在系统目录外创建不必要的 .md 文件
-    if (/\.(md|txt)$/.test(p)
-      && !/(README|CLAUDE|AGENTS|CONTRIBUTING|CHANGELOG|LICENSE|API|ARCHITECTURE|SECURITY|MIGRATION)\.md$/.test(p)
-      && !/\.claude\//.test(p)
-      && !/\.ai_state\//.test(p)
-      && !/docs?\//.test(p)
-      && !/src\//.test(p)
-      && !/plans?\//.test(p)) {
-      console.error("[Hook] BLOCKED: 不必要的文档文件: " + p);
-      console.error("[Hook] 使用 README.md, docs/, 或 .ai_state/");
-      process.exit(2);
+try {
+  if (file.match(/\.(ts|tsx|js|jsx)$/)) {
+    // 先检查 prettier 存在
+    if (fs.existsSync('node_modules/.bin/prettier')) {
+      execSync(`npx prettier --write "${file}" 2>/dev/null`, { timeout: 5000 });
     }
-  } catch {}
-  console.log(d);
-});
+  } else if (file.match(/\.py$/)) {
+    try { execSync('which black', { stdio: 'ignore', timeout: 2000 }); } catch { process.exit(0); }
+    execSync(`python3 -m black "${file}" --quiet 2>/dev/null`, { timeout: 5000 });
+  }
+} catch {}
+process.exit(0);

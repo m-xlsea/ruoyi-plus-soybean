@@ -1,14 +1,14 @@
 ---
 name: vibe-dev
-description: 开始开发 — 自动 P.A.C.E. 路由, 进入 RIPER 流程
+description: 启动开发工作流
 ---
-接收需求: $ARGUMENTS
+# /vibe-dev $TASK
 
-## 执行步骤
-1. 读 .claude/workflows/pace.md → 评估复杂度 → 选择 Path A/B/C/D
-2. 读 .claude/workflows/riper-7.md → 按路径执行对应阶段
-3. 路径 A: 直接开发 (R→E→T→V)
-4. 路径 B+: 先规划后执行 (R₀b→R→D→P→E→T→V)
-5. 每个检查点使用 cunzhi 确认
+1. 初始化 .ai_state/ (如不存在, 从模板复制)
+2. P.A.C.E. 路由 → 确定路径
+3. 写入 .ai_state/session.md: 任务描述 + 路径 + 时间戳
+4. 执行 RIPER-7 对应阶段
 
-如果 .ai_state/ 不存在, 先执行 /vibe-init。
+**注意**: 如果已有进行中的任务 (.ai_state/doing.md 有 [ ]), 先询问用户是否要切换任务。
+
+等效于在会话中说 "开始开发: $TASK"

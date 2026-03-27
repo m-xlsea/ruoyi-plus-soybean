@@ -1,20 +1,21 @@
 ---
 name: plan-first
-description: 强制先规划后执行 — 基于 design.md 生成计划
-context: main
+description: P 阶段计划生成
 ---
-## 触发: Path B+ 任务, brainstorm 完成后
+# Plan-First (P 阶段)
 
-## 步骤
-1. 读 .ai_state/design.md 作为规划输入
-2. 使用 /plan 进入规划模式
-3. context7 查询任务涉及的库文档, 确保技术细节准确
-4. 输出到 .ai_state/plan.md:
-   - [ ] 任务列表 (checkbox 格式)
-   - 依赖关系
-   - 预估时间
-   - 子代理分配 (Path C+)
-5. cunzhi [PLAN_CONFIRMED] 确认后才能写代码
-6. plan.md 未完成任务 → delivery-gate 阻塞
+## 流程
+1. 读 design.md
+2. 分解为可执行任务:
+   ```
+   - [ ] T-001: {动作} + {目标} + {验收条件}
+         文件: {涉及文件}
+         依赖: {前置任务}
+   ```
+3. 排序: 依赖拓扑 → 风险高先做
+4. 写入 plan.md
 
-## 管道: brainstorm → context7 → plan-first → E
+## 质量检查
+- 每个任务有"完成"定义
+- 无模糊词
+- 超过 15 个任务考虑拆分

@@ -1,83 +1,86 @@
-#!/usr/bin/env node
-"use strict";
-// VibeCoding v9.1.0 — Stop Hook (Delivery Gate)
-// 阻止未完成任务/未测试代码的交付
-var fs = require("fs");
-var child_process = require("child_process");
+// VibeCoding v9.2.0 — Stop: 4级 Quality Gate
+'use strict';
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
-process.on("uncaughtException", function() { process.exit(0); });
-if (process.env.VIBECODING_HOOKS_DISABLED === "1") process.exit(0);
-
-function exists(f) { try { return fs.existsSync(f); } catch { return false; } }
-
-function runQuiet(cmd, timeout) {
-  try {
-    child_process.execSync(cmd, { timeout: timeout || 60000, stdio: "pipe" });
-    return true;
-  } catch { return false; }
-}
-
-function hasScript(name) {
-  try {
-    var pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
-    return !!(pkg.scripts && pkg.scripts[name]);
-  } catch { return false; }
-}
-
-var d = "";
-process.stdin.on("data", function(c) { d += c; });
-process.stdin.on("end", function() {
-  try {
-    var input = JSON.parse(d);
-
-    // 检查 last_assistant_message (v2.1.47+ 新增)
-    var lastMsg = input.last_assistant_message || "";
-
-    // 1. 检查 plan.md 未完成任务
-    if (exists(".ai_state/plan.md")) {
-      var plan = fs.readFileSync(".ai_state/plan.md", "utf8");
-      var unchecked = (plan.match(/^- \[ \]/gm) || []).length;
-      if (unchecked > 0) {
-        process.stderr.write("[DeliveryGate] BLOCKED: " + unchecked + " unchecked tasks in plan.md\n");
-        process.exit(2);
-      }
-    }
-
-    // 2. Path B+: 运行测试 (仅当有测试脚本时)
-    var isStrictPath = exists(".ai_state/design.md") || exists(".ai_state/plan.md");
-    if (isStrictPath) {
-      // 多语言测试检测
-      var testCmd = null;
-      if (hasScript("test")) testCmd = "npm test";
-      else if (exists("pytest.ini") || exists("pyproject.toml")) testCmd = "pytest --tb=short -q";
-      else if (exists("Cargo.toml")) testCmd = "cargo test";
-      else if (exists("go.mod")) testCmd = "go test ./...";
-
-      if (testCmd) {
-        var passed = runQuiet(testCmd, 120000);
-        if (!passed) {
-          process.stderr.write("[DeliveryGate] BLOCKED: tests failed (" + testCmd + ")\n");
-          process.exit(2);
-        }
-      }
-
-      // ESLint (仅当有配置时)
-      var hasEslint = exists(".eslintrc.js") || exists(".eslintrc.json") || exists(".eslintrc.yml") || exists("eslint.config.js") || exists("eslint.config.mjs");
-      if (hasEslint) {
-        runQuiet("npx eslint . --max-warnings=0 2>/dev/null", 30000);
-        // ESLint 失败不阻塞, 只警告
-      }
-    }
-
-    // 3. 检查 doing.md 是否有未完成项
-    if (exists(".ai_state/doing.md")) {
-      var doing = fs.readFileSync(".ai_state/doing.md", "utf8");
-      var inProgress = (doing.match(/🔄|IN_PROGRESS|进行中/g) || []).length;
-      if (inProgress > 0) {
-        process.stderr.write("[DeliveryGate] WARNING: " + inProgress + " tasks still in progress\n");
-      }
-    }
-
-  } catch(e) {}
-  console.log(d);
+process.on('uncaughtException', function(e) {
+  process.stderr.write('[delivery-gate] ERROR: ' + e.message + '\n');
+  process.exit(0); // 脚本错误不阻断
 });
+
+if (process.env.VIBECODING_HOOKS_DISABLED === '1') { process.exit(0); }
+
+const STATE_DIR = path.join(process.cwd(), '.ai_state');
+const severity = { fail: [], rework: [], concerns: [] };
+
+try {
+  if (!fs.existsSync(STATE_DIR)) { process.exit(0); } // 无状态 = Path A, 放行
+
+  const planFile = path.join(STATE_DIR, 'plan.md');
+  const qualityFile = path.join(STATE_DIR, 'quality.md');
+
+  // ── FAIL 级: 硬约束 ──
+  // 未完成任务
+  if (fs.existsSync(planFile)) {
+    const plan = fs.readFileSync(planFile, 'utf8');
+    const unchecked = (plan.match(/^- \[ \]/gm) || []).length;
+    if (unchecked > 0) severity.fail.push(`plan.md 有 ${unchecked} 个未完成任务`);
+  }
+  // 缺 quality.md (有 plan 但没 quality = T 阶段未执行)
+  if (fs.existsSync(planFile) && !fs.existsSync(qualityFile)) {
+    severity.fail.push('缺少 quality.md — T 阶段验证未执行');
+  }
+  // 硬编码密钥
+  try {
+    const secrets = execSync(
+      "git diff --cached -U0 2>/dev/null | grep -iE '(password|secret|api_key|token)\\s*[:=]\\s*.' || true",
+      { encoding: 'utf8' }
+    );
+    if (secrets.trim()) severity.fail.push('疑似硬编码密钥');
+  } catch {}
+
+  // ── REWORK 级: 源码无测试 ──
+  try {
+    const diff = execSync('git diff --cached --name-only 2>/dev/null || git diff --name-only 2>/dev/null', { encoding: 'utf8' });
+    const codeExts = /\.(ts|tsx|js|jsx|py|go|rs|java|rb)$/;
+    const testPattern = /\.test\.|\.spec\.|__test__|__spec__|_test\.|tests\//;
+    const configPattern = /config|\.env|\.json$|\.yaml$|\.yml$|\.toml$|\.md$|\.txt$/i;
+    const srcFiles = diff.split('\n').filter(f =>
+      f.match(codeExts) && !f.match(testPattern) && !f.match(configPattern)
+    );
+    const testFiles = diff.split('\n').filter(f => f.match(testPattern));
+    if (srcFiles.length > 0 && testFiles.length === 0) {
+      if (srcFiles.length > 2) {
+        severity.rework.push(`${srcFiles.length} 个源码文件修改但无对应测试`);
+      } else {
+        severity.concerns.push(`${srcFiles.length} 个源码文件修改但无测试 (数量少, 标注)`);
+      }
+    }
+  } catch {}
+
+} catch (e) {
+  process.exit(0);
+}
+
+// ── 输出结果 ──
+// Stop hook 语义: exit 0 = 放行停止, exit 2 = 阻断停止(强制继续)
+// stdout 输出会作为 context 注入 Claude
+const allIssues = [...severity.fail, ...severity.rework, ...severity.concerns];
+if (severity.fail.length > 0) {
+  process.stderr.write(`[delivery-gate] ❌ FAIL — 严重问题, 必须修复:\n${severity.fail.map(i => `  ✗ ${i}`).join('\n')}\n`);
+  if (severity.rework.length) process.stderr.write(`  + REWORK: ${severity.rework.join(', ')}\n`);
+  if (severity.concerns.length) process.stderr.write(`  + CONCERNS: ${severity.concerns.join(', ')}\n`);
+  process.exit(2); // 阻断: 不让停
+}
+if (severity.rework.length > 0) {
+  process.stderr.write(`[delivery-gate] 🔧 REWORK — 需要修复:\n${severity.rework.map(i => `  ✗ ${i}`).join('\n')}\n`);
+  if (severity.concerns.length) process.stderr.write(`  + CONCERNS: ${severity.concerns.join(', ')}\n`);
+  process.exit(2); // 阻断: 不让停
+}
+if (severity.concerns.length > 0) {
+  // CONCERNS: 放行但输出警告作为 context
+  process.stdout.write(`[delivery-gate] ⚠ CONCERNS (已放行, 建议修复):\n${severity.concerns.map(i => `  △ ${i}`).join('\n')}\n`);
+  process.exit(0); // 放行: 但警告已注入
+}
+process.exit(0); // PASS
