@@ -106,6 +106,7 @@ async function handleSubmit() {
   if (props.operateType === 'add') {
     const { error } = await fetchCreateTenantPackage({ packageName, menuIds, remark, menuCheckStrictly });
     if (error) return;
+    window.$message?.success($t('common.addSuccess'));
   }
 
   if (props.operateType === 'edit') {
@@ -117,9 +118,9 @@ async function handleSubmit() {
       menuCheckStrictly
     });
     if (error) return;
+    window.$message?.success($t('common.updateSuccess'));
   }
 
-  window.$message?.success($t('common.saveSuccess'));
   closeDrawer();
   emit('submitted');
 }

@@ -1,0 +1,4 @@
+[agent]
+name = "validator"
+model = "gpt-5.4"
+description = "代码审查 + Plan Review"

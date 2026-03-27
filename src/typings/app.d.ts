@@ -210,6 +210,7 @@ declare namespace App {
     type RouterPushOptions = {
       query?: Record<string, string>;
       params?: Record<string, string>;
+      force?: boolean;
     };
 
     /** The global header props */
@@ -355,6 +356,7 @@ declare namespace App {
         cancel: string;
         close: string;
         check: string;
+        selectAll: string;
         expandColumn: string;
         columnSetting: string;
         config: string;
@@ -1052,6 +1054,11 @@ declare namespace App {
       };
       datatable: {
         itemCount: string;
+        fixed: {
+          left: string;
+          right: string;
+          unFixed: string;
+        };
       };
     };
 

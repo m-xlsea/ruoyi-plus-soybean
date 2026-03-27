@@ -10,8 +10,8 @@ interface NoticeItem {
 }
 
 export const useNoticeStore = defineStore(SetupStoreId.Notice, () => {
-  const state = reactive({
-    notices: [] as NoticeItem[]
+  const state: { notices: NoticeItem[] } = reactive({
+    notices: []
   });
 
   const addNotice = (notice: NoticeItem) => {
@@ -46,5 +46,3 @@ export const useNoticeStore = defineStore(SetupStoreId.Notice, () => {
     clearNotice
   };
 });
-
-export default useNoticeStore;

@@ -109,11 +109,23 @@ async function handleDeleteMenu(id?: CommonType.IdType) {
   getMeunTree();
 }
 
-function renderLabel({ option }: { option: TreeOption }) {
-  let label = String(option.menuName);
-  if (label?.startsWith('route.') || label?.startsWith('menu.')) {
-    label = $t(label as App.I18n.I18nKey);
+function getMenuLabel(option: TreeOption) {
+  const raw = String(option.menuName);
+  if (raw.startsWith('route.') || raw.startsWith('menu.')) {
+    return $t(raw as App.I18n.I18nKey);
   }
+  return raw;
+}
+
+function customFilterTree(pattern: string, node: TreeOption) {
+  if (!pattern) return true;
+
+  const label = getMenuLabel(node);
+  return label.toLowerCase().includes(pattern.toLowerCase());
+}
+
+function renderLabel({ option }: { option: TreeOption }) {
+  const label = getMenuLabel(option);
   // 禁用的菜单显示红色
   if (option.status === '1') {
     return (
@@ -376,6 +388,7 @@ const renderIframeQuery = (queryParam: string) => {
           v-model:expanded-keys="expandedKeys"
           :cancelable="false"
           block-node
+          :filter="customFilterTree"
           show-line
           :data="treeData as []"
           :default-expanded-keys="[0]"
