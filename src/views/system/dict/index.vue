@@ -322,6 +322,12 @@ async function handleExportType() {
   );
 }
 
+async function handleSubmitType(dictType: string) {
+  await getTreeData();
+  if (!dictType) return;
+  handleClickTree([dictType]);
+}
+
 const selectable = computed(() => {
   return !loading.value;
 });
@@ -446,7 +452,7 @@ const tableTitle = computed(() => {
           v-model:visible="dictTypeDrawerVisible"
           :operate-type="dictOperateType"
           :row-data="dictTypeData"
-          @submitted="getTreeData"
+          @submitted="handleSubmitType"
         />
       </NCard>
     </div>

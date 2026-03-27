@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* global self ReadableStream Response */
 
 self.addEventListener('install', () => {
