@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, useAttrs } from 'vue';
-import type { SelectProps } from 'naive-ui';
+import { ref } from 'vue';
 import { useLoading } from '@sa/hooks';
 import { fetchGetUserSelect } from '@/service/api/system';
 
 defineOptions({
-  name: 'UserSelect'
+  name: 'UserSelect',
+  inheritAttrs: false
 });
 
 interface Props {
@@ -15,8 +15,6 @@ interface Props {
 defineProps<Props>();
 
 const value = defineModel<CommonType.IdType | null>('value', { required: false });
-
-const attrs: SelectProps = useAttrs();
 
 const { loading: userLoading, startLoading: startUserLoading, endLoading: endUserLoading } = useLoading();
 
@@ -44,7 +42,7 @@ getUserOptions();
     v-model:value="value"
     :loading="userLoading"
     :options="userOptions"
-    v-bind="attrs"
+    v-bind="$attrs"
     placeholder="请选择用户"
   />
 </template>

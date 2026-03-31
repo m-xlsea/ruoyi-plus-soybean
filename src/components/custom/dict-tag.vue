@@ -1,12 +1,14 @@
 <script setup lang="ts">
-import { computed, useAttrs } from 'vue';
-import type { TagProps } from 'naive-ui';
+import { computed } from 'vue';
 import { jsonClone } from '@sa/utils';
 import { useDict } from '@/hooks/business/dict';
 import { isNotNull } from '@/utils/common';
 import { $t } from '@/locales';
 
-defineOptions({ name: 'DictTag' });
+defineOptions({
+  name: 'DictTag',
+  inheritAttrs: false
+});
 
 interface Props {
   value?: string[] | number[] | string | number;
@@ -22,8 +24,6 @@ const props = withDefaults(defineProps<Props>(), {
   dictCode: '',
   value: () => []
 });
-
-const attrs = useAttrs() as TagProps;
 
 const { transformDictData } = useDict(props.dictCode, props.immediate);
 
@@ -51,7 +51,7 @@ const dictTagData = computed<Api.System.DictData[]>(() => {
       :key="item.dictValue"
       class="m-1"
       :class="[item.cssClass]"
-      v-bind="attrs"
+      v-bind="$attrs"
       :type="item.listClass || 'default'"
     >
       {{ item.dictLabel }}

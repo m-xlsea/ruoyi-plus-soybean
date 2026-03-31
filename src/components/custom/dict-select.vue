@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { useAttrs } from 'vue';
-import type { SelectProps } from 'naive-ui';
 import { useDict } from '@/hooks/business/dict';
 
-defineOptions({ name: 'DictSelect' });
+defineOptions({
+  name: 'DictSelect',
+  inheritAttrs: false
+});
 
 interface Props {
   dictCode: string;
@@ -19,7 +20,6 @@ const props = withDefaults(defineProps<Props>(), {
 
 const value = defineModel<string | string[] | null>('value', { required: false });
 
-const attrs: SelectProps = useAttrs();
 const { options } = useDict(props.dictCode, props.immediate);
 </script>
 
@@ -30,7 +30,7 @@ const { options } = useDict(props.dictCode, props.immediate);
     :loading="!options.length"
     :options="options"
     :clear-filter-after-select="false"
-    v-bind="attrs"
+    v-bind="$attrs"
   />
 </template>
 

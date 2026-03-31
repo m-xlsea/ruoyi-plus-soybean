@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type VNode, computed, useAttrs } from 'vue';
-import type { ButtonProps, PopoverPlacement } from 'naive-ui';
+import type { PopoverPlacement } from 'naive-ui';
 import { twMerge } from 'tailwind-merge';
 
 defineOptions({
@@ -48,7 +48,7 @@ const emit = defineEmits<Emits>();
 
 const DEFAULT_CLASS = 'h-[36px] text-icon';
 
-const attrs: ButtonProps = useAttrs();
+const attrs = useAttrs();
 
 const quaternary = computed(() => {
   return !(attrs.text || attrs.dashed || attrs.ghost) && props.quaternary;

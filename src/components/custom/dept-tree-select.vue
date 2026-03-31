@@ -1,10 +1,11 @@
 <script setup lang="tsx">
-import { useAttrs } from 'vue';
-import type { TreeSelectProps } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchGetDeptTree } from '@/service/api/system';
 
-defineOptions({ name: 'DeptTreeSelect' });
+defineOptions({
+  name: 'DeptTreeSelect',
+  inheritAttrs: false
+});
 
 interface Props {
   [key: string]: any;
@@ -16,7 +17,6 @@ const value = defineModel<CommonType.IdType | null>('value', { required: false }
 const options = defineModel<Api.Common.CommonTreeRecord>('options', { required: false, default: [] });
 const expandedKeys = defineModel<CommonType.IdType[]>('expandedKeys', { required: false, default: [] });
 
-const attrs: TreeSelectProps = useAttrs();
 const { loading, startLoading, endLoading } = useLoading();
 
 async function getDeptList() {
@@ -44,7 +44,7 @@ getDeptList();
     key-field="id"
     label-field="label"
     :options="options as []"
-    v-bind="attrs"
+    v-bind="$attrs"
   />
 </template>
 
