@@ -48,7 +48,7 @@ export const themeSettings: App.Theme.ThemeSetting = {
     collapsedWidth: 64,
     mixWidth: 90,
     mixCollapsedWidth: 64,
-    mixChildMenuWidth: 200,
+    mixChildMenuWidth: 230,
     autoSelectFirstMenu: false
   },
   footer: {
