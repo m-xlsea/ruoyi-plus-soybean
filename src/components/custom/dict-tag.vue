@@ -31,7 +31,8 @@ const dictTagData = computed<Api.System.DictData[]>(() => {
   if (props.dictData) {
     const dictData = jsonClone(props.dictData);
     if (dictData.dictLabel?.startsWith(`dict.${dictData.dictType}.`)) {
-      dictData.dictLabel = $t(dictData.dictLabel as App.I18n.I18nKey);
+      dictData.isI18n = true;
+      dictData.i18nKey = dictData.dictLabel as App.I18n.I18nKey;
     }
     return [dictData];
   }
@@ -54,7 +55,7 @@ const dictTagData = computed<Api.System.DictData[]>(() => {
       v-bind="$attrs"
       :type="item.listClass || 'default'"
     >
-      {{ item.dictLabel }}
+      {{ item.isI18n ? $t(item.i18nKey) : item.dictLabel }}
     </NTag>
   </div>
 </template>

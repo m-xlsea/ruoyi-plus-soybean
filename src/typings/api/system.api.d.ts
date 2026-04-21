@@ -372,6 +372,10 @@ declare namespace Api {
       listClass: NaiveUI.ThemeColor;
       /** 备注 */
       remark: string;
+      /** 是否多语言 */
+      isI18n?: boolean;
+      /** 多语言标识 */
+      i18nKey: App.I18n.I18nKey;
     }>;
 
     /** dict data search params */

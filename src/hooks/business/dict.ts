@@ -3,7 +3,6 @@ import { storeToRefs } from 'pinia';
 import { fetchGetDictDataByType } from '@/service/api/system';
 import { useDictStore } from '@/store/modules/dict';
 import { isNull } from '@/utils/common';
-import { $t } from '@/locales';
 
 export function useDict(dictType: string, immediate: boolean = true) {
   const dictStore = useDictStore();
@@ -21,11 +20,6 @@ export function useDict(dictType: string, immediate: boolean = true) {
     }
     const { data: dictData, error } = await fetchGetDictDataByType(dictType);
     if (error) return;
-    dictData.forEach(dict => {
-      if (dict.dictLabel?.startsWith(`dict.${dictType}.`)) {
-        dict.dictLabel = $t(dict.dictLabel as App.I18n.I18nKey);
-      }
-    });
     dictStore.setDict(dictType, dictData);
     data.value = dictData;
   }
@@ -44,15 +38,20 @@ export function useDict(dictType: string, immediate: boolean = true) {
       await getData();
     }
 
-    options.value = data.value.map(dict => ({ label: dict.dictLabel!, value: dict.dictValue! }));
+    options.value = data.value.map(dict => ({
+      label: dict.dictLabel!,
+      value: dict.dictValue!
+    }));
   }
 
   function transformDictData(dictValue: string[] | number[] | string | number) {
-    if (!data.value.length || isNull(dictValue)) return undefined;
+    if (isNull(dictValue)) return undefined;
+    const currentData = dictStore.getDict(dictType) ?? data.value;
+    if (!currentData.length) return undefined;
     if (Array.isArray(dictValue)) {
-      return data.value.filter(dict => dictValue.some(value => dict.dictValue === value.toString()));
+      return currentData.filter(dict => dictValue.some(value => dict.dictValue === value.toString()));
     }
-    return data.value.filter(dict => dict.dictValue === dictValue.toString());
+    return currentData.filter(dict => dict.dictValue === dictValue.toString());
   }
 
   if (immediate) {
