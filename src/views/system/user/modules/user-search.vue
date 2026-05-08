@@ -18,20 +18,18 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const dateRangeCreateTime = ref<[string, string] | null>(null);
-
 const model = defineModel<Api.System.UserSearchParams>('model', { required: true });
 
 const defaultModel = jsonClone(toRaw(model.value));
 
+const dateRangeCreateTime = ref<[string, string] | null>(null);
+
 function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
-  const params = model.value.params!;
-  if (value && value.length === 2) {
-    [params.beginTime, params.endTime] = value;
-  } else {
-    params.beginTime = undefined;
-    params.endTime = undefined;
-  }
+  model.value.params = {
+    ...model.value.params,
+    beginTime: value?.[0],
+    endTime: value?.[1]
+  };
 }
 
 function resetModel() {

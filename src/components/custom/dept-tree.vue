@@ -1,10 +1,13 @@
 <script setup lang="tsx">
-import { onMounted, ref, useAttrs, watch } from 'vue';
-import type { TreeSelectInst, TreeSelectProps } from 'naive-ui';
+import { onMounted, ref, watch } from 'vue';
+import type { TreeSelectInst } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import { fetchGetDeptTree } from '@/service/api/system/user';
 
-defineOptions({ name: 'DeptTree' });
+defineOptions({
+  name: 'DeptTree',
+  inheritAttrs: false
+});
 
 interface Props {
   immediate?: boolean;
@@ -24,8 +27,6 @@ const value = defineModel<CommonType.IdType[]>('value', { required: false, defau
 const options = defineModel<any[]>('options', { required: false, default: [] });
 const cascade = defineModel<boolean>('cascade', { required: false, default: true });
 const loading = defineModel<boolean>('loading', { required: false, default: false });
-
-const attrs: TreeSelectProps = useAttrs();
 
 async function getDeptList() {
   loading.value = true;
@@ -124,7 +125,7 @@ defineExpose({
         :loading="loading"
         virtual-scroll
         :check-strategy="cascade ? 'child' : 'all'"
-        v-bind="attrs"
+        v-bind="$attrs"
       />
     </NSpin>
   </div>

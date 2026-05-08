@@ -97,18 +97,16 @@ function useMixMenu() {
   }
 
   function getActiveSecondLevelMenuKey() {
-    const keys = selectedKey.value.split('_');
+    const currentKey = selectedKey.value;
 
-    if (keys.length < 2) {
-      setActiveSecondLevelMenuKey('');
-      return;
+    const found = secondLevelMenus.value.find(menu => {
+      if (menu.key === currentKey) return true;
+      return menu.children && findMenuByKey(menu.children, currentKey);
+    });
+
+    if (found) {
+      setActiveSecondLevelMenuKey(found.key);
     }
-
-    const [firstLevelRouteName, level2SuffixName] = keys;
-
-    const secondLevelRouteName = `${firstLevelRouteName}_${level2SuffixName}`;
-
-    setActiveSecondLevelMenuKey(secondLevelRouteName);
   }
 
   const isActiveSecondLevelMenuHasChildren = computed(() => {
@@ -122,9 +120,12 @@ function useMixMenu() {
   });
 
   function handleSelectSecondLevelMenu(key: RouteKey) {
-    setActiveSecondLevelMenuKey(key);
+    const findItem = secondLevelMenus.value.find(item => item.key === key);
+    const itemHasChildren = Boolean(findItem?.children?.length);
 
-    if (!isActiveSecondLevelMenuHasChildren.value) {
+    if (itemHasChildren) {
+      setActiveSecondLevelMenuKey(key);
+    } else {
       routerPushByKeyWithMetaQuery(key);
     }
   }
