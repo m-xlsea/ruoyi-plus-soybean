@@ -2,7 +2,6 @@
 import { ref, toRaw } from 'vue';
 import { jsonClone } from '@sa/utils';
 import { useNaiveForm } from '@/hooks/common/form';
-import { useDict } from '@/hooks/business/dict';
 import { $t } from '@/locales';
 
 defineOptions({
@@ -17,22 +16,18 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const dateRangeCreateTime = ref<[string, string] | null>(null);
-
 const model = defineModel<Api.System.RoleSearchParams>('model', { required: true });
 
 const defaultModel = jsonClone(toRaw(model.value));
 
-const { options: sysNormalDisableOptions } = useDict('sys_normal_disable', false);
+const dateRangeCreateTime = ref<[string, string] | null>(null);
 
 function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
-  const params = model.value.params!;
-  if (value && value.length === 2) {
-    [params.beginTime, params.endTime] = value;
-  } else {
-    params.beginTime = undefined;
-    params.endTime = undefined;
-  }
+  model.value.params = {
+    ...model.value.params,
+    beginTime: value?.[0],
+    endTime: value?.[1]
+  };
 }
 
 function resetModel() {
@@ -59,16 +54,16 @@ async function search() {
         <NForm ref="formRef" :model="model" label-placement="left" :label-width="80">
           <NGrid responsive="screen" item-responsive>
             <NFormItemGi span="24 s:12 m:6" label="角色名称" path="roleName" class="pr-24px">
-              <NInput v-model:value="model.roleName" placeholder="请输入角色名称" />
+              <NInput v-model:value="model.roleName" :placeholder="$t('page.system.role.form.roleName.required')" />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" label="权限字符" path="roleKey" class="pr-24px">
-              <NInput v-model:value="model.roleKey" placeholder="请输入权限字符" />
+              <NInput v-model:value="model.roleKey" :placeholder="$t('page.system.role.form.roleKey.required')" />
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" label="角色状态" path="status" class="pr-24px">
-              <NSelect
+              <DictSelect
                 v-model:value="model.status"
-                placeholder="请选择角色状态"
-                :options="sysNormalDisableOptions"
+                :placeholder="$t('page.system.role.form.status.required')"
+                dict-code="sys_normal_disable"
                 clearable
               />
             </NFormItemGi>

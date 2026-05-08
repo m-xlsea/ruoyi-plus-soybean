@@ -16,17 +16,18 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const dateRangeOperTime = ref<[string, string] | null>(null);
-
 const model = defineModel<Api.Monitor.OperLogSearchParams>('model', { required: true });
 
 const defaultModel = jsonClone(toRaw(model.value));
 
+const dateRangeOperTime = ref<[string, string] | null>(null);
+
 function onDateRangeOperTimeUpdate(value: [string, string] | null) {
-  if (value?.length) {
-    model.value.params!.beginTime = value[0];
-    model.value.params!.endTime = value[1];
-  }
+  model.value.params = {
+    ...model.value.params,
+    beginTime: value?.[0],
+    endTime: value?.[1]
+  };
 }
 
 function resetModel() {

@@ -26,6 +26,19 @@ const model = defineModel<Api.$ModuleName.${BusinessName}SearchParams>('model', 
 
 const defaultModel = jsonClone(toRaw(model.value));
 
+#foreach ($column in $columns)
+    #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+        #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+function onDateRange${AttrName}Update(value: [string, string] | null) {
+  model.value.params = {
+    ...model.value.params,
+    begin${AttrName}: value?.[0],
+    end${AttrName}: value?.[1]
+  };
+}
+    #end
+#end
+
 function resetModel() {
   #foreach ($column in $columns)
     #if($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
