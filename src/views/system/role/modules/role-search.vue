@@ -70,11 +70,10 @@ async function search() {
             <NFormItemGi span="24 s:12 m:6" label="创建时间" path="createTime" class="pr-24px">
               <NDatePicker
                 v-model:formatted-value="dateRangeCreateTime"
-                update-value-on-close
-                class="w-full"
-                type="daterange"
-                value-format="yyyy-MM-dd"
+                type="datetimerange"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
+                :default-time="['00:00:00', '23:59:59']"
                 @update:formatted-value="onDateRangeCreateTimeUpdate"
               />
             </NFormItemGi>

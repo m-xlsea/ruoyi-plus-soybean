@@ -24,16 +24,17 @@ const { formRef, validate, restoreValidation } = useNaiveForm();
 
 const model = defineModel<Api.Tool.GenTableSearchParams>('model', { required: true });
 
-const dateRange = ref<[string, string]>();
-
-function onDateRangeUpdate(value: [string, string] | null) {
-  if (value?.length) {
-    model.value.params!.beginTime = value[0];
-    model.value.params!.endTime = value[1];
-  }
-}
+const dateRangeCreateTime = ref<[string, string] | null>(null);
 
 const defaultModel = jsonClone(toRaw(model.value));
+
+function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
+  model.value.params = {
+    ...model.value.params,
+    beginTime: value?.[0],
+    endTime: value?.[1]
+  };
+}
 
 function resetModel() {
   model.value.params!.beginTime = null;
@@ -70,11 +71,12 @@ async function search() {
             </NFormItemGi>
             <NFormItemGi span="24 s:12 m:6" label="创建时间" label-width="auto" class="pr-24px">
               <NDatePicker
-                v-model:formatted-value="dateRange"
+                v-model:formatted-value="dateRangeCreateTime"
                 value-format="yyyy-MM-dd HH:mm:ss"
-                type="daterange"
+                type="datetimerange"
                 clearable
-                @update:formatted-value="onDateRangeUpdate"
+                :default-time="['00:00:00', '23:59:59']"
+                @update:formatted-value="onDateRangeCreateTimeUpdate"
               />
             </NFormItemGi>
             <NFormItemGi :show-feedback="false" span="24" class="pb-6px pr-24px">
