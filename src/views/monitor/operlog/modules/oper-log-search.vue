@@ -84,6 +84,7 @@ async function search() {
                 type="datetimerange"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
+                :default-time="['00:00:00', '23:59:59']"
                 @update:formatted-value="onDateRangeOperTimeUpdate"
               />
             </NFormItemGi>
