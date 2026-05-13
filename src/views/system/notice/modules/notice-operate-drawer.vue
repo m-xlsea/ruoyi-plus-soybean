@@ -128,7 +128,7 @@ watch(visible, () => {
           </NFormItem>
         </div>
         <NFormItem :show-label="false" path="noticeContent">
-          <WangEditor v-model:value="model.noticeContent!" />
+          <WangEditor v-model:value="model.noticeContent!" :visible="visible" />
         </NFormItem>
       </NForm>
       <template #footer>
