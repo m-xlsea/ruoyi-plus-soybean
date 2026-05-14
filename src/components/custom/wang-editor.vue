@@ -85,9 +85,9 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <NCard size="small" class="wang-editor size-full min-h-500px" content-class="size-full">
-    <Toolbar :editor="editorRef" :default-config="toolbarConfig" class="border-b-1px border-gray-200" />
-    <Editor v-model="value" :default-config="editorConfig" @on-created="handleCreated" />
+  <NCard size="small" class="wang-editor h-500px z-1500" content-class="flex flex-col h-full overflow-hidden">
+    <Toolbar :editor="editorRef" :default-config="toolbarConfig" class="shrink-0 border-b border-gray-200" />
+    <Editor v-model="value" class="flex-1 overflow-y-auto" :default-config="editorConfig" @on-created="handleCreated" />
   </NCard>
 </template>
 
@@ -95,17 +95,27 @@ onBeforeUnmount(() => {
 html.dark .wang-editor {
   /* 编辑区 */
   --w-e-textarea-bg-color: #1e1e1e;
-  --w-e-textarea-color: #c8c8c8;
-  --w-e-textarea-border-color: #4d4d4d;
+  --w-e-textarea-color: #d4d4d4;
+  --w-e-textarea-border-color: #3e3e3e;
+  --w-e-textarea-slight-border-color: #3e3e3e;
+  --w-e-textarea-slight-color: #858585;
+  --w-e-textarea-slight-bg-color: #2d2d2d;
+  --w-e-textarea-selected-border-color: #264f78;
+  --w-e-textarea-handler-bg-color: #0e7490;
 
   /* 工具栏 */
-  --w-e-toolbar-bg-color: #2c2c2c;
-  --w-e-toolbar-color: #999;
+  --w-e-toolbar-color: #d4d4d4;
+  --w-e-toolbar-bg-color: #252526;
   --w-e-toolbar-active-color: #d4d4d4;
-  --w-e-toolbar-active-bg-color: #3a3a3a;
-  --w-e-toolbar-border-color: #3d3d3d;
-}
+  --w-e-toolbar-active-bg-color: #37373d;
+  --w-e-toolbar-disabled-color: #5a5a5a;
+  --w-e-toolbar-border-color: #3e3e3e;
 
+  /* 弹窗 */
+  --w-e-modal-button-bg-color: #2d2d2d;
+  --w-e-modal-button-border-color: #3e3e3e;
+}
+.wang-editor,
 .w-e-select-list {
   @include scrollbar();
 }
