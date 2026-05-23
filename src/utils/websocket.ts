@@ -1,6 +1,6 @@
 import { useWebSocket } from '@vueuse/core';
-import { useNoticeStore } from '@/store/modules/notice';
 import { localStg } from './storage';
+import { processMessage } from './message';
 
 /**
  * 初始化 WebSocket
@@ -9,7 +9,7 @@ import { localStg } from './storage';
  */
 export const initWebSocket = (url: string) => {
   const token = localStg.get('token');
-  if (import.meta.env.VITE_APP_WEBSOCKET === 'N' || !token) {
+  if (import.meta.env.VITE_APP_MESSAGE === 'N' || !token) {
     return;
   }
   const socketUrl = `${url}?Authorization=Bearer ${token}&clientid=${import.meta.env.VITE_APP_CLIENT_ID}`;
@@ -43,18 +43,8 @@ export const initWebSocket = (url: string) => {
       if (e.data.indexOf('ping') > 0) {
         return;
       }
-      useNoticeStore().addNotice({
-        message: e.data,
-        read: false,
-        time: new Date().toLocaleString()
-      });
-
-      window.$notification?.create({
-        title: '消息',
-        content: e.data,
-        type: 'success',
-        duration: 3000
-      });
+      const sseMessage: Api.System.SseMessage = JSON.parse(e.data);
+      processMessage(sseMessage);
     }
   });
 };

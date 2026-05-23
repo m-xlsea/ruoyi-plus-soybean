@@ -1,8 +1,7 @@
 import { watch } from 'vue';
 import { useEventSource } from '@vueuse/core';
-import { useNoticeStore } from '@/store/modules/notice';
-import { $t } from '@/locales';
 import { localStg } from './storage';
+import { processMessage } from './message';
 
 /**
  * 初始化 SSE
@@ -11,7 +10,7 @@ import { localStg } from './storage';
  */
 export const initSSE = (url: string) => {
   const token = localStg.get('token');
-  if (import.meta.env.VITE_APP_SSE === 'N' || !token) {
+  if (import.meta.env.VITE_APP_MESSAGE === 'N' || !token) {
     return;
   }
   const sseUrl = `${url}?Authorization=Bearer ${token}&clientid=${import.meta.env.VITE_APP_CLIENT_ID}`;
@@ -37,23 +36,8 @@ export const initSSE = (url: string) => {
 
   watch(data, () => {
     if (!data.value) return;
-
-    let content = data.value;
-    const noticeType = content.match(/\[dict\.(.*?)\]/)?.[1];
-    if (noticeType) {
-      content = content.replace(`dict.${noticeType}`, $t(`dict.${noticeType}` as App.I18n.I18nKey));
-    }
-    useNoticeStore().addNotice({
-      message: content,
-      read: false,
-      time: new Date().toLocaleString()
-    });
-    window.$notification?.create({
-      title: '消息',
-      content,
-      type: 'success',
-      duration: 3000
-    });
+    const sseMessage: Api.System.SseMessage = JSON.parse(data.value);
+    processMessage(sseMessage);
     data.value = null;
   });
 };

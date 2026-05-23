@@ -57,9 +57,9 @@ export function fetchGetUserInfo() {
 
 /** Logout */
 export function fetchLogout() {
-  if (import.meta.env.VITE_APP_SSE === 'Y') {
+  if (import.meta.env.VITE_APP_MESSAGE === 'Y') {
     request({
-      url: '/resource/sse/close',
+      url: `${import.meta.env.VITE_APP_MESSAGE_PATH}/close`,
       method: 'get'
     });
   }

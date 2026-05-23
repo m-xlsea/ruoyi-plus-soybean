@@ -165,7 +165,9 @@ export const useAuthStore = defineStore(SetupStoreId.Auth, () => {
     if (!error) {
       // update store
       Object.assign(userInfo, info);
-
+      if (userInfo.user?.userId) {
+        noticeStore.initNotice(userInfo.user.userId);
+      }
       return true;
     }
 

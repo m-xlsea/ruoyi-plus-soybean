@@ -6,7 +6,13 @@ import json5 from 'json5';
  * @param env The current env
  */
 export function createServiceConfig(env: Env.ImportMeta) {
-  const { VITE_SERVICE_BASE_URL, VITE_OTHER_SERVICE_BASE_URL, VITE_APP_BASE_API, VITE_APP_WEBSOCKET } = env;
+  const {
+    VITE_SERVICE_BASE_URL,
+    VITE_OTHER_SERVICE_BASE_URL,
+    VITE_APP_BASE_API,
+    VITE_APP_MESSAGE,
+    VITE_APP_MESSAGE_TRANSPORT
+  } = env;
 
   let other = {} as Record<App.Service.OtherBaseURLKey, string>;
   try {
@@ -36,7 +42,7 @@ export function createServiceConfig(env: Env.ImportMeta) {
 
   const config: App.Service.ServiceConfig = {
     baseURL: httpConfig.baseURL,
-    ws: VITE_APP_WEBSOCKET === 'Y',
+    ws: VITE_APP_MESSAGE === 'Y' && VITE_APP_MESSAGE_TRANSPORT === 'websocket',
     proxyPattern: VITE_APP_BASE_API,
     other: otherConfig
   };

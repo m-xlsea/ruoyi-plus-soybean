@@ -703,5 +703,32 @@ declare namespace Api {
 
     /** oss config list */
     type OssConfigList = Api.Common.PaginatingQueryRecord<OssConfig>;
+
+    /** SSE 消息类型 */
+    type SseMessageType = 'message' | 'notice' | 'llm' | 'custom';
+
+    /** SSE 消息来源 */
+    type SseMessageSource = 'backend' | 'notice' | 'workflow' | 'llm' | 'client';
+
+    /** SSE 消息分类 */
+    type SseMessageCategory = 'notice' | 'workflow' | 'system';
+
+    /** SSE 消息 */
+    type SseMessage = {
+      /** 消息记录 ID */
+      messageId: CommonType.IdType;
+      /** 消息类型 */
+      type: SseMessageType;
+      /** 消息来源 */
+      source: SseMessageSource;
+      /** 文本消息 */
+      message: string;
+      /** 消息数据 */
+      data: Record<string, any> | null;
+      /** 前端跳转路径 */
+      path: string;
+      /** 时间戳 */
+      timestamp: number;
+    };
   }
 }

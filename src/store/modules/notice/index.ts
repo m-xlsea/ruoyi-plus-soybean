@@ -2,43 +2,62 @@ import { reactive } from 'vue';
 import { defineStore } from 'pinia';
 import { SetupStoreId } from '@/enum';
 
-interface NoticeItem {
+export interface NoticeItem {
+  messageId?: CommonType.IdType;
   title?: string;
+  category?: Api.System.SseMessageCategory;
+  type?: Api.System.SseMessageType;
+  source?: Api.System.SseMessageSource;
   read: boolean;
-  message: any;
+  message: string;
+  content?: string;
+  data?: Record<string, any> | null;
+  path?: string;
+  timestamp?: number;
   time: string;
 }
 
 export const useNoticeStore = defineStore(SetupStoreId.Notice, () => {
-  const state: { notices: NoticeItem[] } = reactive({
-    notices: []
-  });
+  const state: {
+    [key: CommonType.IdType]: {
+      notices: NoticeItem[];
+    };
+  } = reactive({});
 
-  const addNotice = (notice: NoticeItem) => {
-    state.notices.push(notice);
+  const initNotice = (userId: CommonType.IdType) => {
+    if (state[userId]?.notices?.length) {
+      return;
+    }
+    state[userId] = { notices: [] };
   };
 
-  const removeNotice = (notice: NoticeItem) => {
-    state.notices.splice(state.notices.indexOf(notice), 1);
+  const addNotice = (userId: CommonType.IdType, notice: NoticeItem) => {
+    state[userId].notices.push(notice);
+    console.log(state.notices);
   };
 
-  const readNotice = (notice: NoticeItem) => {
-    state.notices[state.notices.indexOf(notice)].read = true;
+  const removeNotice = (userId: CommonType.IdType, notice: NoticeItem) => {
+    state[userId].notices.splice(state[userId].notices.indexOf(notice), 1);
+  };
+
+  const readNotice = (userId: CommonType.IdType, notice: NoticeItem) => {
+    state[userId].notices[state[userId].notices.indexOf(notice)].read = true;
   };
 
   // 实现全部已读
-  const readAll = () => {
-    state.notices.forEach((item: any) => {
+  const readAll = (userId: CommonType.IdType) => {
+    state[userId].notices.forEach((item: any) => {
       item.read = true;
     });
   };
 
   const clearNotice = () => {
-    state.notices = [];
+    Object.assign(state, {});
   };
 
   return {
     state,
+    initNotice,
     addNotice,
     removeNotice,
     readNotice,

@@ -2,17 +2,24 @@
 import { computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useNoticeStore } from '@/store/modules/notice';
+import { useAuthStore } from '@/store/modules/auth';
 
 defineOptions({
   name: 'MessgaeButton'
 });
 
 const show = ref(false);
+const { userInfo } = useAuthStore();
 const noticeStore = useNoticeStore();
 const { state } = storeToRefs(noticeStore);
 
 const noticeNum = computed(() => {
-  return state.value.notices.filter(notice => !notice.read).length || 0;
+  return state.value[userInfo.user!.userId].notices.filter(notice => !notice.read).length || 0;
+});
+
+const noticeList = computed(() => {
+  const notices = state.value[userInfo.user!.userId].notices || [];
+  return notices.reverse();
 });
 
 const toGitee = () => {
@@ -49,7 +56,7 @@ const toGitee = () => {
       <template #header-extra>
         <NTooltip placement="left" :z-index="98">
           <template #trigger>
-            <NPopconfirm @positive-click="() => noticeStore.readAll()">
+            <NPopconfirm @positive-click="() => noticeStore.readAll(userInfo.user!.userId)">
               <template #trigger>
                 <NButton quaternary>
                   <div class="flex-center gap-8px">
@@ -64,10 +71,10 @@ const toGitee = () => {
         </NTooltip>
       </template>
       <NScrollbar class="h-260px">
-        <template v-if="state?.notices?.length">
-          <template v-for="(message, index) in state?.notices" :key="index">
+        <template v-if="noticeList.length">
+          <template v-for="(message, index) in noticeList" :key="index">
             <NDivider v-show="index !== 0" />
-            <div class="flex cursor-pointer" @click="() => noticeStore.readNotice(message)">
+            <div class="flex cursor-pointer" @click="() => noticeStore.readNotice(userInfo.user!.userId, message)">
               <div class="flex-col justify-between gap-3px">
                 <NEllipsis class="w-260px">{{ message.message }}</NEllipsis>
                 <span class="text-#898989">
