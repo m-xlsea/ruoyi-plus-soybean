@@ -1,13 +1,16 @@
 <script setup lang="tsx">
-import { onMounted, useAttrs } from 'vue';
-import type { TreeOption, TreeSelectProps } from 'naive-ui';
+import { onMounted } from 'vue';
+import type { TreeOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchGetMenuList } from '@/service/api/system';
 import { handleTree } from '@/utils/common';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { $t } from '@/locales';
 
-defineOptions({ name: 'MenuTreeSelect' });
+defineOptions({
+  name: 'MenuTreeSelect',
+  inheritAttrs: false
+});
 
 interface Props {
   immediate?: boolean;
@@ -21,7 +24,6 @@ const props = withDefaults(defineProps<Props>(), {
 const value = defineModel<CommonType.IdType | null>('value', { required: false });
 const options = defineModel<Api.System.MenuList>('options', { required: false, default: [] });
 
-const attrs: TreeSelectProps = useAttrs();
 const { loading, startLoading, endLoading } = useLoading();
 
 async function getMenuList() {
@@ -75,7 +77,7 @@ function renderPrefix({ option }: { option: TreeOption }) {
     :render-tag="renderLabel"
     :render-label="renderLabel"
     :render-prefix="renderPrefix"
-    v-bind="attrs"
+    v-bind="$attrs"
   />
 </template>
 

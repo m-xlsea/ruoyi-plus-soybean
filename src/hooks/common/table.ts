@@ -68,7 +68,7 @@ export function useNaiveTable<ResponseData, ApiData>(options: UseNaiveTableOptio
 type PaginationParams = Pick<PaginationProps, 'page' | 'pageSize'>;
 
 type UseNaivePaginatedTableOptions<ResponseData, ApiData> = UseNaiveTableOptions<ResponseData, ApiData, true> & {
-  paginationProps?: Omit<PaginationProps, 'page' | 'pageSize' | 'itemCount'>;
+  paginationProps?: Omit<PaginationProps, 'page' | 'itemCount'>;
   /**
    * whether to show the total count of the table
    *

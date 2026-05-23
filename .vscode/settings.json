@@ -13,12 +13,17 @@
   "i18n-ally.keystyle": "nested",
   "i18n-ally.localesPaths": ["src/locales/langs"],
   "i18n-ally.parsers.typescript.compilerOptions": {
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
+    "rootDir": ".",
+    "baseUrl": "."
   },
-  "prettier.enable": false,
+  "oxc.fmt.configPath": ".oxfmtrc.json",
   "unocss.root": ["./"],
   "search.exclude": {
     "/docs": true,
-    "**/dist/**": true
+    "**/dist/**": true,
+    "/.claude": true,
+    "/.codex": true
   }
 }

@@ -16,17 +16,18 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const dateRangeLoginTime = ref<[string, string] | null>(null);
-
 const model = defineModel<Api.Monitor.LoginInforSearchParams>('model', { required: true });
 
 const defaultModel = jsonClone(toRaw(model.value));
 
+const dateRangeLoginTime = ref<[string, string] | null>(null);
+
 function onDateRangeLoginTimeUpdate(value: [string, string] | null) {
-  if (value?.length) {
-    model.value.params!.beginTime = value[0];
-    model.value.params!.endTime = value[1];
-  }
+  model.value.params = {
+    ...model.value.params,
+    beginTime: value?.[0],
+    endTime: value?.[1]
+  };
 }
 
 function resetModel() {
@@ -72,6 +73,7 @@ async function search() {
                 type="datetimerange"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
+                :default-time="['00:00:00', '23:59:59']"
                 @update:formatted-value="onDateRangeLoginTimeUpdate"
               />
             </NFormItemGi>

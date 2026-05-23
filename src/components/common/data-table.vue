@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { useAttrs } from 'vue';
-import type { DataTableProps } from 'naive-ui';
 import type { CreateRowKey } from 'naive-ui/es/data-table/src/interface';
 import { useThemeStore } from '@/store/modules/theme';
 
@@ -16,7 +14,6 @@ interface Props {
 defineProps<Props>();
 
 const { table } = useThemeStore();
-const attrs: DataTableProps = useAttrs();
 </script>
 
 <template>
@@ -28,7 +25,7 @@ const attrs: DataTableProps = useAttrs();
     :size="table.size"
     :striped="table.striped"
     :row-key="rowKey"
-    v-bind="attrs"
+    v-bind="$attrs"
   />
 </template>
 

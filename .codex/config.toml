@@ -1,85 +1,115 @@
-# VibeCoding Kernel v9.2.0 — Codex CLI Config
-model_provider = "custom"
-model = "gpt-5.4"
+# VibeCoding Athena v9.6 · Codex Configuration
+
+project_root_markers = [".git", ".hg", ".sl"]
+project_doc_max_bytes = 65536
+
+model = "gpt-5.5"
 model_reasoning_effort = "xhigh"
+
+windows_wsl_setup_acknowledged = true
+model_context_window = 1000000
+model_auto_compact_token_limit = 900000
+web_search = "live"
 suppress_unstable_features_warning = true
 
-# 危险，可开启 和下面的二选一，上面的代表绝对信任
-# approval_policy = "never"            # untrusted|on-request|never
-# sandbox_mode = "danger-full-access"  # read-only|workspace-write|danger-full-access
-
-approval_policy = "never"
-sandbox_mode    = "workspace-write"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
 
 [sandbox_workspace_write]
-network_access = true                  # npm install / pip install 需要网络
-
-# Web Search
-web_search = "live"
+network_access = false
 
 [features]
-multi_agent = true                     # stable; 多代理编排
-collaboration_modes = true             # stable; 协作模式
-shell_snapshot = true                  # beta; 加速重复命令
-unified_exec = true                    # beta; PTY-backed 执行
-shell_tool = true                      # stable; 默认 shell 工具
-apply_patch_freeform = true            # experimental; 自由 patch
-undo = true                            # 回滚 Codex 改动;
+hooks = true
+multi_agent = true
+shell_tool = true
+shell_snapshot = true
+unified_exec = true
+apply_patch_freeform = true
+undo = true
+memories = true
 
-[tui]
-notifications = true
-animations = true
+[memories]
+generate_memories = true
+use_memories = true
+disable_on_external_context = true
 
-[profiles.ci]
-approval_policy = "never"
-sandbox_mode = "workspace-write"
+[[hooks.SessionStart]]
+matcher = "^(startup|resume|clear)$"
+[[hooks.SessionStart.hooks]]
+type = "command"
+command = "python3 \"./.codex/hooks/session-start.py\""
+timeout = 10
+statusMessage = "Loading Athena context"
 
-[profiles.review]
-model = "gpt-5.4"
-approval_policy = "on-request"
+[[hooks.UserPromptSubmit]]
+[[hooks.UserPromptSubmit.hooks]]
+type = "command"
+command = "python3 \"./.codex/hooks/user-prompt-submit.py\""
+timeout = 5
+statusMessage = "Athena pre-check"
 
-[profiles.dev]
-model = "gpt-5.4"
-approval_policy = "on-request"
-sandbox_mode = "workspace-write"
+[[hooks.PreToolUse]]
+matcher = "^Bash$"
+[[hooks.PreToolUse.hooks]]
+type = "command"
+command = "python3 \"./.codex/hooks/pre-bash-guard.py\""
+timeout = 10
+statusMessage = "Checking Bash command"
+
+[[hooks.PostToolUse]]
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = "python3 \"./.codex/hooks/index-updater.py\""
+timeout = 10
+
+[[hooks.PostToolUse]]
+[[hooks.PostToolUse.hooks]]
+type = "command"
+command = "python3 \"./.codex/hooks/subagent-retry.py\""
+timeout = 10
+
+[[hooks.Stop]]
+[[hooks.Stop.hooks]]
+type = "command"
+command = "python3 \"./.codex/hooks/delivery-gate.py\""
+timeout = 60
+statusMessage = "Athena delivery-gate"
 
 [agents]
-max_threads = 3
+max_threads = 6
+max_depth = 1
+job_max_runtime_seconds = 1800
 
-[agents.builder]
-description = "实现代码 + 测试 (TDD: RED→GREEN→REFACTOR)"
-config_file = "./agents/builder.toml"
+[[skills.config]]
+name = "pace"
+enabled = true
 
-[agents.validator]
-description = "代码审查 + Plan Review"
-config_file = "./agents/validator.toml"
+[[skills.config]]
+name = "compound"
+enabled = true
 
-[agents.explorer]
-description = "代码库调研 + 文档查询 (只读)"
-config_file = "./agents/explorer.toml"
+[[skills.config]]
+name = "context7"
+enabled = true
 
-[model_providers.custom]
-name = "custom"
-wire_api = "responses"
-requires_openai_auth = true
+[[skills.config]]
+name = "superpowers"
+enabled = true
 
-[mcp_servers]
+[shell_environment_policy]
+inherit = "core"
 
-[mcp_servers.mcp-deepwiki]
-type = "stdio"
-command = "npx"
-args = ["-y", "mcp-deepwiki@latest"]
+[tui.model_availability_nux]
+"gpt-5.5" = 4
 
-[mcp_servers."cunzhi"]
-type = "stdio"
-command = "寸止"
-
-[mcp_servers.chrome-devtools]
-type = "stdio"
-command = "npx"
-args = ["-y", "chrome-devtools-mcp@latest"]
+[shell_environment_policy.set]
+VIBECODING_VERSION = "9.6.0-codex"
 
 [mcp_servers.augment-context-engine]
-type = "stdio"
 command = "npx"
-args = ["ace-tool-rs", "--base-url", "https://acemcp.heroman.wtf/relay/", "--token", ""]
+args = [ "ace-tool-rs", "--base-url", "https://acemcp.heroman.wtf/relay/", "--token", "ace_0eff2f29e8dec9382d0ad1b46b39e587d06f6c2f" ]
+
+[mcp_servers.augment-context-engine.tools.search_context]
+approval_mode = "approve"
+
+[hooks.state]

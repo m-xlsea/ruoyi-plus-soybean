@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref, useAttrs, watch } from 'vue';
-import type { SelectProps } from 'naive-ui';
+import { ref, watch } from 'vue';
 import { useLoading } from '@sa/hooks';
 import { fetchGetPostSelect } from '@/service/api/system';
 
 defineOptions({
-  name: 'PostSelect'
+  name: 'PostSelect',
+  inheritAttrs: false
 });
 
 interface Props {
@@ -16,8 +16,6 @@ interface Props {
 const props = defineProps<Props>();
 
 const value = defineModel<CommonType.IdType[] | null>('value', { required: false });
-
-const attrs: SelectProps = useAttrs();
 
 const { loading: postLoading, startLoading: startPostLoading, endLoading: endPostLoading } = useLoading();
 
@@ -55,7 +53,7 @@ async function getPostOptions() {
     v-model:value="value"
     :loading="postLoading"
     :options="postOptions"
-    v-bind="attrs"
+    v-bind="$attrs"
     placeholder="请选择岗位"
   />
 </template>

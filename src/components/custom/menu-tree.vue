@@ -1,12 +1,15 @@
 <script setup lang="tsx">
-import { onMounted, ref, useAttrs, watch } from 'vue';
-import type { TreeOption, TreeSelectInst, TreeSelectProps } from 'naive-ui';
+import { onMounted, ref, watch } from 'vue';
+import type { TreeOption, TreeSelectInst } from 'naive-ui';
 import { useBoolean } from '@sa/hooks';
 import { fetchGetMenuTreeSelect } from '@/service/api/system';
 import SvgIcon from '@/components/custom/svg-icon.vue';
 import { $t } from '@/locales';
 
-defineOptions({ name: 'MenuTree' });
+defineOptions({
+  name: 'MenuTree',
+  inheritAttrs: false
+});
 
 interface Props {
   immediate?: boolean;
@@ -28,7 +31,6 @@ const checkedKeys = defineModel<CommonType.IdType[]>('checkedKeys', { required: 
 const options = defineModel<Api.System.MenuList>('options', { required: false, default: [] });
 const cascade = defineModel<boolean>('cascade', { required: false, default: true });
 const loading = defineModel<boolean>('loading', { required: false, default: false });
-const attrs: TreeSelectProps = useAttrs();
 
 async function getMenuList() {
   loading.value = true;
@@ -192,7 +194,7 @@ defineExpose({
         check-strategy="all"
         :render-label="renderLabel"
         :render-prefix="renderPrefix"
-        v-bind="attrs"
+        v-bind="$attrs"
       />
     </NSpin>
   </div>
