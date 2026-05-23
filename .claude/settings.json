@@ -1,55 +1,65 @@
 {
-  "environmentVariables": {
-    "VIBECODING_VERSION": "9.2.0",
-    "LANGUAGE": "zh-Hans",
-    "LC_ALL": "zh-Hans",
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "model": "opusplan",
+  "effortLevel": "xhigh",
+  "env": {
+    "VIBECODING_ATHENA_VERSION": "9.6.0",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-4-7",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-4-6",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-sonnet-4-6",
     "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
-    "API_TIMEOUT_MS": "3000000",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "claude-sonnet-4-6"
+    "DISABLE_NON_ESSENTIAL_MODEL_CALLS": "1",
+    "CLAUDE_CODE_DISABLE_FEEDBACK_SURVEY": "1",
+    "CLAUDE_CODE_SUBPROCESS_ENV_SCRUB": "1",
+    "NEXT_TELEMETRY_DISABLED": "1",
+    "NUXT_TELEMETRY_DISABLED": "1",
+    "GATSBY_TELEMETRY_DISABLED": "1",
+    "ASTRO_TELEMETRY_DISABLED": "1",
+    "ANGULAR_CLI_ANALYTICS": "false",
+    "API_TIMEOUT_MS": "30000"
   },
   "permissions": {
     "allow": [
-      "Bash(npm run *)",
-      "Bash(npx *)",
-      "Bash(node *)",
-      "Bash(git *)",
-      "Bash(cat *)",
-      "Bash(ls *)",
-      "Bash(find *)",
-      "Bash(grep *)",
-      "Bash(head *)",
-      "Bash(tail *)",
-      "Bash(wc *)",
-      "Bash(mkdir *)",
-      "Bash(cp *)",
-      "Bash(mv *)",
-      "Bash(touch *)",
-      "Bash(codex *)",
-      "Bash(ast-grep *)",
-      "Read(*)",
-      "Write(*)",
-      "Edit(*)",
-      "MultiEdit(*)",
-      "Glob(*)",
-      "Grep(*)"
+      "Bash(npm test:*)",
+      "Bash(npm run:*)",
+      "Bash(npx:*)",
+      "Bash(node:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)",
+      "Bash(pytest:*)",
+      "Bash(uv run:*)",
+      "Bash(cargo:*)",
+      "Bash(go:*)",
+      "Bash(claude *)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(git branch:*)",
+      "Bash(git worktree:*)",
+      "Read(.ai_state/**)",
+      "Write(.ai_state/**)"
     ],
     "deny": [
-      "Bash(rm -rf /)",
-      "Bash(rm -rf /*)",
-      "Bash(rm -rf ~)",
-      "Bash(chmod 777 *)",
-      "Bash(curl * | bash)",
-      "Read(./secrets/**)",
-      "Read(./.env.production)"
+      "Bash(rm -rf *)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./secrets/**)"
     ]
+  },
+  "worktree": {
+    "baseRef": "head"
   },
   "hooks": {
     "SessionStart": [
       {
+        "matcher": "startup|resume|clear|compact",
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/context-loader.cjs"
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/session-start.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/session-start.cjs\" || true"
           }
         ]
       }
@@ -60,18 +70,38 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/pre-bash.cjs"
+            "if": "Bash(rm *)",
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-bash-guard.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-bash-guard.cjs\" || true"
+          },
+          {
+            "type": "command",
+            "if": "Bash(curl *|wget *)",
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-bash-guard.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-bash-guard.cjs\" || true"
+          },
+          {
+            "type": "command",
+            "if": "Bash(mkfs*|dd *)",
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-bash-guard.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/pre-bash-guard.cjs\" || true"
           }
         ]
       }
     ],
     "PostToolUse": [
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/post-edit.cjs"
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/index-updater.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/index-updater.cjs\" || true"
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/subagent-retry.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/subagent-retry.cjs\" || true"
           }
         ]
       }
@@ -81,28 +111,78 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/delivery-gate.cjs"
-          }
-        ]
-      },
-      {
-        "hooks": [
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/delivery-gate.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/delivery-gate.cjs\" || true"
+          },
           {
             "type": "command",
-            "command": "node .claude/hooks/tdd-check.cjs"
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/pace-continuator.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/pace-continuator.cjs\" || true"
           }
         ]
       }
     ],
-    "StopFailure": [
+    "PermissionDenied": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "node .claude/hooks/stop-failure.cjs"
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/permission-retry.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/permission-retry.cjs\" || true"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/compact-snapshot.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/compact-snapshot.cjs\" || true"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/compact-restore.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/compact-restore.cjs\" || true"
+          }
+        ]
+      }
+    ],
+    "ConfigChange": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -f \"${CLAUDE_PROJECT_DIR}/.claude/hooks/state-audit.cjs\" && node \"${CLAUDE_PROJECT_DIR}/.claude/hooks/state-audit.cjs\" || true"
           }
         ]
       }
     ]
+  },
+  "extraKnownMarketplaces": {
+    "superpowers-marketplace": {
+      "source": {
+        "source": "github",
+        "repo": "obra/superpowers-marketplace"
+      }
+    },
+    "openai-codex": {
+      "source": {
+        "source": "github",
+        "repo": "openai/codex-plugin-cc"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "superpowers@superpowers-marketplace": true,
+    "codex@openai-codex": true,
+    "feature-dev@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "playwright-skill@playwright-skill": true,
+    "security-guidance@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true
   }
 }

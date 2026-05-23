@@ -1,4 +1,0 @@
-[agent]
-name = "explorer"
-model = "gpt-5.4-mini"
-description = "代码库调研 + 文档查询 (只读)"
