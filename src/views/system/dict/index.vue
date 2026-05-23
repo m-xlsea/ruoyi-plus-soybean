@@ -28,7 +28,7 @@ defineOptions({
   name: 'DictList'
 });
 
-useDict('sys_user_sex');
+useDict('sys_user_gender');
 
 const { hasAuth } = useAuth();
 const appStore = useAppStore();

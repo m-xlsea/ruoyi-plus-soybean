@@ -23,7 +23,7 @@ defineOptions({
   name: 'UserList'
 });
 
-useDict('sys_user_sex');
+useDict('sys_user_gender');
 useDict('sys_normal_disable');
 
 const { hasAuth } = useAuth();
@@ -85,7 +85,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
         width: 80,
         ellipsis: true,
         render(row) {
-          return <DictTag value={row.sex} dictCode="sys_user_sex" />;
+          return <DictTag value={row.sex} dictCode="sys_user_gender" />;
         }
       },
       {

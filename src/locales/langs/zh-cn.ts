@@ -304,7 +304,7 @@ const local: App.I18n.Schema = {
     monitor_admin: 'Admin 监控'
   },
   dict: {
-    sys_user_sex: {
+    sys_user_gender: {
       male: '男',
       female: '女',
       unknown: '未知'

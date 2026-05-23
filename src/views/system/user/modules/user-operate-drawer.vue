@@ -211,7 +211,7 @@ watch(visible, () => {
           <NFormItem :label="$t('page.system.user.sex')" path="sex">
             <DictRadio
               v-model:value="model.sex"
-              dict-code="sys_user_sex"
+              dict-code="sys_user_gender"
               :placeholder="$t('page.system.user.form.sex.required')"
             />
           </NFormItem>

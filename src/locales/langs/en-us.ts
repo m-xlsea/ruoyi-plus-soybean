@@ -308,7 +308,7 @@ const local: App.I18n.Schema = {
     monitor_admin: 'Admin Monitor'
   },
   dict: {
-    sys_user_sex: {
+    sys_user_gender: {
       male: 'Male',
       female: 'Female',
       unknown: 'Unknown'
