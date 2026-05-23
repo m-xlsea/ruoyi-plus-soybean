@@ -37,3 +37,4 @@ src-tauri/target
 
 # VibeCoding state
 .ai_state/
+AGENTS.md
