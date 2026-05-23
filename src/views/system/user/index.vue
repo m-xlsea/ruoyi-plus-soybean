@@ -17,6 +17,7 @@ import UserOperateDrawer from './modules/user-operate-drawer.vue';
 import UserImportModal from './modules/user-import-modal.vue';
 import UserPasswordDrawer from './modules/user-password-drawer.vue';
 import UserSearch from './modules/user-search.vue';
+import { SUPER_ADMIN_USER_ID } from '@/constants/system';
 
 defineOptions({
   name: 'UserList'
@@ -117,7 +118,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
           return (
             <StatusSwitch
               v-model:value={row.status}
-              disabled={row.userId === 1}
+              disabled={row.userId === SUPER_ADMIN_USER_ID}
               info={row.userName}
               onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
             />
@@ -136,7 +137,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
         align: 'center',
         width: 150,
         render: row => {
-          if (row.userId === 1) return null;
+          if (row.userId === SUPER_ADMIN_USER_ID) return null;
 
           const editBtn = () => {
             return (

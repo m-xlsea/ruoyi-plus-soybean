@@ -17,6 +17,7 @@ import RoleOperateDrawer from './modules/role-operate-drawer.vue';
 import RoleSearch from './modules/role-search.vue';
 import RoleDataScopeDrawer from './modules/role-data-scope-drawer.vue';
 import RoleAuthUserDrawer from './modules/role-auth-user-drawer.vue';
+import { SUPER_ADMIN_ROLE_ID } from '@/constants/system';
 
 defineOptions({
   name: 'RoleList'
@@ -97,7 +98,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
           return (
             <StatusSwitch
               v-model:value={row.status}
-              disabled={row.roleId === 1}
+              disabled={row.roleId === SUPER_ADMIN_ROLE_ID}
               info={row.roleKey}
               onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
             />
@@ -116,7 +117,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
         align: 'center',
         width: 230,
         render: row => {
-          if (row.roleId === 1) return null;
+          if (row.roleId === SUPER_ADMIN_ROLE_ID) return null;
 
           const editBtn = () => {
             return (

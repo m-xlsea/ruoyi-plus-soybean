@@ -12,6 +12,7 @@ import { $t } from '@/locales';
 import ButtonIcon from '@/components/custom/button-icon.vue';
 import DeptOperateDrawer from './modules/dept-operate-drawer.vue';
 import DeptSearch from './modules/dept-search.vue';
+import { DEFAULT_DEPT_ID } from '@/constants/system';
 
 defineOptions({
   name: 'DeptList'
@@ -110,6 +111,7 @@ const {
         };
 
         const deleteBtn = () => {
+          if (row.deptId === DEFAULT_DEPT_ID) return null;
           return (
             <ButtonIcon
               text
@@ -202,6 +204,7 @@ function addInRow(row: Api.System.Dept) {
         :flex-height="!appStore.isMobile"
         :scroll-x="scrollX"
         :loading="loading"
+        :indent="18"
         :row-key="row => row.deptId"
         class="sm:h-full"
       />

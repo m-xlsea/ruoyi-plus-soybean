@@ -13,6 +13,7 @@ import ButtonIcon from '@/components/custom/button-icon.vue';
 import StatusSwitch from '@/components/custom/status-switch.vue';
 import ClientOperateDrawer from './modules/client-operate-drawer.vue';
 import ClientSearch from './modules/client-search.vue';
+import { SUPER_ADMIN_USER_ID } from '@/constants/system';
 
 defineOptions({
   name: 'ClientList'
@@ -49,7 +50,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
       {
         type: 'selection',
         align: 'center',
-        disabled: row => row.id === 1,
+        disabled: row => row.id === SUPER_ADMIN_USER_ID,
         width: 48
       },
       {
@@ -122,7 +123,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
           return (
             <StatusSwitch
               v-model:value={row.status}
-              disabled={row.id === 1}
+              disabled={row.id === SUPER_ADMIN_USER_ID}
               info={row.clientId}
               onSubmitted={(value, callback) => handleStatusChange(row, value, callback)}
             />
@@ -169,7 +170,7 @@ const { columns, columnChecks, data, getData, getDataByPage, loading, mobilePagi
                 tooltipContent={$t('common.delete')}
                 popconfirmContent={$t('common.confirmDelete')}
                 onPositiveClick={() => handleDelete(row.id!)}
-                disabled={row.id === 1}
+                disabled={row.id === SUPER_ADMIN_USER_ID}
               />
             );
           };
