@@ -68,11 +68,6 @@ declare namespace Api {
       checkedKeys: CommonType.IdType[];
       menus: MenuList;
     }>;
-    /** teannt-package menu tree select */
-    type TenantPackageMenuTreeSelect = Common.CommonRecord<{
-      checkedKeys: CommonType.IdType[];
-      menus: MenuList;
-    }>;
     /** role dept tree select */
     type RoleDeptTreeSelect = Common.CommonRecord<{
       checkedKeys: CommonType.IdType[];
@@ -91,7 +86,7 @@ declare namespace Api {
     type UserGender = '1' | '2';
 
     /** user */
-    type User = Common.CommonTenantRecord<{
+    type User = Common.CommonRecord<{
       /** 用户ID */
       userId: CommonType.IdType;
       /** 部门ID */
@@ -182,8 +177,6 @@ declare namespace Api {
       id: CommonType.IdType;
       /** 用户ID */
       userId: CommonType.IdType;
-      /** 租户ID */
-      tenantId: CommonType.IdType;
       /** 认证的唯一ID */
       authId: string;
       /** 用户来源 */
@@ -406,8 +399,6 @@ declare namespace Api {
     type Dept = Api.Common.CommonRecord<{
       /** 部门id */
       deptId: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 父部门id */
       parentId: CommonType.IdType;
       /** 祖级列表 */
@@ -450,8 +441,6 @@ declare namespace Api {
     type Post = Common.CommonRecord<{
       /** 岗位ID */
       postId: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 部门id */
       deptId: CommonType.IdType;
       /** 岗位编码 */
@@ -490,8 +479,6 @@ declare namespace Api {
     type Config = Common.CommonRecord<{
       /** 参数主键 */
       configId: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 参数名称 */
       configName: string;
       /** 参数键名 */
@@ -517,114 +504,6 @@ declare namespace Api {
     /** config list */
     type ConfigList = Api.Common.PaginatingQueryRecord<Config>;
 
-    /** tenant */
-    type Tenant = Common.CommonRecord<{
-      /** id */
-      id: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
-      /** 联系人 */
-      contactUserName: string;
-      /** 联系电话 */
-      contactPhone: string;
-      /** 企业名称 */
-      companyName: string;
-      /** 统一社会信用代码 */
-      licenseNumber: string;
-      /** 地址 */
-      address: string;
-      /** 企业简介 */
-      intro: string;
-      /** 域名 */
-      domain: string;
-      /** 备注 */
-      remark: string;
-      /** 租户套餐编号 */
-      packageId: CommonType.IdType;
-      /** 过期时间 */
-      expireTime: string;
-      /** 用户数量（-1不限制） */
-      accountCount: number;
-      /** 租户状态（0正常 1停用） */
-      status: Common.EnableStatus;
-      /** 删除标志（0代表存在 1代表删除） */
-      delFlag: string;
-    }>;
-
-    /** tenant search params */
-    type TenantSearchParams = CommonType.RecordNullable<
-      Pick<Api.System.Tenant, 'tenantId' | 'contactUserName' | 'contactPhone' | 'companyName'> &
-        Api.Common.CommonSearchParams
-    >;
-
-    /** tenant operate params */
-    type TenantOperateParams = CommonType.RecordNullable<
-      Pick<
-        Api.System.Tenant,
-        | 'id'
-        | 'tenantId'
-        | 'contactUserName'
-        | 'contactPhone'
-        | 'companyName'
-        | 'licenseNumber'
-        | 'address'
-        | 'intro'
-        | 'domain'
-        | 'remark'
-        | 'packageId'
-        | 'expireTime'
-        | 'accountCount'
-        | 'status'
-      > & {
-        username: string;
-        password: string;
-      }
-    >;
-
-    /** tenant package sync params */
-    type TenantPackageSyncParams = CommonType.RecordNullable<Pick<Api.System.Tenant, 'tenantId' | 'packageId'>>;
-
-    /** tenant list */
-    type TenantList = Api.Common.PaginatingQueryRecord<Tenant>;
-
-    /** tenant package */
-    type TenantPackage = Common.CommonRecord<{
-      /** 租户套餐id */
-      packageId: CommonType.IdType;
-      /** 套餐名称 */
-      packageName: string;
-      /** 关联菜单id */
-      menuIds: CommonType.IdType[];
-      /** 备注 */
-      remark: string;
-      /** 菜单树选择项是否关联显示 */
-      menuCheckStrictly: boolean;
-      /** 状态（0正常 1停用） */
-      status: Common.EnableStatus;
-      /** 删除标志（0代表存在 1代表删除） */
-      delFlag: string;
-    }>;
-
-    /** tenant package search params */
-    type TenantPackageSearchParams = CommonType.RecordNullable<
-      Pick<Api.System.TenantPackage, 'packageName' | 'menuIds' | 'menuCheckStrictly' | 'status'> &
-        Api.Common.CommonSearchParams
-    >;
-
-    /** tenant package operate params */
-    type TenantPackageOperateParams = CommonType.RecordNullable<
-      Pick<
-        Api.System.TenantPackage,
-        'packageId' | 'packageName' | 'menuIds' | 'remark' | 'menuCheckStrictly' | 'status'
-      >
-    >;
-
-    /** tenant package list */
-    type TenantPackageList = Api.Common.PaginatingQueryRecord<TenantPackage>;
-
-    /** tenant package select list */
-    type TenantPackageSelectList = Common.CommonRecord<Pick<TenantPackage, 'packageId' | 'packageName'>>;
-
     /** 通知公告类型 */
     type NoticeType = '1' | '2';
 
@@ -632,8 +511,6 @@ declare namespace Api {
     type Notice = Common.CommonRecord<{
       /** 公告ID */
       noticeId: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 公告标题 */
       noticeTitle: string;
       /** 公告类型 */
@@ -740,8 +617,6 @@ declare namespace Api {
     type Oss = Common.CommonRecord<{
       /** 对象存储主键 */
       ossId: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 文件名 */
       fileName: string;
       /** 原名 */
@@ -773,8 +648,6 @@ declare namespace Api {
     type OssConfig = Common.CommonRecord<{
       /** 主键 */
       ossConfigId: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 配置名称 */
       configKey: string;
       /** accessKey */

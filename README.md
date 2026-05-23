@@ -6,7 +6,7 @@
 <div style="height: 10px; clear: both;"></div>
 
 <div align="center">
-  <p>一个基于 <a href="https://gitee.com/dromara/RuoYi-Vue-Plus" target="_blank">RuoYi-Vue-Plus</a> 的后端能力和 <a href="https://github.com/soybeanjs/soybean-admin" target="_blank">Soybean Admin</a> 前端特性的现代化多租户管理系统</p>
+  <p>一个基于 <a href="https://gitee.com/dromara/RuoYi-Vue-Plus" target="_blank">RuoYi-Vue-Plus</a> 的后端能力和 <a href="https://github.com/soybeanjs/soybean-admin" target="_blank">Soybean Admin</a> 前端特性的现代化管理系统</p>
   <p>
     <a href="https://gitcode.com/xlsea/ruoyi-plus-soybean" target="_blank"><img src="https://gitcode.com/xlsea/ruoyi-plus-soybean/star/badge.svg" alt="GitCode"></a>
     <a href="https://github.com/m-xlsea/ruoyi-plus-soybean" target="_blank"><img src="https://img.shields.io/github/stars/m-xlsea/ruoyi-plus-soybean" alt="Github"></a>
@@ -49,11 +49,10 @@
 
 ## 📋 项目概述
 
-RuoYi-Plus-Soybean 是一个现代化的企业级多租户管理系统，它结合了 RuoYi-Vue-Plus 的强大后端功能和 Soybean Admin 的现代化前端特性，为开发者提供了完整的企业管理解决方案。
+RuoYi-Plus-Soybean 是一个现代化的企业级管理系统，它结合了 RuoYi-Vue-Plus 的强大后端功能和 Soybean Admin 的现代化前端特性，为开发者提供了完整的企业管理解决方案。
 
 ### 🌟 项目特点
 
-- **多租户架构**：完整支持SaaS多租户模式，灵活的租户管理能力
 - **现代前端技术栈**：基于Vue 3、TypeScript、Vite和Naive UI构建
 - **Monorepo工程管理**：使用pnpm workspaces管理多包结构
 - **丰富的组件库**：内置大量业务组件和布局选项
@@ -339,7 +338,6 @@ console.log(t('common.confirm'));
 - **菜单管理**：系统功能配置
 - **部门管理**：组织架构维护
 - **字典管理**：数据字典配置
-- **租户管理**：多租户配置
 - **系统监控**：登录日志、操作日志、在线用户、缓存监控
 - **代码生成**：生成前后端代码，提升开发效率
 

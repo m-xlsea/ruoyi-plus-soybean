@@ -14,8 +14,6 @@ declare namespace Api {
     type Demo = Common.CommonRecord<{
       /** 主键 */
       id: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 部门id */
       deptId: CommonType.IdType;
       /** 用户id */
@@ -51,8 +49,6 @@ declare namespace Api {
     type Tree = Common.CommonRecord<{
       /** 主键 */
       id: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 父id */
       parentId: CommonType.IdType;
       /** 部门id */

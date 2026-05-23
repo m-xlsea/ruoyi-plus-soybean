@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
-import type { SelectOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import CryptoJS from 'crypto-js';
-import { fetchCaptchaCode, fetchTenantList } from '@/service/api';
+import { fetchCaptchaCode } from '@/service/api';
 import { fetchSocialAuthBinding } from '@/service/api/system';
 import { useAuthStore } from '@/store/modules/auth';
 import { useRouterPush } from '@/hooks/common/router';
@@ -22,63 +21,38 @@ const authStore = useAuthStore();
 const { toggleLoginModule } = useRouterPush();
 const { formRef, validate } = useNaiveForm();
 const { loading: codeLoading, startLoading: startCodeLoading, endLoading: endCodeLoading } = useLoading();
-const { loading: tenantLoading, startLoading: startTenantLoading, endLoading: endTenantLoading } = useLoading();
 
 const codeUrl = ref<string>();
 const captchaEnabled = ref<boolean>(false);
 const registerEnabled = ref<boolean>(false);
 const remberMe = ref<boolean>(false);
 
-const tenantEnabled = ref<boolean>(false);
-
-const tenantOption = ref<SelectOption[]>([]);
-
 const model: Api.Auth.PwdLoginForm = reactive({
-  tenantId: '000000',
   username: 'admin',
   password: 'admin123'
 });
 
-type RuleKey = Extract<keyof Api.Auth.PwdLoginForm, 'username' | 'password' | 'code' | 'tenantId'>;
+type RuleKey = Extract<keyof Api.Auth.PwdLoginForm, 'username' | 'password' | 'code'>;
 
 const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
   // inside computed to make locale reactive, if not apply i18n, you can define it without computed
-  const { formRules, createRequiredRule } = useFormRules();
+  const { createRequiredRule } = useFormRules();
 
   const loginRules: Record<RuleKey, App.Global.FormRule[]> = {
     username: [createRequiredRule($t('form.userName.required'))],
     password: [createRequiredRule($t('form.pwd.required'))],
-    code: captchaEnabled.value ? [createRequiredRule($t('form.code.required'))] : [],
-    tenantId: tenantEnabled.value ? formRules.tenantId : []
+    code: captchaEnabled.value ? [createRequiredRule($t('form.code.required'))] : []
   };
 
   return loginRules;
 });
 
-async function handleFetchTenantList() {
-  startTenantLoading();
-  const { data, error } = await fetchTenantList();
-  if (error) return;
-  tenantEnabled.value = data.tenantEnabled;
-  if (data.tenantEnabled) {
-    tenantOption.value = data.voList.map(tenant => {
-      return {
-        label: tenant.companyName,
-        value: tenant.tenantId
-      };
-    });
-  }
-  endTenantLoading();
-}
-
-handleFetchTenantList();
-
 async function handleSubmit() {
   await validate();
   // 勾选了需要记住密码设置在 localStorage 中设置记住用户名和密码
   if (remberMe.value) {
-    const { tenantId, username, password } = model;
-    localStg.set('loginRember', encryptWithAes(JSON.stringify({ tenantId, username, password }), aesKey));
+    const { username, password } = model;
+    localStg.set('loginRember', encryptWithAes(JSON.stringify({ username, password }), aesKey));
   } else {
     // 否则移除
     localStg.remove('loginRember');
@@ -125,7 +99,7 @@ handleLoginRember();
 // handleRegister();
 
 async function handleSocialLogin(type: Api.System.SocialSource) {
-  const { data, error } = await fetchSocialAuthBinding(type, model.tenantId);
+  const { data, error } = await fetchSocialAuthBinding(type);
   if (error) return;
   window.location.href = data;
 }
@@ -143,14 +117,6 @@ async function handleSocialLogin(type: Api.System.SocialSource) {
       :show-label="false"
       @keyup.enter="() => !authStore.loginLoading && handleSubmit()"
     >
-      <NFormItem v-if="tenantEnabled" path="tenantId">
-        <NSelect
-          v-model:value="model.tenantId"
-          placeholder="请选择租户"
-          :options="tenantOption"
-          :loading="tenantLoading"
-        />
-      </NFormItem>
       <NFormItem path="username">
         <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
       </NFormItem>

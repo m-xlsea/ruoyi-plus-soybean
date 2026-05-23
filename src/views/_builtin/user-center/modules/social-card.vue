@@ -2,14 +2,10 @@
 import { ref } from 'vue';
 import { useLoading } from '@sa/hooks';
 import { fetchSocialAuthBinding, fetchSocialAuthUnbinding, fetchSocialList } from '@/service/api/system';
-import { useAuthStore } from '@/store/modules/auth';
 
 defineOptions({
   name: 'SocialCard'
 });
-
-const authStore = useAuthStore();
-const { userInfo } = authStore;
 
 const socialList = ref<Api.System.Social[]>([]);
 const { loading, startLoading, endLoading } = useLoading();
@@ -27,7 +23,7 @@ async function getSsoUserList() {
 
 /** 绑定SSO账户 */
 async function bindSsoAccount(type: Api.System.SocialSource) {
-  const { data, error } = await fetchSocialAuthBinding(type, userInfo.user?.tenantId);
+  const { data, error } = await fetchSocialAuthBinding(type);
   if (!error) {
     window.location.href = data;
   }

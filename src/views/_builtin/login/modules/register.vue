@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { computed, reactive, ref } from 'vue';
-import type { SelectOption } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
-import { fetchCaptchaCode, fetchRegister, fetchTenantList } from '@/service/api';
+import { fetchCaptchaCode, fetchRegister } from '@/service/api';
 import { useRouterPush } from '@/hooks/common/router';
 import { useFormRules, useNaiveForm } from '@/hooks/common/form';
 import { $t } from '@/locales';
@@ -18,11 +17,8 @@ const { loading: registerLoading, startLoading: startRegisterLoading, endLoading
 
 const codeUrl = ref<string>();
 const captchaEnabled = ref<boolean>(false);
-const tenantEnabled = ref<boolean>(false);
-const tenantOption = ref<SelectOption[]>([]);
 
 const model: Api.Auth.RegisterForm = reactive({
-  tenantId: '000000',
   username: '',
   code: '',
   password: '',
@@ -30,13 +26,12 @@ const model: Api.Auth.RegisterForm = reactive({
   userType: 'sys_user'
 });
 
-type RuleKey = Extract<keyof Api.Auth.RegisterForm, 'username' | 'password' | 'confirmPassword' | 'code' | 'tenantId'>;
+type RuleKey = Extract<keyof Api.Auth.RegisterForm, 'username' | 'password' | 'confirmPassword' | 'code'>;
 
 const rules = computed<Record<RuleKey, App.Global.FormRule[]>>(() => {
-  const { formRules, createConfirmPwdRule, createRequiredRule } = useFormRules();
+  const { createConfirmPwdRule, createRequiredRule } = useFormRules();
 
   return {
-    tenantId: tenantEnabled.value ? formRules.tenantId : [],
     username: [createRequiredRule($t('form.userName.required'))],
     password: [createRequiredRule($t('form.pwd.required'))],
     confirmPassword: createConfirmPwdRule(model.password!),
@@ -49,7 +44,6 @@ async function handleSubmit() {
     await validate();
     startRegisterLoading();
     const { error } = await fetchRegister({
-      tenantId: model.tenantId,
       username: model.username,
       password: model.password,
       code: model.code,
@@ -71,20 +65,6 @@ async function handleSubmit() {
     endRegisterLoading();
   }
 }
-
-async function handleFetchTenantList() {
-  const { data, error } = await fetchTenantList();
-  if (error) return;
-  tenantEnabled.value = data.tenantEnabled;
-  tenantOption.value = data.voList.map(tenant => {
-    return {
-      label: tenant.companyName,
-      value: tenant.tenantId
-    };
-  });
-}
-
-handleFetchTenantList();
 
 async function handleFetchCaptchaCode() {
   startCodeLoading();
@@ -114,9 +94,6 @@ handleFetchCaptchaCode();
       :show-label="false"
       @keyup.enter="() => !registerLoading && handleSubmit()"
     >
-      <NFormItem v-if="tenantEnabled" path="tenantId">
-        <NSelect v-model:value="model.tenantId" :options="tenantOption" :enabled="tenantEnabled" />
-      </NFormItem>
       <NFormItem path="username">
         <NInput v-model:value="model.username" :placeholder="$t('page.login.common.userNamePlaceholder')" />
       </NFormItem>

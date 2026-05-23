@@ -66,11 +66,6 @@ declare namespace Api {
       updateTime: string;
     } & T;
 
-    type CommonTenantRecord<T = any> = {
-      /** record tenant id */
-      tenantId: string;
-    } & CommonRecord<T>;
-
     /** common tree record */
     type CommonTreeRecord = {
       /** record id */

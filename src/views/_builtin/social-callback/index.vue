@@ -22,7 +22,6 @@ const code = route.query.code as string;
 const state = route.query.state as string;
 const source = route.query.source as string;
 const stateJson = state ? JSON.parse(atob(state)) : {};
-const tenantId = (stateJson.tenantId as string) ?? '000000';
 const domain = (stateJson.domain as string) ?? window.location.host;
 const msg = ref('正在登录，请稍后......');
 
@@ -83,7 +82,6 @@ const init = async () => {
   const data: Api.Auth.SocialLoginForm = {
     socialCode: code,
     socialState: state,
-    tenantId,
     source,
     grantType: 'social'
   };

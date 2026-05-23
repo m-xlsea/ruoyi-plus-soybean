@@ -280,8 +280,6 @@ const local: App.I18n.Schema = {
     system_oss: '文件管理',
     'system_oss-config': 'OSS 配置',
     system_client: '客户端管理',
-    system_tenant: '租户管理',
-    'system_tenant-package': '租户套餐',
     monitor: '系统监控',
     monitor_cache: '缓存监控',
     monitor_logininfor: '登录日志',
@@ -301,7 +299,6 @@ const local: App.I18n.Schema = {
     about: '关于'
   },
   menu: {
-    system_tenant: '租户管理',
     system_log: '日志管理',
     'monitor_snail-job': '任务调度中心',
     monitor_admin: 'Admin 监控'
@@ -392,7 +389,7 @@ const local: App.I18n.Schema = {
   page: {
     login: {
       common: {
-        title: '现代化的企业级多租户管理系统',
+        title: '现代化的企业级管理系统',
         subTitle: '为开发者提供了完整的企业管理解决方案',
         loginOrRegister: '登录 / 注册',
         register: '注册',
@@ -1028,104 +1025,6 @@ const local: App.I18n.Schema = {
         selectDataScope: '选择数据权限',
         selectDeptPermission: '选择部门权限'
       },
-      tenant: {
-        title: '租户列表',
-        tenantName: '租户名称',
-        tenantId: '租户编号',
-        contactUserName: '联系人',
-        contactPhone: '联系电话',
-        companyName: '公司名称',
-        licenseNumber: '营业执照编号',
-        address: '地址',
-        intro: '企业简介',
-        domain: '域名',
-        packageId: '租户套餐',
-        expireTime: '过期时间',
-        accountCount: '账号数量',
-        status: '状态',
-        createTime: '创建时间',
-        form: {
-          tenantName: {
-            required: '请输入租户名称',
-            invalid: '租户名称不能为空'
-          },
-          contactUserName: {
-            required: '请输入联系人',
-            invalid: '联系人不能为空'
-          },
-          contactPhone: {
-            required: '请输入联系电话',
-            invalid: '联系电话不能为空'
-          },
-          companyName: {
-            required: '请输入公司名称',
-            invalid: '公司名称不能为空'
-          },
-          licenseNumber: {
-            required: '请输入营业执照编号',
-            invalid: '营业执照编号不能为空'
-          },
-          address: {
-            required: '请输入地址',
-            invalid: '地址不能为空'
-          },
-          intro: {
-            required: '请输入企业简介',
-            invalid: '企业简介不能为空'
-          },
-          domain: {
-            required: '请输入域名',
-            invalid: '域名不能为空'
-          },
-          packageId: {
-            required: '请选择租户套餐',
-            invalid: '租户套餐不能为空'
-          },
-          expireTime: {
-            required: '请选择过期时间',
-            invalid: '过期时间不能为空'
-          },
-          accountCount: {
-            required: '请输入账号数量',
-            invalid: '账号数量不能为空'
-          },
-          status: {
-            required: '请选择状态',
-            invalid: '状态不能为空'
-          }
-        },
-        addTenant: '新增租户',
-        editTenant: '编辑租户'
-      },
-      tenantPackage: {
-        title: '租户套餐列表',
-        packageName: '套餐名称',
-        menuIds: '菜单权限',
-        remark: '备注',
-        status: '状态',
-        createTime: '创建时间',
-        form: {
-          packageName: {
-            required: '请输入套餐名称',
-            invalid: '套餐名称不能为空'
-          },
-          menuIds: {
-            required: '请选择菜单权限',
-            invalid: '菜单权限不能为空'
-          },
-          status: {
-            required: '请选择状态',
-            invalid: '状态不能为空'
-          },
-          remark: {
-            required: '请输入备注',
-            invalid: '备注不能为空'
-          }
-        },
-        addTenantPackage: '新增租户套餐',
-        editTenantPackage: '编辑租户套餐',
-        statusChangeSuccess: '状态修改成功'
-      },
       user: {
         title: '用户列表',
         userName: '用户名称',
@@ -1203,7 +1102,7 @@ const local: App.I18n.Schema = {
     },
     about: {
       title: '关于',
-      introduction: `RuoYi-Plus-Soybean 是一个现代化的企业级多租户管理系统，它结合了 RuoYi-Vue-Plus 的强大后端功能和 Soybean Admin 的现代化前端特性，为开发者提供了完整的企业管理解决方案。`,
+      introduction: `RuoYi-Plus-Soybean 是一个现代化的企业级管理系统，它结合了 RuoYi-Vue-Plus 的强大后端功能和 Soybean Admin 的现代化前端特性，为开发者提供了完整的企业管理解决方案。`,
       projectInfo: {
         title: '项目信息',
         version: '版本',

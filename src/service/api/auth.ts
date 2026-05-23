@@ -1,13 +1,5 @@
 import { request } from '../request';
 
-/** Get tenant list */
-export function fetchTenantList() {
-  return request<Api.Auth.LoginTenant>({
-    url: '/auth/tenant/list',
-    method: 'get'
-  });
-}
-
 /** Get image code */
 export function fetchCaptchaCode() {
   return request<Api.Auth.CaptchaCode>({

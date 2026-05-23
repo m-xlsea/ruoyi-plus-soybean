@@ -17,8 +17,6 @@ declare namespace Api {
     type OperLog = Common.CommonRecord<{
       /** 日志主键 */
       operId: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 系统模块 */
       title: string;
       /** 操作类型 */
@@ -66,8 +64,6 @@ declare namespace Api {
     type LoginInfor = Common.CommonRecord<{
       /** 访问ID */
       infoId: CommonType.IdType;
-      /** 租户编号 */
-      tenantId: CommonType.IdType;
       /** 用户账号 */
       userName: string;
       /** 客户端 */

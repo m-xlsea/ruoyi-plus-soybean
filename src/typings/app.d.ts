@@ -926,56 +926,6 @@ declare namespace App {
             selectDataScope: string;
             selectDeptPermission: string;
           };
-          tenant: {
-            title: string;
-            tenantName: string;
-            tenantId: string;
-            contactUserName: string;
-            contactPhone: string;
-            companyName: string;
-            licenseNumber: string;
-            address: string;
-            intro: string;
-            domain: string;
-            packageId: string;
-            expireTime: string;
-            accountCount: string;
-            status: string;
-            createTime: string;
-            form: {
-              tenantName: FormMsg;
-              contactUserName: FormMsg;
-              contactPhone: FormMsg;
-              companyName: FormMsg;
-              licenseNumber: FormMsg;
-              address: FormMsg;
-              intro: FormMsg;
-              domain: FormMsg;
-              packageId: FormMsg;
-              expireTime: FormMsg;
-              accountCount: FormMsg;
-              status: FormMsg;
-            };
-            addTenant: string;
-            editTenant: string;
-          };
-          tenantPackage: {
-            title: string;
-            packageName: string;
-            menuIds: string;
-            remark: string;
-            status: string;
-            createTime: string;
-            form: {
-              packageName: FormMsg;
-              menuIds: FormMsg;
-              status: FormMsg;
-              remark: FormMsg;
-            };
-            addTenantPackage: string;
-            editTenantPackage: string;
-            statusChangeSuccess: string;
-          };
           user: {
             title: string;
             userName: string;
