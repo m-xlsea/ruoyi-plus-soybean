@@ -37,7 +37,6 @@ const editorConfig: Partial<IEditorConfig> = {
       fieldName: 'file',
       meta: {},
       headers: {
-        // @ts-expect-error ignore this type error
         Authorization: `Bearer ${getToken()}`,
         clientid: import.meta.env.VITE_APP_CLIENT_ID!
       },
