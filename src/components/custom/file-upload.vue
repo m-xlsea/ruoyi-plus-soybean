@@ -1,6 +1,6 @@
 <script setup lang="tsx">
-import { computed, defineComponent, useAttrs } from 'vue';
-import type { UploadFileInfo, UploadProps } from 'naive-ui';
+import { computed, defineComponent } from 'vue';
+import type { UploadFileInfo } from 'naive-ui';
 import type { JSX } from 'vue/jsx-runtime';
 import { fetchBatchDeleteOss } from '@/service/api/system/oss';
 import { getToken } from '@/store/modules/auth/shared';
@@ -8,7 +8,8 @@ import { getServiceBaseURL } from '@/utils/service';
 import { AcceptType } from '@/enum/business';
 
 defineOptions({
-  name: 'FileUpload'
+  name: 'FileUpload',
+  inheritAttrs: false
 });
 
 interface Props {
@@ -39,8 +40,6 @@ const accept = computed(() => {
   }
   return props.uploadType === 'file' ? AcceptType.File : AcceptType.Image;
 });
-
-const attrs: UploadProps = useAttrs();
 
 let fileNum = 0;
 const fileList = defineModel<UploadFileInfo[]>('fileList', {
@@ -177,7 +176,7 @@ async function handleRemove(file: UploadFileInfo) {
 <template>
   <div class="w-full flex-col">
     <NUpload
-      v-bind="attrs"
+      v-bind="$attrs"
       v-model:file-list="fileList"
       :action="`${baseURL}${action}`"
       :data="data"

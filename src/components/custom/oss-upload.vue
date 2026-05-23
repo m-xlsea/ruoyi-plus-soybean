@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, useAttrs, watch } from 'vue';
+import { ref, watch } from 'vue';
 import type { UploadFileInfo } from 'naive-ui';
 import { useLoading } from '@sa/hooks';
 import { fetchGetOssListByIds } from '@/service/api/system/oss';
@@ -7,10 +7,9 @@ import { isNotNull } from '@/utils/common';
 import FileUpload from '@/components/custom/file-upload.vue';
 
 defineOptions({
-  name: 'OssUpload'
+  name: 'OssUpload',
+  inheritAttrs: false
 });
-
-const attrs = useAttrs();
 
 const value = defineModel<string>('value', { default: '' });
 
@@ -63,7 +62,7 @@ watch(fileList, val => {
 
 <template>
   <NSpin v-if="loading" />
-  <FileUpload v-else v-bind="attrs" v-model:file-list="fileList" />
+  <FileUpload v-else v-bind="$attrs" v-model:file-list="fileList" />
 </template>
 
 <style scoped></style>

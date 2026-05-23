@@ -1,5 +1,88 @@
 # 更新日志
 
+## [v2.2.0](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v2.1.0...v2.2.0) (2026-05-23)
+
+### &nbsp;&nbsp;&nbsp;🚨 重大变更
+
+- **pnpm**: update pnpm from v10 to v11 &nbsp;-&nbsp; by @soybeanjs [<samp>(1f8e4)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/1f8e4eca)
+
+### &nbsp;&nbsp;&nbsp;🚀 新功能
+
+- **docs**:
+  - update Vite version from 7 to 8 in README and package.json &nbsp;-&nbsp; by @soybeanjs [<samp>(788d8)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/788d8929)
+  - update communication group details to FeiShu in README &nbsp;-&nbsp; by @soybeanjs [<samp>(da09f)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/da09f2c1)
+- **packages**:
+  - check git staging area before showing commit prompts &nbsp;-&nbsp; by **Azir-11** [<samp>(7b809)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/7b809c09)
+
+### &nbsp;&nbsp;&nbsp;🐞 Bug 修复
+
+- **assets**:
+  - add ts-expect-error comment for svg icons type error &nbsp;-&nbsp; by @soybeanjs [<samp>(f8f0c)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/f8f0c6c4)
+- **bin**:
+  - update import statement for index file &nbsp;-&nbsp; by @soybeanjs [<samp>(4549d)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/4549ddda)
+- **components**:
+  - 修复字典组件多语言切换无法实时更新问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(1160e)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/1160e502)
+  - 修复wang-editor样式和聚焦问题 &nbsp;-&nbsp; by **AN** [<samp>(94766)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/94766c70)
+  - 修复wang-editor编辑器层级和主题问题 &nbsp;-&nbsp; by **AN** [<samp>(871d7)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/871d7bf4)
+- **docs**:
+  - update FeiShu group image URL with cache-busting query parameter &nbsp;-&nbsp; by @soybeanjs [<samp>(369a3)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/369a3447)
+- **hooks**:
+  - 修复无法无法通过paginationProps传入pageSize导致的分页问题 &nbsp;-&nbsp; by **AN** [<samp>(852ff)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/852ffc6b)
+- **i18n-ally**:
+  - add missing TypeScript compiler options. fixed #907 &nbsp;-&nbsp; by @soybeanjs in https://gitee.com/xlsea/ruoyi-plus-soybean/issues/907 [<samp>(a5f85)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/a5f85810)
+- **packages**:
+  - 修复时间筛选未重置问题，调整search.vue.vm模板文件 &nbsp;-&nbsp; by **AN** [<samp>(e0c30)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/e0c30623)
+  - fix ERR_USE_AFTER_CLOSE error when pressing Ctrl+C during commit &nbsp;-&nbsp; by **Azir-11** [<samp>(eba49)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/eba49504)
+- **projects**:
+  - 修复混合左侧混合-顶部优先布局下固定问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(1005d)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/1005d444)
+  - fix ts and lint error &nbsp;-&nbsp; by @soybeanjs [<samp>(9afa2)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/9afa21e4)
+- **tsconfig**:
+  - change moduleResolution to 'bundler' across multiple packages &nbsp;-&nbsp; by @soybeanjs [<samp>(c0105)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/c0105c55)
+- **utils**:
+  - 修复新增公告，SSE消息字典未解析问题 &nbsp;-&nbsp; by **AN** [<samp>(e4e95)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/e4e954dc)
+- **vscode**:
+  - add oxc.vscode extension and update settings for formatting. fixed #904 &nbsp;-&nbsp; by @soybeanjs in https://gitee.com/xlsea/ruoyi-plus-soybean/issues/904 [<samp>(f8bd9)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/f8bd921a)
+- **workflows**:
+  - update actions/checkout and actions/setup-node to v6 &nbsp;-&nbsp; by @soybeanjs [<samp>(b5b50)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/b5b5087c)
+
+### &nbsp;&nbsp;&nbsp;🛠 优化
+
+- **mix-menu**:
+  - use stable Symbol.for as MixMenu context key. fixed #919 &nbsp;-&nbsp; by @soybeanjs in https://gitee.com/xlsea/ruoyi-plus-soybean/issues/919 [<samp>(e1667)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/e1667669)
+- **projects**:
+  - 修复菜单代码质量问题 &nbsp;-&nbsp; by @m-xlsea [<samp>(6f349)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/6f34956e)
+  - 优化搜索时间范围，填充23:59:59；优化代码模板，去除冗余代码。 &nbsp;-&nbsp; by **AN** [<samp>(92e9b)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/92e9beea)
+
+### &nbsp;&nbsp;&nbsp;💅 重构
+
+- **hooks**: simplify useContext implementation and improve type definitions &nbsp;-&nbsp; by @soybeanjs [<samp>(f292d)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/f292d32d)
+
+### &nbsp;&nbsp;&nbsp;📖 文档
+
+- **other**:
+  - 更新 Vibe Coding 配置 &nbsp;-&nbsp; by @m-xlsea [<samp>(7fec0)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/7fec02ff)
+- **readme**:
+  - add SoybeanUI section with description and badges &nbsp;-&nbsp; by @soybeanjs [<samp>(3a7a3)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/3a7a36b7)
+
+### &nbsp;&nbsp;&nbsp;🏡 杂项
+
+- **.gitignore**:
+  - add src-tauri/target to ignore list &nbsp;-&nbsp; by @soybeanjs [<samp>(f3975)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/f39753e1)
+- **deps**:
+  - update deps &nbsp;-&nbsp; by @soybeanjs [<samp>(a43a7)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/a43a7b3b)
+  - update deps &nbsp;-&nbsp; by **soybean-js** [<samp>(9afb3)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/9afb335e)
+  - update deps &nbsp;-&nbsp; by @soybeanjs [<samp>(e8fa9)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/e8fa90b4)
+  - update deps &nbsp;-&nbsp; by @soybeanjs [<samp>(77299)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/77299691)
+- **merge**:
+  - Merge Soybean branch main into dev &nbsp;-&nbsp; by @m-xlsea [<samp>(a4adf)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/a4adffe9)
+  - Merge Soybean branch main into dev &nbsp;-&nbsp; by @m-xlsea [<samp>(7eeff)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/7eeff925)
+- **packages**:
+  - 更新VelocityUtils工具类 &nbsp;-&nbsp; by **AN** [<samp>(3198e)</samp>](https://gitee.com/xlsea/ruoyi-plus-soybean/commit/3198ea4c)
+
+### &nbsp;&nbsp;&nbsp;❤️ 贡献者
+
+[![m-xlsea](https://github.com/m-xlsea.png?size=48)](https://github.com/m-xlsea)&nbsp;&nbsp;[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)&nbsp;&nbsp;[![Azir-11](https://github.com/Azir-11.png?size=48)](https://github.com/Azir-11)&nbsp;&nbsp;[![Elio-An](https://github.com/Elio-An.png?size=48)](https://gitee.com/elio-an)&nbsp;&nbsp;[![soybeanjs](https://github.com/soybeanjs.png?size=48)](https://github.com/soybeanjs)
+
 ## [v2.1.0](https://gitee.com/xlsea/ruoyi-plus-soybean/compare/v2.0.0...v2.1.0) (2026-03-27)
 
 ### &nbsp;&nbsp;&nbsp;🚨 重大变更

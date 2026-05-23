@@ -37,16 +37,17 @@ export const initSSE = (url: string) => {
 
   watch(data, () => {
     if (!data.value) return;
-    useNoticeStore().addNotice({
-      message: data.value,
-      read: false,
-      time: new Date().toLocaleString()
-    });
+
     let content = data.value;
     const noticeType = content.match(/\[dict\.(.*?)\]/)?.[1];
     if (noticeType) {
       content = content.replace(`dict.${noticeType}`, $t(`dict.${noticeType}` as App.I18n.I18nKey));
     }
+    useNoticeStore().addNotice({
+      message: content,
+      read: false,
+      time: new Date().toLocaleString()
+    });
     window.$notification?.create({
       title: '消息',
       content,

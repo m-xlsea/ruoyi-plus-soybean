@@ -16,20 +16,18 @@ const emit = defineEmits<Emits>();
 
 const { formRef, validate, restoreValidation } = useNaiveForm();
 
-const dateRangeCreateTime = ref<[string, string] | null>(null);
-
 const model = defineModel<Api.System.ConfigSearchParams>('model', { required: true });
 
 const defaultModel = jsonClone(toRaw(model.value));
 
+const dateRangeCreateTime = ref<[string, string] | null>(null);
+
 function onDateRangeCreateTimeUpdate(value: [string, string] | null) {
-  const params = model.value.params!;
-  if (value && value.length === 2) {
-    [params.beginTime, params.endTime] = value;
-  } else {
-    params.beginTime = undefined;
-    params.endTime = undefined;
-  }
+  model.value.params = {
+    ...model.value.params,
+    beginTime: value?.[0],
+    endTime: value?.[1]
+  };
 }
 
 function resetModel() {
@@ -93,6 +91,7 @@ async function search() {
                 type="datetimerange"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 clearable
+                :default-time="['00:00:00', '23:59:59']"
                 @update:formatted-value="onDateRangeCreateTimeUpdate"
               />
             </NFormItemGi>
