@@ -163,13 +163,18 @@ function handleError(options: { file: UploadFileInfo; event?: ProgressEvent }) {
 }
 
 async function handleRemove(file: UploadFileInfo) {
-  if (file.status !== 'finished') {
-    return false;
+  if (file.status === 'uploading') {
+    return true;
   }
-  const { error } = await fetchBatchDeleteOss([file.id]);
-  if (error) return false;
-  window.$message?.success('删除成功');
-  return true;
+
+  if (file.status === 'finished') {
+    const { error } = await fetchBatchDeleteOss([file.id]);
+    if (error) return false;
+    window.$message?.success('删除成功');
+    return true;
+  }
+
+  return false;
 }
 </script>
 
@@ -185,6 +190,7 @@ async function handleRemove(file: UploadFileInfo) {
       :accept="accept"
       :multiple="max > 1"
       directory-dnd
+      :show-cancel-button="false"
       :default-upload="defaultUpload"
       :list-type="uploadType === 'image' ? 'image-card' : 'text'"
       :is-error-state="isErrorState"
