@@ -181,6 +181,7 @@ async function handleOperate() {
     const { error, data } = await fetchCreateLeave({ leaveType, startDate, endDate, leaveDays, remark });
     if (error) return;
     respLeave.value = data;
+    window.$message?.success($t('common.addSuccess'));
   }
 
   if (props.operateType === 'edit') {
@@ -188,12 +189,12 @@ async function handleOperate() {
     const { error, data } = await fetchUpdateLeave({ id, leaveType, startDate, endDate, leaveDays, remark });
     if (error) return;
     respLeave.value = data;
+    window.$message?.success($t('common.updateSuccess'));
   }
 }
 
 async function handleSaveDraft() {
   await handleOperate();
-  window.$message?.success($t('common.updateSuccess'));
   closeDrawer();
   emit('submitted');
 }
@@ -202,7 +203,6 @@ const taskVariables = ref<{ [key: string]: any }>({});
 
 async function handleSubmit() {
   await handleOperate();
-  window.$message?.success($t('common.updateSuccess'));
   // 提交流程
   startWorkflowModel.businessId = respLeave.value?.id;
   startWorkflowModel.flowCode = model.flowCode;

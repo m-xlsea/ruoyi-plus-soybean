@@ -386,7 +386,7 @@ watch(visible, () => {
           <FileUpload v-model:file-list="fileList" :file-size="20" :max="20" upload-type="file" :accept="accept" />
         </NFormItem>
         <NFormItem v-if="buttonPerm.copy" label="抄送人员">
-          <NSpace>
+          <NSpace align="center">
             <NButton ghost type="primary" @click="openCopyModal">选择抄送人员</NButton>
             <TagGroup
               size="large"

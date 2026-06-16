@@ -250,12 +250,12 @@ watch(visible, () => {
 <template>
   <NModal
     v-model:show="visible"
-    class="user-select-modal max-h-800px max-w-90% w-1400px"
+    class="user-select-modal max-w-90% w-1300px"
     preset="card"
     size="medium"
     :title="props.title"
   >
-    <TableSiderLayout class="bg-gray-50 p-2" :sider-title="$t('page.system.dept.title')">
+    <TableSiderLayout class="bg-layout p-2" :sider-title="$t('page.system.dept.title')">
       <template #header-extra>
         <NButton size="small" text class="h-18px" @click.stop="() => handleResetTreeData()">
           <template #icon>
@@ -287,18 +287,13 @@ watch(visible, () => {
           </NTree>
         </NSpin>
       </template>
-      <div class="h-full flex-col-stretch gap-12px overflow-hidden lt-sm:max-h-500px lt-sm:overflow-auto">
+      <div class="content-wrapper flex-col-stretch gap-12px overflow-hidden">
         <UserSearch v-model:model="searchParams" @reset="handleResetSearch" @search="getDataByPage" />
         <TableRowCheckAlert v-model:checked-row-keys="checkedRowKeys" />
         <NAlert v-if="props.disabledIds.length > 0" type="warning">
           <span>已存在的用户无法被选择</span>
         </NAlert>
-        <NCard
-          :title="$t('page.system.user.title')"
-          :bordered="false"
-          size="small"
-          class="card-wrapper sm:flex-1-hidden lt-sm:overflow-auto"
-        >
+        <NCard :title="$t('page.system.user.title')" :bordered="false" size="small" class="user-table-card">
           <template #header-extra>
             <TableHeaderOperation
               v-model:columns="columnChecks"
@@ -321,7 +316,7 @@ watch(visible, () => {
             remote
             :row-key="row => row.userId.toString()"
             :pagination="mobilePagination"
-            class="h-full lt-sm:max-h-300px"
+            class="user-table"
           />
         </NCard>
       </div>
@@ -336,30 +331,72 @@ watch(visible, () => {
 </template>
 
 <style scoped lang="scss">
-:deep(.n-layout) {
-  height: 600px;
+.user-select-modal {
+  width: min(90vw, 1000px);
 
-  @media (max-width: 639px) {
-    height: auto;
-    max-height: 500px;
+  :deep(.n-card) {
+    height: min(78vh, 680px);
+  }
+
+  :deep(.n-card-content) {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 }
 
-.user-select-modal {
-  @media (max-width: 639px) {
-    :deep(.n-card-content) {
-      overflow: hidden;
-    }
+:deep(.n-layout) {
+  height: 100%;
+  min-height: 0;
+}
+:deep(.content) {
+  min-height: auto;
+}
+.content-wrapper {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
 
-    :deep(.n-data-table) {
-      max-height: 300px;
-    }
+.user-table-card {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+
+  :deep(.n-card__content) {
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
   }
+}
+
+.user-table {
+  height: 320px;
 }
 
 .n-alert {
   --n-padding: 5px 13px !important;
   --n-icon-margin: 6px 8px 0 12px !important;
   --n-icon-size: 20px !important;
+}
+
+@media (max-width: 640px) {
+  .user-select-modal {
+    width: 95vw;
+
+    :deep(.n-card) {
+      height: 95vh;
+    }
+  }
+
+  .user-table {
+    height: 300px;
+  }
+
+  :deep(.n-layout-sider) {
+    width: 180px !important;
+  }
 }
 </style>

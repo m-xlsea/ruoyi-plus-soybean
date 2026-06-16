@@ -1,11 +1,13 @@
 <script setup lang="tsx">
-import { computed, useAttrs } from 'vue';
-import type { TreeSelectProps } from 'naive-ui';
+import { computed } from 'vue';
 import { useLoading } from '@sa/hooks';
 import { fetchGetCategoryTree } from '@/service/api/workflow';
 import { isNull } from '@/utils/common';
 
-defineOptions({ name: 'FlowCategorySelect' });
+defineOptions({
+  name: 'FlowCategorySelect',
+  inheritAttrs: false
+});
 
 interface Props {
   [key: string]: any;
@@ -17,7 +19,6 @@ const rawValue = defineModel<CommonType.IdType | null>('value', { required: fals
 const options = defineModel<Api.Common.CommonTreeRecord>('options', { required: false, default: [] });
 const expandedKeys = defineModel<CommonType.IdType[]>('expandedKeys', { required: false, default: [] });
 
-const attrs: TreeSelectProps = useAttrs();
 const { loading, startLoading, endLoading } = useLoading();
 
 /** 转换为str，id可能是number类型或者String类型，导致回显失败 */
@@ -55,7 +56,7 @@ getCategoryList();
     key-field="id"
     label-field="label"
     :options="options as []"
-    v-bind="attrs"
+    v-bind="$attrs"
   />
 </template>
 
